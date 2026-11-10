@@ -1,0 +1,10 @@
+{
+	"type": "minecraft:smelting",
+	"category": "food",
+	"ingredient": "deadlands:dirty_water_bottle",
+	"result": {
+		"id": "deadlands:water_bottle"
+	},
+	"experience": 0.0,
+	"cookingtime": 200
+}

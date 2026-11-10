@@ -1,0 +1,59 @@
+{
+	"fallback": "minecraft:empty",
+	"elements": [
+		{
+			"weight": 1,
+			"element": {
+				"element_type": "minecraft:single_pool_element",
+				"location": "deadlands:site/silo_a",
+				"processors": "minecraft:empty",
+				"projection": "rigid"
+			}
+		},
+		{
+			"weight": 1,
+			"element": {
+				"element_type": "minecraft:single_pool_element",
+				"location": "deadlands:site/silo_b",
+				"processors": "minecraft:empty",
+				"projection": "rigid"
+			}
+		},
+		{
+			"weight": 1,
+			"element": {
+				"element_type": "minecraft:single_pool_element",
+				"location": "deadlands:site/windmill_a",
+				"processors": "minecraft:empty",
+				"projection": "rigid"
+			}
+		},
+		{
+			"weight": 1,
+			"element": {
+				"element_type": "minecraft:single_pool_element",
+				"location": "deadlands:site/windmill_b",
+				"processors": "minecraft:empty",
+				"projection": "rigid"
+			}
+		},
+		{
+			"weight": 1,
+			"element": {
+				"element_type": "minecraft:single_pool_element",
+				"location": "deadlands:site/farmstead_a",
+				"processors": "minecraft:empty",
+				"projection": "rigid"
+			}
+		},
+		{
+			"weight": 1,
+			"element": {
+				"element_type": "minecraft:single_pool_element",
+				"location": "deadlands:site/farmstead_b",
+				"processors": "minecraft:empty",
+				"projection": "rigid"
+			}
+		}
+	]
+}

@@ -1,0 +1,206 @@
+{
+	"type": "minecraft:chest",
+	"pools": [
+		{
+			"rolls": {
+				"type": "minecraft:uniform",
+				"min": 2,
+				"max": 4
+			},
+			"bonus_rolls": 0.0,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:leather_helmet",
+					"weight": 3,
+					"functions": [
+						{
+							"function": "minecraft:set_damage",
+							"damage": {
+								"type": "minecraft:uniform",
+								"min": 0.2,
+								"max": 0.8
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:leather_chestplate",
+					"weight": 3,
+					"functions": [
+						{
+							"function": "minecraft:set_damage",
+							"damage": {
+								"type": "minecraft:uniform",
+								"min": 0.2,
+								"max": 0.8
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:leather_leggings",
+					"weight": 3,
+					"functions": [
+						{
+							"function": "minecraft:set_damage",
+							"damage": {
+								"type": "minecraft:uniform",
+								"min": 0.2,
+								"max": 0.8
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:leather_boots",
+					"weight": 3,
+					"functions": [
+						{
+							"function": "minecraft:set_damage",
+							"damage": {
+								"type": "minecraft:uniform",
+								"min": 0.2,
+								"max": 0.8
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:white_wool",
+					"weight": 6,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 1,
+								"max": 2
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:gray_wool",
+					"weight": 4,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 1,
+								"max": 2
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:string",
+					"weight": 6,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 1,
+								"max": 3
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:book",
+					"weight": 4
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:clock",
+					"weight": 1
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:gold_nugget",
+					"weight": 4,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 1,
+								"max": 4
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:emerald",
+					"weight": 1
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:lead",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:name_tag",
+					"weight": 1
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:water_bottle",
+					"weight": 6
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:canned_soup",
+					"weight": 4
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:stale_bread",
+					"weight": 3
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:spoiled_can",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:dirty_water_bottle",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:purification_tablet",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:baseball_bat",
+					"weight": 1
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:pistol_ammo",
+					"weight": 1
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:backpack",
+					"weight": 1
+				}
+			]
+		}
+	],
+	"random_sequence": "deadlands:containers/house_bedroom"
+}

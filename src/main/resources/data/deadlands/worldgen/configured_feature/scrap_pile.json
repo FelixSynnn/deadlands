@@ -1,0 +1,34 @@
+{
+	"type": "minecraft:block_pile",
+	"config": {
+		"state_provider": {
+			"type": "minecraft:weighted_state_provider",
+			"entries": [
+				{
+					"data": {
+						"Name": "deadlands:rusted_sheet_metal"
+					},
+					"weight": 3
+				},
+				{
+					"data": {
+						"Name": "deadlands:corrugated_metal"
+					},
+					"weight": 2
+				},
+				{
+					"data": {
+						"Name": "deadlands:rubble"
+					},
+					"weight": 2
+				},
+				{
+					"data": {
+						"Name": "deadlands:diamond_plate"
+					},
+					"weight": 1
+				}
+			]
+		}
+	}
+}

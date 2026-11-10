@@ -1,0 +1,196 @@
+{
+	"variants": {
+		"facing=north,spawn=vehicle_civilian": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=east,spawn=vehicle_civilian": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=south,spawn=vehicle_civilian": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=west,spawn=vehicle_civilian": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=north,spawn=vehicle_military": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=east,spawn=vehicle_military": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=south,spawn=vehicle_military": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=west,spawn=vehicle_military": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=north,spawn=vehicle_emergency": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=east,spawn=vehicle_emergency": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=south,spawn=vehicle_emergency": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=west,spawn=vehicle_emergency": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=north,spawn=vehicle_farm": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=east,spawn=vehicle_farm": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=south,spawn=vehicle_farm": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=west,spawn=vehicle_farm": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=north,spawn=vehicle_rugged": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=east,spawn=vehicle_rugged": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=south,spawn=vehicle_rugged": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=west,spawn=vehicle_rugged": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=north,spawn=helicopter": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=east,spawn=helicopter": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=south,spawn=helicopter": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=west,spawn=helicopter": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=north,spawn=npc_settler": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=east,spawn=npc_settler": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=south,spawn=npc_settler": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=west,spawn=npc_settler": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=north,spawn=npc_guard": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=east,spawn=npc_guard": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=south,spawn=npc_guard": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=west,spawn=npc_guard": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=north,spawn=npc_trader": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=east,spawn=npc_trader": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=south,spawn=npc_trader": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=west,spawn=npc_trader": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=north,spawn=npc_doctor": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=east,spawn=npc_doctor": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=south,spawn=npc_doctor": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=west,spawn=npc_doctor": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=north,spawn=npc_mechanic": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=east,spawn=npc_mechanic": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=south,spawn=npc_mechanic": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=west,spawn=npc_mechanic": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=north,spawn=npc_farmer": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=east,spawn=npc_farmer": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=south,spawn=npc_farmer": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=west,spawn=npc_farmer": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=north,spawn=npc_leader": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=east,spawn=npc_leader": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=south,spawn=npc_leader": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=west,spawn=npc_leader": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=north,spawn=npc_bandit": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=east,spawn=npc_bandit": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=south,spawn=npc_bandit": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=west,spawn=npc_bandit": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=north,spawn=npc_wanderer": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=east,spawn=npc_wanderer": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=south,spawn=npc_wanderer": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=west,spawn=npc_wanderer": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=north,spawn=npc_researcher": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=east,spawn=npc_researcher": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=south,spawn=npc_researcher": {
+			"model": "deadlands:block/spawn_marker"
+		},
+		"facing=west,spawn=npc_researcher": {
+			"model": "deadlands:block/spawn_marker"
+		}
+	}
+}

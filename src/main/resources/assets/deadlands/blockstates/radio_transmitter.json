@@ -1,0 +1,34 @@
+{
+	"variants": {
+		"facing=north,repaired=false": {
+			"model": "deadlands:block/radio_transmitter"
+		},
+		"facing=north,repaired=true": {
+			"model": "deadlands:block/radio_transmitter_on"
+		},
+		"facing=east,repaired=false": {
+			"model": "deadlands:block/radio_transmitter",
+			"y": 90
+		},
+		"facing=east,repaired=true": {
+			"model": "deadlands:block/radio_transmitter_on",
+			"y": 90
+		},
+		"facing=south,repaired=false": {
+			"model": "deadlands:block/radio_transmitter",
+			"y": 180
+		},
+		"facing=south,repaired=true": {
+			"model": "deadlands:block/radio_transmitter_on",
+			"y": 180
+		},
+		"facing=west,repaired=false": {
+			"model": "deadlands:block/radio_transmitter",
+			"y": 270
+		},
+		"facing=west,repaired=true": {
+			"model": "deadlands:block/radio_transmitter_on",
+			"y": 270
+		}
+	}
+}

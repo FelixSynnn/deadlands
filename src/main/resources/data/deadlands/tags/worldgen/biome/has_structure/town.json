@@ -1,0 +1,16 @@
+{
+	"replace": false,
+	"values": [
+		"#deadlands:is_deadlands",
+		"minecraft:plains",
+		"minecraft:sunflower_plains",
+		"minecraft:meadow",
+		"minecraft:forest",
+		"minecraft:birch_forest",
+		"minecraft:flower_forest",
+		"minecraft:taiga",
+		"minecraft:snowy_plains",
+		"minecraft:savanna",
+		"minecraft:desert"
+	]
+}

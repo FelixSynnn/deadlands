@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"facing=north": {
+			"model": "deadlands:block/workbench"
+		},
+		"facing=east": {
+			"model": "deadlands:block/workbench",
+			"y": 90
+		},
+		"facing=south": {
+			"model": "deadlands:block/workbench",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "deadlands:block/workbench",
+			"y": 270
+		}
+	}
+}

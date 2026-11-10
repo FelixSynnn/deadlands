@@ -1,0 +1,13 @@
+{
+	"variants": {
+		"type=bottom": {
+			"model": "deadlands:block/concrete_slab"
+		},
+		"type=top": {
+			"model": "deadlands:block/concrete_slab_top"
+		},
+		"type=double": {
+			"model": "deadlands:block/concrete"
+		}
+	}
+}

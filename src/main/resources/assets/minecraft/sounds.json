@@ -1,0 +1,11 @@
+{
+	"music.menu": {
+		"replace": true,
+		"sounds": [
+			{
+				"name": "deadlands:music/title_theme",
+				"stream": true
+			}
+		]
+	}
+}

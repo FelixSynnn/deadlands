@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:random_selector",
+	"config": {
+		"features": [
+			{
+				"feature": {
+					"feature": "deadlands:dead_tree_bare",
+					"placement": []
+				},
+				"chance": 0.4
+			}
+		],
+		"default": {
+			"feature": "deadlands:marsh_tree",
+			"placement": []
+		}
+	}
+}

@@ -1,0 +1,18 @@
+{
+	"structures": [
+		{
+			"structure": "deadlands:roadside_stop",
+			"weight": 1
+		}
+	],
+	"placement": {
+		"type": "minecraft:random_spread",
+		"spacing": 26,
+		"separation": 10,
+		"salt": 77100121,
+		"exclusion_zone": {
+			"other_set": "deadlands:towns",
+			"chunk_count": 9
+		}
+	}
+}

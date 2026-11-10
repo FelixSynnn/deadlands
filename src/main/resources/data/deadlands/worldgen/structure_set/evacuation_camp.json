@@ -1,0 +1,18 @@
+{
+	"structures": [
+		{
+			"structure": "deadlands:evacuation_camp",
+			"weight": 1
+		}
+	],
+	"placement": {
+		"type": "minecraft:random_spread",
+		"spacing": 34,
+		"separation": 12,
+		"salt": 77100131,
+		"exclusion_zone": {
+			"other_set": "deadlands:towns",
+			"chunk_count": 9
+		}
+	}
+}

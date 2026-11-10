@@ -1,0 +1,82 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"metal": "deadlands:block/decor/galvanized",
+		"head": "deadlands:block/decor/traffic_lens",
+		"particle": "deadlands:block/decor/galvanized"
+	},
+	"elements": [
+		{
+			"from": [
+				6.5,
+				0,
+				6.5
+			],
+			"to": [
+				9.5,
+				16,
+				9.5
+			],
+			"faces": {
+				"north": {
+					"texture": "#metal"
+				},
+				"south": {
+					"texture": "#metal"
+				},
+				"east": {
+					"texture": "#metal"
+				},
+				"west": {
+					"texture": "#metal"
+				},
+				"up": {
+					"texture": "#metal",
+					"cullface": "up"
+				},
+				"down": {
+					"texture": "#metal",
+					"cullface": "down"
+				}
+			}
+		},
+		{
+			"from": [
+				5,
+				4,
+				2.5
+			],
+			"to": [
+				11,
+				15,
+				6.5
+			],
+			"faces": {
+				"north": {
+					"texture": "#head",
+					"uv": [
+						0,
+						0,
+						6,
+						11
+					]
+				},
+				"south": {
+					"texture": "#metal"
+				},
+				"east": {
+					"texture": "#metal"
+				},
+				"west": {
+					"texture": "#metal"
+				},
+				"up": {
+					"texture": "#metal"
+				},
+				"down": {
+					"texture": "#metal"
+				}
+			}
+		}
+	]
+}

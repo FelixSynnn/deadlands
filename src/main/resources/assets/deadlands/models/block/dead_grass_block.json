@@ -1,0 +1,8 @@
+{
+	"parent": "minecraft:block/cube_bottom_top",
+	"textures": {
+		"top": "deadlands:block/dead_grass_block_top",
+		"side": "deadlands:block/dead_grass_block_side",
+		"bottom": "deadlands:block/dry_dirt"
+	}
+}

@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:random_selector",
+	"config": {
+		"features": [
+			{
+				"feature": {
+					"feature": "deadlands:dead_tree",
+					"placement": []
+				},
+				"chance": 0.25
+			}
+		],
+		"default": {
+			"feature": "deadlands:overgrown_oak",
+			"placement": []
+		}
+	}
+}

@@ -1,0 +1,115 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"metal": "deadlands:block/decor/galvanized",
+		"housing": "deadlands:block/decor/lamp_housing",
+		"lens": "deadlands:block/decor/lamp_lens",
+		"particle": "deadlands:block/decor/galvanized"
+	},
+	"elements": [
+		{
+			"from": [
+				6.5,
+				0,
+				6.5
+			],
+			"to": [
+				9.5,
+				10,
+				9.5
+			],
+			"faces": {
+				"north": {
+					"texture": "#metal"
+				},
+				"south": {
+					"texture": "#metal"
+				},
+				"east": {
+					"texture": "#metal"
+				},
+				"west": {
+					"texture": "#metal"
+				},
+				"up": {
+					"texture": "#metal"
+				},
+				"down": {
+					"texture": "#metal",
+					"cullface": "down"
+				}
+			}
+		},
+		{
+			"from": [
+				6.5,
+				8,
+				2
+			],
+			"to": [
+				9.5,
+				10,
+				6.5
+			],
+			"faces": {
+				"north": {
+					"texture": "#metal"
+				},
+				"south": {
+					"texture": "#metal"
+				},
+				"east": {
+					"texture": "#metal"
+				},
+				"west": {
+					"texture": "#metal"
+				},
+				"up": {
+					"texture": "#metal"
+				},
+				"down": {
+					"texture": "#metal"
+				}
+			}
+		},
+		{
+			"from": [
+				4.5,
+				5,
+				0
+			],
+			"to": [
+				11.5,
+				8,
+				6
+			],
+			"faces": {
+				"north": {
+					"texture": "#housing",
+					"cullface": "north"
+				},
+				"south": {
+					"texture": "#housing"
+				},
+				"east": {
+					"texture": "#housing"
+				},
+				"west": {
+					"texture": "#housing"
+				},
+				"up": {
+					"texture": "#housing"
+				},
+				"down": {
+					"texture": "#lens",
+					"uv": [
+						0,
+						0,
+						7,
+						6
+					]
+				}
+			}
+		}
+	]
+}

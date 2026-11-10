@@ -1,0 +1,12 @@
+{
+	"replace": false,
+	"values": [
+		"deadlands:residential_nest",
+		"deadlands:industrial_nest",
+		"deadlands:military_nest",
+		"deadlands:underground_nest",
+		"deadlands:advanced_nest",
+		"deadlands:biomass",
+		"deadlands:biomass_growth"
+	]
+}

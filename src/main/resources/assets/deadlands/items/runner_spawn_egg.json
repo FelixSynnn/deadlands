@@ -1,0 +1,6 @@
+{
+	"model": {
+		"type": "minecraft:model",
+		"model": "deadlands:item/runner_spawn_egg"
+	}
+}

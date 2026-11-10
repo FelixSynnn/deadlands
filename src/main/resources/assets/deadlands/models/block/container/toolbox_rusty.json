@@ -1,0 +1,17 @@
+{
+	"parent": "deadlands:block/container/toolbox",
+	"textures": {
+		"front": "deadlands:block/container/toolbox/rusty/front",
+		"back": "deadlands:block/container/toolbox/rusty/back",
+		"side": "deadlands:block/container/toolbox/rusty/side",
+		"inside_floor": "deadlands:block/container/toolbox/rusty/inside_floor",
+		"inside_wall": "deadlands:block/container/toolbox/rusty/inside_wall",
+		"rim": "deadlands:block/container/toolbox/rusty/rim",
+		"bottom": "deadlands:block/container/toolbox/rusty/bottom",
+		"lid_top": "deadlands:block/container/toolbox/rusty/lid_top",
+		"lid_side": "deadlands:block/container/toolbox/rusty/lid_side",
+		"lid_inside": "deadlands:block/container/toolbox/rusty/lid_inside",
+		"handle": "deadlands:block/container/toolbox/rusty/handle",
+		"particle": "deadlands:block/container/toolbox/rusty/side"
+	}
+}

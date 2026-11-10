@@ -1,0 +1,124 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"body": "deadlands:block/decor/fuel_pump_body",
+		"front": "deadlands:block/decor/fuel_pump_front",
+		"hose": "deadlands:block/decor/galvanized",
+		"particle": "deadlands:block/decor/fuel_pump_body"
+	},
+	"elements": [
+		{
+			"from": [
+				2,
+				0,
+				5
+			],
+			"to": [
+				14,
+				16,
+				11
+			],
+			"faces": {
+				"north": {
+					"texture": "#front",
+					"uv": [
+						0,
+						0,
+						12,
+						16
+					]
+				},
+				"south": {
+					"texture": "#front",
+					"uv": [
+						0,
+						0,
+						12,
+						16
+					]
+				},
+				"east": {
+					"texture": "#body"
+				},
+				"west": {
+					"texture": "#body"
+				},
+				"up": {
+					"texture": "#body",
+					"cullface": "up"
+				},
+				"down": {
+					"texture": "#body",
+					"cullface": "down"
+				}
+			}
+		},
+		{
+			"from": [
+				0,
+				0,
+				4
+			],
+			"to": [
+				16,
+				1,
+				12
+			],
+			"faces": {
+				"north": {
+					"texture": "#hose"
+				},
+				"south": {
+					"texture": "#hose"
+				},
+				"east": {
+					"texture": "#hose",
+					"cullface": "east"
+				},
+				"west": {
+					"texture": "#hose",
+					"cullface": "west"
+				},
+				"up": {
+					"texture": "#hose"
+				},
+				"down": {
+					"texture": "#hose",
+					"cullface": "down"
+				}
+			}
+		},
+		{
+			"from": [
+				14,
+				5,
+				7
+			],
+			"to": [
+				15,
+				12,
+				9
+			],
+			"faces": {
+				"north": {
+					"texture": "#hose"
+				},
+				"south": {
+					"texture": "#hose"
+				},
+				"east": {
+					"texture": "#hose"
+				},
+				"west": {
+					"texture": "#hose"
+				},
+				"up": {
+					"texture": "#hose"
+				},
+				"down": {
+					"texture": "#hose"
+				}
+			}
+		}
+	]
+}

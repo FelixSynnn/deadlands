@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"facing=north": {
+			"model": "deadlands:block/fuel_pump"
+		},
+		"facing=east": {
+			"model": "deadlands:block/fuel_pump",
+			"y": 90
+		},
+		"facing=south": {
+			"model": "deadlands:block/fuel_pump",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "deadlands:block/fuel_pump",
+			"y": 270
+		}
+	}
+}

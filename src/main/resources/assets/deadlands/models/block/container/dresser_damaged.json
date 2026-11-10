@@ -1,0 +1,13 @@
+{
+	"parent": "deadlands:block/container/dresser",
+	"textures": {
+		"front": "deadlands:block/container/dresser/damaged/front",
+		"back": "deadlands:block/container/dresser/damaged/back",
+		"side": "deadlands:block/container/dresser/damaged/side",
+		"top": "deadlands:block/container/dresser/damaged/top",
+		"bottom": "deadlands:block/container/dresser/damaged/bottom",
+		"drawer": "deadlands:block/container/dresser/damaged/drawer",
+		"clothes": "deadlands:block/container/dresser/damaged/clothes",
+		"particle": "deadlands:block/container/dresser/damaged/side"
+	}
+}

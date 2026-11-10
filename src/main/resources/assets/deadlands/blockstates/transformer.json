@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"facing=north": {
+			"model": "deadlands:block/transformer"
+		},
+		"facing=east": {
+			"model": "deadlands:block/transformer",
+			"y": 90
+		},
+		"facing=south": {
+			"model": "deadlands:block/transformer",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "deadlands:block/transformer",
+			"y": 270
+		}
+	}
+}

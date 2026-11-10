@@ -1,0 +1,8 @@
+{
+	"parent": "minecraft:block/cube_bottom_top",
+	"textures": {
+		"top": "deadlands:block/asphalt_yellow_line",
+		"bottom": "deadlands:block/asphalt",
+		"side": "deadlands:block/asphalt"
+	}
+}

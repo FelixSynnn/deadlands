@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:random_selector",
+	"config": {
+		"features": [
+			{
+				"feature": {
+					"feature": "deadlands:charred_stump",
+					"placement": []
+				},
+				"chance": 0.25
+			}
+		],
+		"default": {
+			"feature": "deadlands:charred_tree",
+			"placement": []
+		}
+	}
+}

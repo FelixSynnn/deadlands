@@ -1,0 +1,12 @@
+{
+	"replace": false,
+	"values": [
+		"deadlands:overgrown_suburbs",
+		"deadlands:rural_countryside",
+		"deadlands:abandoned_farmland",
+		"deadlands:dead_forest",
+		"deadlands:industrial_wasteland",
+		"minecraft:plains",
+		"minecraft:forest"
+	]
+}

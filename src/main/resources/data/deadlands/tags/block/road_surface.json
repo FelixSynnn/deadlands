@@ -1,0 +1,18 @@
+{
+	"replace": false,
+	"values": [
+		"deadlands:asphalt",
+		"deadlands:cracked_asphalt",
+		"deadlands:asphalt_yellow_line",
+		"deadlands:asphalt_white_line",
+		"deadlands:asphalt_slab",
+		"deadlands:cracked_asphalt_slab",
+		"deadlands:sidewalk",
+		"deadlands:sidewalk_slab",
+		"deadlands:concrete",
+		"deadlands:cracked_concrete",
+		"deadlands:concrete_slab",
+		"minecraft:dirt_path",
+		"minecraft:gravel"
+	]
+}

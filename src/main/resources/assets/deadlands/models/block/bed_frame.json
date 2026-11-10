@@ -1,0 +1,172 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"frame": "deadlands:block/decor/dark_wood",
+		"top": "deadlands:block/decor/mattress_top",
+		"side": "deadlands:block/decor/mattress_side",
+		"pillow": "deadlands:block/decor/pillow",
+		"particle": "deadlands:block/decor/dark_wood"
+	},
+	"elements": [
+		{
+			"from": [
+				0,
+				0,
+				0
+			],
+			"to": [
+				16,
+				5,
+				16
+			],
+			"faces": {
+				"north": {
+					"texture": "#frame",
+					"cullface": "north"
+				},
+				"south": {
+					"texture": "#frame",
+					"cullface": "south"
+				},
+				"east": {
+					"texture": "#frame",
+					"cullface": "east"
+				},
+				"west": {
+					"texture": "#frame",
+					"cullface": "west"
+				},
+				"up": {
+					"texture": "#frame"
+				},
+				"down": {
+					"texture": "#frame",
+					"cullface": "down"
+				}
+			}
+		},
+		{
+			"from": [
+				0,
+				5,
+				15
+			],
+			"to": [
+				16,
+				9,
+				16
+			],
+			"faces": {
+				"north": {
+					"texture": "#frame"
+				},
+				"south": {
+					"texture": "#frame",
+					"cullface": "south"
+				},
+				"east": {
+					"texture": "#frame",
+					"cullface": "east"
+				},
+				"west": {
+					"texture": "#frame",
+					"cullface": "west"
+				},
+				"up": {
+					"texture": "#frame"
+				},
+				"down": {
+					"texture": "#frame"
+				}
+			}
+		},
+		{
+			"from": [
+				0.5,
+				5,
+				0.5
+			],
+			"to": [
+				15.5,
+				8,
+				15
+			],
+			"faces": {
+				"north": {
+					"texture": "#side",
+					"uv": [
+						0,
+						0,
+						15,
+						3
+					]
+				},
+				"south": {
+					"texture": "#side",
+					"uv": [
+						0,
+						0,
+						15,
+						3
+					]
+				},
+				"east": {
+					"texture": "#side",
+					"uv": [
+						0,
+						0,
+						15,
+						3
+					]
+				},
+				"west": {
+					"texture": "#side",
+					"uv": [
+						0,
+						0,
+						15,
+						3
+					]
+				},
+				"up": {
+					"texture": "#top"
+				},
+				"down": {
+					"texture": "#frame"
+				}
+			}
+		},
+		{
+			"from": [
+				2.5,
+				8,
+				11.5
+			],
+			"to": [
+				13.5,
+				9,
+				14.5
+			],
+			"faces": {
+				"north": {
+					"texture": "#pillow"
+				},
+				"south": {
+					"texture": "#pillow"
+				},
+				"east": {
+					"texture": "#pillow"
+				},
+				"west": {
+					"texture": "#pillow"
+				},
+				"up": {
+					"texture": "#pillow"
+				},
+				"down": {
+					"texture": "#pillow"
+				}
+			}
+		}
+	]
+}

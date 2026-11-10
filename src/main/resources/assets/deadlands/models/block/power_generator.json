@@ -1,0 +1,82 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"body": "deadlands:block/decor/generator_body",
+		"front": "deadlands:block/decor/generator_front_off",
+		"particle": "deadlands:block/decor/generator_body"
+	},
+	"elements": [
+		{
+			"from": [
+				1,
+				0,
+				2
+			],
+			"to": [
+				15,
+				14,
+				14
+			],
+			"faces": {
+				"north": {
+					"texture": "#front",
+					"uv": [
+						0,
+						0,
+						14,
+						14
+					]
+				},
+				"south": {
+					"texture": "#body"
+				},
+				"east": {
+					"texture": "#body"
+				},
+				"west": {
+					"texture": "#body"
+				},
+				"up": {
+					"texture": "#body"
+				},
+				"down": {
+					"texture": "#body",
+					"cullface": "down"
+				}
+			}
+		},
+		{
+			"from": [
+				2,
+				14,
+				4
+			],
+			"to": [
+				6,
+				16,
+				8
+			],
+			"faces": {
+				"north": {
+					"texture": "#body"
+				},
+				"south": {
+					"texture": "#body"
+				},
+				"east": {
+					"texture": "#body"
+				},
+				"west": {
+					"texture": "#body"
+				},
+				"up": {
+					"texture": "#body",
+					"cullface": "up"
+				},
+				"down": {
+					"texture": "#body"
+				}
+			}
+		}
+	]
+}

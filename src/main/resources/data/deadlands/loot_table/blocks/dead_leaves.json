@@ -1,0 +1,52 @@
+{
+	"type": "minecraft:block",
+	"pools": [
+		{
+			"rolls": 1.0,
+			"bonus_rolls": 0.0,
+			"entries": [
+				{
+					"type": "minecraft:alternatives",
+					"children": [
+						{
+							"type": "minecraft:item",
+							"name": "deadlands:dead_leaves",
+							"conditions": [
+								{
+									"condition": "minecraft:match_tool",
+									"predicate": {
+										"items": "minecraft:shears"
+									}
+								}
+							]
+						},
+						{
+							"type": "minecraft:item",
+							"name": "minecraft:stick",
+							"conditions": [
+								{
+									"condition": "minecraft:survives_explosion"
+								},
+								{
+									"condition": "minecraft:random_chance",
+									"chance": 0.08
+								}
+							],
+							"functions": [
+								{
+									"function": "minecraft:set_count",
+									"count": {
+										"type": "minecraft:uniform",
+										"min": 1.0,
+										"max": 2.0
+									}
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"random_sequence": "deadlands:blocks/dead_leaves"
+}

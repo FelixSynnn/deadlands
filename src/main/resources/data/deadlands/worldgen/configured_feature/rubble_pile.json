@@ -1,0 +1,34 @@
+{
+	"type": "minecraft:block_pile",
+	"config": {
+		"state_provider": {
+			"type": "minecraft:weighted_state_provider",
+			"entries": [
+				{
+					"data": {
+						"Name": "deadlands:rubble"
+					},
+					"weight": 4
+				},
+				{
+					"data": {
+						"Name": "deadlands:cracked_concrete"
+					},
+					"weight": 2
+				},
+				{
+					"data": {
+						"Name": "deadlands:concrete"
+					},
+					"weight": 1
+				},
+				{
+					"data": {
+						"Name": "minecraft:gravel"
+					},
+					"weight": 1
+				}
+			]
+		}
+	}
+}

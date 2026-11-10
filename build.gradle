@@ -1,0 +1,83 @@
+plugins {
+	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+	archivesName = project.archives_base_name
+}
+
+repositories {
+	// Loom adds the Minecraft, Fabric and library repositories automatically.
+	// Only add repositories here when depending on other mods.
+}
+
+loom {
+	// Client-only code lives in src/client so it can never be loaded on a dedicated server.
+	splitEnvironmentSourceSets()
+
+	mods {
+		"deadlands" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
+
+	// Separate folders so a dev client and a dev server can run side by side (multiplayer testing)
+	// without fighting over logs/latest.log and the config file.
+	runs {
+		client {
+			runDir "run/client"
+		}
+		server {
+			runDir "run/server"
+		}
+	}
+}
+
+fabricApi {
+	configureTests {
+		// Game tests live in src/gametest with their own fabric.mod.json.
+		createSourceSet = true
+		modId = "deadlands-gametest"
+		// Server game tests run automatically as part of `gradlew build`.
+		enableGameTests = true
+		// Client game tests run with `gradlew runClientGameTest`.
+		enableClientGameTests = true
+		// Setting this to true accepts the Minecraft EULA for the test server.
+		eula = true
+	}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	// Mojang's official names: matches the unobfuscated 26.x line, which keeps a future port cheap.
+	mappings loom.officialMojangMappings()
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+}
+
+processResources {
+	def version = project.version
+	inputs.property "version", version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 21
+	it.options.encoding = "UTF-8"
+}
+
+java {
+	withSourcesJar()
+	// Gradle/Loom itself needs Java 25+, but Minecraft 1.21.11 ships with Java 21:
+	// compile against and run the game on a Java 21 toolchain.
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}

@@ -1,0 +1,9 @@
+{
+	"replace": false,
+	"values": [
+		"deadlands:asphalt_slab",
+		"deadlands:cracked_asphalt_slab",
+		"deadlands:concrete_slab",
+		"deadlands:sidewalk_slab"
+	]
+}

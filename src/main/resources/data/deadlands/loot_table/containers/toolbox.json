@@ -1,0 +1,181 @@
+{
+	"type": "minecraft:chest",
+	"pools": [
+		{
+			"rolls": {
+				"type": "minecraft:uniform",
+				"min": 2,
+				"max": 3
+			},
+			"bonus_rolls": 0.0,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:iron_nugget",
+					"weight": 12,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 2,
+								"max": 8
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:iron_ingot",
+					"weight": 6,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 1,
+								"max": 2
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:shears",
+					"weight": 4,
+					"functions": [
+						{
+							"function": "minecraft:set_damage",
+							"damage": {
+								"type": "minecraft:uniform",
+								"min": 0.1,
+								"max": 0.6
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:flint_and_steel",
+					"weight": 4,
+					"functions": [
+						{
+							"function": "minecraft:set_damage",
+							"damage": {
+								"type": "minecraft:uniform",
+								"min": 0.2,
+								"max": 0.7
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:iron_chain",
+					"weight": 5,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 1,
+								"max": 3
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:string",
+					"weight": 6,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 1,
+								"max": 3
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:lead",
+					"weight": 3
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:iron_pickaxe",
+					"weight": 2,
+					"functions": [
+						{
+							"function": "minecraft:set_damage",
+							"damage": {
+								"type": "minecraft:uniform",
+								"min": 0.2,
+								"max": 0.6
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:iron_axe",
+					"weight": 2,
+					"functions": [
+						{
+							"function": "minecraft:set_damage",
+							"damage": {
+								"type": "minecraft:uniform",
+								"min": 0.2,
+								"max": 0.6
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:crowbar",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:fire_axe",
+					"weight": 1
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:wrench",
+					"weight": 3
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:engine_parts",
+					"weight": 4
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:tire",
+					"weight": 3
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:car_battery",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:body_panel",
+					"weight": 3
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:fuel_can",
+					"weight": 2
+				}
+			]
+		}
+	],
+	"random_sequence": "deadlands:containers/toolbox"
+}

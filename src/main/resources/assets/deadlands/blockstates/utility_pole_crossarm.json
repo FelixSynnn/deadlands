@@ -1,0 +1,11 @@
+{
+	"variants": {
+		"axis=x": {
+			"model": "deadlands:block/utility_pole_crossarm"
+		},
+		"axis=z": {
+			"model": "deadlands:block/utility_pole_crossarm",
+			"y": 90
+		}
+	}
+}

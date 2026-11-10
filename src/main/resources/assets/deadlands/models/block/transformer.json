@@ -1,0 +1,48 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"body": "deadlands:block/decor/transformer",
+		"particle": "deadlands:block/decor/transformer"
+	},
+	"elements": [
+		{
+			"from": [
+				2,
+				0,
+				3
+			],
+			"to": [
+				14,
+				13,
+				13
+			],
+			"faces": {
+				"north": {
+					"texture": "#body",
+					"uv": [
+						0,
+						0,
+						12,
+						13
+					]
+				},
+				"south": {
+					"texture": "#body"
+				},
+				"east": {
+					"texture": "#body"
+				},
+				"west": {
+					"texture": "#body"
+				},
+				"up": {
+					"texture": "#body"
+				},
+				"down": {
+					"texture": "#body",
+					"cullface": "down"
+				}
+			}
+		}
+	]
+}

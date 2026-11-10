@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"facing=north": {
+			"model": "deadlands:block/chair"
+		},
+		"facing=east": {
+			"model": "deadlands:block/chair",
+			"y": 90
+		},
+		"facing=south": {
+			"model": "deadlands:block/chair",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "deadlands:block/chair",
+			"y": 270
+		}
+	}
+}

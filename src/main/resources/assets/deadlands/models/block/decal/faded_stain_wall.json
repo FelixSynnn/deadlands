@@ -1,0 +1,33 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"decal": "deadlands:block/decal/faded_stain",
+		"particle": "deadlands:block/decal/faded_stain"
+	},
+	"elements": [
+		{
+			"from": [
+				0,
+				0,
+				15.9
+			],
+			"to": [
+				16,
+				16,
+				15.9
+			],
+			"shade": false,
+			"faces": {
+				"north": {
+					"texture": "#decal",
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					]
+				}
+			}
+		}
+	]
+}

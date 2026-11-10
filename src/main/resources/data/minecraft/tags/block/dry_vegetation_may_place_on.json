@@ -1,0 +1,9 @@
+{
+	"replace": false,
+	"values": [
+		"deadlands:dead_grass_block",
+		"deadlands:dry_dirt",
+		"deadlands:cracked_earth",
+		"deadlands:ash"
+	]
+}

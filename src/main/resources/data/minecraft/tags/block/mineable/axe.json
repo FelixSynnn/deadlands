@@ -1,0 +1,28 @@
+{
+	"replace": false,
+	"values": [
+		"deadlands:boarded_planks",
+		"deadlands:weathered_siding",
+		"deadlands:military_crate",
+		"deadlands:dead_log",
+		"deadlands:charred_log",
+		"deadlands:utility_pole",
+		"deadlands:utility_pole_crossarm",
+		"deadlands:table",
+		"deadlands:chair",
+		"deadlands:counter",
+		"deadlands:bed_frame",
+		"deadlands:couch",
+		"deadlands:desk",
+		"deadlands:kitchen_cupboard",
+		"deadlands:dresser",
+		"deadlands:school_desk",
+		"deadlands:bookshelf",
+		"deadlands:residential_nest",
+		"deadlands:industrial_nest",
+		"deadlands:military_nest",
+		"deadlands:underground_nest",
+		"deadlands:advanced_nest",
+		"deadlands:workbench"
+	]
+}

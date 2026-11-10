@@ -1,0 +1,18 @@
+{
+	"structures": [
+		{
+			"structure": "deadlands:treatment_plant",
+			"weight": 1
+		}
+	],
+	"placement": {
+		"type": "minecraft:random_spread",
+		"spacing": 60,
+		"separation": 24,
+		"salt": 77100081,
+		"exclusion_zone": {
+			"other_set": "deadlands:towns",
+			"chunk_count": 9
+		}
+	}
+}

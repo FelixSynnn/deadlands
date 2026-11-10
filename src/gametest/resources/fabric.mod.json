@@ -1,0 +1,26 @@
+{
+	"schemaVersion": 1,
+	"id": "deadlands-gametest",
+	"version": "1.0.0",
+	"name": "DEADLANDS Game Tests",
+	"description": "Automated server and client game tests for DEADLANDS. Not shipped in the mod JAR.",
+	"environment": "*",
+	"entrypoints": {
+		"fabric-gametest": [
+			"com.deadlands.test.DeadlandsServerGameTest",
+			"com.deadlands.test.DeadlandsContentGameTest",
+			"com.deadlands.test.DeadlandsWorldGameTest",
+			"com.deadlands.test.DeadlandsInfectedGameTest",
+			"com.deadlands.test.DeadlandsSurvivalGameTest",
+			"com.deadlands.test.DeadlandsVehicleGameTest",
+			"com.deadlands.test.DeadlandsNpcGameTest",
+			"com.deadlands.test.DeadlandsStoryGameTest"
+		],
+		"fabric-client-gametest": [
+			"com.deadlands.test.DeadlandsClientGameTest"
+		]
+	},
+	"depends": {
+		"deadlands": "*"
+	}
+}

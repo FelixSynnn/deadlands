@@ -1,0 +1,13 @@
+{
+	"replace": false,
+	"values": [
+		"#minecraft:wooden_doors",
+		"#minecraft:wooden_trapdoors",
+		"#minecraft:fence_gates",
+		"#minecraft:wooden_fences",
+		"minecraft:glass",
+		"minecraft:glass_pane",
+		"deadlands:boarded_planks",
+		"deadlands:broken_glass"
+	]
+}

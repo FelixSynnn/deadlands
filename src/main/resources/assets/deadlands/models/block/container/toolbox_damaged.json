@@ -1,0 +1,17 @@
+{
+	"parent": "deadlands:block/container/toolbox",
+	"textures": {
+		"front": "deadlands:block/container/toolbox/damaged/front",
+		"back": "deadlands:block/container/toolbox/damaged/back",
+		"side": "deadlands:block/container/toolbox/damaged/side",
+		"inside_floor": "deadlands:block/container/toolbox/damaged/inside_floor",
+		"inside_wall": "deadlands:block/container/toolbox/damaged/inside_wall",
+		"rim": "deadlands:block/container/toolbox/damaged/rim",
+		"bottom": "deadlands:block/container/toolbox/damaged/bottom",
+		"lid_top": "deadlands:block/container/toolbox/damaged/lid_top",
+		"lid_side": "deadlands:block/container/toolbox/damaged/lid_side",
+		"lid_inside": "deadlands:block/container/toolbox/damaged/lid_inside",
+		"handle": "deadlands:block/container/toolbox/damaged/handle",
+		"particle": "deadlands:block/container/toolbox/damaged/side"
+	}
+}

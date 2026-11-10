@@ -1,0 +1,11 @@
+{
+	"variants": {
+		"axis=x": {
+			"model": "deadlands:block/asphalt_white_line",
+			"y": 90
+		},
+		"axis=z": {
+			"model": "deadlands:block/asphalt_white_line"
+		}
+	}
+}

@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "deadlands:item/patient_zero_spawn_egg"
+	}
+}

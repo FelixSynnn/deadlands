@@ -1,0 +1,21 @@
+{
+	"required": true,
+	"package": "com.deadlands.client.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"AtmosphericFogMixin",
+		"BossHealthOverlayAccessor",
+		"CameraMixin",
+		"HumanoidModelMixin",
+		"HumanoidRenderStateMixin",
+		"LivingEntityRendererMixin",
+		"MinecraftMixin",
+		"ScreenMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

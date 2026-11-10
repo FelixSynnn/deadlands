@@ -1,0 +1,33 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"decal": "deadlands:block/decal/evacuation_notice",
+		"particle": "deadlands:block/decal/evacuation_notice"
+	},
+	"elements": [
+		{
+			"from": [
+				0,
+				0,
+				15.9
+			],
+			"to": [
+				16,
+				16,
+				15.9
+			],
+			"shade": false,
+			"faces": {
+				"north": {
+					"texture": "#decal",
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					]
+				}
+			}
+		}
+	]
+}

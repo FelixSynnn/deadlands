@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"facing=north": {
+			"model": "deadlands:block/counter"
+		},
+		"facing=east": {
+			"model": "deadlands:block/counter",
+			"y": 90
+		},
+		"facing=south": {
+			"model": "deadlands:block/counter",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "deadlands:block/counter",
+			"y": 270
+		}
+	}
+}

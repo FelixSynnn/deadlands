@@ -1,0 +1,179 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"top": "deadlands:block/decor/wood",
+		"legs": "deadlands:block/decor/dark_wood",
+		"particle": "deadlands:block/decor/wood"
+	},
+	"elements": [
+		{
+			"from": [
+				0,
+				13,
+				0
+			],
+			"to": [
+				16,
+				16,
+				16
+			],
+			"faces": {
+				"north": {
+					"texture": "#top",
+					"cullface": "north"
+				},
+				"south": {
+					"texture": "#top",
+					"cullface": "south"
+				},
+				"east": {
+					"texture": "#top",
+					"cullface": "east"
+				},
+				"west": {
+					"texture": "#top",
+					"cullface": "west"
+				},
+				"up": {
+					"texture": "#top",
+					"cullface": "up"
+				},
+				"down": {
+					"texture": "#top"
+				}
+			}
+		},
+		{
+			"from": [
+				1,
+				0,
+				1
+			],
+			"to": [
+				3,
+				13,
+				3
+			],
+			"faces": {
+				"north": {
+					"texture": "#legs"
+				},
+				"south": {
+					"texture": "#legs"
+				},
+				"east": {
+					"texture": "#legs"
+				},
+				"west": {
+					"texture": "#legs"
+				},
+				"up": {
+					"texture": "#legs"
+				},
+				"down": {
+					"texture": "#legs",
+					"cullface": "down"
+				}
+			}
+		},
+		{
+			"from": [
+				1,
+				0,
+				13
+			],
+			"to": [
+				3,
+				13,
+				15
+			],
+			"faces": {
+				"north": {
+					"texture": "#legs"
+				},
+				"south": {
+					"texture": "#legs"
+				},
+				"east": {
+					"texture": "#legs"
+				},
+				"west": {
+					"texture": "#legs"
+				},
+				"up": {
+					"texture": "#legs"
+				},
+				"down": {
+					"texture": "#legs",
+					"cullface": "down"
+				}
+			}
+		},
+		{
+			"from": [
+				13,
+				0,
+				1
+			],
+			"to": [
+				15,
+				13,
+				3
+			],
+			"faces": {
+				"north": {
+					"texture": "#legs"
+				},
+				"south": {
+					"texture": "#legs"
+				},
+				"east": {
+					"texture": "#legs"
+				},
+				"west": {
+					"texture": "#legs"
+				},
+				"up": {
+					"texture": "#legs"
+				},
+				"down": {
+					"texture": "#legs",
+					"cullface": "down"
+				}
+			}
+		},
+		{
+			"from": [
+				13,
+				0,
+				13
+			],
+			"to": [
+				15,
+				13,
+				15
+			],
+			"faces": {
+				"north": {
+					"texture": "#legs"
+				},
+				"south": {
+					"texture": "#legs"
+				},
+				"east": {
+					"texture": "#legs"
+				},
+				"west": {
+					"texture": "#legs"
+				},
+				"up": {
+					"texture": "#legs"
+				},
+				"down": {
+					"texture": "#legs",
+					"cullface": "down"
+				}
+			}
+		}
+	]
+}

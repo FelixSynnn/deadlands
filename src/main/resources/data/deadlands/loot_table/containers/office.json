@@ -1,0 +1,97 @@
+{
+	"type": "minecraft:chest",
+	"pools": [
+		{
+			"rolls": {
+				"type": "minecraft:uniform",
+				"min": 2,
+				"max": 4
+			},
+			"bonus_rolls": 0.0,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:paper",
+					"weight": 16,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 2,
+								"max": 6
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:book",
+					"weight": 6
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:writable_book",
+					"weight": 4
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:map",
+					"weight": 5
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:compass",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:ink_sac",
+					"weight": 4
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:name_tag",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:clock",
+					"weight": 1
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:key",
+					"weight": 1,
+					"functions": [
+						{
+							"function": "minecraft:set_components",
+							"components": {
+								"deadlands:key_id": "records_room"
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:key",
+					"weight": 1,
+					"functions": [
+						{
+							"function": "minecraft:set_components",
+							"components": {
+								"deadlands:key_id": "maintenance"
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:keycard_green",
+					"weight": 1
+				}
+			]
+		}
+	],
+	"random_sequence": "deadlands:containers/office"
+}

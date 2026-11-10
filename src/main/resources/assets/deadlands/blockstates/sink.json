@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"facing=north": {
+			"model": "deadlands:block/sink"
+		},
+		"facing=east": {
+			"model": "deadlands:block/sink",
+			"y": 90
+		},
+		"facing=south": {
+			"model": "deadlands:block/sink",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "deadlands:block/sink",
+			"y": 270
+		}
+	}
+}

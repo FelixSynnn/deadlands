@@ -1,0 +1,41 @@
+{
+	"model": {
+		"type": "minecraft:select",
+		"property": "minecraft:custom_model_data",
+		"index": 0,
+		"cases": [
+			{
+				"when": "journal",
+				"model": {
+					"type": "minecraft:model",
+					"model": "deadlands:item/document_journal"
+				}
+			},
+			{
+				"when": "newspaper",
+				"model": {
+					"type": "minecraft:model",
+					"model": "deadlands:item/document_newspaper"
+				}
+			},
+			{
+				"when": "tape",
+				"model": {
+					"type": "minecraft:model",
+					"model": "deadlands:item/document_tape"
+				}
+			},
+			{
+				"when": "photo",
+				"model": {
+					"type": "minecraft:model",
+					"model": "deadlands:item/document_photo"
+				}
+			}
+		],
+		"fallback": {
+			"type": "minecraft:model",
+			"model": "deadlands:item/document"
+		}
+	}
+}

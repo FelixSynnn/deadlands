@@ -1,0 +1,56 @@
+{
+	"type": "minecraft:chest",
+	"pools": [
+		{
+			"rolls": {
+				"type": "minecraft:uniform",
+				"min": 1,
+				"max": 1
+			},
+			"bonus_rolls": 0.0,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:bandage",
+					"weight": 3
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:jerky",
+					"weight": 3
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:water_bottle",
+					"weight": 6
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:canned_soup",
+					"weight": 4
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:stale_bread",
+					"weight": 3
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:spoiled_can",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:dirty_water_bottle",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:purification_tablet",
+					"weight": 2
+				}
+			]
+		}
+	],
+	"random_sequence": "deadlands:containers/fridge_rare"
+}

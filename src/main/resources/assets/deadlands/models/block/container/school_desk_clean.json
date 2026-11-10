@@ -1,0 +1,17 @@
+{
+	"parent": "deadlands:block/container/school_desk",
+	"textures": {
+		"front": "deadlands:block/container/school_desk/clean/front",
+		"back": "deadlands:block/container/school_desk/clean/back",
+		"side": "deadlands:block/container/school_desk/clean/side",
+		"bottom": "deadlands:block/container/school_desk/clean/bottom",
+		"rim": "deadlands:block/container/school_desk/clean/rim",
+		"inside_floor": "deadlands:block/container/school_desk/clean/inside_floor",
+		"inside_wall": "deadlands:block/container/school_desk/clean/inside_wall",
+		"lid_top": "deadlands:block/container/school_desk/clean/lid_top",
+		"lid_side": "deadlands:block/container/school_desk/clean/lid_side",
+		"lid_inside": "deadlands:block/container/school_desk/clean/lid_inside",
+		"leg": "deadlands:block/container/school_desk/clean/leg",
+		"particle": "deadlands:block/container/school_desk/clean/side"
+	}
+}

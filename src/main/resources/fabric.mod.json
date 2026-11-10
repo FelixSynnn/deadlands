@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "deadlands",
+	"version": "${version}",
+	"name": "DEADLANDS",
+	"description": "A post-apocalyptic survival-horror RPG built on Minecraft's engine. The outbreak was 90 days ago. Harley needs your help.",
+	"authors": [
+		"DEADLANDS Development Team"
+	],
+	"contact": {},
+	"license": "All-Rights-Reserved",
+	"icon": "assets/deadlands/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.deadlands.Deadlands"
+		],
+		"client": [
+			"com.deadlands.client.DeadlandsClient"
+		]
+	},
+	"mixins": [
+		"deadlands.mixins.json",
+		{
+			"config": "deadlands.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.20.1",
+		"minecraft": "~1.21.11",
+		"java": ">=21",
+		"fabric-api": ">=0.141.6"
+	}
+}

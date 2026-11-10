@@ -1,0 +1,6 @@
+{
+	"model": {
+		"type": "minecraft:model",
+		"model": "deadlands:item/warden_spawn_egg"
+	}
+}

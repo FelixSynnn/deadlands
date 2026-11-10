@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"pattern": [
+		"LSL",
+		"L L",
+		"LLL"
+	],
+	"key": {
+		"L": "minecraft:leather",
+		"S": "minecraft:string"
+	},
+	"result": {
+		"id": "deadlands:backpack",
+		"count": 1
+	}
+}

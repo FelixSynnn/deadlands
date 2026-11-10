@@ -1,0 +1,8 @@
+{
+	"parent": "minecraft:block/slab",
+	"textures": {
+		"bottom": "deadlands:block/concrete",
+		"top": "deadlands:block/concrete",
+		"side": "deadlands:block/concrete"
+	}
+}

@@ -1,0 +1,187 @@
+{
+	"type": "minecraft:chest",
+	"pools": [
+		{
+			"rolls": {
+				"type": "minecraft:uniform",
+				"min": 4,
+				"max": 6
+			},
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:mre",
+					"weight": 6,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 1,
+								"max": 3
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:water_bottle",
+					"weight": 6,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 2,
+								"max": 4
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:bandage",
+					"weight": 5,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 2,
+								"max": 4
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:pistol_ammo",
+					"weight": 5,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 8,
+								"max": 20
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:shotgun_shell",
+					"weight": 3,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 4,
+								"max": 8
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:rifle_round",
+					"weight": 3,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 4,
+								"max": 8
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:antibiotics",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:medkit",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:purification_tablet",
+					"weight": 3,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 2,
+								"max": 4
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:splint",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:radio_parts",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:fuel_can",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:military_backpack",
+					"weight": 1
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:antiviral",
+					"weight": 1
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:pistol",
+					"weight": 1
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:keycard_blue",
+					"weight": 1
+				}
+			]
+		},
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:document",
+					"functions": [
+						{
+							"function": "minecraft:set_components",
+							"components": {
+								"deadlands:lore": "mil_calder_access",
+								"minecraft:custom_model_data": {
+									"strings": [
+										"document"
+									]
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+	],
+	"random_sequence": "deadlands:events/supply_drop"
+}

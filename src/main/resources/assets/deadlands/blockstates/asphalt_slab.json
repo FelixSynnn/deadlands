@@ -1,0 +1,13 @@
+{
+	"variants": {
+		"type=bottom": {
+			"model": "deadlands:block/asphalt_slab"
+		},
+		"type=top": {
+			"model": "deadlands:block/asphalt_slab_top"
+		},
+		"type=double": {
+			"model": "deadlands:block/asphalt"
+		}
+	}
+}

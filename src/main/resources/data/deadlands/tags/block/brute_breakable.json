@@ -1,0 +1,11 @@
+{
+	"replace": false,
+	"values": [
+		"#minecraft:planks",
+		"minecraft:iron_bars",
+		"minecraft:iron_door",
+		"minecraft:iron_trapdoor",
+		"deadlands:corrugated_metal",
+		"deadlands:rusted_sheet_metal"
+	]
+}

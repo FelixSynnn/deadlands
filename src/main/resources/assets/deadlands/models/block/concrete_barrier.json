@@ -1,0 +1,112 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"concrete": "deadlands:block/decor/barrier",
+		"particle": "deadlands:block/decor/barrier"
+	},
+	"elements": [
+		{
+			"from": [
+				0,
+				0,
+				3
+			],
+			"to": [
+				16,
+				4,
+				13
+			],
+			"faces": {
+				"north": {
+					"texture": "#concrete"
+				},
+				"south": {
+					"texture": "#concrete"
+				},
+				"east": {
+					"texture": "#concrete",
+					"cullface": "east"
+				},
+				"west": {
+					"texture": "#concrete",
+					"cullface": "west"
+				},
+				"up": {
+					"texture": "#concrete"
+				},
+				"down": {
+					"texture": "#concrete",
+					"cullface": "down"
+				}
+			}
+		},
+		{
+			"from": [
+				0,
+				4,
+				5
+			],
+			"to": [
+				16,
+				10,
+				11
+			],
+			"faces": {
+				"north": {
+					"texture": "#concrete"
+				},
+				"south": {
+					"texture": "#concrete"
+				},
+				"east": {
+					"texture": "#concrete",
+					"cullface": "east"
+				},
+				"west": {
+					"texture": "#concrete",
+					"cullface": "west"
+				},
+				"up": {
+					"texture": "#concrete"
+				},
+				"down": {
+					"texture": "#concrete"
+				}
+			}
+		},
+		{
+			"from": [
+				0,
+				10,
+				6
+			],
+			"to": [
+				16,
+				13,
+				10
+			],
+			"faces": {
+				"north": {
+					"texture": "#concrete"
+				},
+				"south": {
+					"texture": "#concrete"
+				},
+				"east": {
+					"texture": "#concrete",
+					"cullface": "east"
+				},
+				"west": {
+					"texture": "#concrete",
+					"cullface": "west"
+				},
+				"up": {
+					"texture": "#concrete"
+				},
+				"down": {
+					"texture": "#concrete"
+				}
+			}
+		}
+	]
+}

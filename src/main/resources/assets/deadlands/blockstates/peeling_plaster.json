@@ -1,0 +1,15 @@
+{
+	"variants": {
+		"": [
+			{
+				"model": "deadlands:block/peeling_plaster"
+			},
+			{
+				"model": "deadlands:block/peeling_plaster_2"
+			},
+			{
+				"model": "deadlands:block/peeling_plaster_3"
+			}
+		]
+	}
+}

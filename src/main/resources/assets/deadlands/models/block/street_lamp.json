@@ -1,0 +1,43 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"metal": "deadlands:block/decor/galvanized",
+		"particle": "deadlands:block/decor/galvanized"
+	},
+	"elements": [
+		{
+			"from": [
+				6.5,
+				0,
+				6.5
+			],
+			"to": [
+				9.5,
+				16,
+				9.5
+			],
+			"faces": {
+				"north": {
+					"texture": "#metal"
+				},
+				"south": {
+					"texture": "#metal"
+				},
+				"east": {
+					"texture": "#metal"
+				},
+				"west": {
+					"texture": "#metal"
+				},
+				"up": {
+					"texture": "#metal",
+					"cullface": "up"
+				},
+				"down": {
+					"texture": "#metal",
+					"cullface": "down"
+				}
+			}
+		}
+	]
+}

@@ -1,0 +1,69 @@
+{
+	"type": "minecraft:chest",
+	"pools": [
+		{
+			"rolls": 1.0,
+			"bonus_rolls": 0.0,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:key",
+					"functions": [
+						{
+							"function": "minecraft:set_components",
+							"components": {
+								"deadlands:key_id": "ranger_station"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"rolls": {
+				"type": "minecraft:uniform",
+				"min": 2,
+				"max": 4
+			},
+			"bonus_rolls": 0.0,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:crackers",
+					"weight": 6
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:torch",
+					"weight": 8,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 2,
+								"max": 5
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:spyglass",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:map",
+					"weight": 4
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:leather_boots",
+					"weight": 3
+				}
+			]
+		}
+	],
+	"random_sequence": "deadlands:containers/ranger_locker"
+}

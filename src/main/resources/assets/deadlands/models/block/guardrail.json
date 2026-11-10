@@ -1,0 +1,89 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"beam": "deadlands:block/decor/guardrail_beam",
+		"post": "deadlands:block/decor/guardrail_post",
+		"particle": "deadlands:block/decor/guardrail_beam"
+	},
+	"elements": [
+		{
+			"from": [
+				6.5,
+				0,
+				13
+			],
+			"to": [
+				9.5,
+				9,
+				15
+			],
+			"faces": {
+				"north": {
+					"texture": "#post"
+				},
+				"south": {
+					"texture": "#post"
+				},
+				"east": {
+					"texture": "#post"
+				},
+				"west": {
+					"texture": "#post"
+				},
+				"up": {
+					"texture": "#post"
+				},
+				"down": {
+					"texture": "#post",
+					"cullface": "down"
+				}
+			}
+		},
+		{
+			"from": [
+				0,
+				4,
+				12
+			],
+			"to": [
+				16,
+				8,
+				13
+			],
+			"faces": {
+				"north": {
+					"texture": "#beam",
+					"uv": [
+						0,
+						0,
+						16,
+						4
+					]
+				},
+				"south": {
+					"texture": "#beam",
+					"uv": [
+						0,
+						0,
+						16,
+						4
+					]
+				},
+				"east": {
+					"texture": "#beam",
+					"cullface": "east"
+				},
+				"west": {
+					"texture": "#beam",
+					"cullface": "west"
+				},
+				"up": {
+					"texture": "#beam"
+				},
+				"down": {
+					"texture": "#beam"
+				}
+			}
+		}
+	]
+}

@@ -1,0 +1,151 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"wood": "deadlands:block/decor/wood",
+		"drawers": "deadlands:block/decor/desk_drawers",
+		"particle": "deadlands:block/decor/wood"
+	},
+	"elements": [
+		{
+			"from": [
+				0,
+				14,
+				0
+			],
+			"to": [
+				16,
+				16,
+				16
+			],
+			"faces": {
+				"north": {
+					"texture": "#wood",
+					"cullface": "north"
+				},
+				"south": {
+					"texture": "#wood",
+					"cullface": "south"
+				},
+				"east": {
+					"texture": "#wood",
+					"cullface": "east"
+				},
+				"west": {
+					"texture": "#wood",
+					"cullface": "west"
+				},
+				"up": {
+					"texture": "#wood",
+					"cullface": "up"
+				},
+				"down": {
+					"texture": "#wood"
+				}
+			}
+		},
+		{
+			"from": [
+				10,
+				0,
+				1
+			],
+			"to": [
+				15,
+				14,
+				15
+			],
+			"faces": {
+				"north": {
+					"texture": "#drawers",
+					"uv": [
+						0,
+						0,
+						5,
+						14
+					]
+				},
+				"south": {
+					"texture": "#wood"
+				},
+				"east": {
+					"texture": "#wood"
+				},
+				"west": {
+					"texture": "#wood"
+				},
+				"up": {
+					"texture": "#wood"
+				},
+				"down": {
+					"texture": "#wood",
+					"cullface": "down"
+				}
+			}
+		},
+		{
+			"from": [
+				1,
+				0,
+				1
+			],
+			"to": [
+				3,
+				14,
+				15
+			],
+			"faces": {
+				"north": {
+					"texture": "#wood"
+				},
+				"south": {
+					"texture": "#wood"
+				},
+				"east": {
+					"texture": "#wood"
+				},
+				"west": {
+					"texture": "#wood"
+				},
+				"up": {
+					"texture": "#wood"
+				},
+				"down": {
+					"texture": "#wood",
+					"cullface": "down"
+				}
+			}
+		},
+		{
+			"from": [
+				3,
+				7,
+				14
+			],
+			"to": [
+				10,
+				14,
+				15
+			],
+			"faces": {
+				"north": {
+					"texture": "#wood"
+				},
+				"south": {
+					"texture": "#wood"
+				},
+				"east": {
+					"texture": "#wood"
+				},
+				"west": {
+					"texture": "#wood"
+				},
+				"up": {
+					"texture": "#wood"
+				},
+				"down": {
+					"texture": "#wood"
+				}
+			}
+		}
+	]
+}

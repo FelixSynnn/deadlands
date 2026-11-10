@@ -1,0 +1,90 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"front": "deadlands:block/decor/counter_front",
+		"side": "deadlands:block/decor/counter_side",
+		"top": "deadlands:block/decor/counter_top",
+		"particle": "deadlands:block/decor/counter_front"
+	},
+	"elements": [
+		{
+			"from": [
+				0,
+				0,
+				1
+			],
+			"to": [
+				16,
+				14,
+				16
+			],
+			"faces": {
+				"north": {
+					"texture": "#front",
+					"uv": [
+						0,
+						0,
+						16,
+						14
+					]
+				},
+				"south": {
+					"texture": "#side",
+					"cullface": "south"
+				},
+				"east": {
+					"texture": "#side",
+					"cullface": "east"
+				},
+				"west": {
+					"texture": "#side",
+					"cullface": "west"
+				},
+				"up": {
+					"texture": "#side"
+				},
+				"down": {
+					"texture": "#side",
+					"cullface": "down"
+				}
+			}
+		},
+		{
+			"from": [
+				0,
+				14,
+				0
+			],
+			"to": [
+				16,
+				16,
+				16
+			],
+			"faces": {
+				"north": {
+					"texture": "#side",
+					"cullface": "north"
+				},
+				"south": {
+					"texture": "#side",
+					"cullface": "south"
+				},
+				"east": {
+					"texture": "#side",
+					"cullface": "east"
+				},
+				"west": {
+					"texture": "#side",
+					"cullface": "west"
+				},
+				"up": {
+					"texture": "#top",
+					"cullface": "up"
+				},
+				"down": {
+					"texture": "#side"
+				}
+			}
+		}
+	]
+}

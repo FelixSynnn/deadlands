@@ -1,0 +1,16 @@
+{
+	"parent": "deadlands:block/container/medical_cabinet",
+	"textures": {
+		"side": "deadlands:block/container/medical_cabinet/clean/side",
+		"back": "deadlands:block/container/medical_cabinet/clean/back",
+		"top": "deadlands:block/container/medical_cabinet/clean/top",
+		"bottom": "deadlands:block/container/medical_cabinet/clean/bottom",
+		"edge": "deadlands:block/container/medical_cabinet/clean/edge",
+		"inside_side": "deadlands:block/container/medical_cabinet/clean/inside_side",
+		"inside_floor": "deadlands:block/container/medical_cabinet/clean/inside_floor",
+		"shelf": "deadlands:block/container/medical_cabinet/clean/shelf",
+		"inside_back": "deadlands:block/container/medical_cabinet/clean/inside_back",
+		"door": "deadlands:block/container/medical_cabinet/clean/door",
+		"particle": "deadlands:block/container/medical_cabinet/clean/side"
+	}
+}

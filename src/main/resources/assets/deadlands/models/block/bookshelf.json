@@ -1,0 +1,53 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"wood": "deadlands:block/decor/dark_wood",
+		"front": "deadlands:block/decor/bookshelf_front",
+		"particle": "deadlands:block/decor/dark_wood"
+	},
+	"elements": [
+		{
+			"from": [
+				0,
+				0,
+				8
+			],
+			"to": [
+				16,
+				16,
+				16
+			],
+			"faces": {
+				"north": {
+					"texture": "#front",
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					]
+				},
+				"south": {
+					"texture": "#wood",
+					"cullface": "south"
+				},
+				"east": {
+					"texture": "#wood",
+					"cullface": "east"
+				},
+				"west": {
+					"texture": "#wood",
+					"cullface": "west"
+				},
+				"up": {
+					"texture": "#wood",
+					"cullface": "up"
+				},
+				"down": {
+					"texture": "#wood",
+					"cullface": "down"
+				}
+			}
+		}
+	]
+}

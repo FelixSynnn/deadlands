@@ -1,0 +1,16 @@
+{
+	"parent": "deadlands:block/container/supply_locker",
+	"textures": {
+		"side": "deadlands:block/container/supply_locker/rusty/side",
+		"back": "deadlands:block/container/supply_locker/rusty/back",
+		"top": "deadlands:block/container/supply_locker/rusty/top",
+		"bottom": "deadlands:block/container/supply_locker/rusty/bottom",
+		"edge": "deadlands:block/container/supply_locker/rusty/edge",
+		"inside_side": "deadlands:block/container/supply_locker/rusty/inside_side",
+		"inside_floor": "deadlands:block/container/supply_locker/rusty/inside_floor",
+		"shelf": "deadlands:block/container/supply_locker/rusty/shelf",
+		"inside_back": "deadlands:block/container/supply_locker/rusty/inside_back",
+		"door": "deadlands:block/container/supply_locker/rusty/door",
+		"particle": "deadlands:block/container/supply_locker/rusty/side"
+	}
+}

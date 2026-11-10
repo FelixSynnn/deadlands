@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"facing=north": {
+			"model": "deadlands:block/toilet"
+		},
+		"facing=east": {
+			"model": "deadlands:block/toilet",
+			"y": 90
+		},
+		"facing=south": {
+			"model": "deadlands:block/toilet",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "deadlands:block/toilet",
+			"y": 270
+		}
+	}
+}

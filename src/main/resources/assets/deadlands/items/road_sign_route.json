@@ -1,0 +1,6 @@
+{
+	"model": {
+		"type": "minecraft:model",
+		"model": "deadlands:block/road_sign_route"
+	}
+}

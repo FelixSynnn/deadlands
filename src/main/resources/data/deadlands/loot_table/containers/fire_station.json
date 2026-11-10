@@ -1,0 +1,206 @@
+{
+	"type": "minecraft:chest",
+	"pools": [
+		{
+			"rolls": {
+				"type": "minecraft:uniform",
+				"min": 2,
+				"max": 4
+			},
+			"bonus_rolls": 0.0,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:leather_helmet",
+					"weight": 4,
+					"functions": [
+						{
+							"function": "minecraft:set_damage",
+							"damage": {
+								"type": "minecraft:uniform",
+								"min": 0.2,
+								"max": 0.8
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:leather_chestplate",
+					"weight": 4,
+					"functions": [
+						{
+							"function": "minecraft:set_damage",
+							"damage": {
+								"type": "minecraft:uniform",
+								"min": 0.2,
+								"max": 0.8
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:leather_boots",
+					"weight": 4,
+					"functions": [
+						{
+							"function": "minecraft:set_damage",
+							"damage": {
+								"type": "minecraft:uniform",
+								"min": 0.2,
+								"max": 0.8
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:iron_axe",
+					"weight": 3,
+					"functions": [
+						{
+							"function": "minecraft:set_damage",
+							"damage": {
+								"type": "minecraft:uniform",
+								"min": 0.2,
+								"max": 0.7
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:bucket",
+					"weight": 5
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:water_bucket",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:torch",
+					"weight": 6,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 2,
+								"max": 6
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:lead",
+					"weight": 3
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:string",
+					"weight": 4,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 1,
+								"max": 3
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:painkillers",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:fuse",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:mre",
+					"weight": 4
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:water_bottle",
+					"weight": 4
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:bandage",
+					"weight": 3
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:purification_tablet",
+					"weight": 3
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:pistol_ammo",
+					"weight": 5
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:pistol",
+					"weight": 1
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:machete",
+					"weight": 1
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:crowbar",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:fire_axe",
+					"weight": 1
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:wrench",
+					"weight": 3
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:engine_parts",
+					"weight": 4
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:tire",
+					"weight": 3
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:car_battery",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:body_panel",
+					"weight": 3
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:fuel_can",
+					"weight": 2
+				}
+			]
+		}
+	],
+	"random_sequence": "deadlands:containers/fire_station"
+}

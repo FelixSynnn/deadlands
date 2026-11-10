@@ -1,0 +1,10 @@
+{
+	"replace": false,
+	"values": [
+		"deadlands:dehydration",
+		"deadlands:hypothermia",
+		"deadlands:heatstroke",
+		"deadlands:bleeding",
+		"deadlands:infection"
+	]
+}

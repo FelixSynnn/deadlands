@@ -1,0 +1,103 @@
+{
+	"type": "deadlands:town",
+	"biomes": "#deadlands:has_structure/town",
+	"step": "surface_structures",
+	"terrain_adaptation": "none",
+	"spawn_overrides": {},
+	"buildings": {
+		"residential": [
+			"deadlands:town/cottage_siding",
+			"deadlands:town/cottage_brick",
+			"deadlands:town/cottage_plaster",
+			"deadlands:town/suburban_siding",
+			"deadlands:town/suburban_plaster",
+			"deadlands:town/suburban_brick",
+			"deadlands:town/two_story_siding",
+			"deadlands:town/two_story_brick",
+			"deadlands:town/trailer_rusted",
+			"deadlands:town/trailer_corrugated",
+			"deadlands:town/cottage_siding_b",
+			"deadlands:town/cottage_brick_b",
+			"deadlands:town/cottage_plaster_b",
+			"deadlands:town/suburban_siding_b",
+			"deadlands:town/suburban_plaster_b",
+			"deadlands:town/suburban_brick_b",
+			"deadlands:town/two_story_plaster",
+			"deadlands:town/two_story_siding_b",
+			"deadlands:town/trailer_rusted_b",
+			"deadlands:town/trailer_corrugated_b"
+		],
+		"commercial": [
+			"deadlands:town/corner_store",
+			"deadlands:town/grocery",
+			"deadlands:town/pharmacy",
+			"deadlands:town/hardware_store",
+			"deadlands:town/diner",
+			"deadlands:town/corner_store_b",
+			"deadlands:town/grocery_b",
+			"deadlands:town/pharmacy_b",
+			"deadlands:town/hardware_store_b",
+			"deadlands:town/diner_b"
+		],
+		"civic": [
+			"deadlands:town/police_station",
+			"deadlands:town/town_hall",
+			"deadlands:town/church",
+			"deadlands:town/police_station_b",
+			"deadlands:town/town_hall_b",
+			"deadlands:town/church_b",
+			"deadlands:town/library",
+			"deadlands:town/bank",
+			"deadlands:town/courthouse",
+			"deadlands:town/fire_station",
+			"deadlands:town/fire_station_b"
+		],
+		"medical": [
+			"deadlands:town/clinic",
+			"deadlands:town/clinic_small",
+			"deadlands:town/clinic_b",
+			"deadlands:town/emergency_room",
+			"deadlands:town/emergency_room_b"
+		],
+		"industrial": [
+			"deadlands:town/auto_garage",
+			"deadlands:town/auto_garage_large",
+			"deadlands:town/warehouse",
+			"deadlands:town/factory",
+			"deadlands:town/auto_garage_b",
+			"deadlands:town/warehouse_b"
+		],
+		"rural": [
+			"deadlands:town/barn",
+			"deadlands:town/farmhouse_siding",
+			"deadlands:town/farmhouse_plaster",
+			"deadlands:town/shed_small",
+			"deadlands:town/shed_large",
+			"deadlands:town/barn_b",
+			"deadlands:town/farmhouse_brick",
+			"deadlands:town/shed_small_b",
+			"deadlands:town/shed_large_b"
+		],
+		"city": [
+			"deadlands:town/apartment_block_brick",
+			"deadlands:town/apartment_block_concrete",
+			"deadlands:town/apartment_block_plaster",
+			"deadlands:town/office_block_glass",
+			"deadlands:town/office_block_concrete",
+			"deadlands:town/office_block_brick",
+			"deadlands:town/department_store",
+			"deadlands:town/motel",
+			"deadlands:town/motel_b"
+		],
+		"western": [
+			"deadlands:town/saloon",
+			"deadlands:town/saloon_b",
+			"deadlands:town/general_store",
+			"deadlands:town/general_store_b",
+			"deadlands:town/wooden_house_a",
+			"deadlands:town/wooden_house_b",
+			"deadlands:town/wooden_house_c",
+			"deadlands:town/sheriff_office"
+		]
+	}
+}

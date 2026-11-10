@@ -1,0 +1,83 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"metal": "deadlands:block/decor/galvanized",
+		"face": "deadlands:block/decor/sign_speed",
+		"particle": "deadlands:block/decor/galvanized"
+	},
+	"elements": [
+		{
+			"from": [
+				7,
+				0,
+				8
+			],
+			"to": [
+				9,
+				16,
+				10
+			],
+			"faces": {
+				"north": {
+					"texture": "#metal"
+				},
+				"south": {
+					"texture": "#metal"
+				},
+				"east": {
+					"texture": "#metal"
+				},
+				"west": {
+					"texture": "#metal"
+				},
+				"up": {
+					"texture": "#metal",
+					"cullface": "up"
+				},
+				"down": {
+					"texture": "#metal",
+					"cullface": "down"
+				}
+			}
+		},
+		{
+			"from": [
+				2,
+				3,
+				7
+			],
+			"to": [
+				14,
+				16,
+				8
+			],
+			"faces": {
+				"north": {
+					"texture": "#face",
+					"uv": [
+						0,
+						0,
+						12,
+						13
+					]
+				},
+				"south": {
+					"texture": "#metal"
+				},
+				"east": {
+					"texture": "#metal"
+				},
+				"west": {
+					"texture": "#metal"
+				},
+				"up": {
+					"texture": "#metal",
+					"cullface": "up"
+				},
+				"down": {
+					"texture": "#metal"
+				}
+			}
+		}
+	]
+}

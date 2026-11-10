@@ -1,0 +1,352 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"front": "deadlands:block/container/military_crate/clean/front",
+		"back": "deadlands:block/container/military_crate/clean/back",
+		"side": "deadlands:block/container/military_crate/clean/side",
+		"inside_floor": "deadlands:block/container/military_crate/clean/inside_floor",
+		"inside_wall": "deadlands:block/container/military_crate/clean/inside_wall",
+		"rim": "deadlands:block/container/military_crate/clean/rim",
+		"bottom": "deadlands:block/container/military_crate/clean/bottom",
+		"lid_top": "deadlands:block/container/military_crate/clean/lid_top",
+		"lid_side": "deadlands:block/container/military_crate/clean/lid_side",
+		"lid_inside": "deadlands:block/container/military_crate/clean/lid_inside",
+		"particle": "deadlands:block/container/military_crate/clean/side"
+	},
+	"elements": [
+		{
+			"from": [
+				1,
+				0,
+				2
+			],
+			"to": [
+				15,
+				10,
+				14
+			],
+			"faces": {
+				"north": {
+					"texture": "#front",
+					"uv": [
+						0,
+						0,
+						14,
+						10
+					]
+				},
+				"south": {
+					"texture": "#back",
+					"uv": [
+						0,
+						0,
+						14,
+						10
+					]
+				},
+				"east": {
+					"texture": "#side",
+					"uv": [
+						0,
+						0,
+						12,
+						10
+					]
+				},
+				"west": {
+					"texture": "#side",
+					"uv": [
+						0,
+						0,
+						12,
+						10
+					]
+				},
+				"down": {
+					"texture": "#bottom",
+					"uv": [
+						0,
+						0,
+						14,
+						12
+					]
+				}
+			}
+		},
+		{
+			"from": [
+				2,
+				1,
+				3
+			],
+			"to": [
+				14,
+				1,
+				13
+			],
+			"faces": {
+				"up": {
+					"texture": "#inside_floor",
+					"uv": [
+						0,
+						0,
+						12,
+						10
+					]
+				}
+			}
+		},
+		{
+			"from": [
+				2,
+				1,
+				3
+			],
+			"to": [
+				14,
+				10,
+				3
+			],
+			"faces": {
+				"south": {
+					"texture": "#inside_wall",
+					"uv": [
+						0,
+						0,
+						12,
+						9
+					]
+				}
+			}
+		},
+		{
+			"from": [
+				2,
+				1,
+				13
+			],
+			"to": [
+				14,
+				10,
+				13
+			],
+			"faces": {
+				"north": {
+					"texture": "#inside_wall",
+					"uv": [
+						0,
+						0,
+						12,
+						9
+					]
+				}
+			}
+		},
+		{
+			"from": [
+				2,
+				1,
+				3
+			],
+			"to": [
+				2,
+				10,
+				13
+			],
+			"faces": {
+				"east": {
+					"texture": "#inside_wall",
+					"uv": [
+						0,
+						0,
+						10,
+						9
+					]
+				}
+			}
+		},
+		{
+			"from": [
+				14,
+				1,
+				3
+			],
+			"to": [
+				14,
+				10,
+				13
+			],
+			"faces": {
+				"west": {
+					"texture": "#inside_wall",
+					"uv": [
+						0,
+						0,
+						10,
+						9
+					]
+				}
+			}
+		},
+		{
+			"from": [
+				1,
+				10,
+				2
+			],
+			"to": [
+				15,
+				10,
+				3
+			],
+			"faces": {
+				"up": {
+					"texture": "#rim",
+					"uv": [
+						0,
+						0,
+						14,
+						1
+					]
+				}
+			}
+		},
+		{
+			"from": [
+				1,
+				10,
+				13
+			],
+			"to": [
+				15,
+				10,
+				14
+			],
+			"faces": {
+				"up": {
+					"texture": "#rim",
+					"uv": [
+						0,
+						0,
+						14,
+						1
+					]
+				}
+			}
+		},
+		{
+			"from": [
+				1,
+				10,
+				3
+			],
+			"to": [
+				2,
+				10,
+				13
+			],
+			"faces": {
+				"up": {
+					"texture": "#rim",
+					"uv": [
+						0,
+						0,
+						1,
+						10
+					]
+				}
+			}
+		},
+		{
+			"from": [
+				14,
+				10,
+				3
+			],
+			"to": [
+				15,
+				10,
+				13
+			],
+			"faces": {
+				"up": {
+					"texture": "#rim",
+					"uv": [
+						0,
+						0,
+						1,
+						10
+					]
+				}
+			}
+		},
+		{
+			"from": [
+				1,
+				10,
+				2
+			],
+			"to": [
+				15,
+				12,
+				14
+			],
+			"faces": {
+				"north": {
+					"texture": "#lid_side",
+					"uv": [
+						0,
+						0,
+						14,
+						2
+					]
+				},
+				"south": {
+					"texture": "#lid_side",
+					"uv": [
+						0,
+						0,
+						14,
+						2
+					]
+				},
+				"east": {
+					"texture": "#lid_side",
+					"uv": [
+						0,
+						0,
+						12,
+						2
+					]
+				},
+				"west": {
+					"texture": "#lid_side",
+					"uv": [
+						0,
+						0,
+						12,
+						2
+					]
+				},
+				"up": {
+					"texture": "#lid_top",
+					"uv": [
+						0,
+						0,
+						14,
+						12
+					]
+				},
+				"down": {
+					"texture": "#lid_inside",
+					"uv": [
+						0,
+						0,
+						14,
+						12
+					]
+				}
+			}
+		}
+	]
+}

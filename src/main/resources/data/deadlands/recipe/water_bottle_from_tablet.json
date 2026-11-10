@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "misc",
+	"ingredients": [
+		"deadlands:dirty_water_bottle",
+		"deadlands:purification_tablet"
+	],
+	"result": {
+		"id": "deadlands:water_bottle",
+		"count": 1
+	}
+}

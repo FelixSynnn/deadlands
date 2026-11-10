@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"facing=north": {
+			"model": "deadlands:block/guardrail"
+		},
+		"facing=east": {
+			"model": "deadlands:block/guardrail",
+			"y": 90
+		},
+		"facing=south": {
+			"model": "deadlands:block/guardrail",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "deadlands:block/guardrail",
+			"y": 270
+		}
+	}
+}

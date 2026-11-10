@@ -1,0 +1,12 @@
+{
+	"parent": "deadlands:block/container/filing_cabinet",
+	"textures": {
+		"front": "deadlands:block/container/filing_cabinet/damaged/front",
+		"side": "deadlands:block/container/filing_cabinet/damaged/side",
+		"back": "deadlands:block/container/filing_cabinet/damaged/back",
+		"top": "deadlands:block/container/filing_cabinet/damaged/top",
+		"bottom": "deadlands:block/container/filing_cabinet/damaged/bottom",
+		"drawer": "deadlands:block/container/filing_cabinet/damaged/drawer",
+		"particle": "deadlands:block/container/filing_cabinet/damaged/side"
+	}
+}

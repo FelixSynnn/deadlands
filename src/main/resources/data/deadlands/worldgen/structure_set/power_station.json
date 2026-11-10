@@ -1,0 +1,18 @@
+{
+	"structures": [
+		{
+			"structure": "deadlands:power_station",
+			"weight": 1
+		}
+	],
+	"placement": {
+		"type": "minecraft:random_spread",
+		"spacing": 56,
+		"separation": 24,
+		"salt": 77100071,
+		"exclusion_zone": {
+			"other_set": "deadlands:towns",
+			"chunk_count": 9
+		}
+	}
+}

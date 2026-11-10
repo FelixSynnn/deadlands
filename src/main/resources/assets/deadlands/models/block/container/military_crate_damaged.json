@@ -1,0 +1,16 @@
+{
+	"parent": "deadlands:block/container/military_crate",
+	"textures": {
+		"front": "deadlands:block/container/military_crate/damaged/front",
+		"back": "deadlands:block/container/military_crate/damaged/back",
+		"side": "deadlands:block/container/military_crate/damaged/side",
+		"inside_floor": "deadlands:block/container/military_crate/damaged/inside_floor",
+		"inside_wall": "deadlands:block/container/military_crate/damaged/inside_wall",
+		"rim": "deadlands:block/container/military_crate/damaged/rim",
+		"bottom": "deadlands:block/container/military_crate/damaged/bottom",
+		"lid_top": "deadlands:block/container/military_crate/damaged/lid_top",
+		"lid_side": "deadlands:block/container/military_crate/damaged/lid_side",
+		"lid_inside": "deadlands:block/container/military_crate/damaged/lid_inside",
+		"particle": "deadlands:block/container/military_crate/damaged/side"
+	}
+}

@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"facing=north": {
+			"model": "deadlands:block/bookshelf"
+		},
+		"facing=east": {
+			"model": "deadlands:block/bookshelf",
+			"y": 90
+		},
+		"facing=south": {
+			"model": "deadlands:block/bookshelf",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "deadlands:block/bookshelf",
+			"y": 270
+		}
+	}
+}

@@ -1,0 +1,16 @@
+{
+	"parent": "deadlands:block/container/kitchen_cupboard",
+	"textures": {
+		"side": "deadlands:block/container/kitchen_cupboard/dusty/side",
+		"back": "deadlands:block/container/kitchen_cupboard/dusty/back",
+		"top": "deadlands:block/container/kitchen_cupboard/dusty/top",
+		"bottom": "deadlands:block/container/kitchen_cupboard/dusty/bottom",
+		"edge": "deadlands:block/container/kitchen_cupboard/dusty/edge",
+		"inside_side": "deadlands:block/container/kitchen_cupboard/dusty/inside_side",
+		"inside_floor": "deadlands:block/container/kitchen_cupboard/dusty/inside_floor",
+		"shelf": "deadlands:block/container/kitchen_cupboard/dusty/shelf",
+		"inside_back": "deadlands:block/container/kitchen_cupboard/dusty/inside_back",
+		"door": "deadlands:block/container/kitchen_cupboard/dusty/door",
+		"particle": "deadlands:block/container/kitchen_cupboard/dusty/side"
+	}
+}

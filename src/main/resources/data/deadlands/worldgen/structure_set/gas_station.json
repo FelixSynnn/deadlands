@@ -1,0 +1,18 @@
+{
+	"structures": [
+		{
+			"structure": "deadlands:gas_station",
+			"weight": 1
+		}
+	],
+	"placement": {
+		"type": "minecraft:random_spread",
+		"spacing": 30,
+		"separation": 12,
+		"salt": 77100111,
+		"exclusion_zone": {
+			"other_set": "deadlands:towns",
+			"chunk_count": 9
+		}
+	}
+}

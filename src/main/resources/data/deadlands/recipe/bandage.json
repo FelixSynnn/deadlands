@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "misc",
+	"ingredients": [
+		"deadlands:dirty_rag",
+		"deadlands:antiseptic"
+	],
+	"result": {
+		"id": "deadlands:bandage",
+		"count": 2
+	}
+}

@@ -1,0 +1,64 @@
+{
+	"variants": {
+		"condition=clean,facing=north": {
+			"model": "deadlands:block/container/military_crate_clean"
+		},
+		"condition=clean,facing=east": {
+			"model": "deadlands:block/container/military_crate_clean",
+			"y": 90
+		},
+		"condition=clean,facing=south": {
+			"model": "deadlands:block/container/military_crate_clean",
+			"y": 180
+		},
+		"condition=clean,facing=west": {
+			"model": "deadlands:block/container/military_crate_clean",
+			"y": 270
+		},
+		"condition=dusty,facing=north": {
+			"model": "deadlands:block/container/military_crate_dusty"
+		},
+		"condition=dusty,facing=east": {
+			"model": "deadlands:block/container/military_crate_dusty",
+			"y": 90
+		},
+		"condition=dusty,facing=south": {
+			"model": "deadlands:block/container/military_crate_dusty",
+			"y": 180
+		},
+		"condition=dusty,facing=west": {
+			"model": "deadlands:block/container/military_crate_dusty",
+			"y": 270
+		},
+		"condition=rusty,facing=north": {
+			"model": "deadlands:block/container/military_crate_rusty"
+		},
+		"condition=rusty,facing=east": {
+			"model": "deadlands:block/container/military_crate_rusty",
+			"y": 90
+		},
+		"condition=rusty,facing=south": {
+			"model": "deadlands:block/container/military_crate_rusty",
+			"y": 180
+		},
+		"condition=rusty,facing=west": {
+			"model": "deadlands:block/container/military_crate_rusty",
+			"y": 270
+		},
+		"condition=damaged,facing=north": {
+			"model": "deadlands:block/container/military_crate_damaged"
+		},
+		"condition=damaged,facing=east": {
+			"model": "deadlands:block/container/military_crate_damaged",
+			"y": 90
+		},
+		"condition=damaged,facing=south": {
+			"model": "deadlands:block/container/military_crate_damaged",
+			"y": 180
+		},
+		"condition=damaged,facing=west": {
+			"model": "deadlands:block/container/military_crate_damaged",
+			"y": 270
+		}
+	}
+}

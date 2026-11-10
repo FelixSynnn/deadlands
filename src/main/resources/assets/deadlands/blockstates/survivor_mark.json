@@ -1,0 +1,49 @@
+{
+	"variants": {
+		"face=floor,turn=0": {
+			"model": "deadlands:block/decal/survivor_mark_floor"
+		},
+		"face=ceiling,turn=0": {
+			"model": "deadlands:block/decal/survivor_mark_ceiling"
+		},
+		"face=floor,turn=1": {
+			"model": "deadlands:block/decal/survivor_mark_floor",
+			"y": 90
+		},
+		"face=ceiling,turn=1": {
+			"model": "deadlands:block/decal/survivor_mark_ceiling",
+			"y": 90
+		},
+		"face=floor,turn=2": {
+			"model": "deadlands:block/decal/survivor_mark_floor",
+			"y": 180
+		},
+		"face=ceiling,turn=2": {
+			"model": "deadlands:block/decal/survivor_mark_ceiling",
+			"y": 180
+		},
+		"face=floor,turn=3": {
+			"model": "deadlands:block/decal/survivor_mark_floor",
+			"y": 270
+		},
+		"face=ceiling,turn=3": {
+			"model": "deadlands:block/decal/survivor_mark_ceiling",
+			"y": 270
+		},
+		"face=wall,facing=north": {
+			"model": "deadlands:block/decal/survivor_mark_wall"
+		},
+		"face=wall,facing=east": {
+			"model": "deadlands:block/decal/survivor_mark_wall",
+			"y": 90
+		},
+		"face=wall,facing=south": {
+			"model": "deadlands:block/decal/survivor_mark_wall",
+			"y": 180
+		},
+		"face=wall,facing=west": {
+			"model": "deadlands:block/decal/survivor_mark_wall",
+			"y": 270
+		}
+	}
+}

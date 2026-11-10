@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"facing=north": {
+			"model": "deadlands:block/road_sign_speed"
+		},
+		"facing=east": {
+			"model": "deadlands:block/road_sign_speed",
+			"y": 90
+		},
+		"facing=south": {
+			"model": "deadlands:block/road_sign_speed",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "deadlands:block/road_sign_speed",
+			"y": 270
+		}
+	}
+}

@@ -1,0 +1,16 @@
+{
+	"parent": "deadlands:block/container/medical_cabinet",
+	"textures": {
+		"side": "deadlands:block/container/medical_cabinet/rusty/side",
+		"back": "deadlands:block/container/medical_cabinet/rusty/back",
+		"top": "deadlands:block/container/medical_cabinet/rusty/top",
+		"bottom": "deadlands:block/container/medical_cabinet/rusty/bottom",
+		"edge": "deadlands:block/container/medical_cabinet/rusty/edge",
+		"inside_side": "deadlands:block/container/medical_cabinet/rusty/inside_side",
+		"inside_floor": "deadlands:block/container/medical_cabinet/rusty/inside_floor",
+		"shelf": "deadlands:block/container/medical_cabinet/rusty/shelf",
+		"inside_back": "deadlands:block/container/medical_cabinet/rusty/inside_back",
+		"door": "deadlands:block/container/medical_cabinet/rusty/door",
+		"particle": "deadlands:block/container/medical_cabinet/rusty/side"
+	}
+}

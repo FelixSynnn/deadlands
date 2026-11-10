@@ -1,0 +1,12 @@
+{
+	"replace": false,
+	"values": [
+		"deadlands:dead_forest",
+		"deadlands:dead_pine_valley",
+		"deadlands:burned_forest",
+		"deadlands:frozen_outskirts",
+		"deadlands:rural_countryside",
+		"minecraft:forest",
+		"minecraft:taiga"
+	]
+}

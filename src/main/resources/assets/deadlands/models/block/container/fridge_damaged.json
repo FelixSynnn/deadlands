@@ -1,0 +1,16 @@
+{
+	"parent": "deadlands:block/container/fridge",
+	"textures": {
+		"side": "deadlands:block/container/fridge/damaged/side",
+		"back": "deadlands:block/container/fridge/damaged/back",
+		"top": "deadlands:block/container/fridge/damaged/top",
+		"bottom": "deadlands:block/container/fridge/damaged/bottom",
+		"edge": "deadlands:block/container/fridge/damaged/edge",
+		"inside_side": "deadlands:block/container/fridge/damaged/inside_side",
+		"inside_floor": "deadlands:block/container/fridge/damaged/inside_floor",
+		"shelf": "deadlands:block/container/fridge/damaged/shelf",
+		"inside_back": "deadlands:block/container/fridge/damaged/inside_back",
+		"door": "deadlands:block/container/fridge/damaged/door",
+		"particle": "deadlands:block/container/fridge/damaged/side"
+	}
+}

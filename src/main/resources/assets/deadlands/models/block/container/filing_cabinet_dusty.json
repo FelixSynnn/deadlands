@@ -1,0 +1,12 @@
+{
+	"parent": "deadlands:block/container/filing_cabinet",
+	"textures": {
+		"front": "deadlands:block/container/filing_cabinet/dusty/front",
+		"side": "deadlands:block/container/filing_cabinet/dusty/side",
+		"back": "deadlands:block/container/filing_cabinet/dusty/back",
+		"top": "deadlands:block/container/filing_cabinet/dusty/top",
+		"bottom": "deadlands:block/container/filing_cabinet/dusty/bottom",
+		"drawer": "deadlands:block/container/filing_cabinet/dusty/drawer",
+		"particle": "deadlands:block/container/filing_cabinet/dusty/side"
+	}
+}

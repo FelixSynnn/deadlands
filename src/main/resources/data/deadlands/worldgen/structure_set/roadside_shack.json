@@ -1,0 +1,18 @@
+{
+	"structures": [
+		{
+			"structure": "deadlands:roadside_shack",
+			"weight": 1
+		}
+	],
+	"placement": {
+		"type": "minecraft:random_spread",
+		"spacing": 26,
+		"separation": 9,
+		"salt": 184726113,
+		"exclusion_zone": {
+			"other_set": "deadlands:towns",
+			"chunk_count": 9
+		}
+	}
+}

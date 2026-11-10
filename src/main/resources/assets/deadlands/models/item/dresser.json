@@ -1,0 +1,151 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"front": "deadlands:block/container/dresser/clean/front",
+		"back": "deadlands:block/container/dresser/clean/back",
+		"side": "deadlands:block/container/dresser/clean/side",
+		"top": "deadlands:block/container/dresser/clean/top",
+		"bottom": "deadlands:block/container/dresser/clean/bottom",
+		"drawer": "deadlands:block/container/dresser/clean/drawer",
+		"clothes": "deadlands:block/container/dresser/clean/clothes",
+		"particle": "deadlands:block/container/dresser/clean/side"
+	},
+	"elements": [
+		{
+			"from": [
+				1,
+				0,
+				1
+			],
+			"to": [
+				15,
+				14,
+				14
+			],
+			"faces": {
+				"north": {
+					"texture": "#front",
+					"uv": [
+						0,
+						0,
+						14,
+						14
+					]
+				},
+				"south": {
+					"texture": "#back",
+					"uv": [
+						0,
+						0,
+						14,
+						14
+					]
+				},
+				"east": {
+					"texture": "#side",
+					"uv": [
+						0,
+						0,
+						13,
+						14
+					]
+				},
+				"west": {
+					"texture": "#side",
+					"uv": [
+						0,
+						0,
+						13,
+						14
+					]
+				},
+				"up": {
+					"texture": "#top",
+					"uv": [
+						0,
+						0,
+						14,
+						13
+					]
+				},
+				"down": {
+					"texture": "#bottom",
+					"uv": [
+						0,
+						0,
+						14,
+						13
+					]
+				}
+			}
+		},
+		{
+			"from": [
+				2,
+				8,
+				0
+			],
+			"to": [
+				14,
+				13,
+				1
+			],
+			"faces": {
+				"north": {
+					"texture": "#drawer",
+					"uv": [
+						0,
+						0,
+						12,
+						5
+					]
+				},
+				"south": {
+					"texture": "#drawer",
+					"uv": [
+						0,
+						0,
+						12,
+						5
+					]
+				},
+				"east": {
+					"texture": "#drawer",
+					"uv": [
+						0,
+						0,
+						1,
+						5
+					]
+				},
+				"west": {
+					"texture": "#drawer",
+					"uv": [
+						0,
+						0,
+						1,
+						5
+					]
+				},
+				"up": {
+					"texture": "#drawer",
+					"uv": [
+						0,
+						0,
+						12,
+						1
+					]
+				},
+				"down": {
+					"texture": "#drawer",
+					"uv": [
+						0,
+						0,
+						12,
+						1
+					]
+				}
+			}
+		}
+	]
+}

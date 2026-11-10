@@ -1,0 +1,16 @@
+{
+	"parent": "deadlands:block/container/safe",
+	"textures": {
+		"side": "deadlands:block/container/safe/damaged/side",
+		"back": "deadlands:block/container/safe/damaged/back",
+		"top": "deadlands:block/container/safe/damaged/top",
+		"bottom": "deadlands:block/container/safe/damaged/bottom",
+		"edge": "deadlands:block/container/safe/damaged/edge",
+		"inside_side": "deadlands:block/container/safe/damaged/inside_side",
+		"inside_floor": "deadlands:block/container/safe/damaged/inside_floor",
+		"shelf": "deadlands:block/container/safe/damaged/shelf",
+		"inside_back": "deadlands:block/container/safe/damaged/inside_back",
+		"door": "deadlands:block/container/safe/damaged/door",
+		"particle": "deadlands:block/container/safe/damaged/side"
+	}
+}

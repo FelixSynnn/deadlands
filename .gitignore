@@ -1,0 +1,37 @@
+# gradle
+.gradle/
+build/
+out/
+classes/
+
+# idea
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# vscode / eclipse
+.settings/
+.vscode/
+bin/
+.classpath
+.project
+*.launch
+
+# fabric dev runs
+run/
+
+# python asset tooling
+__pycache__/
+*.pyc
+tools/assetgen/_cache/
+
+# java crash / profiling
+hs_err_*.log
+replay_*.log
+*.hprof
+*.jfr
+
+# os
+*.DS_Store
+Thumbs.db

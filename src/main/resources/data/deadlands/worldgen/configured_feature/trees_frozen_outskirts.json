@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:random_selector",
+	"config": {
+		"features": [
+			{
+				"feature": {
+					"feature": "deadlands:dead_pine",
+					"placement": []
+				},
+				"chance": 0.4
+			}
+		],
+		"default": {
+			"feature": "deadlands:dead_pine_bare",
+			"placement": []
+		}
+	}
+}

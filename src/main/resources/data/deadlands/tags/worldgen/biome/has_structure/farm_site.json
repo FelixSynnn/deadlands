@@ -1,0 +1,9 @@
+{
+	"replace": false,
+	"values": [
+		"deadlands:abandoned_farmland",
+		"deadlands:rural_countryside",
+		"deadlands:dry_wasteland",
+		"minecraft:plains"
+	]
+}
