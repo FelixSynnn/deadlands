@@ -21,7 +21,7 @@ import net.minecraft.world.inventory.InventoryMenu;
  * the pack and the hotbar. On the right, a status page: body meters with numbers, the load carried
  * against capacity, up to three of the things that are wrong, and the five skill levels.
  *
- * <p>It does not have Minecraft's recipe book. Creative mode keeps Minecraft's creative screen.
+ * <p>It does not have Minecraft's recipe book. Creative mode keeps all of Minecraft's normal menus.
  */
 public class DLInventoryScreen extends DLMenuScreen<InventoryMenu> {
 	private static final int INVENTORY_W = 176;

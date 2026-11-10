@@ -25,6 +25,9 @@ public abstract class MinecraftMixin {
 			return screen;
 		}
 		Minecraft self = (Minecraft) (Object) this;
+		if (self.player != null && self.player.isCreative()) {
+			return screen; // creative mode keeps Minecraft's normal menus
+		}
 		if (screen instanceof net.minecraft.client.gui.screens.inventory.InventoryScreen && self.player != null) {
 			return new com.deadlands.client.ui.DLInventoryScreen(self.player);
 		}
