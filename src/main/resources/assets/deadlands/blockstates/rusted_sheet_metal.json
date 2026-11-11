@@ -1,7 +1,19 @@
 {
 	"variants": {
-		"": {
-			"model": "deadlands:block/rusted_sheet_metal"
-		}
+		"": [
+			{
+				"model": "deadlands:block/rusted_sheet_metal",
+				"weight": 3
+			},
+			{
+				"model": "deadlands:block/variant/rusted_sheet_metal_1"
+			},
+			{
+				"model": "deadlands:block/variant/rusted_sheet_metal_2"
+			},
+			{
+				"model": "deadlands:block/variant/rusted_sheet_metal_3"
+			}
+		]
 	}
 }

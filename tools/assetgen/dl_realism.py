@@ -44,7 +44,13 @@ SCOPES = {
 # weaker (radio antenna, wrench). Entity skins are not in SCOPES at all: the game lights each face of
 # a model itself, and the pass made no visible difference on their UV islands.
 RESTORED: set[str] = {
+    # Painted pixel by pixel by gen_weapons.py (atmosphere overhaul): already shaded and outlined.
+    *(f"deadlands/textures/item/{name}.png" for name in ("survival_knife", "hunting_knife", "machete", "rusty_machete", "crowbar", "baseball_bat",
+                                                        "nail_bat", "lead_pipe", "pipe_wrench", "fire_axe", "pistol", "shotgun", "hunting_rifle")),
     "deadlands/textures/block/broken_glass.png",
+    "deadlands/textures/block/dirty_glass.png",
+    "deadlands/textures/block/cracked_glass.png",
+    "deadlands/textures/block/dusty_glass.png",
     "deadlands/textures/block/charred_log.png",
     "deadlands/textures/block/container/dresser/clean/bottom.png",
     "deadlands/textures/block/container/dresser/damaged/bottom.png",
@@ -308,6 +314,8 @@ def targets():
             for path in sorted(folder.rglob("*.png")):
                 if path.stem.endswith("_n") or path.stem.endswith("_s"):
                     continue
+                if "variant" in path.parent.parts:
+                    continue  # gen_variants blends these from finished textures: never finish them twice
                 yield kind, path
 
 

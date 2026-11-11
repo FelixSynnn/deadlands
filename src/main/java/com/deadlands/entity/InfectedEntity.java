@@ -79,17 +79,20 @@ public class InfectedEntity extends Monster {
 	private static final EntityDataAccessor<Integer> DATA_PHYSIQUE = SynchedEntityData.defineId(InfectedEntity.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Byte> DATA_FLAGS = SynchedEntityData.defineId(InfectedEntity.class, EntityDataSerializers.BYTE);
 
-	public static final byte EVENT_ATTACK = 4;
-	public static final byte EVENT_SLAM = 62;
-	public static final byte EVENT_POUNCE = 63;
-	public static final byte EVENT_SCREAM = 64;
-	public static final byte EVENT_EMERGE = 66;
+	// Entity events (ids from DLEntityEvents: vanilla's own ids, such as 63, are intercepted by the client).
+	public static final byte EVENT_ATTACK = DLEntityEvents.INFECTED_ATTACK;
+	public static final byte EVENT_SLAM = DLEntityEvents.INFECTED_SLAM;
+	public static final byte EVENT_POUNCE = DLEntityEvents.INFECTED_POUNCE;
+	public static final byte EVENT_SCREAM = DLEntityEvents.INFECTED_SCREAM;
+	public static final byte EVENT_EMERGE = DLEntityEvents.INFECTED_EMERGE;
 
 	public static final int FLAG_BREACHING = 1;
 	public static final int FLAG_SCREAMING = 2;
 	public static final int FLAG_CLIMBING = 4;
 	public static final int FLAG_SWELLING = 8;
 	public static final int FLAG_SPRINTING = 16;
+	/** It has a living target: clients switch its voice to pursuit and the music to danger. */
+	public static final int FLAG_HUNTING = 32;
 
 	/** Physique: five builds (width) and five heights, packed into the low 8 bits. */
 	private static final float[] BUILDS = {0.90F, 0.95F, 1.0F, 1.06F, 1.12F};
@@ -517,6 +520,10 @@ public class InfectedEntity extends Monster {
 				screamAnimationState.stop();
 			}
 			ClientBridge.infectedTick(this);
+		} else if ((tickCount + getId()) % 10 == 0) {
+			// Synced (one byte, only when it changes) so each client can hear and score the chase.
+			LivingEntity target = getTarget();
+			setFlag(FLAG_HUNTING, target != null && target.isAlive());
 		}
 	}
 

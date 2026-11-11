@@ -23,6 +23,8 @@
 		"deadlands:military_nest",
 		"deadlands:underground_nest",
 		"deadlands:advanced_nest",
-		"deadlands:workbench"
+		"deadlands:workbench",
+		"deadlands:rotting_planks",
+		"deadlands:faded_planks"
 	]
 }

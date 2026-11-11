@@ -47,6 +47,11 @@ public final class HordeHud {
 	private static int nextDistant = -1;
 	private static final RandomSource RANDOM = RandomSource.create();
 
+	/** Whether a horde night is under way (the music director plays the horde score while it is). */
+	public static boolean isActive() {
+		return active;
+	}
+
 	private HordeHud() {
 	}
 

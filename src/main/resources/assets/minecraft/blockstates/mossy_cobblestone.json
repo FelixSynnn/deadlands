@@ -1,0 +1,70 @@
+{
+	"variants": {
+		"": [
+			{
+				"model": "minecraft:block/mossy_cobblestone",
+				"weight": 3
+			},
+			{
+				"model": "minecraft:block/mossy_cobblestone",
+				"weight": 3,
+				"y": 90
+			},
+			{
+				"model": "minecraft:block/mossy_cobblestone",
+				"weight": 3,
+				"y": 180
+			},
+			{
+				"model": "minecraft:block/mossy_cobblestone",
+				"weight": 3,
+				"y": 270
+			},
+			{
+				"model": "deadlands:block/variant/mossy_cobblestone_1"
+			},
+			{
+				"model": "deadlands:block/variant/mossy_cobblestone_1",
+				"y": 90
+			},
+			{
+				"model": "deadlands:block/variant/mossy_cobblestone_1",
+				"y": 180
+			},
+			{
+				"model": "deadlands:block/variant/mossy_cobblestone_1",
+				"y": 270
+			},
+			{
+				"model": "deadlands:block/variant/mossy_cobblestone_2"
+			},
+			{
+				"model": "deadlands:block/variant/mossy_cobblestone_2",
+				"y": 90
+			},
+			{
+				"model": "deadlands:block/variant/mossy_cobblestone_2",
+				"y": 180
+			},
+			{
+				"model": "deadlands:block/variant/mossy_cobblestone_2",
+				"y": 270
+			},
+			{
+				"model": "deadlands:block/variant/mossy_cobblestone_3"
+			},
+			{
+				"model": "deadlands:block/variant/mossy_cobblestone_3",
+				"y": 90
+			},
+			{
+				"model": "deadlands:block/variant/mossy_cobblestone_3",
+				"y": 180
+			},
+			{
+				"model": "deadlands:block/variant/mossy_cobblestone_3",
+				"y": 270
+			}
+		]
+	}
+}

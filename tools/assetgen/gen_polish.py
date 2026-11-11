@@ -42,8 +42,12 @@ def particles() -> int:
             alpha = np.clip((radius + 0.5 - d) / max(0.2, soft), 0.0, 1.0)
             if speckle:
                 alpha *= (r.random((8, 8)) > speckle * 0.6)
-            # Greyscale: the particle tints it. Lighter in the upper left, where the light comes from.
-            shade = np.clip(1.0 - 0.06 * (xx + yy) + r.normal(0, 0.04, (8, 8)), 0.55, 1.0)
+            # Greyscale: the particle tints it. Lighter in the upper left, where the light comes from;
+            # an ember glows from its own hot core instead (the particle is drawn full-bright).
+            if name == "ember":
+                shade = np.clip(1.0 - 0.09 * d + r.normal(0, 0.03, (8, 8)), 0.6, 1.0)
+            else:
+                shade = np.clip(1.0 - 0.06 * (xx + yy) + r.normal(0, 0.04, (8, 8)), 0.55, 1.0)
             img = np.zeros((8, 8, 4))
             img[..., :3] = (shade * 255)[..., None]
             img[..., 3] = alpha * 255

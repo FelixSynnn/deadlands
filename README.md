@@ -5,15 +5,40 @@ began ninety days ago; Harley needs your help. The goal is a standalone-feeling 
 Minecraft's engine, developed in nine milestones.
 
 **Current state: Milestones 1 (Foundation) and 2 (Visual foundation) are complete and tested.
-Milestones 3 (World), 4 (Zombies), 5 (Survival), 6 (Vehicles), 7 (NPCs), 8 (Story) and 9 (Polish) are written and compile, but have never
-been run or tested** (by request, no test runs and no game launches were made, so expect problems the first
-time it is played). See [DEVELOPMENT_STATUS.md](DEVELOPMENT_STATUS.md) for exactly what exists and
+Milestones 3 (World), 4 (Zombies), 5 (Survival), 6 (Vehicles), 7 (NPCs), 8 (Story) and 9 (Polish)
+are written and pass the automated tests** (56 server game tests and an end-to-end client test that
+creates worlds, generates terrain and towns, spawns infected and survivors, and joins a dedicated
+server), **but have not been played by hand**: balance, the story, vehicles and settlements over
+time are still untried. The **atmosphere, audio, texture and stability overhaul** (branch
+`overhaul/atmosphere-audio-textures`, see [CHANGELOG.md](CHANGELOG.md)) passes the same tests.
+See [DEVELOPMENT_STATUS.md](DEVELOPMENT_STATUS.md) for exactly what exists, what was tested and
 what is missing.
+
+## The atmosphere overhaul
+
+- **A soundtrack**: 13 original pieces for exploration, night, danger, hordes and safe zones, chosen
+  by a music director that follows what is happening, fades between moods and leaves silence
+  between pieces. Its own volume setting.
+- **A soundscape by place**: crows, wind in trees and streets, rain on roofs (metal roofs ring),
+  creaking signs, rattling sheet metal, distant dogs, thunder, buzzing power lines and far-off
+  noises nobody explains, each kind of place with its own mix.
+- **New infected voices**: groans, breathing, an alert cry when one spots you and panting snarls
+  while it chases, different for each kind, kept to a few at a time so a crowd does not drown
+  everything out.
+- **A new main menu**: a dead city street at sunset with drifting fog, light shafts, swaying weeds
+  and crows.
+- **Grimmer infected** (new faces, skin and four new outfits, plus per-infected blood, mud and ash),
+  **repainted weapons** and six new ones, **block variety** (each block picks one of several
+  textures by position) and ten new weathered blocks.
+- **Fixed**: the client crash when a Stalker pounced, silent location ambience, weapons held like
+  loose items, and embers that turned black in the dark.
 
 ## What you can see today
 
-- A DEADLANDS main menu: layered parallax ruined-city backdrop with drifting fog and film grain,
-  a spray-painted stencil logo and an original synthesized menu theme.
+- A DEADLANDS main menu: a layered parallax dead-city street at sunset with drifting fog, light
+  shafts, swaying weeds, crows and film grain,
+  a spray-painted stencil logo, an original synthesized menu theme (*Ninety Days*) and a quiet bed of
+  wind and far-off crows.
 - Every vanilla menu restyled and shown over the DEADLANDS backdrop.
 - The **Survivor's Journal** (given on first join, craftable, or press **J**): day, time and
   weather, your survival record, the world chronicle, the horde and boss forecast, field notes.
@@ -31,7 +56,7 @@ what is missing.
   `config/deadlands.jsonc`.
 - `/deadlands status | chronicle | day next | day set <n> | config reload | journal`.
 
-Written for Milestone 3 but **not yet tried in game**:
+Written for Milestone 3, **exercised by the automated tests but not yet played**:
 
 - **Ten DEADLANDS biomes** replacing the vanilla land biomes (dead and burned forests, overgrown
   suburbs, abandoned farmland, dry wasteland, flooded marsh, dead pine valley, frozen outskirts,
@@ -52,10 +77,10 @@ Written for Milestone 3 but **not yet tried in game**:
 - **24 furniture and street blocks**, **five household containers** (cupboard, fridge, dresser,
   safe, school desk), and **town names and histories** with a town card when you arrive.
 
-Written for Milestone 4 but **not yet tried in game**:
+Written for Milestone 4, **exercised by the automated tests but not yet played**:
 
 - **Nine kinds of infected** (walker, runner, brute, screamer, military, crawler, bloater,
-  stalker, charred) in **58 looks**, on two custom rigs with their own walk cycles, attacks and
+  stalker, charred) in **66 looks**, on two custom rigs with their own walk cycles, attacks and
   voices. They replace vanilla monsters in DEADLANDS biomes.
 - **AI** that hunts by sight and sound, searches where it last saw you, is drawn to light, moves
   in packs, alerts others and breaks through doors and barricades.
@@ -65,7 +90,7 @@ Written for Milestone 4 but **not yet tried in game**:
   counter and no sleeping through them, and **migrating groups** that travel between towns.
 - `/deadlands horde start | stop | status`, `infected count | clear`, `noise <loudness>`.
 
-Written for Milestone 5 (first part) but **not yet tried in game**:
+Written for Milestone 5 (first part), **exercised by the automated tests but not yet played**:
 
 - **Thirst, stamina, body temperature and fatigue**, with four small meters on screen.
 - **Injuries**: bleeding, fractures, sickness, and an **infection** that kills in about three days
@@ -88,7 +113,19 @@ Screenshots from the automated client test:
 | **DEADLANDS Settings** | **DAY card** |
 | ![Settings](docs/screenshots/settings.png) | ![DAY card](docs/screenshots/day-card.png) |
 
-Written for Milestone 6 but **not yet tried in game**:
+From the atmosphere overhaul (client test screenshots):
+
+| Every kind of infected, and walkers in the new outfits | Close up |
+|-----------|--------------------|
+| ![Infected](docs/screenshots/infected-lineup.png) | ![Close up](docs/screenshots/infected-closeup.png) |
+| **At dusk** | **A machete in hand** |
+| ![Dusk](docs/screenshots/infected-dusk.png) | ![Machete](docs/screenshots/held-machete.png) |
+| **Block variants: no grid of repeats** | **The ten new blocks** |
+| ![Variants](docs/screenshots/block-variants.png) | ![New blocks](docs/screenshots/new-blocks.png) |
+| **Embers at night** | |
+| ![Embers](docs/screenshots/embers-at-night.png) | |
+
+Written for Milestone 6, **covered by the server game tests but never driven**:
 
 - **Twelve vehicles** (sedan to fire truck, motorcycle, tractor) found abandoned along the roads,
   each in its own state of disrepair.
@@ -96,7 +133,7 @@ Written for Milestone 6 but **not yet tried in game**:
   still have some; **driving**, passengers, load space, and a dashboard.
 - `/deadlands vehicle <kind>`.
 
-Written for Milestone 7 but **not yet tried in game**:
+Written for Milestone 7, **exercised by the automated tests but not yet played**:
 
 - **Survivors** with names, roles, routines and factions living in the survivor, military and
   bandit towns, and travelling merchants on the road.
@@ -109,7 +146,7 @@ Written for Milestone 7 but **not yet tried in game**:
 - Vehicles with **interiors, doors, headlights, a horn and towing**, dents and overgrowth on the
   model, more places to find them, and a restoration task in the journal.
 
-Written for Milestone 8 but **not yet tried in game**:
+Written for Milestone 8, **exercised by the automated tests but not yet played through**:
 
 - **The story**: an opening at Harley's camp, The Missing Research, The Cure and A Way Out, and
   quests for the other three characters.
@@ -119,7 +156,7 @@ Written for Milestone 8 but **not yet tried in game**:
 - **Five bosses** with their own attacks, and a **helicopter** to escape in.
 - **Four endings**, one of them secret.
 
-Written for Milestone 9 but **not yet tried in game**:
+Written for Milestone 9, **exercised by the automated tests but not yet played**:
 
 - **Weather** (fog, wind, dust storms) and **world events** (supply drops, crash sites, convoys,
   bandit patrols, distress calls, power outages).
@@ -155,7 +192,7 @@ Play the development client (offline account, a fresh `run/` folder):
 powershell -ExecutionPolicy Bypass -File .\dev.ps1 runClient
 ```
 
-Run the automated end-to-end client test (opens a game window for about two minutes):
+Run the automated end-to-end client test (opens a game window for about five minutes; it plays sound):
 
 ```bash
 powershell -ExecutionPolicy Bypass -File .\dev.ps1 runClientGameTest
@@ -178,7 +215,8 @@ docs/              architecture and testing guides
 
 ## Documentation
 
-- [DEVELOPMENT_STATUS.md](DEVELOPMENT_STATUS.md): completed, partial and missing systems, known issues, next tasks
+- [CHANGELOG.md](CHANGELOG.md): what the atmosphere, audio, texture and stability overhaul changed
+- [DEVELOPMENT_STATUS.md](DEVELOPMENT_STATUS.md): completed, partial and missing systems, test results, known issues, next tasks
 - [ASSET_STATUS.md](ASSET_STATUS.md): every texture, model, animation and sound, and the production plan
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): how the code is organised and how future systems plug in
 - [docs/TESTING.md](docs/TESTING.md): automated tests and a reproducible manual checklist

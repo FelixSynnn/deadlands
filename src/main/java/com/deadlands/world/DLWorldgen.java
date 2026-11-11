@@ -12,7 +12,10 @@ import com.deadlands.world.town.TownGatePiece;
 import com.deadlands.world.town.TownSites;
 import com.deadlands.world.town.TownStreetPiece;
 import com.deadlands.world.town.TownStructure;
+import com.deadlands.config.ConfigManager;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.core.Registry;
@@ -65,6 +68,17 @@ public final class DLWorldgen {
 		// Railways go first, so a road crossing a line overwrites it (a level crossing).
 		BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Decoration.LOCAL_MODIFICATIONS, RAIL_NETWORK_PLACED);
 		BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Decoration.LOCAL_MODIFICATIONS, ROAD_NETWORK_PLACED);
+		// The vanilla biomes DEADLANDS keeps (oceans, rivers, beaches, peaks) lose their bright blue:
+		// murky water and the same drab sky and haze as the DEADLANDS biomes around them.
+		BiomeModifications.create(Deadlands.id("muted_vanilla_biomes")).add(ModificationPhase.POST_PROCESSING,
+			context -> ConfigManager.get().world.deadlandsBiomes && BiomeSelectors.foundInOverworld().test(context)
+				&& !context.getBiomeKey().identifier().getNamespace().equals(Deadlands.MOD_ID),
+			(selection, modification) -> {
+				modification.getEffects().setWaterColor(0xFF3E4A48);
+				modification.getAttributes().set(EnvironmentAttributes.WATER_FOG_COLOR, 0xFF1A2322);
+				modification.getAttributes().set(EnvironmentAttributes.FOG_COLOR, 0xFF9A9E9A);
+				modification.getAttributes().set(EnvironmentAttributes.SKY_COLOR, 0xFF8C959A);
+			});
 		// Town sites and road geometry are cached per world; drop them when the server stops.
 		ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
 			RoadNetwork.clearCaches();

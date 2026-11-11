@@ -1,7 +1,19 @@
 {
 	"variants": {
-		"": {
-			"model": "deadlands:block/weathered_bricks"
-		}
+		"": [
+			{
+				"model": "deadlands:block/weathered_bricks",
+				"weight": 3
+			},
+			{
+				"model": "deadlands:block/variant/weathered_bricks_1"
+			},
+			{
+				"model": "deadlands:block/variant/weathered_bricks_2"
+			},
+			{
+				"model": "deadlands:block/variant/weathered_bricks_3"
+			}
+		]
 	}
 }

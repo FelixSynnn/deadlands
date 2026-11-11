@@ -1,7 +1,70 @@
 {
 	"variants": {
-		"": {
-			"model": "deadlands:block/asphalt"
-		}
+		"": [
+			{
+				"model": "deadlands:block/asphalt",
+				"weight": 3
+			},
+			{
+				"model": "deadlands:block/asphalt",
+				"weight": 3,
+				"y": 90
+			},
+			{
+				"model": "deadlands:block/asphalt",
+				"weight": 3,
+				"y": 180
+			},
+			{
+				"model": "deadlands:block/asphalt",
+				"weight": 3,
+				"y": 270
+			},
+			{
+				"model": "deadlands:block/variant/asphalt_1"
+			},
+			{
+				"model": "deadlands:block/variant/asphalt_1",
+				"y": 90
+			},
+			{
+				"model": "deadlands:block/variant/asphalt_1",
+				"y": 180
+			},
+			{
+				"model": "deadlands:block/variant/asphalt_1",
+				"y": 270
+			},
+			{
+				"model": "deadlands:block/variant/asphalt_2"
+			},
+			{
+				"model": "deadlands:block/variant/asphalt_2",
+				"y": 90
+			},
+			{
+				"model": "deadlands:block/variant/asphalt_2",
+				"y": 180
+			},
+			{
+				"model": "deadlands:block/variant/asphalt_2",
+				"y": 270
+			},
+			{
+				"model": "deadlands:block/variant/asphalt_3"
+			},
+			{
+				"model": "deadlands:block/variant/asphalt_3",
+				"y": 90
+			},
+			{
+				"model": "deadlands:block/variant/asphalt_3",
+				"y": 180
+			},
+			{
+				"model": "deadlands:block/variant/asphalt_3",
+				"y": 270
+			}
+		]
 	}
 }

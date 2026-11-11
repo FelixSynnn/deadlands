@@ -54,7 +54,15 @@ public final class InfectedVariants {
 		new Variant("winter_parka_1", "winter", BACKPACK, List.of("frozen_outskirts")),
 		new Variant("winter_parka_2", "winter", BACKPACK, List.of("frozen_outskirts")),
 		new Variant("pajamas_1", "civilian", 0, List.of()),
-		new Variant("pajamas_2", "civilian", 0, List.of()));
+		new Variant("pajamas_2", "civilian", 0, List.of()),
+		new Variant("patient_gown_1", "medical", 0, List.of()),
+		new Variant("patient_gown_2", "medical", 0, List.of()),
+		new Variant("coveralls_1", "worker", 0, List.of("industrial_wasteland")),
+		new Variant("coveralls_2", "worker", 0, List.of("industrial_wasteland")),
+		new Variant("survivor_1", "civilian", BACKPACK, List.of()),
+		new Variant("survivor_2", "civilian", BACKPACK, List.of()),
+		new Variant("firefighter_1", "worker", HELMET, List.of()),
+		new Variant("firefighter_2", "worker", HELMET, List.of()));
 	private static final List<Variant> RUNNER = List.of(
 		new Variant("track_suit", "athlete", 0, List.of()),
 		new Variant("jogger", "athlete", 0, List.of()),

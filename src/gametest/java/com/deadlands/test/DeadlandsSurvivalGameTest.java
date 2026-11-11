@@ -34,7 +34,8 @@ import net.minecraft.world.phys.Vec3;
  * Milestone 5 (first part) checks: the survivor's body state, its conditions and saving, the
  * treatment rules, the survival damage types and text, and noise through walls (a Milestone 4 fix).
  *
- * <p>Written without being run (the project owner asked for no test runs).
+ * <p>Written while the project owner asked for no test runs; run in every build since the
+ * atmosphere overhaul.
  */
 public class DeadlandsSurvivalGameTest {
 	@GameTest

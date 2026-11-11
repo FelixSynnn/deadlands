@@ -160,6 +160,8 @@ final class MilestoneTwoScenes {
 		try (TestSingleplayerContext world = context.worldBuilder().setUseConsistentSettings(false)
 			.adjustSettings(creator -> creator.setSeed("deadlands")).create()) {
 			world.getClientWorld().waitForChunksRender();
+			// A new world opens with the introduction; without this the screenshots below show its text.
+			DeadlandsClientGameTest.skipOpening(context, null);
 			TestServerContext server = world.getServer();
 			server.runCommand("difficulty peaceful");
 			server.runCommand("time set 6000");

@@ -224,6 +224,20 @@ public final class DeadlandsConfig {
 
 		@ConfigEntry(comment = "Muffle infected heard through walls and use distant versions of their voices far away.", client = true)
 		public boolean infectedVoiceEffects = true;
+
+		@ConfigEntry(comment = "Play the DEADLANDS soundtrack in the world: exploration, night, danger and safe-zone music that follows what is happening "
+			+ "(replaces Minecraft's in-game music).", client = true)
+		public boolean dynamicMusic = true;
+
+		@ConfigEntry(comment = "Volume of the DEADLANDS soundtrack in the world, on top of Minecraft's Music slider.", min = 0.0, max = 1.0, client = true)
+		public double musicVolume = 1.0;
+
+		@ConfigEntry(comment = "How often the world makes ambient sounds (crows, wind, creaking metal, distant noises). 1 is the intended amount.",
+			min = 0.25, max = 2.0, client = true)
+		public double ambienceDensity = 1.0;
+
+		@ConfigEntry(comment = "Quiet wind and distant crows under the DEADLANDS main menu.", client = true)
+		public boolean menuAmbience = true;
 	}
 
 	public static final class Interface {

@@ -39,7 +39,8 @@ import net.minecraft.world.item.ItemStack;
  * Milestone 8 checks: the lore catalogue and its text, documents, story state and its saving, the
  * quests' conditions, the endings' conditions, the radio's text, keycard readers and the bosses.
  *
- * <p>Written without being run (the project owner asked for no test runs).
+ * <p>Written while the project owner asked for no test runs; run in every build since the
+ * atmosphere overhaul.
  */
 public class DeadlandsStoryGameTest {
 	private static JsonObject lang() throws Exception {

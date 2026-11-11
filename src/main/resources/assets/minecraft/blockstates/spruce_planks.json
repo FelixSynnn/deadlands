@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"": [
+			{
+				"model": "minecraft:block/spruce_planks",
+				"weight": 3
+			},
+			{
+				"model": "deadlands:block/variant/spruce_planks_1"
+			},
+			{
+				"model": "deadlands:block/variant/spruce_planks_2"
+			},
+			{
+				"model": "deadlands:block/variant/spruce_planks_3"
+			}
+		]
+	}
+}

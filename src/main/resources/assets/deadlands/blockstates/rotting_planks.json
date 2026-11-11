@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"": [
+			{
+				"model": "deadlands:block/rotting_planks",
+				"weight": 3
+			},
+			{
+				"model": "deadlands:block/variant/rotting_planks_1"
+			},
+			{
+				"model": "deadlands:block/variant/rotting_planks_2"
+			},
+			{
+				"model": "deadlands:block/variant/rotting_planks_3"
+			}
+		]
+	}
+}

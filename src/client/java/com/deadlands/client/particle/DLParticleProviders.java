@@ -7,7 +7,9 @@ import net.minecraft.client.particle.BaseAshSmokeParticle;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 
 /**
@@ -54,13 +56,41 @@ public final class DLParticleProviders {
 	}
 
 	static final class Mote extends BaseAshSmokeParticle {
+		private final Kind kind;
+		private final float red;
+		private final float green;
+		private final float blue;
+
 		Mote(ClientLevel level, double x, double y, double z, double xs, double ys, double zs, SpriteSet sprites, Kind kind) {
 			super(level, x, y, z, 0.1F, kind == Kind.ASH ? -0.1F : 0.1F, 0.1F, xs, ys, zs, kind.scale, sprites, 1.0F, kind.lifetime, kind.gravity,
 				kind == Kind.BLOOD);
+			this.kind = kind;
 			float shade = 0.85F + random.nextFloat() * 0.3F;
-			this.rCol = Math.min(1.0F, kind.red * shade);
-			this.gCol = Math.min(1.0F, kind.green * shade);
-			this.bCol = Math.min(1.0F, kind.blue * shade);
+			this.red = Math.min(1.0F, kind.red * shade);
+			this.green = Math.min(1.0F, kind.green * shade);
+			this.blue = Math.min(1.0F, kind.blue * shade);
+			this.rCol = red;
+			this.gCol = green;
+			this.bCol = blue;
+		}
+
+		@Override
+		public void tick() {
+			super.tick();
+			if (kind == Kind.EMBER) {
+				// Embers cool as they rise: orange, then red, then a dull glow.
+				float life = Mth.clamp((float) age / lifetime, 0.0F, 1.0F);
+				this.rCol = red * (1.0F - 0.25F * life);
+				this.gCol = green * (1.0F - 0.65F * life);
+				this.bCol = blue * (1.0F - 0.9F * life);
+			}
+		}
+
+		@Override
+		protected int getLightColor(float partialTick) {
+			// Embers give their own light, as flames do; lit by the world they turned almost black at
+			// night and in the shade.
+			return kind == Kind.EMBER ? LightTexture.FULL_BRIGHT : super.getLightColor(partialTick);
 		}
 	}
 

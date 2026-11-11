@@ -41,7 +41,8 @@ import net.minecraft.world.item.trading.MerchantOffers;
  * spawn markers, the text and skins survivors need, settlements and their far-away simulation, who
  * may enter them, and survivors' belongings and people.
  *
- * <p>Written without being run (the project owner asked for no test runs).
+ * <p>Written while the project owner asked for no test runs; run in every build since the
+ * atmosphere overhaul.
  */
 public class DeadlandsNpcGameTest {
 	@GameTest

@@ -213,6 +213,21 @@
 					"type": "minecraft:item",
 					"name": "deadlands:fuel_can",
 					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:lead_pipe",
+					"weight": 4
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:pipe_wrench",
+					"weight": 3
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:rusty_machete",
+					"weight": 2
 				}
 			]
 		}

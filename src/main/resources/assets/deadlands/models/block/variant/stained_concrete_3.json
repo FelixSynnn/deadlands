@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:block/cube_all",
+	"textures": {
+		"all": "deadlands:block/variant/stained_concrete_3"
+	}
+}
