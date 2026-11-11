@@ -1,7 +1,19 @@
 {
 	"variants": {
-		"": {
-			"model": "deadlands:block/sooty_bricks"
-		}
+		"": [
+			{
+				"model": "deadlands:block/sooty_bricks",
+				"weight": 3
+			},
+			{
+				"model": "deadlands:block/variant/sooty_bricks_1"
+			},
+			{
+				"model": "deadlands:block/variant/sooty_bricks_2"
+			},
+			{
+				"model": "deadlands:block/variant/sooty_bricks_3"
+			}
+		]
 	}
 }

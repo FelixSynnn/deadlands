@@ -7,27 +7,20 @@ Every command below runs from the project folder in PowerShell. `dev.ps1` runs G
 > `fabricApi.configureTests`, which accepts the [Minecraft EULA](https://aka.ms/MinecraftEULA)
 > for those test servers. Set it to `false` if you do not agree (the game tests will then not run).
 
-## Milestones 3 to 9 status: compiled, not tested
+## Status (2026-11-10)
 
-Milestones 3 to 9 were written without running any game test or game client, at the project
-owner's request. They compile (`dev.ps1 compileJava compileClientJava compileGametestJava`, last
-run clean on 2026-11-09), but **nothing in this guide has been run against that code**; the
-expected outputs in sections 1 and 2 are the Milestone 2 results. Once it is run, expect
-(unverified):
+Both automated suites run and pass on the atmosphere overhaul branch: `dev.ps1 build` ends with
+`All 57 required tests passed :)` (the 56 DEADLANDS server game tests in section 1 and one test
+that is not part of DEADLANDS), and `dev.ps1 runClientGameTest` ends with
+`DEADLANDS client game test passed` (section 2). The results of each run, with the frame rate and
+memory figures, are in [DEVELOPMENT_STATUS.md](../DEVELOPMENT_STATUS.md#build-and-test-results).
 
-- the startup line to read `DEADLANDS 0.5.0-m5-dev ready in N ms: 87 blocks, 51 items, 9 entity
-  types, 86 sounds, 13 creative tabs`;
-- 32 DEADLANDS server game tests: the 11 below, 7 in `DeadlandsWorldGameTest` (Milestone 3), 7 in
-  `DeadlandsInfectedGameTest` (Milestone 4) and 7 in `DeadlandsSurvivalGameTest` (Milestone 5:
-  body state save and load, conditions, treatment and sync, damage types and text, skills, load
-  and weapons, walls muffling noise); tables at the end of section 1;
-- the client test to still cover only the Milestone 2 scenes. Its natural-structure check flies
-  through a normal world, which now has DEADLANDS biomes, towns and infected in it, so it may need
-  adjusting (for example running that scene on peaceful).
-
-What was checked instead of building is listed in
-[DEVELOPMENT_STATUS.md](../DEVELOPMENT_STATUS.md#how-the-unbuilt-code-was-checked). Manual
-checklists are in sections 7 (Milestone 3) and 8 (Milestone 4).
+Milestones 3 to 9 were written without any test run, at the project owner's request; the
+automated tests were first run during the atmosphere overhaul. They start the game, load every
+registry, data file and mixin, generate DEADLANDS worlds, spawn infected and survivors and join a
+dedicated server, but they do not play the game: the manual checklists (sections 3 to 14) have not
+been performed for Milestones 3 to 9, so balance, the story played through, driving, bosses,
+hordes and settlements over days are still untried.
 
 ## 1. Automated: build + server game tests (every build)
 
@@ -35,10 +28,10 @@ checklists are in sections 7 (Milestone 3) and 8 (Milestone 4).
 powershell -ExecutionPolicy Bypass -File .\dev.ps1 build
 ```
 
-Expected: `All 12 required tests passed :)` (the 11 DEADLANDS tests below; the batch also holds
-one test that is not part of DEADLANDS) and `BUILD SUCCESSFUL`. The log also shows
-`DEADLANDS 0.2.0-m2 ready in N ms: 42 blocks, 5 items, 18 sounds, 5 creative tabs` and the
-world-clock sequence `Day 2 begins`, `Day 5 begins (2 days skipped)`,
+Expected: `All 57 required tests passed :)` (the 56 DEADLANDS tests below; the batch also holds
+one test that is not part of DEADLANDS) and `BUILD SUCCESSFUL`, in about a minute. The log also
+shows `DEADLANDS 0.9.0-m9-dev ready in N ms: 100 blocks, 90 items, 9 entity types, 188 sounds, 15
+creative tabs` and the world-clock sequence `Day 2 begins`, `Day 5 begins (2 days skipped)`,
 `World clock moved back from day 5 to day 1`.
 
 | Test | Proves |
@@ -55,9 +48,9 @@ world-clock sequence `Day 2 begins`, `Day 5 begins (2 days skipped)`,
 | `lockedContainersResistSurvivalPlayers` | a locked cabinet cannot be mined by a survival player but can by a creative one; unlocking makes it breakable again; clients are sent the lock but not the contents |
 | `structureTemplatesHoldLockedLoot` | both templates load; the shack's medical cabinet is locked and its locker holds the key table; the cache has three crates; the worldgen structure is registered |
 
-Milestone 3 tests (`DeadlandsWorldGameTest`, **written, never run**):
+Milestone 3 tests (`DeadlandsWorldGameTest`, pass):
 
-| Test | Should prove |
+| Test | Proves |
 |------|--------------|
 | `landBiomesBecomeDeadlandsBiomes` | plains, forest and desert map to DEADLANDS biomes; oceans and rivers stay vanilla |
 | `townTemplatesFitTheirPlots` | the town structure is registered, every listed building template loads and fits a 14x14 plot, and there are at least 25 |
@@ -67,17 +60,27 @@ Milestone 3 tests (`DeadlandsWorldGameTest`, **written, never run**):
 | `sitesAreRegisteredAndTheirTemplatesLoad` | the 10 site structures are registered, all 37 site templates load, and the rail and road features are placed |
 | `thePowerGridHasItsParts` | the fuse and the generator are registered and street lamps have a lit state |
 
-Milestone 4 tests (`DeadlandsInfectedGameTest`, **written, never run**):
+Milestone 4 tests (`DeadlandsInfectedGameTest`, pass):
 
-| Test | Should prove |
+| Test | Proves |
 |------|--------------|
-| `infectedKindsAreRegistered` | all 9 entity types exist, map back to their kind, have attributes with the kind's health and a spawn egg, and there are 50 to 60 looks in total |
+| `infectedKindsAreRegistered` | all 9 entity types exist, map back to their kind, have attributes with the kind's health and a spawn egg, and there are 60 to 80 looks in total (66 since the overhaul) |
 | `infectedLooksHaveTexturesAndLoot` | every look has its texture; every kind and every outfit has a loot table that parses |
 | `infectedKeepTheirLookAndOrdersThroughSaveAndLoad` | a walker gets a look on spawn; look, build, height, horde night, migration and home nest survive saving and loading the entity |
 | `nestsKeepTheirStateAndTakeInfectedBack` | a nest block entity loads and saves its population, cooldown and release count, and absorbs a returning infected |
 | `hordesAreMostlyWalkersAndRunners` | over 4,000 rolls, walkers and runners are at least 70% of a horde, screamers, stalkers and charred never appear, and later hordes bring more brutes |
 | `hordeMigrationAndPowerSurviveSaveAndLoad` | the horde in progress, a migrating group, powered towns and the migration id counter survive the world-data codec |
 | `louderNoisesCarryFarther` | each loudness level has a larger radius and a higher priority than the one below; explosions reach at least 96 blocks |
+| `entityEventsStayClearOfVanilla` | every DEADLANDS entity event id lies above the highest id vanilla declares (read by reflection) and none repeats; sending each to a stalker, screamer and brute starts its animation (the Stalker crash regression) |
+
+The other server game tests, by class (all pass):
+
+| Class | Tests |
+|-------|-------|
+| `DeadlandsSurvivalGameTest` (Milestone 5) | `bodyStateSurvivesSaveAndLoad`, `conditionsFollowTheBody`, `treatmentAndPayload`, `survivalItemsDamageTypesAndText`, `skillsGrowAndSave`, `loadAndWeapons`, `wallsMuffleNoise` |
+| `DeadlandsVehicleGameTest` (Milestone 6) | `vehicleKindsAreRegisteredWithTextures`, `restorationMakesAVehicleDrivable`, `vehiclesKeepConditionAndCargo`, `pumpsHoldWhatTheyHoldAndRunDry`, `vehiclesShowWearAndKeepTheirSwitches`, `ruggedMarkersLeaveAVehicle` |
+| `DeadlandsNpcGameTest` (Milestone 7) | `standingFollowsReputation`, `tradersDealInRounds`, `survivorsKeepWhoTheyAre`, `markersBecomeWhatTheyStandFor`, `survivorsHaveTheirTextAndSkins`, `settlementsLiveAndDieByTheNumbers`, `accessFollowsStandingAndCurfew`, `survivorsHaveTheirPeopleAndBelongings`, `theWorldRemembersWhereCharactersAre` |
+| `DeadlandsStoryGameTest` (Milestone 8) | `loreIsCompleteAndWritten`, `documentsCarryTheirEntryAndTurnUpWhereTheyBelong`, `storyStateIsSaved`, `questsFollowTheStory`, `theSecretEndingNeedsEverything`, `radioAndStoryTextExist`, `keycardReadersHaveThreeLevels`, `bossesAreRegisteredAndScale` |
 
 ## 2. Automated: end-to-end client test
 
@@ -85,8 +88,11 @@ Milestone 4 tests (`DeadlandsInfectedGameTest`, **written, never run**):
 powershell -ExecutionPolicy Bypass -File .\dev.ps1 runClientGameTest
 ```
 
-A game window opens and drives itself for about two minutes. Expected: 23 `PASS:` lines, then
-`DEADLANDS client game test passed` and `BUILD SUCCESSFUL`.
+A game window opens and drives itself for about four minutes, **with sound**: Fabric's test
+defaults turn the music slider to 0 (the soundtrack starts, silently, which is what the music checks
+look for), but ambience and the infected play through the speakers. Expected: 64 `PASS:` lines, a
+`PERFORMANCE:` line and two `LIGHT` lines, then `DEADLANDS client game test passed` and
+`BUILD SUCCESSFUL`.
 
 What it does, in order:
 
@@ -102,8 +108,24 @@ What it does, in order:
 4. The world is saved and reopened: day, chronicle, journal count, the crate's exact contents
    (no re-roll) and the structure's lock and unrolled loot are all unchanged.
 5. A normal world (seed `deadlands`, structures on): the world generator itself finds a roadside
-   shack and a supply cache, each with all of its containers and its lock intact.
-6. A dedicated server with DEADLANDS, joined by this client: world status and journal on first join.
+   shack and a supply cache, each with all of its containers and its lock intact. (Every new world
+   first shows the opening introduction and cutscene; the test skips them with a click.)
+6. **The Stalker crash regression** (`StalkerScenes`, its own world): standing Stalkers receive
+   every infected entity event over the network and start each animation; a Stalker given a target
+   pounces for real, and the client plays the pounce animation and sound; ten Stalkers are spawned,
+   signalled and removed five times over.
+7. **Audio and looks** (`AudioScenes`, `LookScenes`, `PerformanceScenes`, one world): the music
+   director owns the music and wants exploration by day; one-shots play in the open; rain on an
+   iron roof and on an oak roof built over the player; three hunting walkers turn the music to
+   danger (a danger track reaches the sound engine), cry out and snarl, and the danger fades once
+   they are gone; two settlers call for safe-zone music; night music after dark. Then review
+   screenshots (below), forty walkers hunting the survivor at night for ten seconds (frame rate,
+   voices, live heap; it fails above six voices at once or under 20 fps), and F3+T in the world
+   (the same daylight view is captured before and after; their mean brightness must match within
+   15%, which missing textures or a stale light map would break).
+8. A dedicated server with DEADLANDS, joined by this client: world status and journal on first join.
+
+The main menu's wind-and-crows bed is checked at the very start.
 
 Screenshots are written to `build/run/clientGameTest/screenshots/`:
 
@@ -123,6 +145,15 @@ Screenshots are written to `build/run/clientGameTest/screenshots/`:
 | `deadlands-15-supply-cache` | the supply cache from above |
 | `deadlands-07-reloaded` | the first world after save and reload |
 | `deadlands-16-natural-roadside_shack`, `16-natural-supply_cache` | both ruins where the world generator placed them |
+| `deadlands-03c-harley-speaks`, `03b-harley-camp` | the opening introduction, then Harley's camp after it |
+| `deadlands-30-stalkers-events`, `31-stalker-pounce` | standing Stalkers after every entity event; a Stalker's pounce |
+| `deadlands-40-infected-lineup` | every infected kind in a row, and walkers in eight looks (four of the overhaul's outfits) behind |
+| `deadlands-41-infected-closeup`, `42-infected-dusk` | the same, close and at dusk |
+| `deadlands-43-held-<bar>-<slot>` | weapons in hand, first person: knives, machetes, nail bat, fire axe; firearms; vanilla swords |
+| `deadlands-44-block-variants` | asphalt, stone and dirt floors and concrete, brick and cobblestone walls, showing the per-position variants |
+| `deadlands-45-new-blocks` | the ten new blocks |
+| `deadlands-47-embers-at-night` | embers glowing at night |
+| `deadlands-46a-before-reload`, `46-after-reload` | the same daylight view before and after F3+T |
 | `deadlands-08-multiplayer` | joined to a dedicated server running DEADLANDS |
 
 ## 3. Manual checklist (singleplayer)

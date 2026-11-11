@@ -90,6 +90,18 @@ public final class DLBlocks {
 		BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).strength(0.3F).sound(SoundType.GLASS).noOcclusion()
 			.isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking(Blocks::never), DLTab.BUILDING_MATERIALS);
 
+	// Atmosphere overhaul: more of an abandoned town's surfaces (tools/assetgen/gen_blocks.py).
+	public static final Block DIRTY_CONCRETE = register("dirty_concrete", Block::new, stone(MapColor.STONE, 1.8F), DLTab.BUILDING_MATERIALS);
+	public static final Block BROKEN_CONCRETE = register("broken_concrete", Block::new, stone(MapColor.STONE, 1.3F), DLTab.BUILDING_MATERIALS);
+	public static final Block POTHOLED_ASPHALT = register("potholed_asphalt", Block::new, stone(MapColor.COLOR_BLACK, 1.4F), DLTab.BUILDING_MATERIALS);
+	public static final Block ROTTING_PLANKS = register("rotting_planks", Block::new, wood(MapColor.COLOR_BROWN), DLTab.BUILDING_MATERIALS);
+	public static final Block FADED_PLANKS = register("faded_planks", Block::new, wood(MapColor.COLOR_LIGHT_GRAY), DLTab.BUILDING_MATERIALS);
+	public static final Block CORRODED_METAL = register("corroded_metal", Block::new, metal(MapColor.TERRACOTTA_GREEN), DLTab.BUILDING_MATERIALS);
+	public static final Block INDUSTRIAL_PANEL = register("industrial_panel", Block::new, metal(MapColor.COLOR_GREEN), DLTab.BUILDING_MATERIALS);
+	public static final Block DIRTY_GLASS = glass("dirty_glass");
+	public static final Block CRACKED_GLASS = glass("cracked_glass");
+	public static final Block DUSTY_GLASS = glass("dusty_glass");
+
 	// Slabs for roads on slopes and building trim.
 	public static final Block ASPHALT_SLAB = slab("asphalt_slab", ASPHALT);
 	public static final Block CRACKED_ASPHALT_SLAB = slab("cracked_asphalt_slab", CRACKED_ASPHALT);
@@ -125,6 +137,11 @@ public final class DLBlocks {
 
 	public static List<Block> decals() {
 		return Collections.unmodifiableList(DECALS);
+	}
+
+	private static Block glass(String name) {
+		return register(name, TransparentBlock::new, BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).strength(0.3F).sound(SoundType.GLASS)
+			.noOcclusion().isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking(Blocks::never), DLTab.BUILDING_MATERIALS);
 	}
 
 	private static BlockBehaviour.Properties stone(MapColor colour, float hardness) {

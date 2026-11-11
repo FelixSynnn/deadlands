@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"": [
+			{
+				"model": "deadlands:block/potholed_asphalt",
+				"weight": 3
+			},
+			{
+				"model": "deadlands:block/variant/potholed_asphalt_1"
+			},
+			{
+				"model": "deadlands:block/variant/potholed_asphalt_2"
+			},
+			{
+				"model": "deadlands:block/variant/potholed_asphalt_3"
+			}
+		]
+	}
+}

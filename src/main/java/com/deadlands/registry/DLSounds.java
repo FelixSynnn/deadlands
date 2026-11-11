@@ -151,6 +151,44 @@ public final class DLSounds {
 	public static final Holder.Reference<SoundEvent> NPC_HURT = register("npc.hurt");
 	public static final Holder.Reference<SoundEvent> NPC_DEATH = register("npc.death");
 
+	// The soundtrack (tools/assetgen/gen_music.py). One event per track, so client.sound.MusicDirector
+	// chooses the track itself and never repeats the last ones.
+	public static final List<Holder.Reference<SoundEvent>> MUSIC_EXPLORE = List.of(register("music.empty_roads"), register("music.what_remains"),
+		register("music.overgrown"), register("music.static_lullaby"));
+	public static final List<Holder.Reference<SoundEvent>> MUSIC_NIGHT = List.of(register("music.long_night"), register("music.no_lights"),
+		register("music.hollow_hours"));
+	public static final List<Holder.Reference<SoundEvent>> MUSIC_DANGER = List.of(register("music.pursuit"), register("music.they_hear_you"));
+	public static final List<Holder.Reference<SoundEvent>> MUSIC_HORDE = List.of(register("music.horde"));
+	public static final List<Holder.Reference<SoundEvent>> MUSIC_SAFE = List.of(register("music.campfire"), register("music.shelter"));
+
+	// The soundscape (tools/assetgen/gen_soundscape.py), played by name from client.sound.AmbienceDirector.
+	private static final List<Holder.Reference<SoundEvent>> SOUNDSCAPE = List.of(
+		register("ambient.crow_flock"),
+		register("ambient.birds_far"),
+		register("ambient.leaves"),
+		register("ambient.branch"),
+		register("ambient.sign_creak"),
+		register("ambient.rattle"),
+		register("ambient.thunder_far"),
+		register("ambient.buzz"),
+		register("ambient.window_wind"),
+		register("ambient.settle"),
+		register("ambient.unexplained"),
+		register("ambient.wind_trees_loop"),
+		register("ambient.wind_street_loop"),
+		register("ambient.rain_roof_loop"),
+		register("ambient.rain_metal_loop"),
+		register("ambient.room_tone_loop"),
+		register("ambient.transformer_loop"),
+		register("ambient.menu_loop"));
+
+	// What the infected say when they spot a survivor (alert) and while they chase one (chase),
+	// per kind (tools/assetgen/gen_infected_voices.py). The runner's alert existed before.
+	private static final List<String> VOICE_KINDS = List.of("walker", "runner", "brute", "screamer", "military", "crawler", "bloater", "stalker",
+		"charred");
+	private static final java.util.Map<String, Holder.Reference<SoundEvent>> ALERT_VOICES = registerVoices("alert");
+	private static final java.util.Map<String, Holder.Reference<SoundEvent>> CHASE_VOICES = registerVoices("chase");
+
 	private DLSounds() {
 	}
 
@@ -174,6 +212,24 @@ public final class DLSounds {
 	/** A boss's voice: roar, attack, hurt or death. */
 	public static SoundEvent boss(com.deadlands.progression.BossKind kind, String what) {
 		return BOSS_SOUNDS.get(kind.id() + "." + what).value();
+	}
+
+	private static java.util.Map<String, Holder.Reference<SoundEvent>> registerVoices(String what) {
+		java.util.Map<String, Holder.Reference<SoundEvent>> voices = new java.util.HashMap<>();
+		for (String kind : VOICE_KINDS) {
+			voices.put(kind, kind.equals("runner") && what.equals("alert") ? INFECTED_RUNNER_ALERT : register("infected." + kind + "." + what));
+		}
+		return voices;
+	}
+
+	/** The cry an infected of this kind gives when it spots a survivor. */
+	public static SoundEvent infectedAlert(String kind) {
+		return ALERT_VOICES.getOrDefault(kind, ALERT_VOICES.get("walker")).value();
+	}
+
+	/** What an infected of this kind makes while it chases a survivor. */
+	public static SoundEvent infectedChase(String kind) {
+		return CHASE_VOICES.getOrDefault(kind, CHASE_VOICES.get("walker")).value();
 	}
 
 	public static List<Holder.Reference<SoundEvent>> all() {

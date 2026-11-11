@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.LivingEntityEmissiveLayer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import org.jspecify.annotations.Nullable;
 
@@ -27,6 +28,9 @@ public class InfectedRenderer extends MobRenderer<InfectedEntity, InfectedRender
 	private final InfectedKind kind;
 	private final Identifier[] textures;
 	private final @Nullable Identifier[] glows;
+	/** The rig's wear overlays (blood, a feeding, mud, gashes, ash, bites), one chosen per infected. */
+	private final Identifier[] wear;
+	private static final int WEAR_OVERLAYS = 6;
 	private final float baseScale;
 	private final float widthFactor;
 
@@ -48,6 +52,12 @@ public class InfectedRenderer extends MobRenderer<InfectedEntity, InfectedRender
 		}
 		this.baseScale = baseScale(kind);
 		this.widthFactor = widthFactor(kind);
+		String rig = kind.rig() == InfectedKind.Rig.BRUTE ? "brute" : "humanoid";
+		this.wear = new Identifier[WEAR_OVERLAYS];
+		for (int i = 0; i < WEAR_OVERLAYS; i++) {
+			wear[i] = Deadlands.id("textures/entity/infected/wear/" + rig + "_" + i + ".png");
+		}
+		addLayer(new InfectedWearLayer(this));
 		if (anyGlow) {
 			addLayer(new LivingEntityEmissiveLayer<>(this, state -> state.glowTexture, InfectedRenderer::glowAlpha, getModel(),
 				RenderTypes::entityTranslucentEmissive, false));
@@ -109,6 +119,9 @@ public class InfectedRenderer extends MobRenderer<InfectedEntity, InfectedRender
 		state.build = entity.buildScale();
 		state.heightScale = entity.heightScale();
 		state.seed = entity.getUUID().hashCode() & 0x7FFFFFFF;
+		// Six overlays and two chances in eight of none: with the looks, builds and heights, no two match.
+		int wearPick = (state.seed >>> 11) % (WEAR_OVERLAYS + 2);
+		state.wearTexture = wearPick < WEAR_OVERLAYS ? wear[wearPick] : null;
 		state.breaching = entity.hasFlag(InfectedEntity.FLAG_BREACHING);
 		state.screaming = entity.hasFlag(InfectedEntity.FLAG_SCREAMING);
 		state.climbing = entity.hasFlag(InfectedEntity.FLAG_CLIMBING);
@@ -121,6 +134,18 @@ public class InfectedRenderer extends MobRenderer<InfectedEntity, InfectedRender
 		state.breachAnimationState.copyFrom(entity.breachAnimationState);
 		state.emergeAnimationState.copyFrom(entity.emergeAnimationState);
 		state.swellAnimationState.copyFrom(entity.swellAnimationState);
+	}
+
+	/** Each infected's skin and clothes are a shade lighter or darker, warmer or colder, than the next one's. */
+	@Override
+	protected int getModelTint(InfectedRenderState state) {
+		int seed = state.seed;
+		float shade = 0.86F + ((seed >>> 3) & 15) / 15.0F * 0.14F;
+		float warm = (((seed >>> 7) & 15) / 15.0F - 0.5F) * 0.07F;
+		int r = Mth.clamp(Math.round((shade + warm) * 255.0F), 0, 255);
+		int g = Mth.clamp(Math.round(shade * 255.0F), 0, 255);
+		int b = Mth.clamp(Math.round((shade - warm) * 255.0F), 0, 255);
+		return ARGB.color(255, r, g, b);
 	}
 
 	@Override

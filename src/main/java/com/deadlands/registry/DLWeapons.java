@@ -24,6 +24,14 @@ public final class DLWeapons {
 	public static final Item BASEBALL_BAT = melee("baseball_bat", 2.0F, -2.0F);
 	public static final Item MACHETE = melee("machete", 4.0F, -2.4F);
 	public static final Item FIRE_AXE = melee("fire_axe", 6.0F, -3.0F);
+	// Atmosphere overhaul: knives, a worn-out machete and what people made weapons of.
+	public static final Item SURVIVAL_KNIFE = melee("survival_knife", 2.0F, -1.6F);
+	public static final Item HUNTING_KNIFE = melee("hunting_knife", 2.5F, -1.8F);
+	public static final Item RUSTY_MACHETE = DLItems.register("rusty_machete", MeleeItem::new,
+		new Item.Properties().sword(ToolMaterial.IRON, 3.5F, -2.5F).durability(140), DLTab.WEAPONS);
+	public static final Item NAIL_BAT = melee("nail_bat", 3.0F, -2.2F);
+	public static final Item LEAD_PIPE = melee("lead_pipe", 3.0F, -2.4F);
+	public static final Item PIPE_WRENCH = melee("pipe_wrench", 4.5F, -2.8F);
 
 	public static final Item PISTOL_AMMO = DLItems.register("pistol_ammo", Item::new, new Item.Properties(), DLTab.AMMUNITION);
 	public static final Item SHOTGUN_SHELL = DLItems.register("shotgun_shell", Item::new, new Item.Properties(), DLTab.AMMUNITION);
@@ -36,7 +44,8 @@ public final class DLWeapons {
 	public static final Item HUNTING_RIFLE = firearm("hunting_rifle", 300,
 		new FirearmItem.Spec(18.0F, 1, 0.0F, 96.0, 30, 4, 45, () -> RIFLE_ROUND, DLSounds.WEAPON_RIFLE_SHOT));
 
-	private static final Set<Item> ALL = Set.of(CROWBAR, BASEBALL_BAT, MACHETE, FIRE_AXE, PISTOL, SHOTGUN, HUNTING_RIFLE);
+	private static final Set<Item> ALL = Set.of(CROWBAR, BASEBALL_BAT, MACHETE, FIRE_AXE, SURVIVAL_KNIFE, HUNTING_KNIFE, RUSTY_MACHETE, NAIL_BAT,
+		LEAD_PIPE, PIPE_WRENCH, PISTOL, SHOTGUN, HUNTING_RIFLE);
 
 	private DLWeapons() {
 	}

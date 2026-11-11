@@ -216,6 +216,16 @@
 					"type": "minecraft:item",
 					"name": "deadlands:wrench",
 					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:lead_pipe",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:nail_bat",
+					"weight": 1
 				}
 			]
 		}

@@ -1,7 +1,70 @@
 {
 	"variants": {
-		"": {
-			"model": "deadlands:block/ash"
-		}
+		"": [
+			{
+				"model": "deadlands:block/ash",
+				"weight": 3
+			},
+			{
+				"model": "deadlands:block/ash",
+				"weight": 3,
+				"y": 90
+			},
+			{
+				"model": "deadlands:block/ash",
+				"weight": 3,
+				"y": 180
+			},
+			{
+				"model": "deadlands:block/ash",
+				"weight": 3,
+				"y": 270
+			},
+			{
+				"model": "deadlands:block/variant/ash_1"
+			},
+			{
+				"model": "deadlands:block/variant/ash_1",
+				"y": 90
+			},
+			{
+				"model": "deadlands:block/variant/ash_1",
+				"y": 180
+			},
+			{
+				"model": "deadlands:block/variant/ash_1",
+				"y": 270
+			},
+			{
+				"model": "deadlands:block/variant/ash_2"
+			},
+			{
+				"model": "deadlands:block/variant/ash_2",
+				"y": 90
+			},
+			{
+				"model": "deadlands:block/variant/ash_2",
+				"y": 180
+			},
+			{
+				"model": "deadlands:block/variant/ash_2",
+				"y": 270
+			},
+			{
+				"model": "deadlands:block/variant/ash_3"
+			},
+			{
+				"model": "deadlands:block/variant/ash_3",
+				"y": 90
+			},
+			{
+				"model": "deadlands:block/variant/ash_3",
+				"y": 180
+			},
+			{
+				"model": "deadlands:block/variant/ash_3",
+				"y": 270
+			}
+		]
 	}
 }

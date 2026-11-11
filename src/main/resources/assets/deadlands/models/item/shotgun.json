@@ -1,6 +1,76 @@
 {
-	"parent": "minecraft:item/generated",
+	"parent": "minecraft:item/handheld",
 	"textures": {
 		"layer0": "deadlands:item/shotgun"
+	},
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [
+				0,
+				90,
+				-35
+			],
+			"translation": [
+				0,
+				1.25,
+				-2.5
+			],
+			"scale": [
+				0.85,
+				0.85,
+				0.85
+			]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [
+				0,
+				-90,
+				35
+			],
+			"translation": [
+				0,
+				1.25,
+				-2.5
+			],
+			"scale": [
+				0.85,
+				0.85,
+				0.85
+			]
+		},
+		"firstperson_righthand": {
+			"rotation": [
+				0,
+				100,
+				-15
+			],
+			"translation": [
+				1.5,
+				3.5,
+				-2.0
+			],
+			"scale": [
+				0.8,
+				0.8,
+				0.8
+			]
+		},
+		"firstperson_lefthand": {
+			"rotation": [
+				0,
+				-100,
+				15
+			],
+			"translation": [
+				1.5,
+				3.5,
+				-2.0
+			],
+			"scale": [
+				0.8,
+				0.8,
+				0.8
+			]
+		}
 	}
 }

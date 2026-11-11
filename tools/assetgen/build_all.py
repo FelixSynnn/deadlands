@@ -5,7 +5,7 @@
 
 Groups (in run order): title, gui, items, blocks, containers, decor, decals, structures, vanilla, terrain,
 world, towns, sites, infected, nests, audio, ambience, infected_audio, survival, vehicles, npcs, story,
-bosses, polish, realism (always last: it finishes the textures the others paint).
+bosses, polish, weapons, menu, music, soundscape, infected_voices, realism (it finishes the textures the others paint), variants (made from the finished textures).
 Output is deterministic (fixed seeds), so regenerating without changing a generator reproduces
 the committed files. Tag files are merged, so groups can be run in any combination.
 """
@@ -23,7 +23,11 @@ import gen_decals
 import gen_gui
 import gen_infected
 import gen_infected_audio
+import gen_infected_voices
 import gen_items
+import gen_menu
+import gen_music
+import gen_soundscape
 import gen_nests
 import gen_npcs
 import gen_story
@@ -36,9 +40,11 @@ import gen_terrain
 import gen_title
 import gen_towns
 import gen_vanilla
+import gen_weapons
 import gen_vehicles
 import gen_world
 import dl_realism
+import gen_variants
 
 GROUPS = {
     "title": gen_title.build,
@@ -65,7 +71,14 @@ GROUPS = {
     "story": gen_story.build,  # lore (Java), story text, story items and blocks, helicopter, radio sounds
     "bosses": gen_bosses.build,  # boss rigs (Java), textures, eggs, sounds
     "polish": gen_polish.build,  # particles, location ambience, supply drop (Java model), weather/event/cutscene text
+    # Atmosphere overhaul, after every older audio group (these replace some of their sounds.json entries):
+    "weapons": gen_weapons.build,  # weapon icons painted per pixel, held models, new weapons' text, recipes and loot
+    "menu": gen_menu.build,  # the main-menu backdrop (replaces gen_title's sky and skylines; gen_title still draws the logo)
+    "music": gen_music.build,  # the soundtrack: title theme, exploration, night, danger, horde and safe-zone pieces
+    "soundscape": gen_soundscape.build,  # crows, wind, rain on roofs, distant noises, the menu bed
+    "infected_voices": gen_infected_voices.build,  # every infected voice; then removes sound files nothing refers to
     "realism": dl_realism.build,  # last: the finishing pass over block and item textures (originals in texture-backup/)
+    "variants": gen_variants.build,  # after realism: per-position variants blended from the finished textures
 }
 
 

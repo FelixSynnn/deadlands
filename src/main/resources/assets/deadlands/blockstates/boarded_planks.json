@@ -1,7 +1,19 @@
 {
 	"variants": {
-		"": {
-			"model": "deadlands:block/boarded_planks"
-		}
+		"": [
+			{
+				"model": "deadlands:block/boarded_planks",
+				"weight": 3
+			},
+			{
+				"model": "deadlands:block/variant/boarded_planks_1"
+			},
+			{
+				"model": "deadlands:block/variant/boarded_planks_2"
+			},
+			{
+				"model": "deadlands:block/variant/boarded_planks_3"
+			}
+		]
 	}
 }

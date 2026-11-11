@@ -223,6 +223,16 @@
 					"type": "minecraft:item",
 					"name": "deadlands:rifle_round",
 					"weight": 3
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:rusty_machete",
+					"weight": 3
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:lead_pipe",
+					"weight": 1
 				}
 			]
 		}

@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"": [
+			{
+				"model": "deadlands:block/faded_planks",
+				"weight": 3
+			},
+			{
+				"model": "deadlands:block/variant/faded_planks_1"
+			},
+			{
+				"model": "deadlands:block/variant/faded_planks_2"
+			},
+			{
+				"model": "deadlands:block/variant/faded_planks_3"
+			}
+		]
+	}
+}
