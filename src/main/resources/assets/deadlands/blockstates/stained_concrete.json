@@ -1,7 +1,70 @@
 {
 	"variants": {
-		"": {
-			"model": "deadlands:block/stained_concrete"
-		}
+		"": [
+			{
+				"model": "deadlands:block/stained_concrete",
+				"weight": 3
+			},
+			{
+				"model": "deadlands:block/stained_concrete",
+				"weight": 3,
+				"y": 90
+			},
+			{
+				"model": "deadlands:block/stained_concrete",
+				"weight": 3,
+				"y": 180
+			},
+			{
+				"model": "deadlands:block/stained_concrete",
+				"weight": 3,
+				"y": 270
+			},
+			{
+				"model": "deadlands:block/variant/stained_concrete_1"
+			},
+			{
+				"model": "deadlands:block/variant/stained_concrete_1",
+				"y": 90
+			},
+			{
+				"model": "deadlands:block/variant/stained_concrete_1",
+				"y": 180
+			},
+			{
+				"model": "deadlands:block/variant/stained_concrete_1",
+				"y": 270
+			},
+			{
+				"model": "deadlands:block/variant/stained_concrete_2"
+			},
+			{
+				"model": "deadlands:block/variant/stained_concrete_2",
+				"y": 90
+			},
+			{
+				"model": "deadlands:block/variant/stained_concrete_2",
+				"y": 180
+			},
+			{
+				"model": "deadlands:block/variant/stained_concrete_2",
+				"y": 270
+			},
+			{
+				"model": "deadlands:block/variant/stained_concrete_3"
+			},
+			{
+				"model": "deadlands:block/variant/stained_concrete_3",
+				"y": 90
+			},
+			{
+				"model": "deadlands:block/variant/stained_concrete_3",
+				"y": 180
+			},
+			{
+				"model": "deadlands:block/variant/stained_concrete_3",
+				"y": 270
+			}
+		]
 	}
 }

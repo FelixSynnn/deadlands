@@ -1,6 +1,8 @@
 package com.deadlands.audio;
 
 import com.deadlands.network.LocationPayload;
+import com.deadlands.npc.Faction;
+import com.deadlands.npc.Reputation;
 import com.deadlands.world.power.PowerGrid;
 import com.deadlands.world.town.TownBuildingPiece;
 import com.deadlands.world.town.TownLookup;
@@ -62,6 +64,7 @@ public final class LocationTracker {
 			BlockPos pos = player.blockPosition();
 			Place place = Place.OPEN;
 			boolean powered = false;
+			boolean safe = false;
 			boolean underground = pos.getY() < level.getHeight(Heightmap.Types.WORLD_SURFACE, pos.getX(), pos.getZ()) - 6 && !level.canSeeSky(pos);
 			var registry = level.registryAccess().lookupOrThrow(Registries.STRUCTURE);
 			for (Map.Entry<Structure, it.unimi.dsi.fastutil.longs.LongSet> entry : level.structureManager().getAllStructuresAt(pos).entrySet()) {
@@ -83,6 +86,7 @@ public final class LocationTracker {
 					if (id.getPath().equals("town")) {
 						TownSite town = TownLookup.nearest(level, pos, 200.0).orElse(null);
 						powered = town != null && PowerGrid.isPowered(level, town);
+						safe = town != null && tolerated(player, town);
 					}
 					break;
 				}
@@ -97,12 +101,26 @@ public final class LocationTracker {
 					}
 				}
 			}
-			int code = place.ordinal() * 2 + (powered ? 1 : 0);
+			int code = place.ordinal() * 4 + (powered ? 1 : 0) + (safe ? 2 : 0);
 			Integer last = SENT.put(player.getUUID(), code);
 			if (last == null || last != code) {
-				ServerPlayNetworking.send(player, new LocationPayload(place.ordinal(), powered));
+				ServerPlayNetworking.send(player, new LocationPayload(place.ordinal(), powered, safe));
 			}
 		}
+	}
+
+	/** A survivor holdout or a military checkpoint whose people do not hold this survivor wary or hostile. */
+	private static boolean tolerated(ServerPlayer player, TownSite town) {
+		Faction faction = switch (town.condition()) {
+			case SURVIVOR -> Faction.SETTLERS;
+			case MILITARY -> Faction.MILITARY;
+			default -> null;
+		};
+		if (faction == null) {
+			return false;
+		}
+		Reputation.Standing standing = Reputation.standing(player, faction);
+		return standing != Reputation.Standing.HOSTILE && standing != Reputation.Standing.WARY;
 	}
 
 	private static Place townPlace(ServerLevel level, BlockPos pos, Structure town) {

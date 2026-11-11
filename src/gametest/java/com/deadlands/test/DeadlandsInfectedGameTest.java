@@ -1,7 +1,12 @@
 package com.deadlands.test;
 
 import com.deadlands.Deadlands;
+import com.deadlands.entity.DLEntityEvents;
 import com.deadlands.entity.InfectedEntity;
+import com.deadlands.entity.StalkerEntity;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import net.minecraft.world.entity.EntityEvent;
 import com.deadlands.entity.InfectedKind;
 import com.deadlands.entity.InfectedVariants;
 import com.deadlands.horde.HordeDirector;
@@ -44,7 +49,8 @@ import net.minecraft.world.level.storage.loot.LootTable;
  * Milestone 4 checks: the infected kinds and their looks, saving infected and nests, the horde mix,
  * and horde, migration and power state in the world save.
  *
- * <p>Written without being run (the project owner asked for no test runs during Milestones 3 and 4).
+ * <p>Written while the project owner asked for no test runs; run in every build since the
+ * atmosphere overhaul.
  */
 public class DeadlandsInfectedGameTest {
 	@GameTest
@@ -62,7 +68,7 @@ public class DeadlandsInfectedGameTest {
 			helper.assertFalse(kind.variants().isEmpty(), "every kind has at least one look: " + kind.id());
 			looks += kind.variants().size();
 		}
-		helper.assertTrue(looks >= 50 && looks <= 60, "50 to 60 infected looks, found " + looks);
+		helper.assertTrue(looks >= 60 && looks <= 80, "60 to 80 infected looks, found " + looks);
 		helper.succeed();
 	}
 
@@ -191,6 +197,54 @@ public class DeadlandsInfectedGameTest {
 			helper.assertTrue(levels[i].priority() > levels[i - 1].priority(), levels[i] + " outranks " + levels[i - 1]);
 		}
 		helper.assertTrue(Loudness.EXPLOSION.radius() >= 96.0, "explosions are heard at least 96 blocks away");
+		helper.succeed();
+	}
+
+	/**
+	 * Regression test for the Stalker crash (ClassCastException: StalkerEntity cannot be cast to
+	 * Sniffer): the client handles some vanilla entity event ids itself before the entity sees them
+	 * (63 casts it to Sniffer, 21 to Guardian), so every DEADLANDS id must be above every id vanilla
+	 * declares. Vanilla's ids are read from EntityEvent, so a Minecraft update that adds more is caught.
+	 */
+	@GameTest
+	public void entityEventsStayClearOfVanilla(GameTestHelper helper) {
+		int highestVanilla = 0;
+		int vanillaCount = 0;
+		for (Field field : EntityEvent.class.getDeclaredFields()) {
+			if (Modifier.isStatic(field.getModifiers()) && field.getType() == byte.class) {
+				try {
+					highestVanilla = Math.max(highestVanilla, field.getByte(null));
+					vanillaCount++;
+				} catch (IllegalAccessException e) {
+					throw new IllegalStateException("cannot read " + field.getName(), e);
+				}
+			}
+		}
+		helper.assertTrue(vanillaCount > 50 && highestVanilla >= 69, "vanilla's entity events were read (" + vanillaCount + ", highest " + highestVanilla + ")");
+		Set<Byte> seen = new HashSet<>();
+		for (byte id : DLEntityEvents.ALL) {
+			helper.assertTrue(id >= DLEntityEvents.FIRST && id > highestVanilla, "DEADLANDS entity event " + id + " is above vanilla's " + highestVanilla);
+			helper.assertTrue(seen.add(id), "DEADLANDS entity event " + id + " is used once");
+		}
+		byte[] infected = {InfectedEntity.EVENT_ATTACK, InfectedEntity.EVENT_SLAM, InfectedEntity.EVENT_POUNCE, InfectedEntity.EVENT_SCREAM,
+			InfectedEntity.EVENT_EMERGE};
+		for (byte id : infected) {
+			helper.assertTrue(DLEntityEvents.ALL.contains(id), "infected event " + id + " is a DEADLANDS event");
+		}
+		// The infected handle each of their events themselves: the matching animation starts.
+		StalkerEntity stalker = helper.spawn(DLEntities.STALKER, new BlockPos(1, 1, 1));
+		stalker.handleEntityEvent(InfectedEntity.EVENT_POUNCE);
+		helper.assertTrue(stalker.pounceAnimationState.isStarted(), "a stalker's pounce event starts its pounce animation");
+		stalker.handleEntityEvent(InfectedEntity.EVENT_ATTACK);
+		helper.assertTrue(stalker.attackAnimationState.isStarted(), "an attack event starts the attack animation");
+		InfectedEntity screamer = helper.spawn(DLEntities.SCREAMER, new BlockPos(2, 1, 1));
+		screamer.handleEntityEvent(InfectedEntity.EVENT_SCREAM);
+		helper.assertTrue(screamer.screamAnimationState.isStarted(), "a scream event starts the scream animation");
+		InfectedEntity brute = helper.spawn(DLEntities.BRUTE, new BlockPos(3, 1, 1));
+		brute.handleEntityEvent(InfectedEntity.EVENT_SLAM);
+		helper.assertTrue(brute.slamAnimationState.isStarted(), "a slam event starts the slam animation");
+		brute.handleEntityEvent(InfectedEntity.EVENT_EMERGE);
+		helper.assertTrue(brute.emergeAnimationState.isStarted(), "an emerge event starts the emerge animation");
 		helper.succeed();
 	}
 }

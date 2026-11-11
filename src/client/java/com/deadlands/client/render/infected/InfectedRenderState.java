@@ -11,6 +11,8 @@ public class InfectedRenderState extends LivingEntityRenderState {
 	public InfectedKind kind = InfectedKind.WALKER;
 	public @Nullable Identifier texture;
 	public @Nullable Identifier glowTexture;
+	/** What happened to this one (blood, mud, wounds, ash, bites), laid over its look; null for none. */
+	public @Nullable Identifier wearTexture;
 	/** Optional model parts the variant shows ({@link com.deadlands.entity.InfectedVariants} flags). */
 	public int parts;
 	public float build = 1.0F;

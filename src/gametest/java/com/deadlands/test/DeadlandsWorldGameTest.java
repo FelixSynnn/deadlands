@@ -29,7 +29,8 @@ import net.minecraft.world.level.storage.loot.LootTable;
  * Milestone 3 checks: biome replacement, town data and building templates, town identity, cities and
  * western towns, the sites outside towns, railways and the power grid's parts.
  *
- * <p>Written without being run (the project owner asked for no test runs during Milestone 3).
+ * <p>Written while the project owner asked for no test runs; run in every build since the
+ * atmosphere overhaul.
  */
 public class DeadlandsWorldGameTest {
 	private static final List<String> TOWN_LOOT = List.of("house_kitchen", "house_bathroom", "house_bedroom", "house_drawers", "store_storage",

@@ -34,6 +34,7 @@ public class DeadlandsClientGameTest implements FabricClientGameTest {
 		context.waitForScreen(DeadlandsTitleScreen.class);
 		context.waitTicks(50);
 		shot(context, "deadlands-01-title");
+		AudioScenes.menu(context);
 
 		// 2. Settings screen (opened from the title screen as a player would).
 		context.setScreen(() -> new SettingsScreen(Minecraft.getInstance().screen));
@@ -52,7 +53,7 @@ public class DeadlandsClientGameTest implements FabricClientGameTest {
 			context.waitTicks(30);
 			shot(context, "deadlands-03-arrival-day-card");
 			// Milestones 8 and 9: the opening introduction, then the opening cutscene; a click skips each.
-			skipOpening(context);
+			skipOpening(context, "deadlands-03c-harley-speaks");
 			shot(context, "deadlands-03b-harley-camp");
 
 			check(world.getServer().computeOnServer(server -> DeadlandsWorldData.get(server).players().size()) == 1,
@@ -103,6 +104,27 @@ public class DeadlandsClientGameTest implements FabricClientGameTest {
 		// 5. A normal world (fixed seed, structures on): the ruins generate on their own.
 		MilestoneTwoScenes.naturalStructures(context);
 
+		// 5b. Stalker crash regression: entity events, a real pounce, repeated spawning (own world, so
+		// its night, difficulty and game mode cannot touch the worlds above).
+		try (TestSingleplayerContext world = context.worldBuilder().setUseConsistentSettings(true).create()) {
+			world.getClientWorld().waitForChunksRender();
+			skipOpening(context, null);
+			StalkerScenes.run(context, world);
+		}
+
+		// 5c. The soundtrack, the soundscape and the infected's voices in a real client.
+		try (TestSingleplayerContext world = context.worldBuilder().setUseConsistentSettings(true).create()) {
+			world.getClientWorld().waitForChunksRender();
+			skipOpening(context, null);
+			AudioScenes.run(context, world);
+			LookScenes.infected(context, world);
+			LookScenes.weapons(context, world);
+			LookScenes.blocks(context, world);
+			LookScenes.embers(context, world);
+			PerformanceScenes.crowd(context, world);
+			PerformanceScenes.reload(context, world);
+		}
+
 		// 6. Multiplayer: a dedicated server with the mod, joined by this client.
 		try (TestDedicatedServerContext server = context.worldBuilder().createServer()) {
 			try (TestServerConnection connection = server.connect()) {
@@ -116,14 +138,19 @@ public class DeadlandsClientGameTest implements FabricClientGameTest {
 		Deadlands.LOGGER.info("DEADLANDS client game test passed");
 	}
 
-	/** Click through the introduction and the opening cutscene, as a player in a hurry would. */
-	private static void skipOpening(ClientGameTestContext context) {
+	/**
+	 * Click through the introduction and the opening cutscene of a new world, as a player in a hurry
+	 * would, and close Harley's greeting (screenshotted as {@code dialogueShot} unless it is null).
+	 */
+	static void skipOpening(ClientGameTestContext context, String dialogueShot) {
 		int quiet = 0;
 		for (int tick = 0; tick < 600 && quiet < 60; tick += 5) {
 			String screen = context.computeOnClient(client -> client.screen == null ? "" : client.screen.getClass().getSimpleName());
 			if (screen.equals("DialogueScreen")) {
 				// Harley speaks once the opening is over (Milestone 8): look, then close it.
-				shot(context, "deadlands-03c-harley-speaks");
+				if (dialogueShot != null) {
+					shot(context, dialogueShot);
+				}
 				context.setScreen(() -> null);
 				quiet = 0;
 			} else if (screen.equals("IntroScreen") || screen.equals("CutsceneScreen")) {

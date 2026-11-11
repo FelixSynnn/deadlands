@@ -17,11 +17,11 @@
 			"additions": [
 				{
 					"sound": "deadlands:ambient.frog",
-					"tick_chance": 0.0111
+					"tick_chance": 0.00222
 				},
 				{
 					"sound": "deadlands:ambient.creak",
-					"tick_chance": 0.004
+					"tick_chance": 0.0008
 				}
 			]
 		},

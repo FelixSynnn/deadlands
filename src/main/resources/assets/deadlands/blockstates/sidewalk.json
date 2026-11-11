@@ -1,7 +1,19 @@
 {
 	"variants": {
-		"": {
-			"model": "deadlands:block/sidewalk"
-		}
+		"": [
+			{
+				"model": "deadlands:block/sidewalk",
+				"weight": 3
+			},
+			{
+				"model": "deadlands:block/variant/sidewalk_1"
+			},
+			{
+				"model": "deadlands:block/variant/sidewalk_2"
+			},
+			{
+				"model": "deadlands:block/variant/sidewalk_3"
+			}
+		]
 	}
 }

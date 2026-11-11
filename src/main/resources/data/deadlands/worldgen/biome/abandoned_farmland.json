@@ -16,12 +16,8 @@
 			},
 			"additions": [
 				{
-					"sound": "deadlands:ambient.crow",
-					"tick_chance": 0.0111
-				},
-				{
 					"sound": "deadlands:ambient.gust",
-					"tick_chance": 0.004
+					"tick_chance": 0.0008
 				}
 			]
 		},

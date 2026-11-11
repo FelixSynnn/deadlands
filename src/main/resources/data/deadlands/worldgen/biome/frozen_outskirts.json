@@ -17,7 +17,7 @@
 			"additions": [
 				{
 					"sound": "deadlands:ambient.gust",
-					"tick_chance": 0.0111
+					"tick_chance": 0.00222
 				}
 			]
 		},

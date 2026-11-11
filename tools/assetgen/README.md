@@ -52,7 +52,7 @@ python tools/assetgen/build_all.py blocks containers
 | `gen_towns.py` | town building templates (76 with `gen_city`'s and the seeded variants), the town structure and structure set, the road feature data, town loot tables, town text, iron bars and cobweb |
 | `gen_city.py` | city buildings (apartment and office blocks, department store, motels, bank, courthouse, fire stations, emergency rooms) and western buildings (saloons, general stores, wooden houses, sheriff's office); used by `gen_towns` |
 | `gen_sites.py` | the 37 site templates outside towns (school, outposts, camps, military posts, bunkers, utility sites, power station, treatment plant, farm sites, research outpost), their worldgen files and loot tables, the railway feature data, the fuse and the restyled rails |
-| `gen_infected.py` | the infected: both rigs and the variant list **as Java source** (`InfectedGeometry.java`, `InfectedVariants.java`), 58 textures and 2 glow layers, spawn eggs, entity and outfit loot tables, breakable-block tags, horde and infected text; also a review sheet in `_cache/infected_preview.png` |
+| `gen_infected.py` | the infected: both rigs and the variant list **as Java source** (`InfectedGeometry.java`, `InfectedVariants.java`), 66 textures, 2 glow layers and 12 wear overlays (blood, a feeding, mud, gashes, ash, bites; 6 per rig), spawn eggs, entity and outfit loot tables, breakable-block tags, horde and infected text; also a review sheet in `_cache/infected_preview.png` |
 | `gen_nests.py` | the five nest cores, biomass and its floor growth, the tissue sample, their models, drops, tags and names |
 | `gen_infected_audio.py` | infected voices and actions, nest sounds, horde stings and the distant crowd (94 files, merged into `sounds.json`) |
 | `gen_ambience.py` | biome ambience: 9 seamless loops, one-shot additions, the town sting |
@@ -60,12 +60,20 @@ python tools/assetgen/build_all.py blocks containers
 | `gen_vehicles.py` | the twelve vehicle rigs with interiors and doors **as Java source** (`VehicleGeometry.java`), 48 textures and 48 overlays (512x512), the tow rope, the engine loop, impact, repair and horn sounds |
 | `gen_story.py` | the lore catalogue **as Java source** (`LoreEntries.java`) from `lore_data.py`, and (through `story_assets.py` and `story_texts.py`) all story text, item icons, the reader, door and transmitter, the helicopter rig, radio and rotor sounds, structure tags |
 | `gen_bosses.py` | the five boss rigs **as Java source** (`BossGeometry.java`), their textures, spawn eggs, voices and the boss sting |
-| `gen_polish.py` | Milestone 9: the five particles, location ambience sounds, the supply drop (rig **as Java source**, texture, loot), weather, event, cutscene and command text |
+| `gen_polish.py` | Milestone 9: the five particles, location ambience sounds, the supply drop (rig **as Java source**, texture, loot), weather, event, cutscene and command text. Only the ember frames were regenerated in the overhaul (`python -c "import gen_polish; gen_polish.particles()"` from this folder): the committed ash, blood, dust and spore sprites no longer match what the function draws, so restore those four from git after running it |
 | `gen_immersion.py` | horror Phase 1: empties every vanilla structure biome tag, silences vanilla cave and underwater ambience, sets the menu theme to 45%, synthesises the placeholder chase and exploration music, builds the flashlight's box model, texture and text |
 | `import_sfx.py` | horror Phase 2: imports the chosen third-party horror sounds and music (source folder outside the project; skipped when missing), cuts, fades, normalises and encodes them, adds their sound events and subtitles |
 | `gen_framework.py` | horror Phase 2: the Horror Director's scares, mission givers and a development mission, the first achievements, the cutscenes as data, the campaign dimension, and their text |
 | `dl_realism.py` | the finishing pass over block and item textures (light from the upper left, hue-shifted shading, a five-step ramp, calmer saturation, coloured item outlines); copies each original to `texture-backup/` first, keeps a hash manifest in `_cache/` so it never applies twice, and leaves the textures in its `RESTORED` list as painted |
 | `gen_npcs.py` | 34 survivor skins (30 by role, and the 4 characters' skins copied from `character-skins/<Name>.png`, matched ignoring case, or placeholders if missing), the spawn marker's files, the vehicle cargo loot table, survivor voices, the journal TASKS icon, all dialogue, settlement and access text |
+| `gen_weapons.py` | atmosphere overhaul: every weapon icon painted pixel by pixel (bevelled steel, scratches, rust, grips, blood), the vanilla iron, diamond and netherite swords and axes restyled, handheld models and first-person placement, the six new weapons' text, recipes and loot, a review sheet in `_cache/` |
+| `gen_menu.py` | atmosphere overhaul: the main-menu backdrop (sky, far skyline, the street painted per pixel in world space, foreground, weeds, light shafts, fog banks, crow frames) and the build stamp text; a preview in `_cache/` |
+| `dl_music.py` | the instrument library for the soundtrack: modelled piano, bowed strings, pads, choir, Karplus-Strong guitar, bells, drums, hall reverb, compression, a look-ahead limiter and seamless loop folding |
+| `gen_music.py` | the 13 pieces of the soundtrack (title theme, exploration, night, danger, horde, safe zone), their `sounds.json` entries (streamed), titles and the audio setting names |
+| `gen_soundscape.py` | the soundscape: crows, birds, leaves, branches, signs, sheet metal, thunder, dogs, buzz, window wind, settling, unexplained noises (mono), the wind, rain-on-roof, room, transformer and menu loops (stereo) |
+| `dl_voice.py` | the source-filter voice used for the infected: glottal pulses with jitter, shimmer, period doubling and creak, gliding formants, rasp, gurgle and rattle |
+| `gen_infected_voices.py` | every infected voice (idle, alert, chase, hurt, death, breath, distant, muffled) per kind; afterwards removes sound files that `sounds.json` no longer refers to |
+| `gen_variants.py` | per-position variants of the most common DEADLANDS and vanilla blocks, blended from the finished textures with the outer texels kept so any mix tiles, and the weighted blockstates that pick them; run after `realism` |
 
 ## Style guide
 
@@ -85,7 +93,12 @@ python tools/assetgen/build_all.py blocks containers
   and its texture regions come from one description in `gen_infected.py`: change the rig there,
   never in the generated Java.
 - Seeds must be stable between runs: use `zlib.crc32`, never Python's salted `hash()`.
-- Sounds: mono for effects, stereo only for music; peaks below -1 dBFS.
+- Sounds: mono for effects and anything placed in the world (Minecraft does not position stereo
+  files); stereo only for music and beds that play everywhere (wind, rain on the roof, the menu);
+  peaks below -1 dBFS.
+- Block variety: `gen_variants.py` turns a finished texture into variants that differ inside and
+  match at the edges. Use it for blocks that cover large areas; keep features that must not repeat
+  away from the outer texels.
 
 ## Adding an asset
 

@@ -42,6 +42,9 @@ public final class DeadlandsClient implements ClientModInitializer {
 		DLKeyMappings.init();
 		ClientNetworking.init();
 		BlockRenderLayerMap.putBlock(DLBlocks.BROKEN_GLASS, ChunkSectionLayer.TRANSLUCENT);
+		BlockRenderLayerMap.putBlock(DLBlocks.DIRTY_GLASS, ChunkSectionLayer.TRANSLUCENT);
+		BlockRenderLayerMap.putBlock(DLBlocks.CRACKED_GLASS, ChunkSectionLayer.TRANSLUCENT);
+		BlockRenderLayerMap.putBlock(DLBlocks.DUSTY_GLASS, ChunkSectionLayer.TRANSLUCENT);
 		BlockRenderLayerMap.putBlock(DLBlocks.DEAD_LEAVES, ChunkSectionLayer.CUTOUT);
 		DLBlocks.decals().forEach(decal -> BlockRenderLayerMap.putBlock(decal, ChunkSectionLayer.TRANSLUCENT));
 		InfectedLayers.register();
@@ -125,14 +128,15 @@ public final class DeadlandsClient implements ClientModInitializer {
 			com.deadlands.client.hud.BossCardHud.tick();
 			com.deadlands.client.weather.ClientWeather.tick(client);
 			com.deadlands.client.sound.AmbienceDirector.tick(client);
-			com.deadlands.client.sound.VehicleEngineSounds.tick(client);
 			com.deadlands.client.sound.MusicDirector.tick(client);
+			com.deadlands.client.sound.MenuAmbience.tick(client);
+			com.deadlands.client.sound.VehicleEngineSounds.tick(client);
+			VOICES.tickAll(client);
 			com.deadlands.client.horror.ScarePlayer.tick(client);
 		});
 		com.deadlands.client.camera.PerspectiveLock.init();
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			TitleBackdrop.releaseTextures();
-			client.getMusicManager().stopPlaying(); // the menu theme does not follow you into the world
 		});
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
 			ClientState.clear();
@@ -142,8 +146,8 @@ public final class DeadlandsClient implements ClientModInitializer {
 			com.deadlands.client.hud.BossCardHud.reset();
 			com.deadlands.client.weather.ClientWeather.reset();
 			com.deadlands.client.sound.AmbienceDirector.reset();
-			com.deadlands.client.sound.VehicleEngineSounds.reset();
 			com.deadlands.client.sound.MusicDirector.reset();
+			com.deadlands.client.sound.VehicleEngineSounds.reset();
 			com.deadlands.client.horror.ScarePlayer.reset();
 			com.deadlands.client.mission.ClientMissions.reset();
 			SurvivalHud.reset();

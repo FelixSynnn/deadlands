@@ -189,9 +189,14 @@
 	},
 	"ambient.crow": {
 		"sounds": [
-			"deadlands:ambient/crow1",
-			"deadlands:ambient/crow2"
-		]
+			"deadlands:ambient/scape/crow_1",
+			"deadlands:ambient/scape/crow_2",
+			"deadlands:ambient/scape/crow_3",
+			"deadlands:ambient/scape/crow_4",
+			"deadlands:ambient/scape/crow_5",
+			"deadlands:ambient/scape/crow_6"
+		],
+		"subtitle": "subtitles.deadlands.ambient.crow"
 	},
 	"ambient.metal": {
 		"sounds": [
@@ -235,79 +240,103 @@
 	},
 	"infected.walker.ambient": {
 		"sounds": [
-			"deadlands:infected/walker_ambient1",
-			"deadlands:infected/walker_ambient2",
-			"deadlands:infected/walker_ambient3",
-			"deadlands:infected/walker_ambient4"
+			"deadlands:infected/voice/walker_ambient_1",
+			"deadlands:infected/voice/walker_ambient_2",
+			"deadlands:infected/voice/walker_ambient_3",
+			"deadlands:infected/voice/walker_ambient_4",
+			"deadlands:infected/voice/walker_ambient_5",
+			"deadlands:infected/voice/walker_ambient_6"
 		],
 		"subtitle": "subtitles.deadlands.infected.groan"
 	},
 	"infected.walker.hurt": {
 		"sounds": [
-			"deadlands:infected/walker_hurt1",
-			"deadlands:infected/walker_hurt2"
+			"deadlands:infected/voice/walker_hurt_1",
+			"deadlands:infected/voice/walker_hurt_2",
+			"deadlands:infected/voice/walker_hurt_3",
+			"deadlands:infected/voice/walker_hurt_4"
 		],
 		"subtitle": "subtitles.deadlands.infected.hurt"
 	},
 	"infected.walker.death": {
 		"sounds": [
-			"deadlands:infected/walker_death1",
-			"deadlands:infected/walker_death2"
+			"deadlands:infected/voice/walker_death_1",
+			"deadlands:infected/voice/walker_death_2",
+			"deadlands:infected/voice/walker_death_3"
 		],
 		"subtitle": "subtitles.deadlands.infected.death"
 	},
 	"infected.runner.ambient": {
 		"sounds": [
-			"deadlands:infected/runner_ambient1",
-			"deadlands:infected/runner_ambient2",
-			"deadlands:infected/runner_ambient3"
+			"deadlands:infected/voice/runner_ambient_1",
+			"deadlands:infected/voice/runner_ambient_2",
+			"deadlands:infected/voice/runner_ambient_3",
+			"deadlands:infected/voice/runner_ambient_4",
+			"deadlands:infected/voice/runner_ambient_5",
+			"deadlands:infected/voice/runner_ambient_6"
 		],
 		"subtitle": "subtitles.deadlands.infected.groan"
 	},
 	"infected.runner.alert": {
 		"sounds": [
-			"deadlands:infected/runner_alert1",
-			"deadlands:infected/runner_alert2"
+			"deadlands:infected/voice/runner_alert_1",
+			"deadlands:infected/voice/runner_alert_2",
+			"deadlands:infected/voice/runner_alert_3",
+			"deadlands:infected/voice/runner_alert_4",
+			"deadlands:infected/voice/runner_alert_5"
 		],
 		"subtitle": "subtitles.deadlands.infected.runner_alert"
 	},
 	"infected.runner.hurt": {
 		"sounds": [
-			"deadlands:infected/runner_hurt1",
-			"deadlands:infected/runner_hurt2"
+			"deadlands:infected/voice/runner_hurt_1",
+			"deadlands:infected/voice/runner_hurt_2",
+			"deadlands:infected/voice/runner_hurt_3",
+			"deadlands:infected/voice/runner_hurt_4"
 		],
 		"subtitle": "subtitles.deadlands.infected.hurt"
 	},
 	"infected.runner.death": {
 		"sounds": [
-			"deadlands:infected/runner_death1"
+			"deadlands:infected/voice/runner_death_1",
+			"deadlands:infected/voice/runner_death_2",
+			"deadlands:infected/voice/runner_death_3"
 		],
 		"subtitle": "subtitles.deadlands.infected.death"
 	},
 	"infected.brute.ambient": {
 		"sounds": [
-			"deadlands:infected/brute_ambient1",
-			"deadlands:infected/brute_ambient2"
+			"deadlands:infected/voice/brute_ambient_1",
+			"deadlands:infected/voice/brute_ambient_2",
+			"deadlands:infected/voice/brute_ambient_3",
+			"deadlands:infected/voice/brute_ambient_4",
+			"deadlands:infected/voice/brute_ambient_5",
+			"deadlands:infected/voice/brute_ambient_6"
 		],
 		"subtitle": "subtitles.deadlands.infected.groan"
 	},
 	"infected.brute.roar": {
 		"sounds": [
-			"deadlands:infected/brute_roar1",
-			"deadlands:infected/brute_roar2"
+			"deadlands:infected/voice/brute_roar_1",
+			"deadlands:infected/voice/brute_roar_2",
+			"deadlands:infected/voice/brute_roar_3"
 		],
 		"subtitle": "subtitles.deadlands.infected.brute_roar"
 	},
 	"infected.brute.hurt": {
 		"sounds": [
-			"deadlands:infected/brute_hurt1",
-			"deadlands:infected/brute_hurt2"
+			"deadlands:infected/voice/brute_hurt_1",
+			"deadlands:infected/voice/brute_hurt_2",
+			"deadlands:infected/voice/brute_hurt_3",
+			"deadlands:infected/voice/brute_hurt_4"
 		],
 		"subtitle": "subtitles.deadlands.infected.hurt"
 	},
 	"infected.brute.death": {
 		"sounds": [
-			"deadlands:infected/brute_death1"
+			"deadlands:infected/voice/brute_death_1",
+			"deadlands:infected/voice/brute_death_2",
+			"deadlands:infected/voice/brute_death_3"
 		],
 		"subtitle": "subtitles.deadlands.infected.death"
 	},
@@ -328,63 +357,87 @@
 	},
 	"infected.screamer.ambient": {
 		"sounds": [
-			"deadlands:infected/screamer_ambient1",
-			"deadlands:infected/screamer_ambient2"
+			"deadlands:infected/voice/screamer_ambient_1",
+			"deadlands:infected/voice/screamer_ambient_2",
+			"deadlands:infected/voice/screamer_ambient_3",
+			"deadlands:infected/voice/screamer_ambient_4",
+			"deadlands:infected/voice/screamer_ambient_5",
+			"deadlands:infected/voice/screamer_ambient_6"
 		],
 		"subtitle": "subtitles.deadlands.infected.groan"
 	},
 	"infected.screamer.scream": {
 		"sounds": [
-			"deadlands:infected/screamer_scream1",
-			"deadlands:infected/screamer_scream2"
+			"deadlands:infected/voice/screamer_scream_1",
+			"deadlands:infected/voice/screamer_scream_2",
+			"deadlands:infected/voice/screamer_scream_3"
 		],
 		"subtitle": "subtitles.deadlands.infected.scream"
 	},
 	"infected.screamer.hurt": {
 		"sounds": [
-			"deadlands:infected/screamer_hurt1",
-			"deadlands:infected/screamer_hurt2"
+			"deadlands:infected/voice/screamer_hurt_1",
+			"deadlands:infected/voice/screamer_hurt_2",
+			"deadlands:infected/voice/screamer_hurt_3",
+			"deadlands:infected/voice/screamer_hurt_4"
 		],
 		"subtitle": "subtitles.deadlands.infected.hurt"
 	},
 	"infected.screamer.death": {
 		"sounds": [
-			"deadlands:infected/screamer_death1"
+			"deadlands:infected/voice/screamer_death_1",
+			"deadlands:infected/voice/screamer_death_2",
+			"deadlands:infected/voice/screamer_death_3"
 		],
 		"subtitle": "subtitles.deadlands.infected.death"
 	},
 	"infected.military.ambient": {
 		"sounds": [
-			"deadlands:infected/military_ambient1",
-			"deadlands:infected/military_ambient2",
-			"deadlands:infected/military_ambient3"
+			"deadlands:infected/voice/military_ambient_1",
+			"deadlands:infected/voice/military_ambient_2",
+			"deadlands:infected/voice/military_ambient_3",
+			"deadlands:infected/voice/military_ambient_4",
+			"deadlands:infected/voice/military_ambient_5",
+			"deadlands:infected/voice/military_ambient_6"
 		],
 		"subtitle": "subtitles.deadlands.infected.groan"
 	},
 	"infected.crawler.ambient": {
 		"sounds": [
-			"deadlands:infected/crawler_ambient1",
-			"deadlands:infected/crawler_ambient2"
+			"deadlands:infected/voice/crawler_ambient_1",
+			"deadlands:infected/voice/crawler_ambient_2",
+			"deadlands:infected/voice/crawler_ambient_3",
+			"deadlands:infected/voice/crawler_ambient_4",
+			"deadlands:infected/voice/crawler_ambient_5",
+			"deadlands:infected/voice/crawler_ambient_6"
 		],
 		"subtitle": "subtitles.deadlands.infected.groan"
 	},
 	"infected.crawler.hurt": {
 		"sounds": [
-			"deadlands:infected/crawler_hurt1",
-			"deadlands:infected/crawler_hurt2"
+			"deadlands:infected/voice/crawler_hurt_1",
+			"deadlands:infected/voice/crawler_hurt_2",
+			"deadlands:infected/voice/crawler_hurt_3",
+			"deadlands:infected/voice/crawler_hurt_4"
 		],
 		"subtitle": "subtitles.deadlands.infected.hurt"
 	},
 	"infected.crawler.death": {
 		"sounds": [
-			"deadlands:infected/crawler_death1"
+			"deadlands:infected/voice/crawler_death_1",
+			"deadlands:infected/voice/crawler_death_2",
+			"deadlands:infected/voice/crawler_death_3"
 		],
 		"subtitle": "subtitles.deadlands.infected.death"
 	},
 	"infected.bloater.ambient": {
 		"sounds": [
-			"deadlands:infected/bloater_ambient1",
-			"deadlands:infected/bloater_ambient2"
+			"deadlands:infected/voice/bloater_ambient_1",
+			"deadlands:infected/voice/bloater_ambient_2",
+			"deadlands:infected/voice/bloater_ambient_3",
+			"deadlands:infected/voice/bloater_ambient_4",
+			"deadlands:infected/voice/bloater_ambient_5",
+			"deadlands:infected/voice/bloater_ambient_6"
 		],
 		"subtitle": "subtitles.deadlands.infected.groan"
 	},
@@ -397,49 +450,66 @@
 	},
 	"infected.bloater.hurt": {
 		"sounds": [
-			"deadlands:infected/bloater_hurt1"
+			"deadlands:infected/voice/bloater_hurt_1",
+			"deadlands:infected/voice/bloater_hurt_2",
+			"deadlands:infected/voice/bloater_hurt_3",
+			"deadlands:infected/voice/bloater_hurt_4"
 		],
 		"subtitle": "subtitles.deadlands.infected.hurt"
 	},
 	"infected.stalker.ambient": {
 		"sounds": [
-			"deadlands:infected/stalker_ambient1",
-			"deadlands:infected/stalker_ambient2",
-			"deadlands:infected/stalker_ambient3"
+			"deadlands:infected/voice/stalker_ambient_1",
+			"deadlands:infected/voice/stalker_ambient_2",
+			"deadlands:infected/voice/stalker_ambient_3",
+			"deadlands:infected/voice/stalker_ambient_4",
+			"deadlands:infected/voice/stalker_ambient_5",
+			"deadlands:infected/voice/stalker_ambient_6"
 		],
 		"subtitle": "subtitles.deadlands.infected.breath"
 	},
 	"infected.stalker.pounce": {
 		"sounds": [
-			"deadlands:infected/stalker_pounce1",
-			"deadlands:infected/stalker_pounce2"
+			"deadlands:infected/voice/stalker_pounce_1",
+			"deadlands:infected/voice/stalker_pounce_2",
+			"deadlands:infected/voice/stalker_pounce_3"
 		],
 		"subtitle": "subtitles.deadlands.infected.pounce"
 	},
 	"infected.stalker.hurt": {
 		"sounds": [
-			"deadlands:infected/stalker_hurt1"
+			"deadlands:infected/voice/stalker_hurt_1",
+			"deadlands:infected/voice/stalker_hurt_2",
+			"deadlands:infected/voice/stalker_hurt_3",
+			"deadlands:infected/voice/stalker_hurt_4"
 		],
 		"subtitle": "subtitles.deadlands.infected.hurt"
 	},
 	"infected.stalker.death": {
 		"sounds": [
-			"deadlands:infected/stalker_death1"
+			"deadlands:infected/voice/stalker_death_1",
+			"deadlands:infected/voice/stalker_death_2",
+			"deadlands:infected/voice/stalker_death_3"
 		],
 		"subtitle": "subtitles.deadlands.infected.death"
 	},
 	"infected.charred.ambient": {
 		"sounds": [
-			"deadlands:infected/charred_ambient1",
-			"deadlands:infected/charred_ambient2"
+			"deadlands:infected/voice/charred_ambient_1",
+			"deadlands:infected/voice/charred_ambient_2",
+			"deadlands:infected/voice/charred_ambient_3",
+			"deadlands:infected/voice/charred_ambient_4",
+			"deadlands:infected/voice/charred_ambient_5",
+			"deadlands:infected/voice/charred_ambient_6"
 		],
 		"subtitle": "subtitles.deadlands.infected.groan"
 	},
 	"infected.breath": {
 		"sounds": [
-			"deadlands:infected/breath1",
-			"deadlands:infected/breath2",
-			"deadlands:infected/breath3"
+			"deadlands:infected/voice/breath_1",
+			"deadlands:infected/voice/breath_2",
+			"deadlands:infected/voice/breath_3",
+			"deadlands:infected/voice/breath_4"
 		],
 		"subtitle": "subtitles.deadlands.infected.breath"
 	},
@@ -477,25 +547,32 @@
 	},
 	"infected.attack": {
 		"sounds": [
-			"deadlands:infected/attack1",
-			"deadlands:infected/attack2"
+			"deadlands:infected/voice/attack_1",
+			"deadlands:infected/voice/attack_2",
+			"deadlands:infected/voice/attack_3",
+			"deadlands:infected/voice/attack_4",
+			"deadlands:infected/voice/attack_5"
 		],
 		"subtitle": "subtitles.deadlands.infected.attack"
 	},
 	"infected.distant": {
 		"sounds": [
-			"deadlands:infected/distant1",
-			"deadlands:infected/distant2",
-			"deadlands:infected/distant3",
-			"deadlands:infected/distant4"
+			"deadlands:infected/voice/distant_1",
+			"deadlands:infected/voice/distant_2",
+			"deadlands:infected/voice/distant_3",
+			"deadlands:infected/voice/distant_4",
+			"deadlands:infected/voice/distant_5",
+			"deadlands:infected/voice/distant_6"
 		],
 		"subtitle": "subtitles.deadlands.infected.distant"
 	},
 	"infected.muffled": {
 		"sounds": [
-			"deadlands:infected/muffled1",
-			"deadlands:infected/muffled2",
-			"deadlands:infected/muffled3"
+			"deadlands:infected/voice/muffled_1",
+			"deadlands:infected/voice/muffled_2",
+			"deadlands:infected/voice/muffled_3",
+			"deadlands:infected/voice/muffled_4",
+			"deadlands:infected/voice/muffled_5"
 		],
 		"subtitle": "subtitles.deadlands.infected.groan"
 	},
@@ -837,9 +914,11 @@
 	},
 	"ambient.dog": {
 		"sounds": [
-			"deadlands:ambient/place/dog_0",
-			"deadlands:ambient/place/dog_1",
-			"deadlands:ambient/place/dog_2"
+			"deadlands:ambient/scape/dog_1",
+			"deadlands:ambient/scape/dog_2",
+			"deadlands:ambient/scape/dog_3",
+			"deadlands:ambient/scape/dog_4",
+			"deadlands:ambient/scape/dog_5"
 		],
 		"subtitle": "subtitles.deadlands.ambient.dog"
 	},
@@ -972,6 +1051,427 @@
 			}
 		],
 		"subtitle": "subtitles.deadlands.ambient.hum_loop"
+	},
+	"music.empty_roads": {
+		"sounds": [
+			{
+				"name": "deadlands:music/empty_roads",
+				"stream": true
+			}
+		]
+	},
+	"music.what_remains": {
+		"sounds": [
+			{
+				"name": "deadlands:music/what_remains",
+				"stream": true
+			}
+		]
+	},
+	"music.overgrown": {
+		"sounds": [
+			{
+				"name": "deadlands:music/overgrown",
+				"stream": true
+			}
+		]
+	},
+	"music.static_lullaby": {
+		"sounds": [
+			{
+				"name": "deadlands:music/static_lullaby",
+				"stream": true
+			}
+		]
+	},
+	"music.long_night": {
+		"sounds": [
+			{
+				"name": "deadlands:music/long_night",
+				"stream": true
+			}
+		]
+	},
+	"music.no_lights": {
+		"sounds": [
+			{
+				"name": "deadlands:music/no_lights",
+				"stream": true
+			}
+		]
+	},
+	"music.hollow_hours": {
+		"sounds": [
+			{
+				"name": "deadlands:music/hollow_hours",
+				"stream": true
+			}
+		]
+	},
+	"music.pursuit": {
+		"sounds": [
+			{
+				"name": "deadlands:music/pursuit",
+				"stream": true
+			}
+		]
+	},
+	"music.they_hear_you": {
+		"sounds": [
+			{
+				"name": "deadlands:music/they_hear_you",
+				"stream": true
+			}
+		]
+	},
+	"music.horde": {
+		"sounds": [
+			{
+				"name": "deadlands:music/horde",
+				"stream": true
+			}
+		]
+	},
+	"music.campfire": {
+		"sounds": [
+			{
+				"name": "deadlands:music/campfire",
+				"stream": true
+			}
+		]
+	},
+	"music.shelter": {
+		"sounds": [
+			{
+				"name": "deadlands:music/shelter",
+				"stream": true
+			}
+		]
+	},
+	"infected.walker.alert": {
+		"sounds": [
+			"deadlands:infected/voice/walker_alert_1",
+			"deadlands:infected/voice/walker_alert_2",
+			"deadlands:infected/voice/walker_alert_3",
+			"deadlands:infected/voice/walker_alert_4"
+		],
+		"subtitle": "subtitles.deadlands.infected.alert"
+	},
+	"infected.walker.chase": {
+		"sounds": [
+			"deadlands:infected/voice/walker_chase_1",
+			"deadlands:infected/voice/walker_chase_2",
+			"deadlands:infected/voice/walker_chase_3",
+			"deadlands:infected/voice/walker_chase_4",
+			"deadlands:infected/voice/walker_chase_5",
+			"deadlands:infected/voice/walker_chase_6"
+		],
+		"subtitle": "subtitles.deadlands.infected.chase"
+	},
+	"infected.runner.chase": {
+		"sounds": [
+			"deadlands:infected/voice/runner_chase_1",
+			"deadlands:infected/voice/runner_chase_2",
+			"deadlands:infected/voice/runner_chase_3",
+			"deadlands:infected/voice/runner_chase_4",
+			"deadlands:infected/voice/runner_chase_5",
+			"deadlands:infected/voice/runner_chase_6"
+		],
+		"subtitle": "subtitles.deadlands.infected.chase"
+	},
+	"infected.brute.alert": {
+		"sounds": [
+			"deadlands:infected/voice/brute_alert_1",
+			"deadlands:infected/voice/brute_alert_2",
+			"deadlands:infected/voice/brute_alert_3",
+			"deadlands:infected/voice/brute_alert_4"
+		],
+		"subtitle": "subtitles.deadlands.infected.alert"
+	},
+	"infected.brute.chase": {
+		"sounds": [
+			"deadlands:infected/voice/brute_chase_1",
+			"deadlands:infected/voice/brute_chase_2",
+			"deadlands:infected/voice/brute_chase_3",
+			"deadlands:infected/voice/brute_chase_4",
+			"deadlands:infected/voice/brute_chase_5",
+			"deadlands:infected/voice/brute_chase_6"
+		],
+		"subtitle": "subtitles.deadlands.infected.chase"
+	},
+	"infected.screamer.alert": {
+		"sounds": [
+			"deadlands:infected/voice/screamer_alert_1",
+			"deadlands:infected/voice/screamer_alert_2",
+			"deadlands:infected/voice/screamer_alert_3",
+			"deadlands:infected/voice/screamer_alert_4"
+		],
+		"subtitle": "subtitles.deadlands.infected.alert"
+	},
+	"infected.screamer.chase": {
+		"sounds": [
+			"deadlands:infected/voice/screamer_chase_1",
+			"deadlands:infected/voice/screamer_chase_2",
+			"deadlands:infected/voice/screamer_chase_3",
+			"deadlands:infected/voice/screamer_chase_4",
+			"deadlands:infected/voice/screamer_chase_5",
+			"deadlands:infected/voice/screamer_chase_6"
+		],
+		"subtitle": "subtitles.deadlands.infected.chase"
+	},
+	"infected.military.alert": {
+		"sounds": [
+			"deadlands:infected/voice/military_alert_1",
+			"deadlands:infected/voice/military_alert_2",
+			"deadlands:infected/voice/military_alert_3",
+			"deadlands:infected/voice/military_alert_4"
+		],
+		"subtitle": "subtitles.deadlands.infected.alert"
+	},
+	"infected.military.chase": {
+		"sounds": [
+			"deadlands:infected/voice/military_chase_1",
+			"deadlands:infected/voice/military_chase_2",
+			"deadlands:infected/voice/military_chase_3",
+			"deadlands:infected/voice/military_chase_4",
+			"deadlands:infected/voice/military_chase_5",
+			"deadlands:infected/voice/military_chase_6"
+		],
+		"subtitle": "subtitles.deadlands.infected.chase"
+	},
+	"infected.crawler.alert": {
+		"sounds": [
+			"deadlands:infected/voice/crawler_alert_1",
+			"deadlands:infected/voice/crawler_alert_2",
+			"deadlands:infected/voice/crawler_alert_3",
+			"deadlands:infected/voice/crawler_alert_4"
+		],
+		"subtitle": "subtitles.deadlands.infected.alert"
+	},
+	"infected.crawler.chase": {
+		"sounds": [
+			"deadlands:infected/voice/crawler_chase_1",
+			"deadlands:infected/voice/crawler_chase_2",
+			"deadlands:infected/voice/crawler_chase_3",
+			"deadlands:infected/voice/crawler_chase_4",
+			"deadlands:infected/voice/crawler_chase_5",
+			"deadlands:infected/voice/crawler_chase_6"
+		],
+		"subtitle": "subtitles.deadlands.infected.chase"
+	},
+	"infected.bloater.alert": {
+		"sounds": [
+			"deadlands:infected/voice/bloater_alert_1",
+			"deadlands:infected/voice/bloater_alert_2",
+			"deadlands:infected/voice/bloater_alert_3",
+			"deadlands:infected/voice/bloater_alert_4"
+		],
+		"subtitle": "subtitles.deadlands.infected.alert"
+	},
+	"infected.bloater.chase": {
+		"sounds": [
+			"deadlands:infected/voice/bloater_chase_1",
+			"deadlands:infected/voice/bloater_chase_2",
+			"deadlands:infected/voice/bloater_chase_3",
+			"deadlands:infected/voice/bloater_chase_4",
+			"deadlands:infected/voice/bloater_chase_5",
+			"deadlands:infected/voice/bloater_chase_6"
+		],
+		"subtitle": "subtitles.deadlands.infected.chase"
+	},
+	"infected.stalker.alert": {
+		"sounds": [
+			"deadlands:infected/voice/stalker_alert_1",
+			"deadlands:infected/voice/stalker_alert_2",
+			"deadlands:infected/voice/stalker_alert_3",
+			"deadlands:infected/voice/stalker_alert_4"
+		],
+		"subtitle": "subtitles.deadlands.infected.alert"
+	},
+	"infected.stalker.chase": {
+		"sounds": [
+			"deadlands:infected/voice/stalker_chase_1",
+			"deadlands:infected/voice/stalker_chase_2",
+			"deadlands:infected/voice/stalker_chase_3",
+			"deadlands:infected/voice/stalker_chase_4",
+			"deadlands:infected/voice/stalker_chase_5",
+			"deadlands:infected/voice/stalker_chase_6"
+		],
+		"subtitle": "subtitles.deadlands.infected.chase"
+	},
+	"infected.charred.alert": {
+		"sounds": [
+			"deadlands:infected/voice/charred_alert_1",
+			"deadlands:infected/voice/charred_alert_2",
+			"deadlands:infected/voice/charred_alert_3",
+			"deadlands:infected/voice/charred_alert_4"
+		],
+		"subtitle": "subtitles.deadlands.infected.alert"
+	},
+	"infected.charred.chase": {
+		"sounds": [
+			"deadlands:infected/voice/charred_chase_1",
+			"deadlands:infected/voice/charred_chase_2",
+			"deadlands:infected/voice/charred_chase_3",
+			"deadlands:infected/voice/charred_chase_4",
+			"deadlands:infected/voice/charred_chase_5",
+			"deadlands:infected/voice/charred_chase_6"
+		],
+		"subtitle": "subtitles.deadlands.infected.chase"
+	},
+	"ambient.crow_flock": {
+		"sounds": [
+			"deadlands:ambient/scape/crow_flock_1",
+			"deadlands:ambient/scape/crow_flock_2",
+			"deadlands:ambient/scape/crow_flock_3"
+		],
+		"subtitle": "subtitles.deadlands.ambient.crow_flock"
+	},
+	"ambient.birds_far": {
+		"sounds": [
+			"deadlands:ambient/scape/birds_far_1",
+			"deadlands:ambient/scape/birds_far_2",
+			"deadlands:ambient/scape/birds_far_3",
+			"deadlands:ambient/scape/birds_far_4"
+		],
+		"subtitle": "subtitles.deadlands.ambient.birds_far"
+	},
+	"ambient.leaves": {
+		"sounds": [
+			"deadlands:ambient/scape/leaves_1",
+			"deadlands:ambient/scape/leaves_2",
+			"deadlands:ambient/scape/leaves_3",
+			"deadlands:ambient/scape/leaves_4",
+			"deadlands:ambient/scape/leaves_5"
+		],
+		"subtitle": "subtitles.deadlands.ambient.leaves"
+	},
+	"ambient.branch": {
+		"sounds": [
+			"deadlands:ambient/scape/branch_1",
+			"deadlands:ambient/scape/branch_2",
+			"deadlands:ambient/scape/branch_3",
+			"deadlands:ambient/scape/branch_4"
+		],
+		"subtitle": "subtitles.deadlands.ambient.branch"
+	},
+	"ambient.sign_creak": {
+		"sounds": [
+			"deadlands:ambient/scape/sign_creak_1",
+			"deadlands:ambient/scape/sign_creak_2",
+			"deadlands:ambient/scape/sign_creak_3",
+			"deadlands:ambient/scape/sign_creak_4"
+		],
+		"subtitle": "subtitles.deadlands.ambient.sign_creak"
+	},
+	"ambient.rattle": {
+		"sounds": [
+			"deadlands:ambient/scape/rattle_1",
+			"deadlands:ambient/scape/rattle_2",
+			"deadlands:ambient/scape/rattle_3",
+			"deadlands:ambient/scape/rattle_4",
+			"deadlands:ambient/scape/rattle_5"
+		],
+		"subtitle": "subtitles.deadlands.ambient.rattle"
+	},
+	"ambient.thunder_far": {
+		"sounds": [
+			"deadlands:ambient/scape/thunder_far_1",
+			"deadlands:ambient/scape/thunder_far_2",
+			"deadlands:ambient/scape/thunder_far_3"
+		],
+		"subtitle": "subtitles.deadlands.ambient.thunder_far"
+	},
+	"ambient.buzz": {
+		"sounds": [
+			"deadlands:ambient/scape/buzz_1",
+			"deadlands:ambient/scape/buzz_2",
+			"deadlands:ambient/scape/buzz_3"
+		],
+		"subtitle": "subtitles.deadlands.ambient.buzz"
+	},
+	"ambient.window_wind": {
+		"sounds": [
+			"deadlands:ambient/scape/window_wind_1",
+			"deadlands:ambient/scape/window_wind_2",
+			"deadlands:ambient/scape/window_wind_3"
+		],
+		"subtitle": "subtitles.deadlands.ambient.window_wind"
+	},
+	"ambient.settle": {
+		"sounds": [
+			"deadlands:ambient/scape/settle_1",
+			"deadlands:ambient/scape/settle_2",
+			"deadlands:ambient/scape/settle_3",
+			"deadlands:ambient/scape/settle_4"
+		],
+		"subtitle": "subtitles.deadlands.ambient.settle"
+	},
+	"ambient.unexplained": {
+		"sounds": [
+			"deadlands:ambient/scape/unexplained_1",
+			"deadlands:ambient/scape/unexplained_2",
+			"deadlands:ambient/scape/unexplained_3",
+			"deadlands:ambient/scape/unexplained_4",
+			"deadlands:ambient/scape/unexplained_5"
+		],
+		"subtitle": "subtitles.deadlands.ambient.unexplained"
+	},
+	"ambient.wind_trees_loop": {
+		"sounds": [
+			{
+				"name": "deadlands:ambient/scape/wind_trees_loop",
+				"stream": true
+			}
+		]
+	},
+	"ambient.wind_street_loop": {
+		"sounds": [
+			{
+				"name": "deadlands:ambient/scape/wind_street_loop",
+				"stream": true
+			}
+		]
+	},
+	"ambient.rain_roof_loop": {
+		"sounds": [
+			{
+				"name": "deadlands:ambient/scape/rain_roof_loop",
+				"stream": true
+			}
+		]
+	},
+	"ambient.rain_metal_loop": {
+		"sounds": [
+			{
+				"name": "deadlands:ambient/scape/rain_metal_loop",
+				"stream": true
+			}
+		]
+	},
+	"ambient.room_tone_loop": {
+		"sounds": [
+			{
+				"name": "deadlands:ambient/scape/room_tone_loop",
+				"stream": true
+			}
+		]
+	},
+	"ambient.transformer_loop": {
+		"sounds": [
+			{
+				"name": "deadlands:ambient/scape/transformer_loop",
+				"stream": true
+			}
+		]
+	},
+	"ambient.menu_loop": {
+		"sounds": [
+			{
+				"name": "deadlands:ambient/scape/menu_loop",
+				"stream": true
+			}
+		]
 	},
 	"music.chase": {
 		"sounds": [

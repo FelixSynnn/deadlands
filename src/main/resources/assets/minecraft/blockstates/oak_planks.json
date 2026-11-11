@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"": [
+			{
+				"model": "minecraft:block/oak_planks",
+				"weight": 3
+			},
+			{
+				"model": "deadlands:block/variant/oak_planks_1"
+			},
+			{
+				"model": "deadlands:block/variant/oak_planks_2"
+			},
+			{
+				"model": "deadlands:block/variant/oak_planks_3"
+			}
+		]
+	}
+}

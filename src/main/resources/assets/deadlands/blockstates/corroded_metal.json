@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"": [
+			{
+				"model": "deadlands:block/corroded_metal",
+				"weight": 3
+			},
+			{
+				"model": "deadlands:block/variant/corroded_metal_1"
+			},
+			{
+				"model": "deadlands:block/variant/corroded_metal_2"
+			},
+			{
+				"model": "deadlands:block/variant/corroded_metal_3"
+			}
+		]
+	}
+}

@@ -193,6 +193,11 @@
 					"type": "minecraft:item",
 					"name": "deadlands:purification_tablet",
 					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:survival_knife",
+					"weight": 1
 				}
 			]
 		}

@@ -516,7 +516,7 @@ the fog distances and tints its colour, `ClientWeather` spawns dust, grit and as
 the supply drop is its own entity that becomes a block when it lands. **Location** is worked out on
 the server every two seconds from the structures the survivor stands in (`audio/LocationTracker`)
 and sent only when it changes (`LocationPayload`); `client/sound/AmbienceDirector` picks sounds from
-it. **Cutscenes** are named on the server (`cutscene/Cutscenes`, which records who has seen what as
+it (rewritten in the atmosphere overhaul, below). **Cutscenes** are named on the server (`cutscene/Cutscenes`, which records who has seen what as
 a player attachment) and played on the client: `CutscenePlayer` holds the shots, `CameraMixin` moves
 the camera at the end of `Camera.setup`, `CutsceneScreen` draws bars and subtitles and any key or
 click skips. The boss bar replaces `VanillaHudElements.BOSS_BAR` and reads vanilla's events through an
@@ -555,21 +555,83 @@ seed, town and day so it is repeatable. The world catches up lazily: a survivor 
 `npc/Access` checks each survivor once a second against the settlement they stand in; trespass is a
 map the fighters' target predicate reads. Theft is reported from `LootContainerBlockEntity.startOpen`.
 
+## Atmosphere overhaul
+
+**Entity events.** Every byte DEADLANDS sends with `Level.broadcastEntityEvent` is declared in
+`entity/DLEntityEvents` and lies above vanilla's range (100 and up). Vanilla's
+`ClientPacketListener.handleEntityEvent` handles some ids itself before the entity sees them and
+casts the entity on the way (21 Guardian, 35 totem, 63 Sniffer): the Stalker's pounce used to be 63,
+which crashed the client. `DeadlandsInfectedGameTest.entityEventsStayClearOfVanilla` reads vanilla's
+ids by reflection, so a Minecraft update that adds ids is caught. New events go in that class.
+
+**Music.** `client/sound/MusicDirector` owns in-game music when *Audio > DEADLANDS soundtrack in the
+world* is on; `client/mixin/MusicManagerMixin` cancels `MusicManager.tick` while it does (the menus
+keep vanilla's manager and the title theme). Every 10 ticks it scores the threat (hunting infected by
+kind and distance, bosses within 64 blocks, being hurt) and picks a mood: HORDE (the horde HUD is up),
+DANGER (score 2.5 or more for 30 ticks; it lets go after 240 ticks below 1.0), SAFE (the server's
+safe-zone flag in `LocationPayload`, or two friendly survivors within 20 blocks), NIGHT (13000 to
+23000 or deep underground), else EXPLORE. Each mood has a pool of sound events (`DLSounds.MUSIC_*`, one
+per track, streamed). Tense moods fade in fast and loop; quiet ones play one track and then leave a
+silence sized by vanilla's *Music Frequency*. Tracks are `AbstractTickableSoundInstance`s in the MUSIC
+source with no attenuation, so the Music slider and *Soundtrack volume* both apply; the newest
+track fades in while the old one fades out, and nothing else overlaps. The server side is one flag:
+`audio/LocationTracker` sets `safe` when the survivor stands in a town whose faction tolerates them.
+
+**Soundscape.** `client/sound/AmbienceDirector` surveys the camera every 10 ticks (indoors, under a
+roof, a metal roof, on asphalt outside town) and combines it with the server's location to choose a
+profile (open, forest, suburb, city, highway, interior, hospital, school, industrial, farm, campsite,
+bunker, underground). A profile is a list of `Layer`s: a sound, its spacing, distances, height,
+loudness and conditions (day, night, dry, wet, storm, outdoors). Each layer keeps its own clock; a
+one-shot starts only if no other started in the last 2 seconds, fewer than three are playing and it is
+not the sound that played last. One-shots use `Attenuation.NONE` at a world position, with the
+director setting the volume from distance itself (vanilla's linear roll-off silenced anything past
+16 blocks), so they keep their direction. Loops (wind beds, rain on the roof or on metal, room tone,
+hum, transformer) fade in and out with the conditions. `MenuAmbience` plays its bed while no world is
+loaded. The DEADLANDS biomes' own one-shot additions (data) were made five times rarer to leave room
+for it.
+
+**Infected voices.** The server syncs a *hunting* flag (`InfectedEntity.FLAG_HUNTING`, set every 10
+ticks from the target). On the client `client/sound/InfectedVoices` turns vanilla's ambient timer
+into idle groans with one shared budget that thins out in a crowd, plays an alert cry when the flag
+rises (not for the Stalker, at most once per 20 seconds per infected), chase voices at a per-kind
+pace while it is set, and breath within 4.5 blocks. All of them share a limit of six playing at once
+(`MAX_VOICES`, checked against the sound engine). Distance, walls (a block raycast) and the
+*infected voice effects* setting pick the plain, muffled or distant variant.
+
+**Menu backdrop.** `client/ui/TitleBackdrop` draws stacked 1920x1080 layers (sky, far and middle
+skyline, light shafts, the street, weeds, fog banks, vignette, grain), each shifted by the mouse by
+its own amount for depth, the fog offsets moved by time, the weeds sheared by a `Matrix3x2f` for wind
+and, every 38 seconds, a few crow sprites flying across the sky. The art is painted by `gen_menu.py`.
+
+**Infected looks.** `InfectedRenderer` picks a look as before and, from the infected's UUID, one of
+six wear overlays per rig (or none) and a small skin and cloth tint (`getModelTint`).
+`InfectedWearLayer` draws the overlay as a second translucent pass of the same model.
+
+**Block variants.** No code: `gen_variants.py` writes weighted blockstate variant lists (the original
+texture weight 3, three variants weight 1, random quarter turns where the texture allows). The game
+picks one per block position, the same way it varies grass. Vanilla blockstates are overridden
+for the ten vanilla blocks it covers. Connected textures (CTM) would need a renderer mod and are not
+used.
+
+**Vanilla biomes.** `world/DLWorldgen` gives the vanilla biomes DEADLANDS keeps (oceans, rivers,
+beaches, peaks) DEADLANDS water, fog and sky colours with a Fabric biome modification, when
+*World > DEADLANDS biomes* is on.
+
 ## Testing
 
-- **Server game tests** (`DeadlandsServerGameTest`, `DeadlandsContentGameTest`) run in every
-  `gradlew build` on a real dedicated-server instance: registration, asset completeness, config
-  round trip and clamping, the encounter schedule against the design, world-data codec,
-  world-clock semantics, block assets, loot-table parsing, locks and keys, locked containers
-  resisting survival players, structure templates.
-- **Written but never run:** `DeadlandsWorldGameTest` (Milestone 3: biome replacement, town
-  templates and loot tables, town identity, cities, sites, railways, power parts) and
-  `DeadlandsInfectedGameTest` (Milestone 4: kinds, looks, loot, entity and nest save and load, the
-  horde mix, horde, migration and power state in the world save, noise levels).
-- **Client game test** (`DeadlandsClientGameTest` + `MilestoneTwoScenes`,
-  `gradlew runClientGameTest`): real client, real input, screenshots, containers opened with real
-  right-clicks, locks, singleplayer save and reload, natural structure generation in a normal
-  world (fixed seed), dedicated-server join. It has no Milestone 3 or 4 scenes yet.
+- **Server game tests** (56, in `DeadlandsServerGameTest`, `DeadlandsContentGameTest`,
+  `DeadlandsWorldGameTest`, `DeadlandsInfectedGameTest`, `DeadlandsSurvivalGameTest`,
+  `DeadlandsVehicleGameTest`, `DeadlandsNpcGameTest`, `DeadlandsStoryGameTest`) run in every
+  `gradlew build` on a real dedicated-server instance: registration and asset completeness, config,
+  the encounter schedule, saved data, blocks and loot, locks, structures and towns, infected and
+  nests, entity-event ids, survival, vehicles, survivors and settlements, the story.
+- **Client game test** (`DeadlandsClientGameTest` with `MilestoneTwoScenes`, `StalkerScenes`,
+  `AudioScenes`, `LookScenes` and `PerformanceScenes`; `gradlew runClientGameTest`): real client,
+  real input, screenshots; the Milestone 2 scenes, save and reload, natural structures in a normal
+  world, the Stalker regression, the music director, soundscape and voices, review screenshots of the
+  infected, weapons, blocks and embers, a crowd of forty hunting infected (frame rate, live heap, at
+  most six voices at once), a resource reload that must leave the same view looking the same, and a
+  dedicated-server join.
 
 See [TESTING.md](TESTING.md).
 

@@ -262,11 +262,18 @@ def particles(*entries: tuple[str, float]) -> list[dict]:
     return [{"particle": {"type": f"minecraft:{p}"}, "probability": prob} for p, prob in entries]
 
 
+# Atmosphere overhaul: the client's AmbienceDirector now places occasional sounds around the listener,
+# at a distance and from a direction (crows on the rooftops, a dog streets away), so the biome's own
+# additions (which play at the listener's head) keep only its character sound, five times rarer
+# (about one every 20 to 40 seconds instead of every 4 to 8), and leave the crows to the director.
+ADDITION_SCALE = 0.2
+
+
 def ambience(loop: str, additions: list[tuple[str, float]]) -> dict:
     return {
         "loop": f"{NS}:ambient.{loop}.loop",
         "mood": {"sound": f"{NS}:ambient.mood", "tick_delay": 6000, "block_search_extent": 8, "offset": 2.0},
-        "additions": [{"sound": f"{NS}:ambient.{a}", "tick_chance": chance} for a, chance in additions],
+        "additions": [{"sound": f"{NS}:ambient.{a}", "tick_chance": round(chance * ADDITION_SCALE, 5)} for a, chance in additions if a != "crow"],
     }
 
 

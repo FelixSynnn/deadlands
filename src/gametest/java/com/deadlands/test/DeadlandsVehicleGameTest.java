@@ -31,7 +31,8 @@ import net.minecraft.world.phys.AABB;
  * Milestone 6 checks: the vehicle kinds and their assets, condition and restoration, fuel cans and
  * pumps, and saving a vehicle with its cargo.
  *
- * <p>Written without being run (the project owner asked for no test runs).
+ * <p>Written while the project owner asked for no test runs; run in every build since the
+ * atmosphere overhaul.
  */
 public class DeadlandsVehicleGameTest {
 	@GameTest

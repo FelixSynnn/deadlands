@@ -1,0 +1,76 @@
+{
+	"parent": "minecraft:item/handheld",
+	"textures": {
+		"layer0": "deadlands:item/survival_knife"
+	},
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [
+				0,
+				-90,
+				55
+			],
+			"translation": [
+				0,
+				3.0,
+				0.75
+			],
+			"scale": [
+				0.72,
+				0.72,
+				0.72
+			]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [
+				0,
+				90,
+				-55
+			],
+			"translation": [
+				0,
+				3.0,
+				0.75
+			],
+			"scale": [
+				0.72,
+				0.72,
+				0.72
+			]
+		},
+		"firstperson_righthand": {
+			"rotation": [
+				0,
+				-90,
+				25
+			],
+			"translation": [
+				1.13,
+				2.6,
+				1.13
+			],
+			"scale": [
+				0.6,
+				0.6,
+				0.6
+			]
+		},
+		"firstperson_lefthand": {
+			"rotation": [
+				0,
+				90,
+				-25
+			],
+			"translation": [
+				1.13,
+				2.6,
+				1.13
+			],
+			"scale": [
+				0.6,
+				0.6,
+				0.6
+			]
+		}
+	}
+}

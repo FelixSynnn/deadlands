@@ -208,6 +208,11 @@
 					"type": "minecraft:item",
 					"name": "deadlands:rifle_round",
 					"weight": 3
+				},
+				{
+					"type": "minecraft:item",
+					"name": "deadlands:survival_knife",
+					"weight": 2
 				}
 			]
 		}
