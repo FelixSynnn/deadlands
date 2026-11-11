@@ -1,0 +1,42 @@
+{
+	"kind": "major",
+	"dark": true,
+	"weight": 10,
+	"steps": [
+		{
+			"at": 0,
+			"type": "silence",
+			"amount": 80
+		},
+		{
+			"at": 30,
+			"type": "sound",
+			"sound": "deadlands:horror.swell",
+			"where": "everywhere",
+			"volume": 0.6,
+			"pitch": 1.0
+		},
+		{
+			"at": 80,
+			"type": "sound",
+			"sound": "deadlands:horror.scream",
+			"where": "behind",
+			"volume": 1.2,
+			"pitch": 1.0,
+			"distance": 3
+		},
+		{
+			"at": 80,
+			"type": "sound",
+			"sound": "deadlands:horror.stinger",
+			"where": "everywhere",
+			"volume": 0.7,
+			"pitch": 1.0
+		},
+		{
+			"at": 80,
+			"type": "jolt",
+			"amount": 0.7
+		}
+	]
+}

@@ -1,0 +1,159 @@
+{
+	"parent": "deadlands:root",
+	"criteria": {
+		"walker": {
+			"trigger": "minecraft:player_killed_entity",
+			"conditions": {
+				"entity": [
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"type": "deadlands:walker"
+						}
+					}
+				]
+			}
+		},
+		"runner": {
+			"trigger": "minecraft:player_killed_entity",
+			"conditions": {
+				"entity": [
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"type": "deadlands:runner"
+						}
+					}
+				]
+			}
+		},
+		"brute": {
+			"trigger": "minecraft:player_killed_entity",
+			"conditions": {
+				"entity": [
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"type": "deadlands:brute"
+						}
+					}
+				]
+			}
+		},
+		"screamer": {
+			"trigger": "minecraft:player_killed_entity",
+			"conditions": {
+				"entity": [
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"type": "deadlands:screamer"
+						}
+					}
+				]
+			}
+		},
+		"military": {
+			"trigger": "minecraft:player_killed_entity",
+			"conditions": {
+				"entity": [
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"type": "deadlands:military"
+						}
+					}
+				]
+			}
+		},
+		"crawler": {
+			"trigger": "minecraft:player_killed_entity",
+			"conditions": {
+				"entity": [
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"type": "deadlands:crawler"
+						}
+					}
+				]
+			}
+		},
+		"bloater": {
+			"trigger": "minecraft:player_killed_entity",
+			"conditions": {
+				"entity": [
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"type": "deadlands:bloater"
+						}
+					}
+				]
+			}
+		},
+		"stalker": {
+			"trigger": "minecraft:player_killed_entity",
+			"conditions": {
+				"entity": [
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"type": "deadlands:stalker"
+						}
+					}
+				]
+			}
+		},
+		"charred": {
+			"trigger": "minecraft:player_killed_entity",
+			"conditions": {
+				"entity": [
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"type": "deadlands:charred"
+						}
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"walker",
+			"runner",
+			"brute",
+			"screamer",
+			"military",
+			"crawler",
+			"bloater",
+			"stalker",
+			"charred"
+		]
+	],
+	"display": {
+		"icon": {
+			"id": "deadlands:crowbar"
+		},
+		"title": {
+			"translate": "achievement.deadlands.combat.first_blood.title"
+		},
+		"description": {
+			"translate": "achievement.deadlands.combat.first_blood.description"
+		},
+		"frame": "task",
+		"show_toast": true,
+		"announce_to_chat": false,
+		"hidden": false
+	}
+}

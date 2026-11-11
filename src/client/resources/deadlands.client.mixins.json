@@ -10,7 +10,11 @@
 		"HumanoidRenderStateMixin",
 		"LivingEntityRendererMixin",
 		"MinecraftMixin",
-		"ScreenMixin"
+		"ScreenMixin",
+		"LightTextureMixin",
+		"SkyRendererMixin",
+		"GlobalSettingsUniformMixin",
+		"ClientAdvancementsMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

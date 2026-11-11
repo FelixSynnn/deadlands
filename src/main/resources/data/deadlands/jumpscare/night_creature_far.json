@@ -1,0 +1,17 @@
+{
+	"kind": "minor",
+	"time": "night",
+	"place": "outdoors",
+	"weight": 14,
+	"steps": [
+		{
+			"at": 0,
+			"type": "sound",
+			"sound": "deadlands:horror.night_creature",
+			"where": "far",
+			"volume": 2.6,
+			"pitch": 0.95,
+			"distance": 30
+		}
+	]
+}

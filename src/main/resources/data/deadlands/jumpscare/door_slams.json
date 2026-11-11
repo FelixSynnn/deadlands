@@ -1,0 +1,11 @@
+{
+	"kind": "minor",
+	"place": "indoors",
+	"weight": 6,
+	"steps": [
+		{
+			"at": 0,
+			"type": "slam_door"
+		}
+	]
+}

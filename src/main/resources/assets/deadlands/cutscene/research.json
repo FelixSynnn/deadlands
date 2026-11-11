@@ -1,0 +1,30 @@
+{
+	"cue": "deadlands:event.town_enter",
+	"shots": [
+		{
+			"ticks": 120,
+			"from": [
+				4,
+				2.5,
+				0
+			],
+			"to": [
+				0,
+				2.0,
+				4
+			],
+			"look": [
+				0,
+				1.4,
+				0
+			]
+		}
+	],
+	"lines": [
+		{
+			"from": 10,
+			"to": 115,
+			"key": "cutscene.deadlands.research.0"
+		}
+	]
+}

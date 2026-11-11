@@ -2,7 +2,6 @@ package com.deadlands.client.cutscene;
 
 import com.deadlands.config.ConfigManager;
 import com.deadlands.network.CutscenePayload;
-import com.deadlands.registry.DLSounds;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -46,31 +45,38 @@ public final class CutscenePlayer {
 	private CutscenePlayer() {
 	}
 
-	private static Script script(String id, float bearing) {
-		Vec3 ahead = new Vec3(Math.cos(bearing) * 30.0, 2.0, Math.sin(bearing) * 30.0);
-		return switch (id) {
-			case "opening" -> new Script(List.of(
-				new Shot(110, new Vec3(14, 9, 12), new Vec3(-12, 6, 12), new Vec3(0, 1, 0), 0.0),
-				new Shot(90, new Vec3(7, 2.5, 6), new Vec3(2.6, 1.9, 2.4), new Vec3(0, 1.5, 0), 0.0)),
-				List.of(new Line(10, 95, "cutscene.deadlands.opening.0"), new Line(105, 195, "cutscene.deadlands.opening.1")), DLSounds.EVENT_DAY_BEGIN.value());
-			case "boss_reveal" -> new Script(List.of(
-				new Shot(70, new Vec3(0, 6, -18), new Vec3(0, 3, -9), new Vec3(0, 2, 0), 0.0),
-				new Shot(60, new Vec3(4, 1.5, -6), new Vec3(-4, 1.5, -6), new Vec3(0, 2.4, 0), 0.0)),
-				List.of(new Line(20, 125, "cutscene.deadlands.boss_reveal.0")), DLSounds.EVENT_BOSS.value());
-			case "research", "cure" -> new Script(List.of(
-				new Shot(120, new Vec3(4, 2.5, 0), new Vec3(0, 2.0, 4), new Vec3(0, 1.4, 0), 0.0)),
-				List.of(new Line(10, 115, "cutscene.deadlands." + id + ".0")), DLSounds.EVENT_TOWN_ENTER.value());
-			case "horde" -> new Script(List.of(
-				new Shot(60, new Vec3(0, 3, 0), new Vec3(0, 7, 0), ahead.scale(0.5), 0.0),
-				new Shot(80, new Vec3(0, 7, 0), ahead.scale(0.3).add(0, 5, 0), ahead, 0.0)),
-				List.of(new Line(15, 135, "cutscene.deadlands.horde.0")), DLSounds.EVENT_HORDE_START.value());
-			case "extraction" -> new Script(List.of(
-				new Shot(120, new Vec3(14, 3, 10), new Vec3(-14, 6, 10), new Vec3(0, 2, 0), 10.0),
-				new Shot(100, new Vec3(-14, 6, 10), new Vec3(-6, 22, -10), new Vec3(0, 12, 0), 16.0)),
-				List.of(new Line(20, 110, "cutscene.deadlands.extraction.0"), new Line(130, 215, "cutscene.deadlands.extraction.1")),
-				DLSounds.HELICOPTER_ROTOR.value());
-			default -> new Script(List.of(new Shot(40, new Vec3(3, 2, 3), new Vec3(3, 2, 3), Vec3.ZERO, 0.0)), List.of(), null);
-		};
+	/** True when the current cutscene's points were already turned to the bearing (no further yaw). */
+	private static boolean bearingFrame;
+
+	/**
+	 * The scene's script, from its data file ({@link CutsceneLibrary}). In the bearing frame the points
+	 * are turned now so that +X points along the bearing (given in radians).
+	 */
+	private static Script script(String id, float facing) {
+		CutsceneLibrary.Def def = CutsceneLibrary.get(id).orElse(null);
+		if (def == null) {
+			bearingFrame = false;
+			return new Script(List.of(new Shot(40, new Vec3(3, 2, 3), new Vec3(3, 2, 3), Vec3.ZERO, 0.0)), List.of(), null);
+		}
+		bearingFrame = def.frame().equals("bearing");
+		double cos = Math.cos(facing);
+		double sin = Math.sin(facing);
+		List<Shot> shots = new java.util.ArrayList<>();
+		for (CutsceneLibrary.ShotDef shot : def.shots()) {
+			shots.add(bearingFrame
+				? new Shot(shot.ticks(), alongBearing(shot.from(), cos, sin), alongBearing(shot.to(), cos, sin), alongBearing(shot.look(), cos, sin), shot.lookRise())
+				: new Shot(shot.ticks(), shot.from(), shot.to(), shot.look(), shot.lookRise()));
+		}
+		List<Line> lines = new java.util.ArrayList<>();
+		for (CutsceneLibrary.LineDef line : def.lines()) {
+			lines.add(new Line(line.from(), line.to(), line.key()));
+		}
+		SoundEvent cue = def.cue().map(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT::getValue).orElse(null);
+		return new Script(shots, lines, cue);
+	}
+
+	private static Vec3 alongBearing(Vec3 point, double cos, double sin) {
+		return new Vec3(point.x * cos - point.z * sin, point.y, point.x * sin + point.z * cos);
 	}
 
 	public static void start(CutscenePayload payload) {
@@ -88,7 +94,7 @@ public final class CutscenePlayer {
 		}
 		script = script(id, facing);
 		anchor = at;
-		yaw = id.equals("horde") ? 0.0F : facing;
+		yaw = bearingFrame ? 0.0F : facing;
 		ticks = 0;
 		onEnd = then;
 		minecraft.setScreen(new CutsceneScreen());

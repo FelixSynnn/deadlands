@@ -1,0 +1,55 @@
+{
+	"cue": "deadlands:helicopter.rotor",
+	"shots": [
+		{
+			"ticks": 120,
+			"from": [
+				14,
+				3,
+				10
+			],
+			"to": [
+				-14,
+				6,
+				10
+			],
+			"look": [
+				0,
+				2,
+				0
+			],
+			"look_rise": 10.0
+		},
+		{
+			"ticks": 100,
+			"from": [
+				-14,
+				6,
+				10
+			],
+			"to": [
+				-6,
+				22,
+				-10
+			],
+			"look": [
+				0,
+				12,
+				0
+			],
+			"look_rise": 16.0
+		}
+	],
+	"lines": [
+		{
+			"from": 20,
+			"to": 110,
+			"key": "cutscene.deadlands.extraction.0"
+		},
+		{
+			"from": 130,
+			"to": 215,
+			"key": "cutscene.deadlands.extraction.1"
+		}
+	]
+}

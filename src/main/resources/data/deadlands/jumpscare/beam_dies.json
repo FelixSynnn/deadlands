@@ -1,0 +1,39 @@
+{
+	"kind": "major",
+	"dark": true,
+	"flashlight": true,
+	"weight": 12,
+	"steps": [
+		{
+			"at": 0,
+			"type": "flicker",
+			"amount": 40
+		},
+		{
+			"at": 40,
+			"type": "beam_off",
+			"amount": 70
+		},
+		{
+			"at": 55,
+			"type": "sound",
+			"sound": "deadlands:horror.whisper",
+			"where": "ear",
+			"volume": 0.7,
+			"pitch": 1.0
+		},
+		{
+			"at": 108,
+			"type": "sound",
+			"sound": "deadlands:horror.stinger",
+			"where": "everywhere",
+			"volume": 0.8,
+			"pitch": 1.0
+		},
+		{
+			"at": 108,
+			"type": "jolt",
+			"amount": 0.6
+		}
+	]
+}

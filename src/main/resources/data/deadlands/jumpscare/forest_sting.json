@@ -1,0 +1,16 @@
+{
+	"kind": "minor",
+	"time": "night",
+	"place": "outdoors",
+	"weight": 4,
+	"steps": [
+		{
+			"at": 0,
+			"type": "sound",
+			"sound": "deadlands:horror.sting_forest",
+			"where": "everywhere",
+			"volume": 0.35,
+			"pitch": 1.0
+		}
+	]
+}

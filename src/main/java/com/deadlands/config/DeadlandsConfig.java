@@ -20,8 +20,13 @@ public final class DeadlandsConfig {
 	public Weather weather = new Weather();
 	public WorldEvents events = new WorldEvents();
 	public Performance performance = new Performance();
+	public Horror horror = new Horror();
 	public Audio audio = new Audio();
 	public Interface ui = new Interface();
+
+	public enum ScarePreset {
+		LOW, NORMAL, NIGHTMARE
+	}
 
 	public enum SurvivalDifficulty {
 		STORY, SURVIVOR, VETERAN, NIGHTMARE
@@ -215,6 +220,17 @@ public final class DeadlandsConfig {
 		public int fullSimulationChunks = 6;
 	}
 
+	public static final class Horror {
+		@ConfigEntry(comment = "How often the Horror Director scares survivors. Normal: at night a major scare every 4 to 8 minutes of active play and something unsettling every 1 to 3; by day a major scare every 10 to 15 minutes.")
+		public ScarePreset scarePreset = ScarePreset.NORMAL;
+
+		@ConfigEntry(comment = "Photosensitivity: flashes and flickers become slow fades. Scares still happen.", client = true)
+		public boolean photosensitivity = false;
+
+		@ConfigEntry(comment = "How strongly the camera reacts to scares (0 = not at all).", min = 0.0, max = 1.0, client = true)
+		public double cameraShake = 1.0;
+	}
+
 	public static final class Audio {
 		@ConfigEntry(comment = "Play DEADLANDS interface sounds.", client = true)
 		public boolean interfaceSounds = true;
@@ -224,6 +240,15 @@ public final class DeadlandsConfig {
 
 		@ConfigEntry(comment = "Muffle infected heard through walls and use distant versions of their voices far away.", client = true)
 		public boolean infectedVoiceEffects = true;
+
+		@ConfigEntry(comment = "Volume of DEADLANDS music and stings (on top of Minecraft's Music slider).", min = 0.0, max = 1.0, client = true)
+		public double musicVolume = 0.45;
+
+		@ConfigEntry(comment = "How many infected must be chasing a survivor (within 48 blocks, for 2 seconds) before chase music starts.", min = 1, max = 50)
+		public int chaseMusicThreshold = 8;
+
+		@ConfigEntry(comment = "Chase music fades once fewer than this many have been chasing for 10 seconds.", min = 1, max = 50)
+		public int chaseMusicStopBelow = 5;
 	}
 
 	public static final class Interface {

@@ -38,6 +38,12 @@ public final class ClientNetworking {
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.IntroPayload.TYPE,
 			(payload, context) -> context.client().setScreen(new com.deadlands.client.ui.IntroScreen(payload.harleyNear(),
 				new net.minecraft.world.phys.Vec3(payload.x(), payload.y(), payload.z()))));
+		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.HorrorScarePayload.TYPE,
+			(payload, context) -> com.deadlands.client.horror.ScarePlayer.onScare(payload));
+		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.MissionSyncPayload.TYPE,
+			(payload, context) -> com.deadlands.client.mission.ClientMissions.update(payload));
+		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.ChaseMusicPayload.TYPE,
+			(payload, context) -> com.deadlands.client.sound.MusicDirector.onChase(payload.chased()));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.WeatherPayload.TYPE,
 			(payload, context) -> com.deadlands.client.weather.ClientWeather.set(payload));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.LocationPayload.TYPE,

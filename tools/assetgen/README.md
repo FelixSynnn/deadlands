@@ -21,8 +21,8 @@ python tools/assetgen/build_all.py
 
 Or only some groups (`title`, `gui`, `items`, `blocks`, `containers`, `decor`, `decals`,
 `structures`, `vanilla`, `terrain`, `world`, `towns`, `sites`, `infected`, `nests`, `audio`,
-`ambience`, `infected_audio`, `survival`, `vehicles`, `npcs`, `story`, `bosses`, `polish`, and
-`realism`, which must come last):
+`ambience`, `infected_audio`, `survival`, `vehicles`, `npcs`, `story`, `bosses`, `polish`, `immersion`,
+`sfx`, `framework`, and `realism`, which must come last):
 
 ```bash
 python tools/assetgen/build_all.py blocks containers
@@ -61,6 +61,9 @@ python tools/assetgen/build_all.py blocks containers
 | `gen_story.py` | the lore catalogue **as Java source** (`LoreEntries.java`) from `lore_data.py`, and (through `story_assets.py` and `story_texts.py`) all story text, item icons, the reader, door and transmitter, the helicopter rig, radio and rotor sounds, structure tags |
 | `gen_bosses.py` | the five boss rigs **as Java source** (`BossGeometry.java`), their textures, spawn eggs, voices and the boss sting |
 | `gen_polish.py` | Milestone 9: the five particles, location ambience sounds, the supply drop (rig **as Java source**, texture, loot), weather, event, cutscene and command text |
+| `gen_immersion.py` | horror Phase 1: empties every vanilla structure biome tag, silences vanilla cave and underwater ambience, sets the menu theme to 45%, synthesises the placeholder chase and exploration music, builds the flashlight's box model, texture and text |
+| `import_sfx.py` | horror Phase 2: imports the chosen third-party horror sounds and music (source folder outside the project; skipped when missing), cuts, fades, normalises and encodes them, adds their sound events and subtitles |
+| `gen_framework.py` | horror Phase 2: the Horror Director's scares, mission givers and a development mission, the first achievements, the cutscenes as data, the campaign dimension, and their text |
 | `dl_realism.py` | the finishing pass over block and item textures (light from the upper left, hue-shifted shading, a five-step ramp, calmer saturation, coloured item outlines); copies each original to `texture-backup/` first, keeps a hash manifest in `_cache/` so it never applies twice, and leaves the textures in its `RESTORED` list as painted |
 | `gen_npcs.py` | 34 survivor skins (30 by role, and the 4 characters' skins copied from `character-skins/<Name>.png`, matched ignoring case, or placeholders if missing), the spawn marker's files, the vehicle cargo loot table, survivor voices, the journal TASKS icon, all dialogue, settlement and access text |
 

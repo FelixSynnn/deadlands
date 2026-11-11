@@ -1,0 +1,35 @@
+{
+	"kind": "major",
+	"time": "night",
+	"place": "outdoors",
+	"weight": 10,
+	"steps": [
+		{
+			"at": 0,
+			"type": "silence",
+			"amount": 60
+		},
+		{
+			"at": 60,
+			"type": "sound",
+			"sound": "deadlands:horror.whoosh",
+			"where": "everywhere",
+			"volume": 0.8,
+			"pitch": 1.0
+		},
+		{
+			"at": 64,
+			"type": "sound",
+			"sound": "deadlands:horror.night_creature",
+			"where": "far",
+			"volume": 1.4,
+			"pitch": 1.1,
+			"distance": 5
+		},
+		{
+			"at": 64,
+			"type": "jolt",
+			"amount": 0.4
+		}
+	]
+}

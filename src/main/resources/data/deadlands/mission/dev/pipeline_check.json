@@ -1,0 +1,35 @@
+{
+	"title": "mission.deadlands.dev.pipeline_check",
+	"description": "mission.deadlands.dev.pipeline_check.description",
+	"objectives": [
+		{
+			"id": "flashlight",
+			"type": "have_item",
+			"text": "mission.deadlands.dev.pipeline_check.flashlight",
+			"target": "deadlands:flashlight",
+			"count": 1
+		},
+		{
+			"id": "walkers",
+			"type": "kill",
+			"text": "mission.deadlands.dev.pipeline_check.walkers",
+			"target": "deadlands:walker",
+			"count": 2
+		},
+		{
+			"id": "flag",
+			"type": "flag",
+			"text": "mission.deadlands.dev.pipeline_check.flag",
+			"flag": "dev_pipeline_ok"
+		}
+	],
+	"reward_items": [
+		{
+			"item": "deadlands:bandage",
+			"count": 1
+		}
+	],
+	"reward_flags": [
+		"dev_pipeline_done"
+	]
+}

@@ -1,0 +1,20 @@
+{
+	"kind": "minor",
+	"dark": true,
+	"weight": 6,
+	"steps": [
+		{
+			"at": 0,
+			"type": "sound",
+			"sound": "deadlands:horror.suspense",
+			"where": "everywhere",
+			"volume": 0.45,
+			"pitch": 1.0
+		},
+		{
+			"at": 70,
+			"type": "flicker",
+			"amount": 30
+		}
+	]
+}

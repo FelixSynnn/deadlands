@@ -30,6 +30,20 @@ public final class DLDataComponents {
 		DataComponentType.<Float>builder().persistent(Codec.FLOAT).networkSynchronized(ByteBufCodecs.FLOAT).build()
 	);
 
+	/** Whether a flashlight is switched on. */
+	public static final DataComponentType<Boolean> FLASHLIGHT_ON = Registry.register(
+		BuiltInRegistries.DATA_COMPONENT_TYPE,
+		Deadlands.id("flashlight_on"),
+		DataComponentType.<Boolean>builder().persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).build()
+	);
+
+	/** A flashlight's charge, in seconds of light. */
+	public static final DataComponentType<Integer> BATTERY = Registry.register(
+		BuiltInRegistries.DATA_COMPONENT_TYPE,
+		Deadlands.id("battery"),
+		DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT).build()
+	);
+
 	private DLDataComponents() {
 	}
 

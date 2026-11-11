@@ -1,0 +1,30 @@
+{
+	"kind": "major",
+	"time": "day",
+	"place": "outdoors",
+	"weight": 10,
+	"steps": [
+		{
+			"at": 0,
+			"type": "silence",
+			"amount": 40
+		},
+		{
+			"at": 40,
+			"type": "sound",
+			"sound": "deadlands:horror.scream",
+			"where": "far",
+			"volume": 2.5,
+			"pitch": 0.85,
+			"distance": 30
+		},
+		{
+			"at": 46,
+			"type": "sound",
+			"sound": "deadlands:horror.swell",
+			"where": "everywhere",
+			"volume": 0.5,
+			"pitch": 1.0
+		}
+	]
+}

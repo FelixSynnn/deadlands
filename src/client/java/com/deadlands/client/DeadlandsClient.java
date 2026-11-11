@@ -73,6 +73,18 @@ public final class DeadlandsClient implements ClientModInitializer {
 		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Deadlands.id("horde"), HordeHud::render);
 		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Deadlands.id("boss_card"), com.deadlands.client.hud.BossCardHud::render);
 		HudElementRegistry.replaceElement(VanillaHudElements.BOSS_BAR, vanilla -> com.deadlands.client.hud.BossBarHud::render);
+		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Deadlands.id("mission_tracker"), com.deadlands.client.mission.MissionTrackerHud::render);
+		// Cutscenes are client data (assets/<namespace>/cutscene/*.json).
+		net.fabricmc.fabric.api.resource.v1.ResourceLoader.get(net.minecraft.server.packs.PackType.CLIENT_RESOURCES)
+			.registerReloader(Deadlands.id("cutscene"), com.deadlands.client.cutscene.CutsceneLibrary.INSTANCE);
+		// The pause screen's Missions tab, once the survivor has received a mission.
+		net.fabricmc.fabric.api.client.screen.v1.ScreenEvents.AFTER_INIT.register((client, screen, width, height) -> {
+			if (screen instanceof net.minecraft.client.gui.screens.PauseScreen && com.deadlands.client.mission.ClientMissions.received()) {
+				net.fabricmc.fabric.api.client.screen.v1.Screens.getButtons(screen).add(new com.deadlands.client.ui.widget.DLButton(8, height - 28, 98, 20,
+					net.minecraft.network.chat.Component.translatable("mission.deadlands.screen"),
+					button -> client.setScreen(new com.deadlands.client.mission.MissionsScreen(screen))));
+			}
+		});
 		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Deadlands.id("survival"), SurvivalHud::render);
 		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Deadlands.id("vehicle"), com.deadlands.client.hud.VehicleHud::render);
 		com.deadlands.client.hud.VitalsHud.register();
@@ -114,8 +126,14 @@ public final class DeadlandsClient implements ClientModInitializer {
 			com.deadlands.client.weather.ClientWeather.tick(client);
 			com.deadlands.client.sound.AmbienceDirector.tick(client);
 			com.deadlands.client.sound.VehicleEngineSounds.tick(client);
+			com.deadlands.client.sound.MusicDirector.tick(client);
+			com.deadlands.client.horror.ScarePlayer.tick(client);
 		});
-		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> TitleBackdrop.releaseTextures());
+		com.deadlands.client.camera.PerspectiveLock.init();
+		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+			TitleBackdrop.releaseTextures();
+			client.getMusicManager().stopPlaying(); // the menu theme does not follow you into the world
+		});
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
 			ClientState.clear();
 			DayCardHud.reset();
@@ -125,6 +143,9 @@ public final class DeadlandsClient implements ClientModInitializer {
 			com.deadlands.client.weather.ClientWeather.reset();
 			com.deadlands.client.sound.AmbienceDirector.reset();
 			com.deadlands.client.sound.VehicleEngineSounds.reset();
+			com.deadlands.client.sound.MusicDirector.reset();
+			com.deadlands.client.horror.ScarePlayer.reset();
+			com.deadlands.client.mission.ClientMissions.reset();
 			SurvivalHud.reset();
 			LocalSurvival.reset();
 			VOICES.reset();

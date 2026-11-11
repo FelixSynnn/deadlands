@@ -16,8 +16,20 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
  */
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
+	/** Minecraft's game music never plays in a world: DEADLANDS music is chosen by {@code MusicDirector}. */
+	@org.spongepowered.asm.mixin.injection.Inject(method = "getSituationalMusic", at = @At("HEAD"), cancellable = true)
+	private void deadlands$noVanillaMusic(org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable<net.minecraft.sounds.Music> cir) {
+		if (((Minecraft) (Object) this).level != null) {
+			cir.setReturnValue(null);
+		}
+	}
+
 	@ModifyVariable(method = "setScreen", at = @At("HEAD"), argsOnly = true)
 	private Screen deadlands$useDeadlandsTitleScreen(Screen screen) {
+		// Vanilla's advancements screen becomes the DEADLANDS Achievements screen.
+		if (screen instanceof net.minecraft.client.gui.screens.advancements.AdvancementsScreen) {
+			return new com.deadlands.client.achievement.DLAchievementsScreen(((Minecraft) (Object) this).screen);
+		}
 		if (screen instanceof TitleScreen && !(screen instanceof DeadlandsTitleScreen) && ConfigManager.get().ui.replaceTitleScreen) {
 			return new DeadlandsTitleScreen();
 		}

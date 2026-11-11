@@ -54,10 +54,7 @@
 			"minecraft:amethyst_geode",
 			"deadlands:surface_cover"
 		],
-		[
-			"minecraft:monster_room",
-			"minecraft:monster_room_deep"
-		],
+		[],
 		[],
 		[],
 		[
@@ -110,22 +107,8 @@
 	],
 	"spawners": {
 		"monster": [],
-		"creature": [
-			{
-				"type": "minecraft:rabbit",
-				"weight": 4,
-				"minCount": 2,
-				"maxCount": 3
-			}
-		],
-		"ambient": [
-			{
-				"type": "minecraft:bat",
-				"weight": 10,
-				"minCount": 8,
-				"maxCount": 8
-			}
-		],
+		"creature": [],
+		"ambient": [],
 		"water_creature": [],
 		"water_ambient": [],
 		"underground_water_creature": [],

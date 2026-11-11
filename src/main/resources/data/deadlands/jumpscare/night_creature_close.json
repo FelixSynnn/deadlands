@@ -1,0 +1,32 @@
+{
+	"kind": "minor",
+	"time": "night",
+	"place": "outdoors",
+	"dark": true,
+	"weight": 9,
+	"steps": [
+		{
+			"at": 0,
+			"type": "silence",
+			"amount": 60
+		},
+		{
+			"at": 20,
+			"type": "sound",
+			"sound": "deadlands:horror.night_creature",
+			"where": "far",
+			"volume": 1.6,
+			"pitch": 1.0,
+			"distance": 14
+		},
+		{
+			"at": 70,
+			"type": "sound",
+			"sound": "deadlands:horror.night_creature",
+			"where": "far",
+			"volume": 1.8,
+			"pitch": 0.9,
+			"distance": 18
+		}
+	]
+}

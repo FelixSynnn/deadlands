@@ -1,0 +1,17 @@
+{
+	"kind": "minor",
+	"time": "night",
+	"place": "outdoors",
+	"weight": 4,
+	"steps": [
+		{
+			"at": 0,
+			"type": "sound",
+			"sound": "deadlands:horror.distant_horn",
+			"where": "far",
+			"volume": 5.0,
+			"pitch": 0.9,
+			"distance": 70
+		}
+	]
+}

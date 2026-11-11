@@ -1,5 +1,10 @@
 # DEADLANDS: Development Status
 
+> **Horror transformation:** the master development prompt's phases are tracked in
+> [docs/DEADLANDS_PROGRESS.md](docs/DEADLANDS_PROGRESS.md) (Phase 1, immersion blockers, and
+> Phase 2, foundation, done 2026-11-11), with the inspection and approved decisions in
+> [docs/DEADLANDS_STATUS.md](docs/DEADLANDS_STATUS.md).
+
 - **Version:** 0.9.0-m9-dev
 - **Last updated:** 2026-11-10 (Milestone 9 written, Milestones 1 to 9 reviewed, textures finished,
   the four characters set up; Milestones 3 to 9 compile)

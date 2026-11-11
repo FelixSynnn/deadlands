@@ -1,0 +1,35 @@
+{
+	"kind": "major",
+	"place": "indoors",
+	"dark": true,
+	"weight": 9,
+	"steps": [
+		{
+			"at": 0,
+			"type": "silence",
+			"amount": 40
+		},
+		{
+			"at": 20,
+			"type": "sound",
+			"sound": "deadlands:horror.riser",
+			"where": "everywhere",
+			"volume": 0.8,
+			"pitch": 1.0
+		},
+		{
+			"at": 150,
+			"type": "sound",
+			"sound": "deadlands:horror.door_creak",
+			"where": "behind",
+			"volume": 1.0,
+			"pitch": 0.9,
+			"distance": 4
+		},
+		{
+			"at": 150,
+			"type": "jolt",
+			"amount": 0.6
+		}
+	]
+}

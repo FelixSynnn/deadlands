@@ -69,7 +69,7 @@ public final class DayCardHud {
 			}
 			pending = false;
 			startedAt = Util.getMillis();
-			DLTheme.playUi(DLSounds.EVENT_DAY_BEGIN, 1.0F, 0.9F);
+			DLTheme.playSting(DLSounds.EVENT_DAY_BEGIN, 1.0F, 0.9F);
 		}
 		float t = (Util.getMillis() - startedAt) / 1000.0F;
 		if (t > HOLD_UNTIL + FADE_OUT) {

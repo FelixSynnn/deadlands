@@ -1,0 +1,17 @@
+{
+	"kind": "minor",
+	"time": "night",
+	"place": "outdoors",
+	"near_water": true,
+	"weight": 10,
+	"steps": [
+		{
+			"at": 0,
+			"type": "sound",
+			"sound": "deadlands:horror.water_creak",
+			"where": "everywhere",
+			"volume": 0.35,
+			"pitch": 1.0
+		}
+	]
+}

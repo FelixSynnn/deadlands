@@ -25,6 +25,10 @@ public final class DLNetworking {
 
 	public static void init() {
 		PayloadTypeRegistry.playS2C().register(WorldStatusPayload.TYPE, WorldStatusPayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(ChaseMusicPayload.TYPE, ChaseMusicPayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(HorrorScarePayload.TYPE, HorrorScarePayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(MissionSyncPayload.TYPE, MissionSyncPayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(HorrorBusyPayload.TYPE, HorrorBusyPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(DayBeginPayload.TYPE, DayBeginPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(TownCardPayload.TYPE, TownCardPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(HordeEventPayload.TYPE, HordeEventPayload.CODEC);

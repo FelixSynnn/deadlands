@@ -238,7 +238,7 @@ def features(vegetation: list[str]) -> list[list[str]]:
         [],                                                                     # raw_generation
         ["minecraft:lake_lava_underground", "minecraft:lake_lava_surface"],    # lakes
         ["minecraft:amethyst_geode", f"{NS}:surface_cover"],                   # local_modifications
-        ["minecraft:monster_room", "minecraft:monster_room_deep"],             # underground_structures
+        [],                                                                     # underground_structures (no vanilla dungeons: Hard Rule 2)
         [],                                                                     # surface_structures
         [],                                                                     # strongholds
         [f"minecraft:{o}" for o in UNDERGROUND_ORES],                          # underground_ores
@@ -357,7 +357,7 @@ def biome_json(name: str, b: dict) -> dict:
         "minecraft:visual/fog_color": b["fog"],
         "minecraft:visual/water_fog_color": b["water_fog"],
         "minecraft:audio/ambient_sounds": ambience(b["loop"], b["additions"]),
-        "minecraft:audio/background_music": {},  # no vanilla music in the wasteland; the soundtrack is Milestone 9
+        "minecraft:audio/background_music": {},  # vanilla music never plays in a world (MinecraftMixin); DEADLANDS music is MusicDirector
     }
     if "fog_range" in b:
         attributes["minecraft:visual/fog_start_distance"] = b["fog_range"][0]
@@ -372,8 +372,8 @@ def biome_json(name: str, b: dict) -> dict:
         "effects": {"water_color": b["water"], "grass_color": b["grass"], "foliage_color": b["foliage"], "dry_foliage_color": b["foliage"]},
         "carvers": ["minecraft:cave", "minecraft:cave_extra_underground", "minecraft:canyon"],
         "features": features(b["vegetation"]),
-        # No vanilla monsters: since Milestone 4 the infected (InfectedSpawner) populate DEADLANDS biomes.
-        "spawners": {"monster": [], "creature": b["creatures"], "ambient": BATS,
+        # No vanilla creatures at all (Hard Rule 2): the infected (InfectedSpawner) are the only life here.
+        "spawners": {"monster": [], "creature": [], "ambient": [],
                      "water_creature": [], "water_ambient": [], "underground_water_creature": [], "misc": [], "axolotls": []},
         "spawn_costs": {},
     }
@@ -400,7 +400,8 @@ def build() -> None:
     every = [f"{NS}:{n}" for n in BIOMES]
     biome_tag("is_deadlands", every)
     # has_structure/town is written by gen_towns.py (DEADLANDS biomes plus vanilla land biomes).
-    for vanilla in ("is_overworld", "stronghold_biased_to", "has_structure/mineshaft", "has_structure/trial_chambers"):
+    # Mineshafts and trial chambers are no longer added (their spawners): gen_immersion empties every vanilla structure tag.
+    for vanilla in ("is_overworld", "stronghold_biased_to"):
         biome_tag(vanilla, every, ns="minecraft")
     for vanilla in ("spawns_snow_foxes", "spawns_white_rabbits", "spawns_cold_variant_farm_animals"):
         biome_tag(vanilla, [f"{NS}:frozen_outskirts"], ns="minecraft")

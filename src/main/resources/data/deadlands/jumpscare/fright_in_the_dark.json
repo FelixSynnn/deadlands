@@ -1,0 +1,30 @@
+{
+	"kind": "major",
+	"place": "indoors",
+	"dark": true,
+	"weight": 8,
+	"steps": [
+		{
+			"at": 0,
+			"type": "silence",
+			"amount": 60
+		},
+		{
+			"at": 60,
+			"type": "sound",
+			"sound": "deadlands:horror.stinger",
+			"where": "everywhere",
+			"volume": 0.8,
+			"pitch": 1.0
+		},
+		{
+			"at": 60,
+			"type": "jolt",
+			"amount": 0.5
+		},
+		{
+			"at": 60,
+			"type": "slam_door"
+		}
+	]
+}

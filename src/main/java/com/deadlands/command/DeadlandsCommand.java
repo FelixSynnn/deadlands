@@ -69,6 +69,52 @@ public final class DeadlandsCommand {
 						return builder.buildFuture();
 					})
 					.executes(ctx -> worldEvent(ctx.getSource(), StringArgumentType.getString(ctx, "kind")))))
+			.then(Commands.literal("horror")
+				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+				.then(Commands.literal("status").executes(ctx -> horrorStatus(ctx.getSource())))
+				.then(Commands.literal("play").then(Commands.argument("scare", StringArgumentType.greedyString())
+					.suggests((ctx, builder) -> {
+						com.deadlands.content.DLContent.JUMPSCARES.all().keySet().forEach(id -> builder.suggest(id.toString()));
+						return builder.buildFuture();
+					})
+					.executes(ctx -> horrorPlay(ctx.getSource(), StringArgumentType.getString(ctx, "scare"))))))
+			.then(Commands.literal("flag")
+				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+				.then(Commands.literal("list").executes(ctx -> flagList(ctx.getSource())))
+				.then(Commands.literal("set").then(Commands.argument("flag", StringArgumentType.word())
+					.executes(ctx -> flagSet(ctx.getSource(), StringArgumentType.getString(ctx, "flag"), true))))
+				.then(Commands.literal("clear").then(Commands.argument("flag", StringArgumentType.word())
+					.executes(ctx -> flagSet(ctx.getSource(), StringArgumentType.getString(ctx, "flag"), false)))))
+			.then(Commands.literal("mission")
+				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+				.then(Commands.literal("list").executes(ctx -> missionList(ctx.getSource())))
+				.then(Commands.literal("start").then(Commands.argument("mission", StringArgumentType.greedyString())
+					.suggests((ctx, builder) -> {
+						com.deadlands.content.DLContent.MISSIONS.all().keySet().forEach(id -> builder.suggest(id.toString()));
+						return builder.buildFuture();
+					})
+					.executes(ctx -> missionAction(ctx.getSource(), "start", StringArgumentType.getString(ctx, "mission")))))
+				.then(Commands.literal("complete").then(Commands.argument("mission", StringArgumentType.greedyString())
+					.executes(ctx -> missionAction(ctx.getSource(), "complete", StringArgumentType.getString(ctx, "mission")))))
+				.then(Commands.literal("fail").then(Commands.argument("mission", StringArgumentType.greedyString())
+					.executes(ctx -> missionAction(ctx.getSource(), "fail", StringArgumentType.getString(ctx, "mission")))))
+				.then(Commands.literal("offer").then(Commands.argument("giver", StringArgumentType.word())
+					.executes(ctx -> missionAction(ctx.getSource(), "offer", StringArgumentType.getString(ctx, "giver"))))))
+			.then(Commands.literal("achievement")
+				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+				.then(Commands.argument("path", StringArgumentType.greedyString())
+					.executes(ctx -> achievement(ctx.getSource(), StringArgumentType.getString(ctx, "path")))))
+			.then(Commands.literal("campaign")
+				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+				.then(Commands.literal("enter").executes(ctx -> campaign(ctx.getSource(), "enter")))
+				.then(Commands.literal("leave").executes(ctx -> campaign(ctx.getSource(), "leave")))
+				.then(Commands.literal("status").executes(ctx -> campaign(ctx.getSource(), "status"))))
+			.then(Commands.literal("content")
+				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+				.executes(ctx -> content(ctx.getSource())))
+			.then(Commands.literal("mobs")
+				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+				.executes(ctx -> mobs(ctx.getSource())))
 			.then(Commands.literal("weather")
 				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 				.then(Commands.argument("kind", StringArgumentType.word())
@@ -178,6 +224,136 @@ public final class DeadlandsCommand {
 		}
 		source.sendSuccess(() -> Component.translatable("command.deadlands.boss", kind.displayName()), true);
 		return 1;
+	}
+
+	private static int horrorStatus(CommandSourceStack source) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+		net.minecraft.server.level.ServerPlayer player = source.getPlayerOrException();
+		String status = com.deadlands.horror.HorrorDirector.status(player);
+		source.sendSuccess(() -> Component.literal(status), false);
+		return 1;
+	}
+
+	private static int horrorPlay(CommandSourceStack source, String id) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+		net.minecraft.server.level.ServerPlayer player = source.getPlayerOrException();
+		net.minecraft.resources.Identifier key = net.minecraft.resources.Identifier.tryParse(id);
+		com.deadlands.horror.Scare scare = key == null ? null : com.deadlands.content.DLContent.JUMPSCARES.get(key).orElse(null);
+		if (scare == null) {
+			source.sendFailure(Component.translatable("command.deadlands.unknown", id));
+			return 0;
+		}
+		com.deadlands.horror.HorrorDirector.perform(player, key, scare);
+		source.sendSuccess(() -> Component.translatable("command.deadlands.horror.play", id), false);
+		return 1;
+	}
+
+	private static int flagList(CommandSourceStack source) {
+		java.util.Set<String> flags = com.deadlands.flags.StoryFlags.get(source.getServer()).all();
+		String joined = String.join(", ", new java.util.TreeSet<>(flags));
+		source.sendSuccess(() -> Component.translatable("command.deadlands.flag.list", flags.size(), joined), false);
+		return flags.size();
+	}
+
+	private static int flagSet(CommandSourceStack source, String flag, boolean on) {
+		com.deadlands.flags.StoryFlags flags = com.deadlands.flags.StoryFlags.get(source.getServer());
+		boolean changed = on ? flags.set(flag) : flags.clear(flag);
+		source.sendSuccess(() -> Component.translatable(on ? "command.deadlands.flag.set" : "command.deadlands.flag.clear", flag), true);
+		return changed ? 1 : 0;
+	}
+
+	private static int missionList(CommandSourceStack source) {
+		String text = com.deadlands.mission.MissionManager.describe(source.getServer());
+		source.sendSuccess(() -> Component.literal(text), false);
+		return 1;
+	}
+
+	private static int missionAction(CommandSourceStack source, String action, String arg) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+		net.minecraft.server.MinecraftServer server = source.getServer();
+		if (action.equals("offer")) {
+			net.minecraft.server.level.ServerPlayer player = source.getPlayerOrException();
+			java.util.Optional<net.minecraft.resources.Identifier> offer = com.deadlands.mission.MissionManager.offer(server, arg, player);
+			String offered = offer.map(Object::toString).orElse("-");
+			source.sendSuccess(() -> Component.translatable("command.deadlands.mission.offer", arg, offered), false);
+			return offer.isPresent() ? 1 : 0;
+		}
+		net.minecraft.resources.Identifier id = net.minecraft.resources.Identifier.tryParse(arg);
+		boolean done = false;
+		if (id != null) {
+			done = switch (action) {
+				case "start" -> com.deadlands.mission.MissionManager.start(server, id, source.getPlayerOrException());
+				case "complete" -> com.deadlands.mission.MissionManager.complete(server, id);
+				default -> com.deadlands.mission.MissionManager.fail(server, id);
+			};
+		}
+		if (!done) {
+			source.sendFailure(Component.translatable("command.deadlands.mission.refused", arg));
+			return 0;
+		}
+		source.sendSuccess(() -> Component.translatable("command.deadlands.mission." + action, arg), true);
+		return 1;
+	}
+
+	private static int achievement(CommandSourceStack source, String path) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+		com.deadlands.achievement.Achievements.award(source.getPlayerOrException(), path);
+		source.sendSuccess(() -> Component.translatable("command.deadlands.achievement", path), true);
+		return 1;
+	}
+
+	private static int campaign(CommandSourceStack source, String action) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+		com.deadlands.campaign.Campaign.State state = com.deadlands.campaign.Campaign.state(source.getServer());
+		if (action.equals("status")) {
+			boolean loaded = source.getServer().getLevel(com.deadlands.campaign.Campaign.LEVEL) != null;
+			String checkpoint = state.checkpoint().toShortString();
+			source.sendSuccess(() -> Component.translatable("command.deadlands.campaign.status", state.campaign(), state.chapter(), checkpoint, loaded), false);
+			return loaded ? 1 : 0;
+		}
+		net.minecraft.server.level.ServerPlayer player = source.getPlayerOrException();
+		boolean done = action.equals("enter") ? com.deadlands.campaign.Campaign.enter(player) : com.deadlands.campaign.Campaign.leave(player);
+		if (!done) {
+			source.sendFailure(Component.translatable("command.deadlands.campaign.failed"));
+			return 0;
+		}
+		return 1;
+	}
+
+	/** Checks the content layer from the console: what loaded from data files, and that vanilla achievements are gone. */
+	private static int content(CommandSourceStack source) {
+		int scares = com.deadlands.content.DLContent.JUMPSCARES.all().size();
+		int missions = com.deadlands.content.DLContent.MISSIONS.all().size();
+		int givers = com.deadlands.content.DLContent.GIVERS.all().size();
+		int dialogue = com.deadlands.content.DLContent.DIALOGUE.all().size();
+		int endings = com.deadlands.content.DLContent.ENDINGS.all().size();
+		long achievements = source.getServer().getAdvancements().getAllAdvancements().stream()
+			.filter(holder -> holder.id().getNamespace().equals("deadlands")).count();
+		long vanilla = source.getServer().getAdvancements().getAllAdvancements().stream()
+			.filter(holder -> holder.id().getNamespace().equals("minecraft") && !holder.id().getPath().startsWith("recipes/")).count();
+		source.sendSuccess(() -> Component.translatable("command.deadlands.content", scares, missions, givers, dialogue, endings, achievements, vanilla), false);
+		return scares;
+	}
+
+	/** Checks Hard Rule 2 and the chase music from the console: vanilla mobs loaded, infected loaded, the vanilla event rules, who is being chased. */
+	private static int mobs(CommandSourceStack source) {
+		net.minecraft.server.MinecraftServer server = source.getServer();
+		int vanilla = com.deadlands.world.VanillaMobs.countLoaded(server);
+		int infected = 0;
+		for (net.minecraft.server.level.ServerLevel level : server.getAllLevels()) {
+			for (net.minecraft.world.entity.Entity entity : level.getAllEntities()) {
+				if (entity instanceof com.deadlands.entity.InfectedEntity) {
+					infected++;
+				}
+			}
+		}
+		net.minecraft.world.level.gamerules.GameRules rules = server.overworld().getGameRules();
+		int vanillaCount = vanilla;
+		int infectedCount = infected;
+		source.sendSuccess(() -> Component.translatable("command.deadlands.mobs", vanillaCount, infectedCount,
+			rules.get(net.minecraft.world.level.gamerules.GameRules.RAIDS), rules.get(net.minecraft.world.level.gamerules.GameRules.SPAWN_PATROLS),
+			rules.get(net.minecraft.world.level.gamerules.GameRules.SPAWN_PHANTOMS), rules.get(net.minecraft.world.level.gamerules.GameRules.SPAWN_WANDERING_TRADERS)), false);
+		for (net.minecraft.server.level.ServerPlayer player : server.getPlayerList().getPlayers()) {
+			int chasers = com.deadlands.audio.ChaseTracker.chasers(player);
+			boolean chased = com.deadlands.audio.ChaseTracker.chased(player);
+			source.sendSuccess(() -> Component.translatable("command.deadlands.mobs.player", player.getName(), chasers, chased), false);
+		}
+		return vanilla;
 	}
 
 	/** Put a survivor of a role, or one of the recurring characters, where the source stands. */

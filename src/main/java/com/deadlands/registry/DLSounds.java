@@ -24,6 +24,26 @@ public final class DLSounds {
 	public static final Holder.Reference<SoundEvent> EVENT_DAY_BEGIN = register("event.day_begin");
 	public static final Holder.Reference<SoundEvent> EVENT_TOWN_ENTER = register("event.town_enter");
 	public static final Holder.Reference<SoundEvent> MUSIC_TITLE = register("music.title");
+	/** Only when a crowd is really chasing (see {@code ChaseTracker}); looped and faded by the client. */
+	public static final Holder.Reference<SoundEvent> MUSIC_CHASE = register("music.chase");
+	/** At most one exploration piece every 10 to 15 minutes of play. */
+	public static final Holder.Reference<SoundEvent> MUSIC_EXPLORE = register("music.explore");
+
+	// Horror Director (Phase 2): the night creature, dread beds, unsettling moments and scare stingers.
+	public static final Holder.Reference<SoundEvent> HORROR_NIGHT_CREATURE = register("horror.night_creature");
+	public static final Holder.Reference<SoundEvent> HORROR_DREAD = register("horror.dread");
+	public static final Holder.Reference<SoundEvent> HORROR_WATER_CREAK = register("horror.water_creak");
+	public static final Holder.Reference<SoundEvent> HORROR_WHISPER = register("horror.whisper");
+	public static final Holder.Reference<SoundEvent> HORROR_DOOR_CREAK = register("horror.door_creak");
+	public static final Holder.Reference<SoundEvent> HORROR_DISTANT_HORN = register("horror.distant_horn");
+	public static final Holder.Reference<SoundEvent> HORROR_STING_FOREST = register("horror.sting_forest");
+	public static final Holder.Reference<SoundEvent> HORROR_RISER = register("horror.riser");
+	public static final Holder.Reference<SoundEvent> HORROR_STINGER = register("horror.stinger");
+	public static final Holder.Reference<SoundEvent> HORROR_SWELL = register("horror.swell");
+	public static final Holder.Reference<SoundEvent> HORROR_WHOOSH = register("horror.whoosh");
+	public static final Holder.Reference<SoundEvent> HORROR_SUSPENSE = register("horror.suspense");
+	public static final Holder.Reference<SoundEvent> HORROR_SCREAM = register("horror.scream");
+	public static final Holder.Reference<SoundEvent> HORROR_JUMPSCARE = register("horror.jumpscare");
 
 	// Containers: each kind opens and closes with its own sound.
 	public static final Holder.Reference<SoundEvent> CRATE_OPEN = register("container.crate_open");

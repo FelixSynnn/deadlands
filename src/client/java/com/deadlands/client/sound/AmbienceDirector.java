@@ -102,6 +102,10 @@ public final class AmbienceDirector {
 		float volume = (float) ConfigManager.get().audio.ambienceVolume;
 		boolean indoors = !minecraft.level.canSeeSky(minecraft.player.blockPosition().above());
 		loops(minecraft, volume, indoors);
+		// A scare is holding its breath: no ambience until it lets go.
+		if (com.deadlands.client.horror.ScarePlayer.silenced()) {
+			return;
+		}
 		if (volume <= 0.0F || --cooldown > 0) {
 			return;
 		}

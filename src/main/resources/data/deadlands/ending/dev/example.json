@@ -1,0 +1,8 @@
+{
+	"campaign": "dev",
+	"title": "ending.deadlands.dev.example.title",
+	"body": "ending.deadlands.dev.example.body",
+	"requires": [
+		"dev_pipeline_done"
+	]
+}

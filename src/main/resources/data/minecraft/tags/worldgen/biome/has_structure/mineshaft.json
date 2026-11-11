@@ -1,15 +1,4 @@
 {
-	"replace": false,
-	"values": [
-		"deadlands:dead_forest",
-		"deadlands:overgrown_suburbs",
-		"deadlands:abandoned_farmland",
-		"deadlands:dry_wasteland",
-		"deadlands:flooded_marsh",
-		"deadlands:dead_pine_valley",
-		"deadlands:frozen_outskirts",
-		"deadlands:industrial_wasteland",
-		"deadlands:burned_forest",
-		"deadlands:rural_countryside"
-	]
+	"replace": true,
+	"values": []
 }

@@ -37,6 +37,7 @@ public final class DLItems {
 		new Item.Properties().stacksTo(1).rarity(Rarity.RARE), DLTab.QUEST_ITEMS);
 
 	/** Restarts a dead power generator (Milestone 3 power restoration). */
+	public static final Item FLASHLIGHT = register("flashlight", com.deadlands.item.FlashlightItem::new, new Item.Properties(), DLTab.SURVIVAL_GEAR);
 	public static final Item FUSE = register("fuse", Item::new, new Item.Properties().stacksTo(16), DLTab.CRAFTING_MATERIALS);
 
 	private DLItems() {

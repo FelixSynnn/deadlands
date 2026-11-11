@@ -34,7 +34,7 @@ public final class BossCardHud {
 				subtitle = payload.tier() > 0 ? Component.translatable("hud.deadlands.boss.tier", Component.translatable("boss.deadlands." + payload.kind() + ".subtitle"),
 					payload.tier() + 1) : Component.translatable("boss.deadlands." + payload.kind() + ".subtitle");
 				colour = DLTheme.DANGER;
-				Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(DLSounds.EVENT_BOSS.value(), 1.0F, 1.0F));
+				com.deadlands.client.ui.DLTheme.playSting(DLSounds.EVENT_BOSS, 1.0F, 1.0F);
 			}
 			case BossEventPayload.DEFEATED -> {
 				title = Component.translatable("hud.deadlands.boss.defeated", name);

@@ -38,6 +38,9 @@ import gen_towns
 import gen_vanilla
 import gen_vehicles
 import gen_world
+import gen_immersion
+import import_sfx
+import gen_framework
 import dl_realism
 
 GROUPS = {
@@ -65,6 +68,9 @@ GROUPS = {
     "story": gen_story.build,  # lore (Java), story text, story items and blocks, helicopter, radio sounds
     "bosses": gen_bosses.build,  # boss rigs (Java), textures, eggs, sounds
     "polish": gen_polish.build,  # particles, location ambience, supply drop (Java model), weather/event/cutscene text
+    "immersion": gen_immersion.build,  # horror Phase 1: vanilla structures off, vanilla ambience silenced, music placeholders, flashlight
+    "sfx": import_sfx.build,  # after immersion: the chosen third-party horror sounds and music (skipped if the source folder is missing)
+    "framework": gen_framework.build,  # horror Phase 2: scares, mission givers, achievements, cutscenes as data, the campaign dimension
     "realism": dl_realism.build,  # last: the finishing pass over block and item textures (originals in texture-backup/)
 }
 

@@ -1,0 +1,48 @@
+{
+	"cue": "deadlands:event.boss",
+	"shots": [
+		{
+			"ticks": 70,
+			"from": [
+				0,
+				6,
+				-18
+			],
+			"to": [
+				0,
+				3,
+				-9
+			],
+			"look": [
+				0,
+				2,
+				0
+			]
+		},
+		{
+			"ticks": 60,
+			"from": [
+				4,
+				1.5,
+				-6
+			],
+			"to": [
+				-4,
+				1.5,
+				-6
+			],
+			"look": [
+				0,
+				2.4,
+				0
+			]
+		}
+	],
+	"lines": [
+		{
+			"from": 20,
+			"to": 125,
+			"key": "cutscene.deadlands.boss_reveal.0"
+		}
+	]
+}

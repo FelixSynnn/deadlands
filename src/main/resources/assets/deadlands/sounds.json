@@ -972,5 +972,127 @@
 			}
 		],
 		"subtitle": "subtitles.deadlands.ambient.hum_loop"
+	},
+	"music.chase": {
+		"sounds": [
+			{
+				"name": "deadlands:music/chase_strings",
+				"stream": true
+			},
+			{
+				"name": "deadlands:music/chase_strikes",
+				"stream": true
+			}
+		]
+	},
+	"music.explore": {
+		"sounds": [
+			{
+				"name": "deadlands:music/explore_ambience",
+				"stream": true
+			},
+			{
+				"name": "deadlands:music/explore_low_tone",
+				"stream": true
+			}
+		]
+	},
+	"horror.night_creature": {
+		"sounds": [
+			"deadlands:horror/night_creature_long",
+			"deadlands:horror/night_creature_call1",
+			"deadlands:horror/night_creature_call2",
+			"deadlands:horror/night_creature_call3"
+		],
+		"subtitle": "subtitles.deadlands.horror.night_creature"
+	},
+	"horror.dread": {
+		"sounds": [
+			{
+				"name": "deadlands:horror/dread_pressure",
+				"stream": true
+			},
+			{
+				"name": "deadlands:horror/dread_bass",
+				"stream": true
+			},
+			{
+				"name": "deadlands:horror/dread_suspense",
+				"stream": true
+			}
+		]
+	},
+	"horror.water_creak": {
+		"sounds": [
+			{
+				"name": "deadlands:horror/water_creak",
+				"stream": true
+			}
+		],
+		"subtitle": "subtitles.deadlands.horror.water_creak"
+	},
+	"horror.whisper": {
+		"sounds": [
+			"deadlands:horror/whisper1",
+			"deadlands:horror/whisper2",
+			"deadlands:horror/whisper3",
+			"deadlands:horror/whisper4"
+		],
+		"subtitle": "subtitles.deadlands.horror.whisper"
+	},
+	"horror.door_creak": {
+		"sounds": [
+			"deadlands:horror/door_creak"
+		],
+		"subtitle": "subtitles.deadlands.horror.door_creak"
+	},
+	"horror.distant_horn": {
+		"sounds": [
+			"deadlands:horror/distant_horn"
+		],
+		"subtitle": "subtitles.deadlands.horror.distant_horn"
+	},
+	"horror.sting_forest": {
+		"sounds": [
+			"deadlands:horror/sting_forest"
+		]
+	},
+	"horror.riser": {
+		"sounds": [
+			"deadlands:horror/riser_flare"
+		]
+	},
+	"horror.stinger": {
+		"sounds": [
+			"deadlands:horror/stinger_fright",
+			"deadlands:horror/stinger_hit"
+		]
+	},
+	"horror.swell": {
+		"sounds": [
+			"deadlands:horror/swell"
+		]
+	},
+	"horror.whoosh": {
+		"sounds": [
+			"deadlands:horror/whoosh"
+		],
+		"subtitle": "subtitles.deadlands.horror.whoosh"
+	},
+	"horror.suspense": {
+		"sounds": [
+			"deadlands:horror/suspense"
+		]
+	},
+	"horror.scream": {
+		"sounds": [
+			"deadlands:horror/scream"
+		],
+		"subtitle": "subtitles.deadlands.horror.scream"
+	},
+	"horror.jumpscare": {
+		"sounds": [
+			"deadlands:horror/jumpscare_chase"
+		]
 	}
 }

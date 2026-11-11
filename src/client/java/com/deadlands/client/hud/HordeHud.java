@@ -62,18 +62,18 @@ public final class HordeHud {
 				total = payload.total();
 				remaining = payload.remaining();
 				showCard(payload);
-				DLTheme.playUi(DLSounds.EVENT_HORDE_START, 1.0F, 1.0F);
+				DLTheme.playSting(DLSounds.EVENT_HORDE_START, 1.0F, 1.0F);
 				nextDistant = DISTANT_MIN_TICKS / 2;
 			}
 			case HordeEventPayload.BROKEN -> {
 				active = false;
 				showCard(payload);
-				DLTheme.playUi(DLSounds.EVENT_HORDE_BROKEN, 1.0F, 1.0F);
+				DLTheme.playSting(DLSounds.EVENT_HORDE_BROKEN, 1.0F, 1.0F);
 			}
 			case HordeEventPayload.DAWN -> {
 				active = false;
 				showCard(payload);
-				DLTheme.playUi(DLSounds.EVENT_HORDE_DAWN, 1.0F, 0.9F);
+				DLTheme.playSting(DLSounds.EVENT_HORDE_DAWN, 1.0F, 0.9F);
 			}
 			case HordeEventPayload.CLEAR -> active = false;
 			default -> {

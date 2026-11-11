@@ -1,0 +1,20 @@
+{
+	"kind": "minor",
+	"dark": true,
+	"weight": 8,
+	"steps": [
+		{
+			"at": 0,
+			"type": "silence",
+			"amount": 70
+		},
+		{
+			"at": 30,
+			"type": "sound",
+			"sound": "deadlands:horror.whisper",
+			"where": "ear",
+			"volume": 0.55,
+			"pitch": 1.0
+		}
+	]
+}

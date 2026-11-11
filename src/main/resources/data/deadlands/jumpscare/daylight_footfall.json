@@ -1,0 +1,38 @@
+{
+	"kind": "major",
+	"time": "day",
+	"place": "indoors",
+	"weight": 10,
+	"steps": [
+		{
+			"at": 0,
+			"type": "sound",
+			"sound": "deadlands:horror.suspense",
+			"where": "everywhere",
+			"volume": 0.5,
+			"pitch": 1.0
+		},
+		{
+			"at": 100,
+			"type": "sound",
+			"sound": "deadlands:horror.door_creak",
+			"where": "behind",
+			"volume": 1.0,
+			"pitch": 1.0,
+			"distance": 5
+		},
+		{
+			"at": 120,
+			"type": "sound",
+			"sound": "deadlands:horror.stinger",
+			"where": "everywhere",
+			"volume": 0.7,
+			"pitch": 1.0
+		},
+		{
+			"at": 120,
+			"type": "jolt",
+			"amount": 0.5
+		}
+	]
+}

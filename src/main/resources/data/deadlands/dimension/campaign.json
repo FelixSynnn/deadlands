@@ -1,0 +1,13 @@
+{
+	"type": "deadlands:campaign",
+	"generator": {
+		"type": "minecraft:flat",
+		"settings": {
+			"biome": "deadlands:dead_forest",
+			"features": false,
+			"lakes": false,
+			"layers": [],
+			"structure_overrides": []
+		}
+	}
+}

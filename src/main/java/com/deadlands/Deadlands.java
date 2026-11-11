@@ -94,6 +94,13 @@ public final class Deadlands implements ModInitializer {
 		com.deadlands.horde.BossDirector.init();
 		com.deadlands.story.Endings.init();
 		com.deadlands.world.weather.WeatherDirector.init();
+		com.deadlands.world.VanillaMobs.init();
+		com.deadlands.item.Flashlights.init();
+		com.deadlands.audio.ChaseTracker.init();
+		com.deadlands.content.DLContent.init();
+		com.deadlands.horror.HorrorDirector.init();
+		com.deadlands.mission.MissionManager.init();
+		com.deadlands.achievement.Achievements.init();
 		com.deadlands.vehicle.VehicleEntity.init();
 		com.deadlands.event.WorldEvents.init();
 		com.deadlands.audio.LocationTracker.init();

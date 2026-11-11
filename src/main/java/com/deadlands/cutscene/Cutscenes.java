@@ -48,6 +48,8 @@ public final class Cutscenes {
 		next.add(id);
 		player.setAttached(SEEN, List.copyOf(next));
 		ServerPlayNetworking.send(player, new CutscenePayload(id, anchor.x, anchor.y, anchor.z, yaw));
+		// No scares during the scene or for two minutes after it.
+		com.deadlands.horror.HorrorDirector.grace(player, com.deadlands.horror.HorrorDirector.GRACE_TICKS + 600);
 		return true;
 	}
 

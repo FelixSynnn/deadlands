@@ -1,0 +1,334 @@
+{
+	"textures": {
+		"0": "deadlands:item/flashlight",
+		"particle": "deadlands:item/flashlight"
+	},
+	"elements": [
+		{
+			"name": "body",
+			"from": [
+				7,
+				7,
+				3
+			],
+			"to": [
+				9,
+				9,
+				13
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						8,
+						0,
+						10,
+						2
+					],
+					"texture": "#0"
+				},
+				"south": {
+					"uv": [
+						8,
+						0,
+						10,
+						2
+					],
+					"texture": "#0"
+				},
+				"east": {
+					"uv": [
+						0,
+						0,
+						2,
+						10
+					],
+					"texture": "#0",
+					"rotation": 90
+				},
+				"west": {
+					"uv": [
+						0,
+						0,
+						2,
+						10
+					],
+					"texture": "#0",
+					"rotation": 90
+				},
+				"up": {
+					"uv": [
+						0,
+						0,
+						2,
+						10
+					],
+					"texture": "#0"
+				},
+				"down": {
+					"uv": [
+						0,
+						0,
+						2,
+						10
+					],
+					"texture": "#0"
+				}
+			}
+		},
+		{
+			"name": "head",
+			"from": [
+				6.5,
+				6.5,
+				0
+			],
+			"to": [
+				9.5,
+				9.5,
+				3
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						5,
+						0,
+						8,
+						3
+					],
+					"texture": "#0"
+				},
+				"south": {
+					"uv": [
+						2,
+						0,
+						5,
+						3
+					],
+					"texture": "#0"
+				},
+				"east": {
+					"uv": [
+						2,
+						0,
+						5,
+						3
+					],
+					"texture": "#0",
+					"rotation": 0
+				},
+				"west": {
+					"uv": [
+						2,
+						0,
+						5,
+						3
+					],
+					"texture": "#0",
+					"rotation": 0
+				},
+				"up": {
+					"uv": [
+						2,
+						0,
+						5,
+						3
+					],
+					"texture": "#0"
+				},
+				"down": {
+					"uv": [
+						2,
+						0,
+						5,
+						3
+					],
+					"texture": "#0"
+				}
+			}
+		},
+		{
+			"name": "switch",
+			"from": [
+				7.6,
+				9,
+				8
+			],
+			"to": [
+				8.4,
+				9.4,
+				9
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						8,
+						4,
+						9,
+						5
+					],
+					"texture": "#0"
+				},
+				"south": {
+					"uv": [
+						8,
+						4,
+						9,
+						5
+					],
+					"texture": "#0"
+				},
+				"east": {
+					"uv": [
+						8,
+						4,
+						9,
+						5
+					],
+					"texture": "#0",
+					"rotation": 0
+				},
+				"west": {
+					"uv": [
+						8,
+						4,
+						9,
+						5
+					],
+					"texture": "#0",
+					"rotation": 0
+				},
+				"up": {
+					"uv": [
+						8,
+						4,
+						9,
+						5
+					],
+					"texture": "#0"
+				},
+				"down": {
+					"uv": [
+						8,
+						4,
+						9,
+						5
+					],
+					"texture": "#0"
+				}
+			}
+		}
+	],
+	"display": {
+		"firstperson_righthand": {
+			"rotation": [
+				0,
+				0,
+				0
+			],
+			"translation": [
+				2.5,
+				1.0,
+				-1.0
+			],
+			"scale": [
+				0.9,
+				0.9,
+				0.9
+			]
+		},
+		"firstperson_lefthand": {
+			"rotation": [
+				0,
+				0,
+				0
+			],
+			"translation": [
+				2.5,
+				1.0,
+				-1.0
+			],
+			"scale": [
+				0.9,
+				0.9,
+				0.9
+			]
+		},
+		"thirdperson_righthand": {
+			"rotation": [
+				0,
+				0,
+				0
+			],
+			"translation": [
+				0,
+				2.0,
+				1.0
+			],
+			"scale": [
+				0.6,
+				0.6,
+				0.6
+			]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [
+				0,
+				0,
+				0
+			],
+			"translation": [
+				0,
+				2.0,
+				1.0
+			],
+			"scale": [
+				0.6,
+				0.6,
+				0.6
+			]
+		},
+		"gui": {
+			"rotation": [
+				30,
+				225,
+				0
+			],
+			"scale": [
+				0.9,
+				0.9,
+				0.9
+			]
+		},
+		"ground": {
+			"translation": [
+				0,
+				2,
+				0
+			],
+			"scale": [
+				0.5,
+				0.5,
+				0.5
+			]
+		},
+		"fixed": {
+			"rotation": [
+				0,
+				90,
+				0
+			],
+			"scale": [
+				0.8,
+				0.8,
+				0.8
+			]
+		},
+		"head": {
+			"translation": [
+				0,
+				10,
+				-4
+			]
+		}
+	}
+}

@@ -70,7 +70,7 @@ public final class TownCardHud {
 			}
 			pending = false;
 			startedAt = Util.getMillis();
-			DLTheme.playUi(DLSounds.EVENT_TOWN_ENTER, 1.0F, 0.85F);
+			DLTheme.playSting(DLSounds.EVENT_TOWN_ENTER, 1.0F, 0.85F);
 		}
 		float t = (Util.getMillis() - startedAt) / 1000.0F;
 		if (t > HOLD_UNTIL + FADE_OUT) {

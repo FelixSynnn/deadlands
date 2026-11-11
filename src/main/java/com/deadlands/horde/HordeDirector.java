@@ -235,6 +235,7 @@ public final class HordeDirector {
 		}
 		DLNetworking.broadcastHorde(server, new HordeEventPayload(broken ? HordeEventPayload.BROKEN : HordeEventPayload.DAWN,
 			horde.day(), horde.total(), horde.remaining()));
+		com.deadlands.achievement.Achievements.awardAll(server, "combat/horde_night");
 		DLNetworking.broadcastStatus(server);
 	}
 

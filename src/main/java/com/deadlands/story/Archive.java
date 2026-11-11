@@ -63,6 +63,10 @@ public final class Archive {
 			Component.translatable(entry.category().translationKey())), false);
 		player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BOOK_PAGE_TURN, SoundSource.PLAYERS, 0.8F, 1.0F);
 		StoryState.get(player.level().getServer()).discover(player, id);
+		com.deadlands.achievement.Achievements.award(player, "lore/first_document");
+		if (next.size() >= 25) {
+			com.deadlands.achievement.Achievements.award(player, "lore/archivist");
+		}
 		sync(player);
 		return true;
 	}

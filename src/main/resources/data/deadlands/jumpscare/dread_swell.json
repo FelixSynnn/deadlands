@@ -1,0 +1,15 @@
+{
+	"kind": "minor",
+	"time": "night",
+	"weight": 8,
+	"steps": [
+		{
+			"at": 0,
+			"type": "sound",
+			"sound": "deadlands:horror.dread",
+			"where": "everywhere",
+			"volume": 0.3,
+			"pitch": 1.0
+		}
+	]
+}

@@ -62,6 +62,18 @@ public final class DLTheme {
 		}
 	}
 
+	/**
+	 * A sting (a new day, a horde, a boss, a town): heard with the music, so the Music slider and
+	 * {@code audio.musicVolume} apply, never at full interface volume.
+	 */
+	public static void playSting(Holder<SoundEvent> sound, float pitch, float volume) {
+		float scaled = volume * (float) ConfigManager.get().audio.musicVolume;
+		Minecraft.getInstance().getSoundManager().play(new net.minecraft.client.resources.sounds.SimpleSoundInstance(
+			sound.value().location(), net.minecraft.sounds.SoundSource.MUSIC, scaled, pitch,
+			net.minecraft.client.resources.sounds.SoundInstance.createUnseededRandom(), false, 0,
+			net.minecraft.client.resources.sounds.SoundInstance.Attenuation.NONE, 0.0, 0.0, 0.0, true));
+	}
+
 	/** Button press sound: the DEADLANDS latch click, or vanilla's click if interface sounds are off. */
 	public static void click() {
 		if (ConfigManager.get().audio.interfaceSounds) {

@@ -5,7 +5,11 @@
 	"mixins": [
 		"OverworldBiomeBuilderMixin",
 		"PlayerMixin",
-		"ServerLevelMixin"
+		"ServerLevelMixin",
+		"PortalShapeMixin",
+		"EnderEyeItemMixin",
+		"EntityPortalMixin",
+		"ServerAdvancementManagerMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

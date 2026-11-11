@@ -4,8 +4,29 @@
 		"sounds": [
 			{
 				"name": "deadlands:music/title_theme",
-				"stream": true
+				"stream": true,
+				"volume": 0.45
 			}
 		]
+	},
+	"ambient.cave": {
+		"replace": true,
+		"sounds": []
+	},
+	"ambient.underwater.loop": {
+		"replace": true,
+		"sounds": []
+	},
+	"ambient.underwater.loop.additions": {
+		"replace": true,
+		"sounds": []
+	},
+	"ambient.underwater.loop.additions.rare": {
+		"replace": true,
+		"sounds": []
+	},
+	"ambient.underwater.loop.additions.ultra_rare": {
+		"replace": true,
+		"sounds": []
 	}
 }

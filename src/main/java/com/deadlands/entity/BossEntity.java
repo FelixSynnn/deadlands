@@ -522,6 +522,9 @@ public class BossEntity extends Monster {
 		super.die(source);
 		if (first && level() instanceof ServerLevel level) {
 			BossDirector.onDefeated(level, this, source.getEntity() instanceof ServerPlayer player ? player : null);
+			for (ServerPlayer near : level.getEntitiesOfClass(ServerPlayer.class, getBoundingBox().inflate(64.0))) {
+				com.deadlands.achievement.Achievements.award(near, "combat/boss");
+			}
 		}
 	}
 

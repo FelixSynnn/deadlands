@@ -1,0 +1,6 @@
+{
+	"cooldown_min_minutes": 10,
+	"cooldown_max_minutes": 15,
+	"stop_flag": "harley_dead",
+	"missions": []
+}
