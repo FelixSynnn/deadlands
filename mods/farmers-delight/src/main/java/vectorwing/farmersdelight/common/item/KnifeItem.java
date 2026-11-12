@@ -1,0 +1,156 @@
+package vectorwing.farmersdelight.common.item;
+
+import java.util.Set;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.item.v1.EnchantingContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ToolMaterial;
+import net.minecraft.world.item.Item.Properties;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CakeBlock;
+import net.minecraft.world.level.block.CarvedPumpkinBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import vectorwing.farmersdelight.common.registry.ModItems;
+import vectorwing.farmersdelight.common.tag.ModTags;
+import vectorwing.farmersdelight.common.utility.ItemUtils;
+import vectorwing.farmersdelight.refabricated.ItemAbility;
+
+public class KnifeItem extends Item {
+    public static final ItemAbility KNIFE_DIG = ItemAbility.KNIFE_DIG;
+    public static final ItemAbility KNIFE_HARVEST = ItemAbility.KNIFE_HARVEST;
+    public static final Set<ItemAbility> KNIFE_ACTIONS = Set.of(ItemAbility.SHEARS_CARVE, ItemAbility.SWORD_DIG, KNIFE_DIG, KNIFE_HARVEST);
+
+    public KnifeItem(Properties properties) {
+        super(properties);
+    }
+
+    public static void init() {
+        UseBlockCallback.EVENT.register(KnifeItem.KnifeEvents::onCakeInteraction);
+    }
+
+    public static ItemAttributeModifiers createAttributes(ToolMaterial material, float attackDamage, float attackSpeed) {
+        return ItemAttributeModifiers.builder()
+            .add(
+                Attributes.ATTACK_DAMAGE,
+                new AttributeModifier(BASE_ATTACK_DAMAGE_ID, attackDamage + material.attackDamageBonus(), Operation.ADD_VALUE),
+                EquipmentSlotGroup.MAINHAND
+            )
+            .add(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_ID, attackSpeed, Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+            .build();
+    }
+
+    @Override
+    public boolean canBeEnchantedWith(ItemStack stack, Holder<Enchantment> enchantment, EnchantingContext context) {
+        return enchantment.is(Enchantments.SWEEPING_EDGE) ? false : super.canBeEnchantedWith(stack, enchantment, context);
+    }
+
+    @Override
+    public InteractionResult useOn(UseOnContext context) {
+        Level level = context.getLevel();
+        ItemStack toolStack = context.getItemInHand();
+        BlockPos pos = context.getClickedPos();
+        BlockState state = level.getBlockState(pos);
+        Direction facing = context.getClickedFace();
+        if (state.getBlock() == Blocks.PUMPKIN && toolStack.is(ModTags.Items.KNIVES)) {
+            Player player = context.getPlayer();
+            if (player != null && !level.isClientSide()) {
+                Direction direction = facing.getAxis() == Axis.Y ? player.getDirection().getOpposite() : facing;
+                level.playSound(null, pos, SoundEvents.PUMPKIN_CARVE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.setBlock(pos, Blocks.CARVED_PUMPKIN.defaultBlockState().setValue(CarvedPumpkinBlock.FACING, direction), 11);
+                ItemEntity itemEntity = new ItemEntity(
+                    level,
+                    pos.getX() + 0.5 + direction.getStepX() * 0.65,
+                    pos.getY() + 0.1,
+                    pos.getZ() + 0.5 + direction.getStepZ() * 0.65,
+                    new ItemStack(Items.PUMPKIN_SEEDS, 4)
+                );
+                itemEntity.setDeltaMovement(
+                    0.05 * direction.getStepX() + level.getRandom().nextDouble() * 0.02,
+                    0.05,
+                    0.05 * direction.getStepZ() + level.getRandom().nextDouble() * 0.02
+                );
+                level.addFreshEntity(itemEntity);
+                toolStack.hurtAndBreak(1, player, context.getHand().asEquipmentSlot());
+            }
+
+            return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
+        } else {
+            return InteractionResult.PASS;
+        }
+    }
+
+    public static class KnifeEvents {
+        public static double onKnifeKnockback(double strength, LivingEntity entity) {
+            LivingEntity attacker = entity.getKillCredit();
+            ItemStack toolStack = attacker != null ? attacker.getItemInHand(InteractionHand.MAIN_HAND) : ItemStack.EMPTY;
+            if (toolStack.getItem() instanceof KnifeItem) {
+                strength -= 0.1F;
+            }
+
+            return strength;
+        }
+
+        public static InteractionResult onCakeInteraction(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
+            if (player.isSpectator()) {
+                return InteractionResult.PASS;
+            }
+
+            ItemStack toolStack = player.getItemInHand(hand);
+            if (!toolStack.is(ModTags.Items.KNIVES)) {
+                return InteractionResult.PASS;
+            }
+
+            BlockPos pos = hitResult.getBlockPos();
+            BlockState state = level.getBlockState(pos);
+            Block block = state.getBlock();
+            if (state.is(ModTags.Blocks.DROPS_CAKE_SLICE)) {
+                level.setBlock(pos, Blocks.CAKE.defaultBlockState().setValue(CakeBlock.BITES, 1), 3);
+                Block.dropResources(state, level, pos);
+                ItemUtils.spawnItemEntity(level, new ItemStack(ModItems.CAKE_SLICE.get()), pos.getX(), pos.getY() + 0.2, pos.getZ() + 0.5, -0.05, 0.0, 0.0);
+                level.playSound(null, pos, SoundEvents.WOOL_BREAK, SoundSource.PLAYERS, 0.8F, 0.8F);
+                return InteractionResult.SUCCESS;
+            }
+
+            if (block == Blocks.CAKE) {
+                int bites = state.getValue(CakeBlock.BITES);
+                if (bites < 6) {
+                    level.setBlock(pos, state.setValue(CakeBlock.BITES, bites + 1), 3);
+                } else {
+                    level.removeBlock(pos, false);
+                }
+
+                ItemUtils.spawnItemEntity(
+                    level, new ItemStack(ModItems.CAKE_SLICE.get()), pos.getX() + bites * 0.1, pos.getY() + 0.2, pos.getZ() + 0.5, -0.05, 0.0, 0.0
+                );
+                level.playSound(null, pos, SoundEvents.WOOL_BREAK, SoundSource.PLAYERS, 0.8F, 0.8F);
+                return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
+            } else {
+                return InteractionResult.PASS;
+            }
+        }
+    }
+}

@@ -519,3 +519,235 @@ The **full Phase 3 playtest checklist** is the three batch checklists above (bat
   - first-person arms and weapon animations;
   - interactions, inventory, weapons, infected types, vehicles and survival rules;
   - the jumpscare library to 25+.
+
+## Phase 4: Gameplay (in progress, 2026-11-12)
+
+Branch `horror/phase-4`, uncommitted. The owner's requests, done in order:
+- Bring four mod projects into the build.
+- Replace the infected's sounds with the owner's files.
+- Start Phase 4.
+- Build the eight jumpscares the owner picked.
+
+### Done and server-verified
+
+| What | How it was verified |
+|------|---------------------|
+| Bundled mods build and ship | `.\dev.ps1 build`: success, all 57 server game tests pass. The DEADLANDS jar carries five mods in `META-INF/jars/`: SmoothPlayerAnimations, Farmer's Delight Refabricated, Sound Physics Remastered, EnhancedVisuals (decompiled from its jar) and CreativeCore. Details and credits are in `mods/README.md` |
+| New infected sounds | Every file in `sounds.json` exists (the asset test). The ambient, hurt and death events point at the new cuts. The stalker uses only the demon-spirit files |
+| Jumpscares load | `/deadlands content`: "Loaded: 27 scares" (19 before, plus 8) |
+| Dark buildings are tracked | `/deadlands lights`: "dark buildings: 0 waiting, 0 claimed, 0 done" (no town restored in the test world) |
+| Feeding goal runs without errors | 40 walkers for 25 s on the dedicated server: no errors or warnings |
+| Earlier phases still hold | `/deadlands mobs`: 0 vanilla mobs, the four vanilla events off |
+
+**Dev server note:** with the subprojects, run the DEADLANDS dev server as `.\dev.ps1 :runServer`. A plain `runServer` starts one in every subproject too.
+
+### What changed
+
+- **Bundled mods:**
+  - `mods/` holds four subprojects, built and bundled jar-in-jar, each keeping its packages, licence and credits.
+  - CreativeCore 2.14.11 is bundled for EnhancedVisuals.
+  - Every change made to them is listed in `mods/README.md`.
+- **Infected sounds:**
+  - `tools/assetgen/import_zombie_sfx.py` cuts the owner's 18 mp3 files into 45 short OGG clips (Vorbis, mono, 44.1 kHz).
+  - Every infected kind except the stalker shares 15 ambient, 16 hurt and 6 death cuts.
+  - The stalker gets whispers and laughter (ambient), chanting bursts (hurt) and the chanting's end (death).
+  - Five more events reuse the same cuts: `horror.breath`, `horror.stalker_chant`, `horror.stalker_laugh`, `infected.feeding` and `infected.feeding_screech`.
+  - The old voice files are unused but still on disk; deleting them needs the owner's OK.
+- **First-person motion:**
+  - A newly drawn item rises from below the screen. The hands breathe, faster after sprinting, and tremble when under 40% health or chased.
+  - The setting is *Horror > First-person motion*.
+  - Files: `client/firstperson/FirstPersonMotion.java`, `client/mixin/ItemInHandRendererMixin.java`.
+- **Jumpscare framework:**
+  - Scare data gains `requires` (fixtures, emergency_light, heavy_rain, window, open_ground) and `trigger` (`event` scares are fired only by code).
+  - New client steps:
+    - `apparition`: a stalker only you see, placed in the beam, ahead, on the ceiling upside down, in a doorway, behind a window, behind you, or dropping;
+    - `apparition_hide`;
+    - `blink`: dark frames, which become slow fades with photosensitivity on;
+    - `wait_look`: the scare holds until you look up.
+  - New sound positions: `above`, and `around`, which circles you step by step.
+  - New server steps:
+    - `fixtures_out`: the tubes die one after another toward you;
+    - `emergency_strobe`.
+  - Files: `horror/Scare.java`, `HorrorDirector.java`, `ScareConditions.java`, `client/horror/Apparition.java`, `ScarePlayer.java`.
+- **The eight jumpscares** (`tools/assetgen/gen_gameplay.py`, `data/deadlands/jumpscare/`):
+  - Ceiling Crawl;
+  - Caught in the Beam;
+  - Emergency Strobe;
+  - Still Water;
+  - Feeding (`entity/ai/FeedGoal.java`, the `feeding_turn` stinger);
+  - Closed Inventory (fired when a menu kept open 4+ s is closed, indoors at night, after a world's first hour, at most every 40 minutes);
+  - The Dark Building (`horror/DarkBuildings.java`, once per restored town, saved with the world);
+  - Breath on the Glass.
+
+### Done, needs playtest (client-side, or needs a player: not tested by me)
+
+Playtest checklist. Force the director-chosen scares with `/deadlands horror play deadlands:<id>`.
+
+- [ ] **Sounds:** the zombies use the new voices; the stalker whispers, laughs, and chants when hit.
+- [ ] **First-person motion:** swap items (they rise); sprint, then stop (heavier breathing); drop low (shaking hands). The slider at 0 makes them still.
+- [ ] **ceiling_crawl** (indoors, 3+ lit tubes nearby):
+  - The tubes die toward you and a whisper comes from above.
+  - Nothing more happens until you look up.
+  - Then the stalker hangs upside down on the ceiling, chants and drops.
+- [ ] **caught_in_the_beam** (outdoors at night, flashlight on, open ground): the figure is at 18, then 12, then 6 blocks as the beam flickers, then gone, then laughter behind you.
+- [ ] **emergency_strobe** (indoors near a pulsing emergency light): the light strobes, the screen goes dark in four beats, the stalker is closer each time, then in your face.
+- [ ] **still_water** (`/deadlands weather heavy_rain`, outdoors at night): footsteps circle you, stop behind you, then a growl at your ear.
+- [ ] **Closed Inventory:** indoors at night in a world over an hour old, keep the inventory open 5 s and close it. The stalker is in the nearest doorway ahead, gone on the flicker.
+- [ ] **breath_on_glass** (facing a window up close at night): breathing, a face at the glass, a thud.
+- [ ] **Feeding:** find a walker standing still, head bowed, with bite sounds (it can take a few minutes of an infected idling). Walk within 8 blocks: its head snaps round, it screeches, and the infected around come for you.
+- [ ] **The Dark Building:**
+  - Restore a town's power. One building with fluorescents stays dark with its emergency lights pulsing.
+  - Walk up to it: every tube snaps on, 3 to 5 infected stand still facing you, then charge.
+
+### Known limitations
+
+- **Still Water:** Minecraft's own rain hiss is not silenced (only DEADLANDS' ambience is); the footsteps play over it.
+- **Feeding:** shown by stillness, a bowed head, bite sounds and blood particles. There is no kneeling animation yet; that comes with the creature animation work in this phase. Its head turns to face you before its body does, not a full 180 degrees.
+- **Apparition clipping:** the apparition is a client-only copy of the stalker, so it can clip into walls when a doorway or window is awkward.
+
+### Next (rest of Phase 4)
+
+- (Done in the second round: weapon sounds, firearm kick and reload dip, the inspect key.)
+- A kneeling animation for feeding and idle variants.
+- Door-push and reach animations.
+- The jumpscare library past 25: done (27).
+
+### Phase 4, second round (2026-11-12): shaders, flashlight, livelier sound, weapon handling
+
+The owner's report: the flashlight does nothing even with Lamb's Dynamic Lights, nights are not dark with shaders (Photon on Ultra), and the ambience and horror sounds should play more often.
+
+**Cause.** DEADLANDS' darkness and flashlight cone live in Minecraft's core shaders and lightmap:
+- Iris shader packs replace those shaders, so neither works under a pack.
+- Sodium replaces the terrain shader, so the cone does not work under Sodium either.
+- Lamb's Dynamic Lights only lights items it has a light-source file for, and the flashlight had none.
+
+**What changed**
+
+- **Darkness and beam on the screen** (`client/light/ShaderDarkness.java`):
+  - When a shader pack is in use (Iris API, read by reflection, no dependency) or Sodium is loaded, the night's darkness and the flashlight beam are drawn over the finished frame, after the pack. That is why it works with any pack.
+  - The screen darkens as far as light is missing where you stand: night under the sky, or an unlit room. Block light (lamps, lit buildings) lifts it.
+  - A shining flashlight opens a soft beam in the middle of the view. Battery fade and scare flickers dim it.
+  - Setting: *Horror > Shader compatibility* (on by default). Without shaders or Sodium the old core-shader darkness and cone are used.
+- **Lamb's Dynamic Lights:** `assets/deadlands/dynamiclights/item/flashlight.json` makes the flashlight a light level 15 source, only while it is switched on (matched on its `deadlands:flashlight_on` component; LDL 4.x format). With LDL installed the blocks around you really light up, and the screen beam shapes it into a cone.
+- **More sound:**
+  - Hushes are now 30 to 90 seconds; spells of sound are 1.5 to 3.5 minutes at night and 2 to 4 by day.
+  - Everyday sounds come about a third sooner and can be six seconds apart.
+  - Eerie sounds come every 1.5 to 3.5 minutes after dark (4 to 8 by day). After a scare they wait one minute instead of two.
+- **Weapon handling:**
+  - Firearms kick back and up when fired, and dip out of view and back while reloading.
+  - The **I** key (*Inspect weapon*) raises and turns the held weapon or flashlight.
+  - Melee weapons whoosh as you swing (only you hear it) and land with a blunt thud or a blade cut that everyone hears.
+  - The sounds are synthesised originals (`tools/assetgen/gen_weapon_sfx.py`).
+
+**Verified:** `.\dev.ps1 build`: success, all 57 server game tests pass (every new sound file exists). Dedicated server (`:runServer`): boots clean; 27 scares; 0 vanilla mobs.
+
+**Playtest checklist (needs the client):**
+- [ ] **Photon on Ultra, at night outdoors:**
+  - The screen is near black and only faint shapes show.
+  - Lit areas and lamps near you lift the darkness.
+  - In daytime nothing changes.
+- [ ] **Flashlight under shaders:**
+  - A soft beam in the middle of the view.
+  - With Lamb's Dynamic Lights, the blocks in it are really lit.
+  - It dims as the battery runs low and flickers during scares.
+- [ ] **Sodium without shaders:** the same beam; nights still dark.
+- [ ] **Vanilla without Sodium or Iris:** the old cone and darkness as before; no overlay.
+- [ ] **Ambience:** sounds come more often and the quiet stretches are shorter; eerie sounds every few minutes at night.
+- [ ] **Weapons:**
+  - Fire a gun: it kicks.
+  - Reload (use it while sneaking, or when empty): it dips and comes back.
+  - Press I: the weapon turns in your hand.
+  - Swing a bat: whoosh. Hit an infected: thud. With a machete: a cut.
+
+**Known limitations:**
+- **Darkness is uniform:**
+  - The screen-space darkness is the same everywhere on screen. When you stand in the dark, a lit window far away is dimmed too.
+  - It cannot tell near from far, so the "about 2 blocks" rule is approximated, not exact.
+- **Beam is fixed to the view:**
+  - It always sits in the middle of the view.
+  - Without Lamb's Dynamic Lights it brightens only what the pack already shows (moonlit shapes), not real light.
+- **Photon's own night brightness:** Photon's night-brightness options still apply underneath. The overlay darkens on top of them.
+
+### Phase 4, third round (2026-11-11): first-person animation rework, achievements, Harley fix
+
+- **First-person animation for almost everything** (`client/firstperson/FirstPersonMotion.java`):
+  - Melee arcs by weapon:
+    - blunt weapons wind up and come down overhead;
+    - blades slash diagonally;
+    - knives stab.
+  - Guns: a kick when fired, a dip on reload, and a low carry when sprinting.
+  - Items in use:
+    - drinking tips the bottle to the mouth with swallow bobs;
+    - eating chews;
+    - bandages, medkits and splints wrap in circles.
+  - Hands: a grab when you pick something up; a push when you open a door, gate or trapdoor.
+  - Body: a dip on landing, a flinch when hit, hand over hand on ladders, lower when crouching, a lift in the air, hands trailing when you turn.
+  - Also: breathing, tremor, the equip rise and the I-key inspect.
+  - Everything except inspect follows *Horror > First-person motion*.
+- **Achievements:**
+  - The screen lists every achievement:
+    - The hidden root is granted on joining, so Minecraft sends every regular achievement, not just earned ones.
+    - The server sends the ids of the hidden ones (`AchievementSecretsPayload`); those show as "???" until earned, so nothing is spoiled.
+  - 26 new achievements, 42 in all (`gen_gameplay.py`, `gen_story5.py`):
+    - exploration: four biomes, every biome, restoring a town's power;
+    - kills of each special infected, and carrying all three firearms;
+    - survival: water, medicine, the military pack;
+    - meeting Harley;
+    - eight hidden horror ones, one per Phase 4 jumpscare;
+    - the hidden "Batch Seven".
+- **Harley always spawns:**
+  - Before: her spawn tried 12 spots within 6 blocks and gave up silently. A failed spawn was also recorded as placed, so she could never come.
+  - Now: the nearest safe spot within 48 blocks is used (solid footing, room, no water, lava, fire, magma or cactus), with the survivor's own spot as the last resort. Characters are marked placed only once they exist.
+  - When her camp is not beside you, its coordinates appear on screen (a title) and in chat.
+  - Worlds whose Harley never came get her the next time someone joins.
+  - Files: `npc/SafeSpots.java`, `NpcSpawns.onFirstArrival`, `StoryIntro.repairHarley`.
+
+## Phase 5: Story and cinematics (started 2026-11-11)
+
+**Plan** (each step its own build-checked batch):
+1. **Chapter one: Harley's questline and Adam.** Done, see below.
+2. **Adam's research and belongings:** documents, voice recordings, family photos, his lab as a location.
+3. **The family mystery:** the trail of hope (notes, recordings, messages) through Itzbreadloaf's campaign, and the protected family-house cinematic.
+4. **The Harley ending beat:**
+   - the drive with Adam using the vehicle system;
+   - the long final scene;
+   - Harley's offers stop.
+5. **Imlilylol's and felixSyn's campaigns:** their own chapters and perspectives.
+6. **Endings, chapter select, the Cinematic Archive and the cutscene library**, in step with each campaign.
+
+**Chapter one, done** (`story/HarleyQuest.java`, `tools/assetgen/gen_story5.py`):
+- **Static:** Harley asks for 2 radio parts and a fuse for her receiver. Talking to her offers it; bringing them completes it and she takes them.
+- **Cold Chain:** after the receiver works, she asks for a car battery and 2 purification tablets. She gives a **sealed sample case** from the regional lab with Adam's project number on it.
+- **Finding Adam:** she says where Adam is. He is placed at a safe spot 120 to 200 blocks from her camp, and the coordinates go on screen and in chat.
+- **The Case:**
+  - Bring it to Adam. He takes it and recognises it: "This is batch seven. I sealed it myself, the week before everything went wrong."
+  - The flag `chapter_one_case_delivered` is set and the hidden achievement is awarded.
+- **Harley's rules:** her offers follow her giver rules (10 to 15 minutes between offers, one at a time, stopped by `harley_dead`).
+- **Adam himself:**
+  - A new character, appended so saved worlds keep their order, and story-placed only (never a chance encounter).
+  - His own greeting and four story lines: a father and colleague, hoping his family is out there.
+  - Nothing hints at the family house.
+- **Canon checks:** Harley and Adam stay strictly professional (colleagues across the hall for eleven years).
+
+**Verified:**
+- `.\dev.ps1 build`: success, all 57 server game tests pass (the new item, models, sounds and names are all present).
+- Dedicated server (`:runServer`): "Loaded: 27 scares, 4 missions, 2 mission givers ... 42 DEADLANDS achievements"; no errors.
+
+**Playtest checklist (needs a player):**
+- [ ] **Harley's spawn:**
+  - Make a new world, ideally starting in a forest, on a slope or near water: Harley is always there.
+  - If she is more than 10 blocks away, a title and a chat line give her coordinates.
+- [ ] **Achievements:** the screen lists every achievement (42), the hidden ones as "???", with the count "x / 42".
+- [ ] **Chapter one:**
+  - Talk to Harley: she asks for radio parts and a fuse, and the tracker shows the mission. Bring them and talk again: done.
+  - After the cooldown, talk again: Cold Chain. Bring the battery and tablets: you get the sealed case, and Adam's coordinates appear.
+  - Go there and talk to Adam: three lines, the case is gone, and Batch Seven is unlocked.
+- [ ] **First-person motion:**
+  - swing a bat, a machete and a knife (three different arcs);
+  - drink, eat and bandage;
+  - pick up an item and open a door;
+  - jump down three blocks, climb a ladder, take a hit, sprint with a gun.
+
+**Known limitations:**
+- **Chat-only scenes:** chapter one's lines play in chat. Adam's recognition is a scene for the cutscene library (step 6), with a skippable cinematic.
+- **Adam's skin** is a placeholder: the researcher's, with glasses and greying hair. It is listed in the asset manifest.

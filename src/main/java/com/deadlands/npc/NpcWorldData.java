@@ -131,7 +131,7 @@ public final class NpcWorldData extends SavedData {
 	public @Nullable NpcCharacter nextUnplaced(RandomSource random) {
 		List<NpcCharacter> free = new ArrayList<>();
 		for (NpcCharacter character : NpcCharacter.values()) {
-			if (!isPlaced(character)) {
+			if (!isPlaced(character) && !character.storyOnly()) {
 				free.add(character);
 			}
 		}

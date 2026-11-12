@@ -53,6 +53,9 @@ public final class DLStory {
 	public static final Item EXPERIMENTAL_FORMULA = story("experimental_formula", Rarity.RARE);
 	public static final Item EVACUATION_ORDERS = story("evacuation_orders", Rarity.UNCOMMON);
 
+	// Phase 5: Harley's questline. The case she gives the survivor to take to Adam.
+	public static final Item SEALED_SAMPLE_CASE = story("sealed_sample_case", Rarity.RARE);
+
 	// What the bosses leave behind.
 	public static final Item FUSED_TISSUE = story("fused_tissue", Rarity.EPIC);
 	public static final Item BUTCHERS_BADGE = story("butchers_badge", Rarity.EPIC);

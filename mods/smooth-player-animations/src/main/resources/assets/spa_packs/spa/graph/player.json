@@ -1,0 +1,320 @@
+{
+  "format": "spa_graph/1",
+  "_说明": "玩家动画图。环境按优先级选一个，环境里的状态按优先级选一个；动作按槽叠在上面。资源包可整份替换，也可只写要改的部分（带 id 的条目按 id 合并）。",
+  "default_environment": "ground",
+  "variables": {
+    "_说明": "开关：1 开 0 关。v.sprint_stop：疾跑急停的滑步（开；是否播放由设置里的“急停”开关决定，默认关，和 V14 一样）。",
+    "v.sprint_stop": 1
+  },
+  "environments": [
+    {
+      "id": "riding", "priority": 70, "when": "q.riding", "transition": 0.3, "cem": true,
+      "_说明_cem": "CEM 开时骑乘交给 FA 动画包；只有骑马用本模组自己的骑马动画（FA 没有的扩展）",
+      "states": [
+        {"id": "boat_passenger", "priority": 40, "backends": ["vanilla"], "when": "q.vehicle == 1 && !q.boat_driver",
+         "_说明": "原版骨骼：不是划船的人就用原版坐姿", "motion": "@vanilla"},
+        {"id": "boat_cart_vanilla", "priority": 36, "backends": ["vanilla"], "when": "q.vehicle == 1 || q.vehicle == 2",
+         "_说明": "原版骨骼：划船、坐矿车本模组没有动作（CEM 开时由 FA 播放，没装 FA 时用原版坐姿）", "motion": "@vanilla"},
+        {"id": "boat_turn_left", "priority": 35, "when": "q.vehicle == 1 && q.paddling && q.paddle_turn == 1",
+         "_说明": "只有右桨在划 = 向左转", "motion": {"clip": "boat_turn_left", "time": "free"}},
+        {"id": "boat_turn_right", "priority": 35, "when": "q.vehicle == 1 && q.paddling && q.paddle_turn == -1",
+         "motion": {"clip": "boat_turn_right", "time": "free"}},
+        {"id": "boat_row_back", "priority": 31, "when": "q.vehicle == 1 && q.paddling",
+         "_说明": "往前划用 boat_backward（boat_forward 时间倒放）", "motion": {"clip": "boat_backward", "time": "free"}},
+        {"id": "boat_row", "priority": 30, "when": "q.vehicle == 1 && q.paddling",
+         "motion": {"clip": "boat_forward", "time": {"phase": "q.paddle_phase"}}},
+        {"id": "boat_idle", "priority": 25, "when": "q.vehicle == 1", "motion": {"clip": "boat_idle", "time": "free"}},
+        {"id": "cart", "priority": 20, "when": "q.vehicle == 2",
+         "motion": {"blend": {"by": "q.speed", "smooth": 0.15, "points": [
+           [0, {"clip": "cart_idle", "time": "free"}],
+           [3, {"clip": "cart_moving", "time": "free"}],
+           [6, {"clip": "cart_fast", "time": "free"}]]}}},
+        {"id": "ride_other", "priority": 15, "backends": ["vanilla"], "when": "q.vehicle == 4",
+         "_说明": "原版骨骼：马以外的坐骑（猪、炽足兽……）用原版坐姿", "motion": "@vanilla"},
+        {"id": "mount", "priority": 10, "when": "1", "cem": false,
+         "motion": {"blend": {"by": "q.speed", "smooth": 0.15, "points": [
+           [0.4, {"clip": "horse_riding_idle", "time": "free"}],
+           [4, {"clip": "horse_riding", "time": {"stride": 7}}],
+           [10, {"clip": "horse_riding_fast", "time": {"stride": 10}}]]}}}
+      ]
+    },
+    {
+      "id": "flying", "priority": 60, "when": "q.flying", "transition": 0.3, "cem": true,
+      "states": [
+        {"id": "fly", "priority": 10, "when": "1",
+         "motion": {"blend": {"by": "q.speed", "smooth": 0.12, "points": [
+           [0, {"clip": "fly_idle", "time": "free"}],
+           [5, {"clip": "flying", "time": "free"}],
+           [11, {"clip": "flying_fast", "time": "free"}]]}}}
+      ]
+    },
+    {
+      "id": "gliding", "priority": 50, "when": "q.gliding", "transition": 0.3, "cem": "q.cem_full",
+      "states": [
+        {"id": "glide", "priority": 10, "when": "1",
+         "motion": {"blend": {"by": "q.speed", "smooth": 0.2, "points": [
+           [3, {"clip": "elytra_fly", "time": "free"}],
+           [15, {"clip": "elytra_fly_fast", "time": "free"}]]}}}
+      ]
+    },
+    {
+      "id": "water", "priority": 40, "when": "q.in_water && !q.on_ground", "transition": 0.35, "cem": "q.cem_full",
+      "states": [
+        {"id": "swim", "priority": 20, "when": "q.swimming",
+         "motion": {"blend": {"by": "q.speed", "smooth": 0.15, "points": [
+           [0.3, {"clip": "swimming_idle", "time": "sync"}],
+           [1.5, {"clip": "swimming", "time": "sync"}],
+           [5, {"clip": "swimming", "time": "sync", "speed": "1.6"}]]}}},
+        {"id": "tread", "priority": 10, "when": "1",
+         "motion": {"blend": {"by": "q.speed", "smooth": 0.15, "points": [
+           [0.1, {"clip": "swim_idle", "time": "free"}],
+           [1.0, {"clip": "tread_move", "time": "sync"}],
+           [2.5, {"clip": "tread_fast", "time": "sync"}]]}}}
+      ]
+    },
+    {
+      "id": "climb", "priority": 30, "when": "q.climbing", "transition": 0.25, "cem": "q.cem_full",
+      "states": [
+        {"id": "climb", "priority": 10, "when": "1",
+         "_说明": "混合空间，按往上爬的速度：0 是抓住的姿势，2.35 格/秒（正常爬梯子）是攀爬动作。停在梯子上（不按潜行会慢慢往下滑）和往下滑都按 0 算，是抓住的姿势",
+         "motion": {"blend": {"by": "max(q.vertical, 0)", "smooth": 0.12, "points": [
+           [0, {"clip": "climbing_idle", "time": "free"}],
+           [2.35, {"clip": "climbing", "time": "sync", "speed": "max(q.vertical, 0) / 2.35"}]]}}}
+      ]
+    },
+    {
+      "id": "bounce", "priority": 20, "when": "q.bouncing || q.bounce_contact", "transition": 0.15,
+      "states": [
+        {"id": "bounce_up", "priority": 12, "when": "q.vertical > 0", "motion": {"clip": "bounce_jump", "time": "once"}},
+        {"id": "bounce_down", "priority": 10, "when": "1", "motion": {"clip": "bounce_fall", "time": "free"}}
+      ]
+    },
+    {
+      "id": "step_off", "priority": 11, "backends": ["bent"],
+      "_说明": "弯曲骨骼：走下台阶的短暂离地，继续走路动作（与 ground/move 同一个节点，不切换）。只算自己走下去的（被击飞、飞行结束都不算）",
+      "when": "!q.on_ground && !q.cling_grace && q.stepped_off && q.air_time < 0.3 && !q.in_water && !q.climbing && !q.riding && !q.flying && !q.gliding",
+      "states": [
+        {"id": "step_off", "priority": 10, "when": "1", "motion": {"same_as": "ground/move"}}
+      ]
+    },
+    {
+      "id": "air", "priority": 10, "when": "!q.on_ground && !q.cling_grace", "transition": 0.12, "cem": true,
+      "states": [
+        {"id": "slow_falling", "priority": 68, "cem": "q.cem_full", "when": "q.vertical < 0 && q.slow_falling",
+         "motion": {"clip": "slow_falling", "time": "free"}},
+        {"id": "jump_arc", "priority": 67, "backends": ["bent"],
+         "_说明": "弯曲骨骼的跳跃动作是从起跳到落地的完整弧线：播完再交给下落",
+         "when": "q.jumped && !q.stepped_off", "until_end": true, "transition": 0.08,
+         "motion": {"select": [
+           {"when": "q.slow_jump && q.jump_left", "motion": {"clip": "jump_slow_first", "time": "once"}},
+           {"when": "q.slow_jump", "motion": {"clip": "jump_slow_second", "time": "once"}},
+           {"when": "q.jump_left", "motion": {"clip": "jump_first", "time": "once"}},
+           {"motion": {"clip": "jump_second", "time": "once"}}], "latch": true}},
+        {"id": "jump", "priority": 66, "when": "q.jumped && !q.stepped_off && !q.descending",
+         "until_end": true, "transition": 0.08,
+         "motion": {"select": [
+           {"when": "q.slow_jump && q.jump_left", "motion": {"clip": "jump_slow_first", "time": "once"}},
+           {"when": "q.slow_jump", "motion": {"clip": "jump_slow_second", "time": "once"}},
+           {"when": "q.jump_left", "motion": {"clip": "jump_first", "time": "once"}},
+           {"motion": {"clip": "jump_second", "time": "once"}}], "latch": true}},
+        {"id": "falling_long", "priority": 64, "cem": "q.cem_full", "when": "q.vertical <= 0 && q.fall_distance > 3",
+         "_说明": "从进入下落时的姿势（@snapshot，跳跃或走下边缘的最后一帧）混合到下落动作，按下落速度张开手臂：下落速度 3 格/秒开始张开，12 格/秒完全张开；同时至少用 0.4 秒，不会一下子张开。fall_ease、falling 和它共用这个节点（same_as）：换状态时混合接着走，不重新开始",
+         "motion": {"blend": {"by": "min(q.state_time / 0.4, clamp((-q.vertical - 3) / 9, 0, 1))", "smooth": 0.1, "points": [
+           [0, {"clip": "@snapshot", "time": "free"}],
+           [1, {"clip": "falling", "time": "free"}]]}}},
+        {"id": "step_down", "priority": 63,
+         "when": "q.fall_distance <= 3 && ((q.slow_jump && q.vertical <= 0) || q.stepped_off)",
+         "until_end": true,
+         "motion": {"select": [
+           {"when": "if(q.slow_jump, q.jump_left, !q.left_foot_lead)", "motion": {"clip": "step_down_left", "time": "once"}},
+           {"motion": {"clip": "step_down_right", "time": "once"}}], "latch": true}},
+        {"id": "fall_ease", "priority": 62, "backends": ["bent"], "when": "!q.fall_high || q.descent_time < 0.5",
+         "_说明": "弯曲骨骼没有 fall_first/second：从进入时的姿势慢慢混合到下落动作",
+         "motion": {"same_as": "air/falling_long"}},
+        {"id": "fall", "priority": 62, "when": "!q.fall_high || q.descent_time < 0.5",
+         "motion": {"select": [
+           {"when": "q.jump_left", "motion": {"clip": "fall_first", "time": "once"}},
+           {"motion": {"clip": "fall_second", "time": "once"}}], "latch": true}},
+        {"id": "falling", "priority": 60, "when": "1", "cem": "q.cem_full",
+         "motion": {"same_as": "air/falling_long"}}
+      ]
+    },
+    {
+      "id": "ground", "priority": 0, "when": "1", "transition": 0.2, "cem": true,
+      "_说明": "cem：CEM 引擎开时这里由 CEM 动画包驱动基础动作（可写表达式）。没开动画包时用内置的 player.jem，它只管待机、走、跑和跳跃落地；q.cem_full 为 0 时，潜行、爬行、后退、长距离下落、缓降、水中、攀爬、鞘翅播放动作文件",
+      "states": [
+        {"id": "crawl", "priority": 70, "cem": "q.cem_full", "when": "q.crawling",
+         "_说明": "混合空间，按移动速度：0.2 格/秒以下是爬行停住，1.3 格/秒（正常爬行）是爬行动作，步频跟着速度走",
+         "motion": {"blend": {"by": "q.speed", "smooth": 0.12, "points": [
+           [0.2, {"clip": "crawl_idle", "time": "free"}],
+           [1.3, {"clip": "crawling", "time": {"stride": 1.3}}]]}}},
+        {"id": "sneak", "priority": 40, "cem": "q.cem_full", "when": "q.sneaking",
+         "motion": {"blend": {"by": "q.speed", "smooth": 0.1, "points": [
+           [0.2, {"clip": "sneak_idle", "time": "free"}],
+           [1.0, {"direction": {
+             "forward": {"clip": "sneak_walk", "time": {"stride": 1.3}},
+             "back": {"clip": "sneak_walk", "time": {"stride": 1.3}, "speed": "-1"}}}]]}}},
+        {"id": "sprint_stop", "priority": 30, "backends": ["vanilla"], "when": "v.sprint_stop && q.sprint_stopping", "until_end": true, "end_lead": 0.2, "cem": false,
+         "motion": {"clip": "sprint_stop", "time": "once"}},
+        {"id": "afk_item_intro", "priority": 26, "when": "q.afk && q.afk_item && !q.holding", "until_end": true, "cem": false,
+         "_说明": "站着发呆时主手物品的待机动作（物品规则 type idle，例如虞美人）：先举起一次……",
+         "motion": {"clip": {"signal": "idle_intro"}, "time": "once"}},
+        {"id": "afk_item", "priority": 25, "when": "q.afk && q.afk_item && !q.holding", "cem": false, "transition": 0.1,
+         "_说明": "……然后一直举着，直到移动或换物品",
+         "motion": {"clip": {"signal": "idle_loop"}, "time": "free"}},
+        {"id": "fidget", "priority": 24, "when": "q.fidget && !q.afk_item && !q.holding", "until_end": true, "cem": false,
+         "_说明": "发呆时每分钟随机 2～3 次的小动作。弯曲骨骼不自带（是槽位，资源包放 spa/bent/idle_special_1.json / idle_special_2.json 生效，没有时照常待机）；原版模型用内置的",
+         "motion": {"select": [
+           {"when": "q.fidget_pick < 0.5", "motion": {"clip": "idle_special_1", "time": "once"}},
+           {"motion": {"clip": "idle_special_2", "time": "once"}}], "latch": true}},
+        {"id": "move", "priority": 20, "when": "1", "group": "move", "cem": "q.cem_full || !q.moving_backward",
+         "motion": {"blend": {"by": "q.speed", "smooth": 0.12, "points": [
+           [0.3, {"clip": "idle", "time": "free"}],
+           [1.6, {"clip": "walk_slow", "time": {"stride": 1.6}}],
+           [3.4, {"direction": {
+             "forward": {"clip": "walking", "time": {"stride": 4.317}},
+             "back": {"clip": "walk_back", "time": {"stride": 3.5}},
+             "left": {"clip": "walk_left", "time": {"stride": 4.317}},
+             "right": {"clip": "walk_right", "time": {"stride": 4.317}}}}],
+           [4.6, {"direction": {
+             "forward": {"clip": "walking", "time": {"stride": 4.317}},
+             "back": {"clip": "walk_back", "time": {"stride": 3.5}},
+             "left": {"clip": "walk_left", "time": {"stride": 4.317}},
+             "right": {"clip": "walk_right", "time": {"stride": 4.317}}}}],
+           [5.6, {"direction": {
+             "forward": {"clip": "running", "time": {"stride": 5.612}},
+             "back": {"clip": "walk_back", "time": {"stride": 3.5}},
+             "left": {"clip": "walk_left", "time": {"stride": 4.317}},
+             "right": {"clip": "walk_right", "time": {"stride": 4.317}}}}]]}}}
+      ]
+    }
+  ],
+  "slots": ["full", "upper", "off_hand", "main_hand"],
+  "actions": [
+    {"id": "land", "slot": "full", "priority": 50, "backends": ["bent"],
+     "_说明": "弯曲骨骼的落地下沉：叠加动作 land（膝盖弯、根骨下沉、脚底贴地、上身略前倾再回正，0.6 秒），叠在当前动作上；力度按落地速度（落地速度 / 8，0.25～1.2）。资源包可以替换 spa/bent/land.json",
+     "trigger": "q.landed && !q.in_water && !q.riding && !q.flying && !q.gliding",
+     "clip": "land", "mask": "full", "additive": true,
+     "strength": "clamp(q.land_speed / 8, 0.25, 1.2)",
+     "fade_in": 0.02, "fade_out": 0.05},
+    {"id": "sword_combo", "slot": "main_hand", "priority": 95, "backends": ["bent"],
+     "_说明": "弯曲骨骼的剑二连：连段（chain）——跟着原版的挥手事件走，原版挥一次出一刀：一刀总是完整播完，播放中再挥手直接忽略（不打断、不排队）；播完之后再挥才出下一刀（第一下、第二下依次循环）；rearm：播完时原版那一下挥手还没结束，就停在这一刀的收尾等它结束（不让普通挥手动画插进来）；按住左键（原版一直在挥，比如挖方块）时，每刀播完后原版的下一次挥手接上下一刀，一直轮流；停下后 1 秒内再挥接着下一下，否则从第一下开始。动作接管上半身和骨盆朝向；腿始终用下层的步伐（站着时是站立动画，移动时是走跑），按髋部规则跟着动作骨盆的水平朝向，高度保留下层的起伏。只有出剑没有收剑：从持剑架势 0.12 秒混合进出剑，连段的下一下也用 0.12 秒从上一下的收尾混合过去，大动作做完就算出完（blend_out 0.4：两刀最后约 0.4 秒只是定在收刀姿势，不再播这段后摇），这时就能接下一刀，没有下一刀就用 0.3 秒混合到下一个动作（通常是持剑）",
+     "trigger": "q.swing_start && q.swing_sword", "rearm": "q.swinging && q.swing_sword",
+     "yield": "q.bc_arms || q.external_body",
+     "clip": {"pick": "q.swing_index", "of": ["sword_swing_first", "sword_swing_second"]}, "chain": true,
+     "mask": "full", "override": "full", "lower": "0",
+     "mirror": "q.swing_offhand != q.hold_main_left",
+     "fade_in": 0.12, "fade_out": 0.3, "blend_out": 0.4},
+    {"id": "swing", "slot": "main_hand", "priority": 90,
+     "when": "q.swinging", "loop": true, "rearm": "q.swing_start",
+     "_说明": "挥手期间循环播放，连续挥不从头重播，停下后再挥才从头开始。rearm：这一下播放期间原版又挥了一次（按住左键）才接着播下一下，否则播完停在结尾，不会因为原版的挥手多算了一 tick 就多播半下",
+     "yield": "q.bc_arms || q.external_body",
+     "clip": {"signal": "swing"}, "mask": "upper", "mirror": "q.swing_offhand != q.hold_main_left",
+     "fade_in": 0.05, "fade_out": 0.12},
+    {"id": "release", "slot": "main_hand", "priority": 85, "trigger": "q.released", "duration": 0.3,
+     "yield": "q.bc_arms || q.external_body",
+     "clip": {"signal": "release"}, "mask": "upper", "mirror": "q.release_left", "fade_in": 0.05, "fade_out": 0.15},
+    {"id": "use", "slot": "main_hand", "priority": 80, "when": "q.using", "loop": true,
+     "yield": "q.bc_arms || q.external_body",
+     "clip": {"signal": "use"}, "mask": "upper", "mirror": "q.use_offhand != q.hold_main_left", "aim": "q.use_action == 4 || q.use_action == 6",
+     "fade_in": 0.12, "fade_out": 0.15},
+    {"id": "eat", "slot": "main_hand", "priority": 81, "backends": ["vanilla"], "when": "q.using && (q.use_action == 1 || q.use_action == 2)", "loop": true,
+     "_说明": "原版骨骼（CEM 开）吃喝：只动拿食物的那只手，送到嘴边；手跟着视线俯仰、转头走六成（嘴绕脖子转，手绕肩膀转，跟满了会过头）",
+     "yield": "q.bc_arms || q.external_body",
+     "clip": {"signal": "use"}, "mask": "right_arm", "mirror": "q.use_offhand != q.hold_main_left", "aim": 0.6,
+     "fade_in": 0.15, "fade_out": 0.15},
+    {"id": "crossbow_ready", "slot": "main_hand", "priority": 70, "when": "q.crossbow_charged", "loop": true,
+     "yield": "q.bc_arms || q.external_body",
+     "clip": "hold_crossbow", "mask": "arms", "mirror": "q.crossbow_offhand != q.hold_main_left", "aim": true,
+     "fade_in": 0.15, "fade_out": 0.15},
+    {"id": "draw", "slot": "main_hand", "priority": 75, "trigger": "q.item_drawn",
+     "_说明": "掏出物品：主手换了物品（切快捷栏，或选中的格子里来了别的物品；换手不算）时播放，物品同时溶解出现。武器（剑、斧、三叉戟、重锤、弓、弩，或挥击规则是这几类的物品）用 draw_weapon 从右肩拔出，其他物品用 draw_item 从腰后拿出；物品规则 type 为 draw 的可以另指定或关掉。挥击、使用会打断它",
+     "yield": "q.bc_arms || q.external_body",
+     "clip": {"signal": "draw"}, "mask": "upper", "mirror": "q.hold_main_left", "fade_in": 0.06, "fade_out": 0.3},
+    {"id": "swap_hands", "slot": "upper", "priority": 60, "trigger": "q.hands_swapped",
+     "yield": "q.bc_arms || q.external_body",
+     "clip": "swap_hands", "mask": "arms", "fade_in": 0.05, "fade_out": 0.1},
+    {"id": "hold_both", "slot": "upper", "priority": 50, "when": "q.hold_both", "loop": true,
+     "yield": "q.bc_arms || q.external_body",
+     "clip": {"signal": "hold_both"}, "mask": "arms", "fade_in": 0.2, "fade_out": 0.2},
+    {"id": "hold_sword", "slot": "main_hand", "priority": 56, "backends": ["bent"], "loop": true,
+     "_说明": "槽位：弯曲骨骼主手拿剑、站着不动时的持剑动作（整套全身）。模组不自带，资源包放 spa/bent/hold_sword.json 即可生效；没有时不播（不回退）",
+     "when": "q.hold_sword && q.on_ground && !q.sneaking && q.speed < 0.3 && q.vehicle == 0",
+     "yield": "q.bc_arms || q.external_body || q.hold_both",
+     "clip": "hold_sword", "mask": "full", "override": "full", "lower": "1", "mirror": "q.hold_main_left",
+     "fade_in": 0.25, "fade_out": 0.25},
+    {"id": "hold_sword_move", "slot": "main_hand", "priority": 55, "backends": ["bent"], "loop": true,
+     "_说明": "槽位：拿剑移动、潜行、跳跃时的持剑动作，只用上半身（头直接取动作的，不跟着走路晃；腿和骨盆照走路）。资源包放 spa/bent/hold_sword_move.json 即可生效",
+     "when": "q.hold_sword && !q.climbing && !q.in_water && !q.flying && !q.gliding && q.vehicle == 0",
+     "yield": "q.bc_arms || q.external_body || q.hold_both",
+     "clip": "hold_sword_move", "mask": "upper", "override": "arms_head", "mirror": "q.hold_main_left",
+     "fade_in": 0.25, "fade_out": 0.25},
+    {"id": "hold_main", "slot": "main_hand", "priority": 50, "when": "1", "loop": true,
+     "yield": "q.bc_arms || q.external_body || q.hold_both",
+     "clip": {"signal": "hold_main"}, "mask": "right_arm", "mirror": "q.hold_main_left",
+     "fade_in": 0.2, "fade_out": 0.2},
+    {"id": "hold_off", "slot": "off_hand", "priority": 50, "when": "1", "loop": true,
+     "yield": "q.bc_arms || q.external_body || q.hold_both",
+     "clip": {"signal": "hold_off"}, "mask": "right_arm", "mirror": "!q.hold_main_left",
+     "fade_in": 0.2, "fade_out": 0.2}
+  ],
+  "fallbacks": {
+    "bent": [
+      ["punch", "interact"],
+      ["tool_*", "interact"],
+      ["sword_swing_*", "interact"],
+      ["use_*", "@vanilla_arms"],
+      ["release_*", "@vanilla_arms"],
+      ["hold_crossbow", "@vanilla_arms"],
+      ["hold_sword*", null],
+      ["hold_*", null],
+      ["drinking", "eating"],
+      ["eating", "@vanilla_arms"],
+      ["walk_slow", "walking"],
+      ["fall_*", "falling"],
+      ["slow_falling", "falling"],
+      ["bounce_*", "falling"],
+      ["swimming_fast", "swimming"],
+      ["tread_move", "swim_idle"],
+      ["horse_riding_fast", "horse_riding"]
+    ],
+    "vanilla": [
+      ["interact", "punch"],
+      ["tool_*", "@vanilla_arms"],
+      ["use_*", "@vanilla_arms"],
+      ["hold_*", "@vanilla_arms"],
+      ["toot_horn", "@vanilla_arms"],
+      ["brush", "@vanilla_arms"],
+      ["walk_left", "walking"],
+      ["walk_right", "walking"],
+      ["swimming_fast", "swimming"],
+      ["swimming_idle", "swimming"],
+      ["tread_fast", "tread_move"],
+      ["tread_move", "swim_idle"],
+      ["elytra_fly_fast", "elytra_fly"],
+      ["cart_fast", "cart_moving"],
+      ["fly_idle", "idle"],
+      ["flying", "walking"],
+      ["flying_fast", "running"],
+      ["horse_riding_fast", "horse_riding"],
+      ["cart_*", "@vanilla"],
+      ["drinking", "eating"]
+    ]
+  },
+  "aliases": {
+    "_说明": "改名（不管原名的动作在不在）。原版模型的喝东西有自己的 drinking，资源包只做了 eating 时由上面的回退补上",
+    "vanilla": []
+  },
+  "procedural": {
+    "_说明": "程序层：视角（头和脊柱分担：chest_share 是身体转的比例，spine_split 按骨盆、腰、胸分摊，让身体平顺地弯、不出折痕；骨盆的朝向跟着腿，分给骨盆的扭转会转到腰和胸上）、加减速前倾和转弯侧倾、灯笼摆动。落地没有程序下沉，用动作文件自己的（跳跃动作一直播到落地）。角度单位为度。",
+    "look": {"chest_share": 0.25, "spine_split": [0, 0.4, 0.6], "max_yaw": 80, "max_pitch": 80},
+    "lean": {"when": "q.on_ground && !q.crawling && !q.riding && !q.swimming",
+             "forward": 1.6, "max_forward": 7, "bank": 0.5, "max_bank": 8, "halflife": 0.15},
+    "lantern": {"when": "!q.bc_attacking && !q.external_body"},
+    "flight": {"_说明": "创造模式飞行时身体和四肢跟着飞行方向动（参照 Fresh Animations 的玩家动画）：往前飞身体前倾、手脚往后拖；刹车时身体后仰、手往前甩；左右平移时身体侧倾、腿往反方向甩；转身时一只手往前一只手往后、双臂张开，腿往外甩。数值是角度：前后、左右按 reference（方块/秒）的速度算满，转身按 max_turn（度/秒）算满，刹车按半秒内停下算满；halflife 是平滑时间（秒）。",
+               "when": "q.flying", "reference": 11, "max_turn": 300, "halflife": 0.2,
+               "lean": 18, "brake": 14, "bank": 8, "turn_bank": 10,
+               "arms_trail": 12, "arms_brake": 10, "arms_side": 4, "arms_turn_swing": 10, "arms_turn_out": 8,
+               "legs_trail": 28, "legs_side": 20, "legs_turn": 18}
+  }
+}

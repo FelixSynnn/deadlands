@@ -240,40 +240,73 @@
 	},
 	"infected.walker.ambient": {
 		"sounds": [
-			"deadlands:infected/voice/walker_ambient_1",
-			"deadlands:infected/voice/walker_ambient_2",
-			"deadlands:infected/voice/walker_ambient_3",
-			"deadlands:infected/voice/walker_ambient_4",
-			"deadlands:infected/voice/walker_ambient_5",
-			"deadlands:infected/voice/walker_ambient_6"
+			"deadlands:infected/sfx/zombie_moan_ambient_1",
+			"deadlands:infected/sfx/zombie_breathing_ambient_1",
+			"deadlands:infected/sfx/zombie_breathing_ambient_2",
+			"deadlands:infected/sfx/zombie_breathing_ambient_3",
+			"deadlands:infected/sfx/zombie_breathing_ambient_4",
+			"deadlands:infected/sfx/restrained_zombie_ambient_1",
+			"deadlands:infected/sfx/restrained_zombie_ambient_2",
+			"deadlands:infected/sfx/zombie_call_ambient_1",
+			"deadlands:infected/sfx/zombie_voice_growl_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_ambient_2",
+			"deadlands:infected/sfx/zombie_sound_2_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_2_ambient_2",
+			"deadlands:infected/sfx/zombie_sfx_ambient_1",
+			"deadlands:infected/sfx/zombie_horde_ambient_1"
 		],
 		"subtitle": "subtitles.deadlands.infected.groan"
 	},
 	"infected.walker.hurt": {
 		"sounds": [
-			"deadlands:infected/voice/walker_hurt_1",
-			"deadlands:infected/voice/walker_hurt_2",
-			"deadlands:infected/voice/walker_hurt_3",
-			"deadlands:infected/voice/walker_hurt_4"
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_1",
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_2",
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_3",
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_4",
+			"deadlands:infected/sfx/zombie_screech_hurt_1",
+			"deadlands:infected/sfx/zombie_screech_hurt_2",
+			"deadlands:infected/sfx/zombie_screech_hurt_3",
+			"deadlands:infected/sfx/zombie_scream_hurt_1",
+			"deadlands:infected/sfx/zombie_scream_hurt_2",
+			"deadlands:infected/sfx/zombie_scream_hurt_3",
+			"deadlands:infected/sfx/zombie_scream_hurt_4",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_1",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_2",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_3",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_4",
+			"deadlands:infected/sfx/zombie_voice_growl_hurt_1"
 		],
 		"subtitle": "subtitles.deadlands.infected.hurt"
 	},
 	"infected.walker.death": {
 		"sounds": [
-			"deadlands:infected/voice/walker_death_1",
-			"deadlands:infected/voice/walker_death_2",
-			"deadlands:infected/voice/walker_death_3"
+			"deadlands:infected/sfx/zombie_dying_sound_death_1",
+			"deadlands:infected/sfx/zombie_dying_sound_death_2",
+			"deadlands:infected/sfx/zombie_dying_sound_death_3",
+			"deadlands:infected/sfx/zombie_scream_death_1",
+			"deadlands:infected/sfx/zombie_scream_death_2",
+			"deadlands:infected/sfx/zombie_flesh_bites_death_1"
 		],
 		"subtitle": "subtitles.deadlands.infected.death"
 	},
 	"infected.runner.ambient": {
 		"sounds": [
-			"deadlands:infected/voice/runner_ambient_1",
-			"deadlands:infected/voice/runner_ambient_2",
-			"deadlands:infected/voice/runner_ambient_3",
-			"deadlands:infected/voice/runner_ambient_4",
-			"deadlands:infected/voice/runner_ambient_5",
-			"deadlands:infected/voice/runner_ambient_6"
+			"deadlands:infected/sfx/zombie_moan_ambient_1",
+			"deadlands:infected/sfx/zombie_breathing_ambient_1",
+			"deadlands:infected/sfx/zombie_breathing_ambient_2",
+			"deadlands:infected/sfx/zombie_breathing_ambient_3",
+			"deadlands:infected/sfx/zombie_breathing_ambient_4",
+			"deadlands:infected/sfx/restrained_zombie_ambient_1",
+			"deadlands:infected/sfx/restrained_zombie_ambient_2",
+			"deadlands:infected/sfx/zombie_call_ambient_1",
+			"deadlands:infected/sfx/zombie_voice_growl_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_ambient_2",
+			"deadlands:infected/sfx/zombie_sound_2_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_2_ambient_2",
+			"deadlands:infected/sfx/zombie_sfx_ambient_1",
+			"deadlands:infected/sfx/zombie_horde_ambient_1"
 		],
 		"subtitle": "subtitles.deadlands.infected.groan"
 	},
@@ -289,29 +322,53 @@
 	},
 	"infected.runner.hurt": {
 		"sounds": [
-			"deadlands:infected/voice/runner_hurt_1",
-			"deadlands:infected/voice/runner_hurt_2",
-			"deadlands:infected/voice/runner_hurt_3",
-			"deadlands:infected/voice/runner_hurt_4"
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_1",
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_2",
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_3",
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_4",
+			"deadlands:infected/sfx/zombie_screech_hurt_1",
+			"deadlands:infected/sfx/zombie_screech_hurt_2",
+			"deadlands:infected/sfx/zombie_screech_hurt_3",
+			"deadlands:infected/sfx/zombie_scream_hurt_1",
+			"deadlands:infected/sfx/zombie_scream_hurt_2",
+			"deadlands:infected/sfx/zombie_scream_hurt_3",
+			"deadlands:infected/sfx/zombie_scream_hurt_4",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_1",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_2",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_3",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_4",
+			"deadlands:infected/sfx/zombie_voice_growl_hurt_1"
 		],
 		"subtitle": "subtitles.deadlands.infected.hurt"
 	},
 	"infected.runner.death": {
 		"sounds": [
-			"deadlands:infected/voice/runner_death_1",
-			"deadlands:infected/voice/runner_death_2",
-			"deadlands:infected/voice/runner_death_3"
+			"deadlands:infected/sfx/zombie_dying_sound_death_1",
+			"deadlands:infected/sfx/zombie_dying_sound_death_2",
+			"deadlands:infected/sfx/zombie_dying_sound_death_3",
+			"deadlands:infected/sfx/zombie_scream_death_1",
+			"deadlands:infected/sfx/zombie_scream_death_2",
+			"deadlands:infected/sfx/zombie_flesh_bites_death_1"
 		],
 		"subtitle": "subtitles.deadlands.infected.death"
 	},
 	"infected.brute.ambient": {
 		"sounds": [
-			"deadlands:infected/voice/brute_ambient_1",
-			"deadlands:infected/voice/brute_ambient_2",
-			"deadlands:infected/voice/brute_ambient_3",
-			"deadlands:infected/voice/brute_ambient_4",
-			"deadlands:infected/voice/brute_ambient_5",
-			"deadlands:infected/voice/brute_ambient_6"
+			"deadlands:infected/sfx/zombie_moan_ambient_1",
+			"deadlands:infected/sfx/zombie_breathing_ambient_1",
+			"deadlands:infected/sfx/zombie_breathing_ambient_2",
+			"deadlands:infected/sfx/zombie_breathing_ambient_3",
+			"deadlands:infected/sfx/zombie_breathing_ambient_4",
+			"deadlands:infected/sfx/restrained_zombie_ambient_1",
+			"deadlands:infected/sfx/restrained_zombie_ambient_2",
+			"deadlands:infected/sfx/zombie_call_ambient_1",
+			"deadlands:infected/sfx/zombie_voice_growl_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_ambient_2",
+			"deadlands:infected/sfx/zombie_sound_2_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_2_ambient_2",
+			"deadlands:infected/sfx/zombie_sfx_ambient_1",
+			"deadlands:infected/sfx/zombie_horde_ambient_1"
 		],
 		"subtitle": "subtitles.deadlands.infected.groan"
 	},
@@ -325,18 +382,33 @@
 	},
 	"infected.brute.hurt": {
 		"sounds": [
-			"deadlands:infected/voice/brute_hurt_1",
-			"deadlands:infected/voice/brute_hurt_2",
-			"deadlands:infected/voice/brute_hurt_3",
-			"deadlands:infected/voice/brute_hurt_4"
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_1",
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_2",
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_3",
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_4",
+			"deadlands:infected/sfx/zombie_screech_hurt_1",
+			"deadlands:infected/sfx/zombie_screech_hurt_2",
+			"deadlands:infected/sfx/zombie_screech_hurt_3",
+			"deadlands:infected/sfx/zombie_scream_hurt_1",
+			"deadlands:infected/sfx/zombie_scream_hurt_2",
+			"deadlands:infected/sfx/zombie_scream_hurt_3",
+			"deadlands:infected/sfx/zombie_scream_hurt_4",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_1",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_2",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_3",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_4",
+			"deadlands:infected/sfx/zombie_voice_growl_hurt_1"
 		],
 		"subtitle": "subtitles.deadlands.infected.hurt"
 	},
 	"infected.brute.death": {
 		"sounds": [
-			"deadlands:infected/voice/brute_death_1",
-			"deadlands:infected/voice/brute_death_2",
-			"deadlands:infected/voice/brute_death_3"
+			"deadlands:infected/sfx/zombie_dying_sound_death_1",
+			"deadlands:infected/sfx/zombie_dying_sound_death_2",
+			"deadlands:infected/sfx/zombie_dying_sound_death_3",
+			"deadlands:infected/sfx/zombie_scream_death_1",
+			"deadlands:infected/sfx/zombie_scream_death_2",
+			"deadlands:infected/sfx/zombie_flesh_bites_death_1"
 		],
 		"subtitle": "subtitles.deadlands.infected.death"
 	},
@@ -357,12 +429,21 @@
 	},
 	"infected.screamer.ambient": {
 		"sounds": [
-			"deadlands:infected/voice/screamer_ambient_1",
-			"deadlands:infected/voice/screamer_ambient_2",
-			"deadlands:infected/voice/screamer_ambient_3",
-			"deadlands:infected/voice/screamer_ambient_4",
-			"deadlands:infected/voice/screamer_ambient_5",
-			"deadlands:infected/voice/screamer_ambient_6"
+			"deadlands:infected/sfx/zombie_moan_ambient_1",
+			"deadlands:infected/sfx/zombie_breathing_ambient_1",
+			"deadlands:infected/sfx/zombie_breathing_ambient_2",
+			"deadlands:infected/sfx/zombie_breathing_ambient_3",
+			"deadlands:infected/sfx/zombie_breathing_ambient_4",
+			"deadlands:infected/sfx/restrained_zombie_ambient_1",
+			"deadlands:infected/sfx/restrained_zombie_ambient_2",
+			"deadlands:infected/sfx/zombie_call_ambient_1",
+			"deadlands:infected/sfx/zombie_voice_growl_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_ambient_2",
+			"deadlands:infected/sfx/zombie_sound_2_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_2_ambient_2",
+			"deadlands:infected/sfx/zombie_sfx_ambient_1",
+			"deadlands:infected/sfx/zombie_horde_ambient_1"
 		],
 		"subtitle": "subtitles.deadlands.infected.groan"
 	},
@@ -376,68 +457,125 @@
 	},
 	"infected.screamer.hurt": {
 		"sounds": [
-			"deadlands:infected/voice/screamer_hurt_1",
-			"deadlands:infected/voice/screamer_hurt_2",
-			"deadlands:infected/voice/screamer_hurt_3",
-			"deadlands:infected/voice/screamer_hurt_4"
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_1",
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_2",
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_3",
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_4",
+			"deadlands:infected/sfx/zombie_screech_hurt_1",
+			"deadlands:infected/sfx/zombie_screech_hurt_2",
+			"deadlands:infected/sfx/zombie_screech_hurt_3",
+			"deadlands:infected/sfx/zombie_scream_hurt_1",
+			"deadlands:infected/sfx/zombie_scream_hurt_2",
+			"deadlands:infected/sfx/zombie_scream_hurt_3",
+			"deadlands:infected/sfx/zombie_scream_hurt_4",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_1",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_2",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_3",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_4",
+			"deadlands:infected/sfx/zombie_voice_growl_hurt_1"
 		],
 		"subtitle": "subtitles.deadlands.infected.hurt"
 	},
 	"infected.screamer.death": {
 		"sounds": [
-			"deadlands:infected/voice/screamer_death_1",
-			"deadlands:infected/voice/screamer_death_2",
-			"deadlands:infected/voice/screamer_death_3"
+			"deadlands:infected/sfx/zombie_dying_sound_death_1",
+			"deadlands:infected/sfx/zombie_dying_sound_death_2",
+			"deadlands:infected/sfx/zombie_dying_sound_death_3",
+			"deadlands:infected/sfx/zombie_scream_death_1",
+			"deadlands:infected/sfx/zombie_scream_death_2",
+			"deadlands:infected/sfx/zombie_flesh_bites_death_1"
 		],
 		"subtitle": "subtitles.deadlands.infected.death"
 	},
 	"infected.military.ambient": {
 		"sounds": [
-			"deadlands:infected/voice/military_ambient_1",
-			"deadlands:infected/voice/military_ambient_2",
-			"deadlands:infected/voice/military_ambient_3",
-			"deadlands:infected/voice/military_ambient_4",
-			"deadlands:infected/voice/military_ambient_5",
-			"deadlands:infected/voice/military_ambient_6"
+			"deadlands:infected/sfx/zombie_moan_ambient_1",
+			"deadlands:infected/sfx/zombie_breathing_ambient_1",
+			"deadlands:infected/sfx/zombie_breathing_ambient_2",
+			"deadlands:infected/sfx/zombie_breathing_ambient_3",
+			"deadlands:infected/sfx/zombie_breathing_ambient_4",
+			"deadlands:infected/sfx/restrained_zombie_ambient_1",
+			"deadlands:infected/sfx/restrained_zombie_ambient_2",
+			"deadlands:infected/sfx/zombie_call_ambient_1",
+			"deadlands:infected/sfx/zombie_voice_growl_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_ambient_2",
+			"deadlands:infected/sfx/zombie_sound_2_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_2_ambient_2",
+			"deadlands:infected/sfx/zombie_sfx_ambient_1",
+			"deadlands:infected/sfx/zombie_horde_ambient_1"
 		],
 		"subtitle": "subtitles.deadlands.infected.groan"
 	},
 	"infected.crawler.ambient": {
 		"sounds": [
-			"deadlands:infected/voice/crawler_ambient_1",
-			"deadlands:infected/voice/crawler_ambient_2",
-			"deadlands:infected/voice/crawler_ambient_3",
-			"deadlands:infected/voice/crawler_ambient_4",
-			"deadlands:infected/voice/crawler_ambient_5",
-			"deadlands:infected/voice/crawler_ambient_6"
+			"deadlands:infected/sfx/zombie_moan_ambient_1",
+			"deadlands:infected/sfx/zombie_breathing_ambient_1",
+			"deadlands:infected/sfx/zombie_breathing_ambient_2",
+			"deadlands:infected/sfx/zombie_breathing_ambient_3",
+			"deadlands:infected/sfx/zombie_breathing_ambient_4",
+			"deadlands:infected/sfx/restrained_zombie_ambient_1",
+			"deadlands:infected/sfx/restrained_zombie_ambient_2",
+			"deadlands:infected/sfx/zombie_call_ambient_1",
+			"deadlands:infected/sfx/zombie_voice_growl_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_ambient_2",
+			"deadlands:infected/sfx/zombie_sound_2_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_2_ambient_2",
+			"deadlands:infected/sfx/zombie_sfx_ambient_1",
+			"deadlands:infected/sfx/zombie_horde_ambient_1"
 		],
 		"subtitle": "subtitles.deadlands.infected.groan"
 	},
 	"infected.crawler.hurt": {
 		"sounds": [
-			"deadlands:infected/voice/crawler_hurt_1",
-			"deadlands:infected/voice/crawler_hurt_2",
-			"deadlands:infected/voice/crawler_hurt_3",
-			"deadlands:infected/voice/crawler_hurt_4"
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_1",
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_2",
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_3",
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_4",
+			"deadlands:infected/sfx/zombie_screech_hurt_1",
+			"deadlands:infected/sfx/zombie_screech_hurt_2",
+			"deadlands:infected/sfx/zombie_screech_hurt_3",
+			"deadlands:infected/sfx/zombie_scream_hurt_1",
+			"deadlands:infected/sfx/zombie_scream_hurt_2",
+			"deadlands:infected/sfx/zombie_scream_hurt_3",
+			"deadlands:infected/sfx/zombie_scream_hurt_4",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_1",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_2",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_3",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_4",
+			"deadlands:infected/sfx/zombie_voice_growl_hurt_1"
 		],
 		"subtitle": "subtitles.deadlands.infected.hurt"
 	},
 	"infected.crawler.death": {
 		"sounds": [
-			"deadlands:infected/voice/crawler_death_1",
-			"deadlands:infected/voice/crawler_death_2",
-			"deadlands:infected/voice/crawler_death_3"
+			"deadlands:infected/sfx/zombie_dying_sound_death_1",
+			"deadlands:infected/sfx/zombie_dying_sound_death_2",
+			"deadlands:infected/sfx/zombie_dying_sound_death_3",
+			"deadlands:infected/sfx/zombie_scream_death_1",
+			"deadlands:infected/sfx/zombie_scream_death_2",
+			"deadlands:infected/sfx/zombie_flesh_bites_death_1"
 		],
 		"subtitle": "subtitles.deadlands.infected.death"
 	},
 	"infected.bloater.ambient": {
 		"sounds": [
-			"deadlands:infected/voice/bloater_ambient_1",
-			"deadlands:infected/voice/bloater_ambient_2",
-			"deadlands:infected/voice/bloater_ambient_3",
-			"deadlands:infected/voice/bloater_ambient_4",
-			"deadlands:infected/voice/bloater_ambient_5",
-			"deadlands:infected/voice/bloater_ambient_6"
+			"deadlands:infected/sfx/zombie_moan_ambient_1",
+			"deadlands:infected/sfx/zombie_breathing_ambient_1",
+			"deadlands:infected/sfx/zombie_breathing_ambient_2",
+			"deadlands:infected/sfx/zombie_breathing_ambient_3",
+			"deadlands:infected/sfx/zombie_breathing_ambient_4",
+			"deadlands:infected/sfx/restrained_zombie_ambient_1",
+			"deadlands:infected/sfx/restrained_zombie_ambient_2",
+			"deadlands:infected/sfx/zombie_call_ambient_1",
+			"deadlands:infected/sfx/zombie_voice_growl_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_ambient_2",
+			"deadlands:infected/sfx/zombie_sound_2_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_2_ambient_2",
+			"deadlands:infected/sfx/zombie_sfx_ambient_1",
+			"deadlands:infected/sfx/zombie_horde_ambient_1"
 		],
 		"subtitle": "subtitles.deadlands.infected.groan"
 	},
@@ -450,21 +588,30 @@
 	},
 	"infected.bloater.hurt": {
 		"sounds": [
-			"deadlands:infected/voice/bloater_hurt_1",
-			"deadlands:infected/voice/bloater_hurt_2",
-			"deadlands:infected/voice/bloater_hurt_3",
-			"deadlands:infected/voice/bloater_hurt_4"
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_1",
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_2",
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_3",
+			"deadlands:infected/sfx/zombie_yell_and_shout_hurt_4",
+			"deadlands:infected/sfx/zombie_screech_hurt_1",
+			"deadlands:infected/sfx/zombie_screech_hurt_2",
+			"deadlands:infected/sfx/zombie_screech_hurt_3",
+			"deadlands:infected/sfx/zombie_scream_hurt_1",
+			"deadlands:infected/sfx/zombie_scream_hurt_2",
+			"deadlands:infected/sfx/zombie_scream_hurt_3",
+			"deadlands:infected/sfx/zombie_scream_hurt_4",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_1",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_2",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_3",
+			"deadlands:infected/sfx/female_zombie_screams_hurt_4",
+			"deadlands:infected/sfx/zombie_voice_growl_hurt_1"
 		],
 		"subtitle": "subtitles.deadlands.infected.hurt"
 	},
 	"infected.stalker.ambient": {
 		"sounds": [
-			"deadlands:infected/voice/stalker_ambient_1",
-			"deadlands:infected/voice/stalker_ambient_2",
-			"deadlands:infected/voice/stalker_ambient_3",
-			"deadlands:infected/voice/stalker_ambient_4",
-			"deadlands:infected/voice/stalker_ambient_5",
-			"deadlands:infected/voice/stalker_ambient_6"
+			"deadlands:infected/stalker_sfx/demon_spirit_whispers_ambient_1",
+			"deadlands:infected/stalker_sfx/demon_spirit_whispers_ambient_2",
+			"deadlands:infected/stalker_sfx/demon_spirit_laughter_ambient_1"
 		],
 		"subtitle": "subtitles.deadlands.infected.breath"
 	},
@@ -478,29 +625,36 @@
 	},
 	"infected.stalker.hurt": {
 		"sounds": [
-			"deadlands:infected/voice/stalker_hurt_1",
-			"deadlands:infected/voice/stalker_hurt_2",
-			"deadlands:infected/voice/stalker_hurt_3",
-			"deadlands:infected/voice/stalker_hurt_4"
+			"deadlands:infected/stalker_sfx/demon_spirit_chanting_hurt_1",
+			"deadlands:infected/stalker_sfx/demon_spirit_chanting_hurt_2",
+			"deadlands:infected/stalker_sfx/demon_spirit_chanting_hurt_3",
+			"deadlands:infected/stalker_sfx/demon_spirit_chanting_hurt_4"
 		],
 		"subtitle": "subtitles.deadlands.infected.hurt"
 	},
 	"infected.stalker.death": {
 		"sounds": [
-			"deadlands:infected/voice/stalker_death_1",
-			"deadlands:infected/voice/stalker_death_2",
-			"deadlands:infected/voice/stalker_death_3"
+			"deadlands:infected/stalker_sfx/demon_spirit_chanting_death_1"
 		],
 		"subtitle": "subtitles.deadlands.infected.death"
 	},
 	"infected.charred.ambient": {
 		"sounds": [
-			"deadlands:infected/voice/charred_ambient_1",
-			"deadlands:infected/voice/charred_ambient_2",
-			"deadlands:infected/voice/charred_ambient_3",
-			"deadlands:infected/voice/charred_ambient_4",
-			"deadlands:infected/voice/charred_ambient_5",
-			"deadlands:infected/voice/charred_ambient_6"
+			"deadlands:infected/sfx/zombie_moan_ambient_1",
+			"deadlands:infected/sfx/zombie_breathing_ambient_1",
+			"deadlands:infected/sfx/zombie_breathing_ambient_2",
+			"deadlands:infected/sfx/zombie_breathing_ambient_3",
+			"deadlands:infected/sfx/zombie_breathing_ambient_4",
+			"deadlands:infected/sfx/restrained_zombie_ambient_1",
+			"deadlands:infected/sfx/restrained_zombie_ambient_2",
+			"deadlands:infected/sfx/zombie_call_ambient_1",
+			"deadlands:infected/sfx/zombie_voice_growl_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_ambient_2",
+			"deadlands:infected/sfx/zombie_sound_2_ambient_1",
+			"deadlands:infected/sfx/zombie_sound_2_ambient_2",
+			"deadlands:infected/sfx/zombie_sfx_ambient_1",
+			"deadlands:infected/sfx/zombie_horde_ambient_1"
 		],
 		"subtitle": "subtitles.deadlands.infected.groan"
 	},
@@ -1594,5 +1748,67 @@
 		"sounds": [
 			"deadlands:horror/jumpscare_chase"
 		]
+	},
+	"horror.breath": {
+		"sounds": [
+			"deadlands:infected/sfx/zombie_breathing_ambient_1",
+			"deadlands:infected/sfx/zombie_breathing_ambient_2",
+			"deadlands:infected/sfx/zombie_breathing_ambient_3",
+			"deadlands:infected/sfx/zombie_breathing_ambient_4"
+		],
+		"subtitle": "subtitles.deadlands.horror.breath"
+	},
+	"horror.stalker_chant": {
+		"sounds": [
+			"deadlands:infected/stalker_sfx/demon_spirit_chanting_hurt_1",
+			"deadlands:infected/stalker_sfx/demon_spirit_chanting_hurt_2",
+			"deadlands:infected/stalker_sfx/demon_spirit_chanting_hurt_3",
+			"deadlands:infected/stalker_sfx/demon_spirit_chanting_hurt_4"
+		],
+		"subtitle": "subtitles.deadlands.horror.stalker_chant"
+	},
+	"horror.stalker_laugh": {
+		"sounds": [
+			"deadlands:infected/stalker_sfx/demon_spirit_laughter_ambient_1"
+		],
+		"subtitle": "subtitles.deadlands.horror.stalker_laugh"
+	},
+	"infected.feeding": {
+		"sounds": [
+			"deadlands:infected/sfx/zombie_flesh_bites_death_1"
+		],
+		"subtitle": "subtitles.deadlands.infected.feeding"
+	},
+	"infected.feeding_screech": {
+		"sounds": [
+			"deadlands:infected/sfx/zombie_screech_hurt_1",
+			"deadlands:infected/sfx/zombie_screech_hurt_2",
+			"deadlands:infected/sfx/zombie_screech_hurt_3"
+		],
+		"subtitle": "subtitles.deadlands.infected.feeding_screech"
+	},
+	"weapon.swing": {
+		"sounds": [
+			"deadlands:weapon/melee/swing_1",
+			"deadlands:weapon/melee/swing_2",
+			"deadlands:weapon/melee/swing_3"
+		],
+		"subtitle": "subtitles.deadlands.weapon.swing"
+	},
+	"weapon.hit_blunt": {
+		"sounds": [
+			"deadlands:weapon/melee/hit_blunt_1",
+			"deadlands:weapon/melee/hit_blunt_2",
+			"deadlands:weapon/melee/hit_blunt_3"
+		],
+		"subtitle": "subtitles.deadlands.weapon.hit_blunt"
+	},
+	"weapon.hit_blade": {
+		"sounds": [
+			"deadlands:weapon/melee/hit_blade_1",
+			"deadlands:weapon/melee/hit_blade_2",
+			"deadlands:weapon/melee/hit_blade_3"
+		],
+		"subtitle": "subtitles.deadlands.weapon.hit_blade"
 	}
 }

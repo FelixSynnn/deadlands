@@ -136,6 +136,10 @@ public class FluorescentLightBlock extends Block {
 	/** In a town: the town's power. Outside towns: its own supply. */
 	static boolean powered(ServerLevel level, BlockPos pos) {
 		Optional<TownSite> town = TownLookup.nearest(level, pos, TOWN_EXTENT);
-		return town.isEmpty() || PowerGrid.isPowered(level, town.get());
+		if (town.isEmpty()) {
+			return true;
+		}
+		// In a powered town the dark building (Phase 4 jumpscare) keeps its tubes off until a survivor comes near.
+		return PowerGrid.isPowered(level, town.get()) && !com.deadlands.horror.DarkBuildings.holdsDark(level, pos, town.get(), true);
 	}
 }

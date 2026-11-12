@@ -1,0 +1,9 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "plugin": "com.huaxiaosheng.spapacks.platform.MixinAudit",
+  "package": "com.huaxiaosheng.spapacks.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": ["PlayerRendererMixin", "BipedModelMixin", "LivingEntityRendererMixin", "HeldItemFeatureRendererMixin", "EmfConfigMixin", "CapeFeatureMixin", "PlayerCapeModelMixin", "ElytraFeatureMixin", "ModelPartMixin", "ModelMixin", "ModelPartAccessor", "ImmersiveCapeMixin", "ElytraSlotMixin", "ElytraTrinketMixin", "FirstPersonHandsMixin", "RenderLayerAccessor", "RenderPhasesAccessor", "TextureBaseAccessor", "SpriteAtlasAccessor", "GeoArmorRendererMixin", "GeoBoneMixin", "PunchyEngineMixin", "PunchyTrackerMixin", "PunchyHeldItemMixin", "PunchyTorsoMixin", "PunchyFaceMixin", "PunchyRideMixin"],
+  "injectors": {"defaultRequire": 0}
+}

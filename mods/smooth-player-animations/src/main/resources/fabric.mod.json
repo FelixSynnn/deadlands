@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "spa_packs",
+  "version": "${version}",
+  "name": "SmoothPlayerAnimations",
+  "description": "Smooth, highly-compatible player animations on a jointed model that bends at the elbows, knees and spine, driven by a data-driven animation graph that resource packs can extend, with procedural look and lean; a built-in CEM engine plays OptiFine / EMF player animation packs, and Better Combat and other animation mods blend in. | 流畅且高兼容的玩家动画模组：四肢与脊柱可弯曲的分段模型，由资源包可扩展的数据驱动动画图驱动，带视线跟随与身体倾斜等程序动画；内置 CEM 引擎播放 OptiFine / EMF 格式的玩家动画包，并与 Better Combat 等战斗/动画模组兼容。",
+  "authors": [
+    "HuaXiaoSheng"
+  ],
+  "license": "ARR",
+  "icon": "assets/spa_packs/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.huaxiaosheng.spapacks.platform.FabricEntry"
+    ],
+    "modmenu": [
+      "com.huaxiaosheng.spapacks.platform.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "spa_packs.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": "\u003e\u003d0.16.9",
+    "minecraft": "\u003e\u003d1.21.11 \u003c26.1",
+    "java": "\u003e\u003d21",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "cloth-config": "*",
+    "modmenu": "*"
+  },
+  "breaks": {
+    "smoothplayeranimations": "*",
+    "smoothplayeranimations_lv2": "*",
+    "mc_motion_matching": "*"
+  }
+}

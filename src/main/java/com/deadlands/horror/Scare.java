@@ -20,8 +20,22 @@ import net.minecraft.util.StringRepresentable;
  * while: the breath before the payoff), {@code flicker} and {@code beam_off} (the flashlight),
  * {@code jolt} (the camera flinches; scaled by the camera-shake setting) and {@code slam_door}
  * (a nearby open door slams shut, on the server).
+ *
+ * <p><b>Phase 4:</b> {@code requires} adds a place condition the Horror Director checks on the server:
+ * {@code fixtures} (three lit fluorescent lights within 12 blocks), {@code emergency_light} (a pulsing
+ * emergency light within 10), {@code heavy_rain} (outdoors in heavy rain), {@code window} (glass right in
+ * front of the survivor) or {@code open_ground} (open ground ahead in the flashlight's beam).
+ * {@code trigger} is {@code director} (chosen on the schedule, the default) or {@code event} (only fired by
+ * code: closing a menu after a while, a feeding infected turning, a dark building lighting up).
+ * New steps: {@code apparition} (a figure only this survivor sees: {@code where} is beam, ahead, ceiling,
+ * doorway, window, behind or drop, {@code distance} in blocks, {@code amount} ticks it stays),
+ * {@code apparition_hide}, {@code blink} (the screen goes dark for {@code amount} ticks), {@code wait_look}
+ * (the scare holds until the survivor looks up, at most {@code amount} ticks), and on the server
+ * {@code fixtures_out} (the nearest fluorescent lights die one after another toward the survivor over
+ * {@code amount} ticks) and {@code emergency_strobe} (nearby emergency lights pulse fast for {@code amount}).
  */
-public record Scare(Kind kind, Time time, Place place, boolean dark, boolean nearWater, boolean flashlight, int weight, List<Step> steps) {
+public record Scare(Kind kind, Time time, Place place, boolean dark, boolean nearWater, boolean flashlight, int weight, List<Step> steps,
+	Optional<String> requires, String trigger) {
 	public enum Kind implements StringRepresentable {
 		MAJOR, MINOR;
 
@@ -81,6 +95,8 @@ public record Scare(Kind kind, Time time, Place place, boolean dark, boolean nea
 		Codec.BOOL.optionalFieldOf("near_water", false).forGetter(Scare::nearWater),
 		Codec.BOOL.optionalFieldOf("flashlight", false).forGetter(Scare::flashlight),
 		Codec.INT.optionalFieldOf("weight", 10).forGetter(Scare::weight),
-		Step.CODEC.listOf().fieldOf("steps").forGetter(Scare::steps)
+		Step.CODEC.listOf().fieldOf("steps").forGetter(Scare::steps),
+		Codec.STRING.optionalFieldOf("requires").forGetter(Scare::requires),
+		Codec.STRING.optionalFieldOf("trigger", "director").forGetter(Scare::trigger)
 	).apply(instance, Scare::new));
 }

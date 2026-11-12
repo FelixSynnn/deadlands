@@ -1,0 +1,34 @@
+plugins {
+    id 'net.fabricmc.fabric-loom-remap' // version from the DEADLANDS root build (1.19.3)
+}
+
+version = project.mod_version
+group = project.maven_group
+base { archivesName = project.archives_base_name }
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://api.modrinth.com/maven' }
+    maven { url = 'https://maven.neoforged.net/releases/' }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    modImplementation "maven.modrinth:creativecore:${project.creativecore_version}"
+    compileOnly "net.neoforged:bus:7.2.0" // the event bus CreativeCore bundles for Fabric (META-INF/jars/bus-7.2.0.jar)
+}
+
+sourceSets {
+    main {
+        java {
+            exclude 'team/creative/enhancedvisuals/common/addon/**' // NeoForge-only integrations
+        }
+    }
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+}

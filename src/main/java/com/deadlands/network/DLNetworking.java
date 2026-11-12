@@ -28,6 +28,7 @@ public final class DLNetworking {
 		PayloadTypeRegistry.playS2C().register(ChaseMusicPayload.TYPE, ChaseMusicPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(HorrorScarePayload.TYPE, HorrorScarePayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(MissionSyncPayload.TYPE, MissionSyncPayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(AchievementSecretsPayload.TYPE, AchievementSecretsPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(HorrorBusyPayload.TYPE, HorrorBusyPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(DayBeginPayload.TYPE, DayBeginPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(TownCardPayload.TYPE, TownCardPayload.CODEC);

@@ -97,6 +97,7 @@ public class EmergencyLightBlock extends HorizontalDirectionalBlock {
 
 	/** True when this light stands in a town whose power has been restored. */
 	private static boolean mainsBack(ServerLevel level, BlockPos pos) {
-		return com.deadlands.world.town.TownLookup.nearest(level, pos, 150.0).map(town -> com.deadlands.world.power.PowerGrid.isPowered(level, town)).orElse(false);
+		return com.deadlands.world.town.TownLookup.nearest(level, pos, 150.0).map(town -> com.deadlands.world.power.PowerGrid.isPowered(level, town)
+			&& !com.deadlands.horror.DarkBuildings.holdsDark(level, pos, town, false)).orElse(false); // the dark building keeps pulsing
 	}
 }

@@ -40,6 +40,8 @@ public final class ClientNetworking {
 				new net.minecraft.world.phys.Vec3(payload.x(), payload.y(), payload.z()))));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.HorrorScarePayload.TYPE,
 			(payload, context) -> com.deadlands.client.horror.ScarePlayer.onScare(payload));
+		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.AchievementSecretsPayload.TYPE,
+			(payload, context) -> com.deadlands.client.achievement.DLAchievementsScreen.secrets(payload.ids()));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.MissionSyncPayload.TYPE,
 			(payload, context) -> com.deadlands.client.mission.ClientMissions.update(payload));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.ChaseMusicPayload.TYPE,

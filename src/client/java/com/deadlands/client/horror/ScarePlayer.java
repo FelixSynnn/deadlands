@@ -53,6 +53,13 @@ public final class ScarePlayer {
 	private static float joltStrength;
 	private static int busy = -1;
 	private static int lastScareAt = -1_000_000;
+	// Phase 4: a scare holding until the survivor looks up, the dark frames of a blink, footsteps circling.
+	private static boolean waiting;
+	private static int waitStarted;
+	private static int waitLimit;
+	private static int blinkUntil;
+	private static int blinkLength = 1;
+	private static double aroundAngle = Double.NaN;
 
 	private ScarePlayer() {
 	}
@@ -79,6 +86,22 @@ public final class ScarePlayer {
 			return;
 		}
 		now++;
+		Apparition.tick(minecraft);
+		if (waiting) {
+			if (minecraft.player.getXRot() < -40.0F || now >= waitLimit) {
+				// Everything after the wait moves later by however long the survivor took to look up.
+				int shift = now - waitStarted;
+				List<Due> later = new ArrayList<>();
+				for (Due due : QUEUE) {
+					later.add(new Due(due.at() + shift, due.step()));
+				}
+				QUEUE.clear();
+				QUEUE.addAll(later);
+				waiting = false;
+			} else {
+				return;
+			}
+		}
 		Iterator<Due> it = QUEUE.iterator();
 		List<HorrorScarePayload.Step> run = new ArrayList<>();
 		while (it.hasNext()) {
@@ -106,6 +129,17 @@ public final class ScarePlayer {
 			case "silence" -> silenceUntil = Math.max(silenceUntil, now + Math.round(step.amount()));
 			case "flicker" -> flickerUntil = Math.max(flickerUntil, now + Math.round(step.amount()));
 			case "beam_off" -> beamOffUntil = Math.max(beamOffUntil, now + Math.round(step.amount()));
+			case "apparition" -> Apparition.show(minecraft, step.where(), step.distance(), Math.round(step.amount()));
+			case "apparition_hide" -> Apparition.hide(minecraft);
+			case "blink" -> {
+				blinkLength = Math.max(1, Math.round(step.amount()));
+				blinkUntil = now + blinkLength;
+			}
+			case "wait_look" -> {
+				waiting = true;
+				waitStarted = now;
+				waitLimit = now + Math.max(20, Math.round(step.amount()));
+			}
 			case "jolt" -> {
 				float shake = (float) ConfigManager.get().horror.cameraShake;
 				if (shake > 0.0F) {
@@ -138,6 +172,12 @@ public final class ScarePlayer {
 			case "ear" -> eye.add(right.scale(RANDOM.nextBoolean() ? 0.7 : -0.7)).add(0.0, 0.1, 0.0);
 			case "behind" -> eye.subtract(flat.scale(distance)).add(right.scale((RANDOM.nextFloat() - 0.5F) * 1.5));
 			case "ahead" -> eye.add(look.scale(distance));
+			case "above" -> eye.add(0.0, distance, 0.0);
+			case "around" -> {
+				// Each step a little further round: footsteps circling the survivor.
+				aroundAngle = Double.isNaN(aroundAngle) ? RANDOM.nextDouble() * Math.PI * 2.0 : aroundAngle + Math.toRadians(50.0);
+				yield eye.add(Math.cos(aroundAngle) * distance, -1.4, Math.sin(aroundAngle) * distance);
+			}
 			default -> {
 				double angle = RANDOM.nextDouble() * Math.PI * 2.0;
 				yield eye.add(Math.cos(angle) * distance, (RANDOM.nextDouble() - 0.4) * 3.0, Math.sin(angle) * distance);
@@ -187,8 +227,24 @@ public final class ScarePlayer {
 		}
 	}
 
+	/** 0 to 1: how dark the screen is for a blink (soft and slow with photosensitivity on). */
+	public static float blink() {
+		if (now >= blinkUntil) {
+			return 0.0F;
+		}
+		if (ConfigManager.get().horror.photosensitivity) {
+			float t = (blinkUntil - now) / (float) blinkLength;
+			return 0.55F * Mth.sin(t * Mth.PI);
+		}
+		return 1.0F;
+	}
+
 	public static void reset() {
 		QUEUE.clear();
+		waiting = false;
+		blinkUntil = 0;
+		aroundAngle = Double.NaN;
+		Apparition.hide(Minecraft.getInstance());
 		silenceUntil = 0;
 		flickerUntil = 0;
 		beamOffUntil = 0;

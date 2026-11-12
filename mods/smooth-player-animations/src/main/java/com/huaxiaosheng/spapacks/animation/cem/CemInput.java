@@ -1,0 +1,73 @@
+package com.huaxiaosheng.spapacks.animation.cem;
+
+public final class CemInput {
+    public float limbSwing;
+    public float limbSpeed;
+    public float age;
+    public float headYaw;
+    public float headPitch;
+    public float yaw;
+    public float posY;
+    public float velocityY;
+    public float moveForward;
+    public float moveStrafing;
+    public float hurtTime;
+    public float distance;
+    public float id;
+    public float fluidDepth;
+    public boolean onGround;
+    public boolean inWater;
+    public boolean inLava;
+    public boolean sprinting;
+    public boolean sneaking;
+    public boolean swimming;
+    public boolean crawling;
+    public boolean climbing;
+    public boolean gliding;
+    public boolean flying;
+    public boolean riding;
+    public boolean jumping;
+    public boolean usingItem;
+    public boolean blocking;
+    public boolean rightHanded = true;
+    public boolean holdingRight;
+    public boolean holdingLeft;
+    public boolean inGui;
+    public boolean paused;
+
+    public void copyFrom(CemInput from) {
+        this.limbSwing = from.limbSwing;
+        this.limbSpeed = from.limbSpeed;
+        this.age = from.age;
+        this.headYaw = from.headYaw;
+        this.headPitch = from.headPitch;
+        this.yaw = from.yaw;
+        this.posY = from.posY;
+        this.velocityY = from.velocityY;
+        this.moveForward = from.moveForward;
+        this.moveStrafing = from.moveStrafing;
+        this.hurtTime = from.hurtTime;
+        this.distance = from.distance;
+        this.id = from.id;
+        this.fluidDepth = from.fluidDepth;
+        this.onGround = from.onGround;
+        this.inWater = from.inWater;
+        this.inLava = from.inLava;
+        this.sprinting = from.sprinting;
+        this.sneaking = from.sneaking;
+        this.swimming = from.swimming;
+        this.crawling = from.crawling;
+        this.climbing = from.climbing;
+        this.gliding = from.gliding;
+        this.flying = from.flying;
+        this.riding = from.riding;
+        this.jumping = from.jumping;
+        this.usingItem = from.usingItem;
+        this.blocking = from.blocking;
+        this.rightHanded = from.rightHanded;
+        this.holdingRight = from.holdingRight;
+        this.holdingLeft = from.holdingLeft;
+        this.inGui = from.inGui;
+        this.paused = from.paused;
+    }
+}

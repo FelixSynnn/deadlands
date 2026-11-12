@@ -115,7 +115,8 @@ public final class DeadlandsCommand {
 			.then(Commands.literal("lights")
 				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 				.executes(ctx -> {
-					ctx.getSource().sendSuccess(() -> Component.translatable("command.deadlands.lights", com.deadlands.block.FluorescentLightBlock.toggles()), false);
+					ctx.getSource().sendSuccess(() -> Component.translatable("command.deadlands.lights", com.deadlands.block.FluorescentLightBlock.toggles(),
+						com.deadlands.horror.DarkBuildings.status(ctx.getSource().getServer().overworld())), false);
 					return 1;
 				}))
 			.then(Commands.literal("mobs")

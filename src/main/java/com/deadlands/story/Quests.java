@@ -211,6 +211,7 @@ public final class Quests {
 			case ITZBREADLOAF -> itzbreadloaf(player, story);
 			case IMLILYLOL -> imlilylol(player, npc, story);
 			case FELIXSYN -> felixsyn(player, story);
+			case ADAM -> Component.translatable("npc.deadlands.character.adam.talk"); // his part runs through HarleyQuest
 		};
 	}
 

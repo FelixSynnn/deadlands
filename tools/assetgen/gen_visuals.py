@@ -70,7 +70,6 @@ TEXT = {
     "block.deadlands.fluorescent_light": "Fluorescent Light",
     "block.deadlands.emergency_light": "Emergency Light",
     "weather.deadlands.heavy_rain": "heavy rain",
-    "command.deadlands.lights": "Faulty light fixtures have flickered %s times since the server started.",
 }
 
 

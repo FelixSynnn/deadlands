@@ -1,0 +1,39 @@
+{
+	"parent": "deadlands:root",
+	"criteria": {
+		"done": {
+			"trigger": "minecraft:player_killed_entity",
+			"conditions": {
+				"entity": [
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"type": "deadlands:stalker"
+						}
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"done"
+		]
+	],
+	"display": {
+		"icon": {
+			"id": "deadlands:hunting_rifle"
+		},
+		"title": {
+			"translate": "achievement.deadlands.combat.stalker_down.title"
+		},
+		"description": {
+			"translate": "achievement.deadlands.combat.stalker_down.description"
+		},
+		"frame": "goal",
+		"show_toast": true,
+		"announce_to_chat": false,
+		"hidden": false
+	}
+}

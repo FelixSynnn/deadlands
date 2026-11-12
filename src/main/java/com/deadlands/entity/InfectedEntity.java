@@ -93,6 +93,8 @@ public class InfectedEntity extends Monster {
 	public static final int FLAG_SPRINTING = 16;
 	/** It has a living target: clients switch its voice to pursuit and the music to danger. */
 	public static final int FLAG_HUNTING = 32;
+	/** Feeding over a kill, still and head bowed (Phase 4, {@code ai/FeedGoal}). */
+	public static final int FLAG_FEEDING = 64;
 
 	/** Physique: five builds (width) and five heights, packed into the low 8 bits. */
 	private static final float[] BUILDS = {0.90F, 0.95F, 1.0F, 1.06F, 1.12F};
@@ -174,6 +176,7 @@ public class InfectedEntity extends Monster {
 		this.goalSelector.addGoal(7, new SeekShelterGoal(this));
 		this.goalSelector.addGoal(8, new MigrateGoal(this));
 		this.goalSelector.addGoal(8, new FollowPackGoal(this));
+		this.goalSelector.addGoal(8, new com.deadlands.entity.ai.FeedGoal(this));
 		this.goalSelector.addGoal(9, new InfectedRoamGoal(this));
 		this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 10.0F));
 		this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));

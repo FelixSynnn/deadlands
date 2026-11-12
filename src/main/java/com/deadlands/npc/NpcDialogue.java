@@ -87,6 +87,12 @@ public final class NpcDialogue {
 
 	public static void open(ServerPlayer player, NpcEntity npc) {
 		NpcCharacter character = npc.character();
+		if (character == NpcCharacter.HARLEY) {
+			com.deadlands.achievement.Achievements.award(player, "story/met_harley");
+		}
+		if (character == NpcCharacter.HARLEY || character == NpcCharacter.ADAM) {
+			com.deadlands.story.HarleyQuest.talked(player, npc); // Phase 5: her questline
+		}
 		Reputation.Standing standing = Reputation.standing(player, npc.faction());
 		String mood = standing == Reputation.Standing.WARY ? "wary" : standing.ordinal() >= Reputation.Standing.FRIENDLY.ordinal() ? "friendly" : "neutral";
 		Component greeting;
@@ -133,6 +139,7 @@ public final class NpcDialogue {
 			case ITZBREADLOAF -> "itz_log";
 			case IMLILYLOL -> "lily_letter";
 			case FELIXSYN -> "felix_notes";
+			case ADAM -> "adam_notes"; // none yet: his research documents come with Phase 5
 		};
 	}
 

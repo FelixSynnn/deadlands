@@ -101,6 +101,7 @@ public final class Deadlands implements ModInitializer {
 		com.deadlands.audio.ChaseTracker.init();
 		com.deadlands.content.DLContent.init();
 		com.deadlands.horror.HorrorDirector.init();
+		com.deadlands.horror.DarkBuildings.init();
 		com.deadlands.mission.MissionManager.init();
 		com.deadlands.achievement.Achievements.init();
 		com.deadlands.vehicle.VehicleEntity.init();

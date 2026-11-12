@@ -16,6 +16,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -114,9 +115,10 @@ public final class NpcSpawns {
 	 */
 	public static @Nullable NpcEntity place(ServerLevel level, NpcCharacter character, BlockPos pos, float yaw) {
 		NpcWorldData data = NpcWorldData.get(level.getServer());
-		data.markPlaced(character, pos);
 		NpcEntity npc = create(level, character.role(), character.faction(), character, pos, yaw);
 		if (npc != null) {
+			// Only once they really exist: a failed spawn used to be recorded as placed, so they never came.
+			data.markPlaced(character, pos);
 			data.own(character, npc.getUUID());
 		}
 		return npc;
@@ -208,24 +210,36 @@ public final class NpcSpawns {
 		}
 	}
 
-	/** Harley's camp is where the story starts: she stands a few blocks from the first arrival. */
-	public static void onFirstArrival(ServerPlayer player) {
+	/**
+	 * Harley's camp is where the story starts: she stands a few blocks from the first arrival. She always
+	 * comes: the nearest safe spot within 48 blocks is used (solid footing, room to stand, no water,
+	 * lava, fire, magma or cactus), and failing that the survivor's own spot. When her camp is not right
+	 * beside the survivor, its coordinates are shown on screen and in chat. Returns Harley, or null if
+	 * she was already placed.
+	 */
+	public static @Nullable NpcEntity onFirstArrival(ServerPlayer player) {
 		ServerLevel level = player.level();
 		NpcWorldData data = NpcWorldData.get(level.getServer());
 		if (data.isPlaced(NpcCharacter.HARLEY)) {
-			return;
+			return null;
 		}
 		RandomSource random = player.getRandom();
-		for (int attempt = 0; attempt < 12; attempt++) {
-			int x = player.getBlockX() + random.nextInt(13) - 6;
-			int z = player.getBlockZ() + random.nextInt(13) - 6;
-			int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
-			BlockPos pos = new BlockPos(x, y, z);
-			if (Math.abs(y - player.getBlockY()) <= 4 && level.getBlockState(pos).isAir() && level.getFluidState(pos.below()).isEmpty()) {
-				place(level, NpcCharacter.HARLEY, pos, random.nextFloat() * 360.0F);
-				return;
-			}
+		BlockPos origin = player.blockPosition();
+		BlockPos spot = SafeSpots.find(level, origin, 3, 48, random);
+		NpcEntity harley = spot == null ? null : place(level, NpcCharacter.HARLEY, spot, random.nextFloat() * 360.0F);
+		if (harley == null) {
+			spot = origin;
+			harley = place(level, NpcCharacter.HARLEY, origin, random.nextFloat() * 360.0F);
 		}
+		if (harley != null && spot.distSqr(origin) > 10 * 10) {
+			Component where = Component.translatable("message.deadlands.story.harley_moved", spot.getX(), spot.getY(), spot.getZ());
+			player.sendSystemMessage(where);
+			player.connection.send(new net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket(10, 120, 30));
+			player.connection.send(new net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket(where));
+			player.connection.send(new net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket(
+				Component.translatable("message.deadlands.story.harley_camp")));
+		}
+		return harley;
 	}
 
 	private static void wanderers(MinecraftServer server) {

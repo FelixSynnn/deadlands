@@ -1,0 +1,38 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+issueTrackerURL="https://github.com/CreativeMD/EnhancedVisuals/issues"
+license="LGPL-3.0-only"
+
+[[mods]]
+    modId="enhancedvisuals"
+    logoFile="enhancedvisuals.png"
+    version="1.8.27"
+    displayName="EnhancedVisuals"
+    displayURL="https://modrinth.com/mod/enhancedvisuals"
+    authors="CreativeMD, Sonicjumper"
+    description='''Experience realism and extra video effects for your in-game experience.'''
+
+[[dependencies.enhancedvisuals]]
+    modId="neoforge"
+    type="required"
+    versionRange="[21.11.0-beta,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.enhancedvisuals]]
+    modId="minecraft"
+    type="required"
+    versionRange="[1.21.11,1.22)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.enhancedvisuals]]
+   modId="creativecore"
+   type="required"
+   ordering="NONE"
+   side="BOTH"
+   versionRange="[2.14.1,)"
+
+[[mixins]]
+   config="enhancedvisuals.mixins.json"
+

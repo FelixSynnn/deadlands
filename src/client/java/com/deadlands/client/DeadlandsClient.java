@@ -72,6 +72,26 @@ public final class DeadlandsClient implements ClientModInitializer {
 		BlockEntityRenderers.register(DLBlockEntities.LOOT_CONTAINER, LootContainerRenderer::new);
 		MenuScreens.register(DLMenus.LOOT_CONTAINER, DLContainerScreen::new);
 		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Deadlands.id("day_card"), DayCardHud::render);
+		// Darkness and the flashlight beam on the screen, for shader packs and Sodium (client/light/ShaderDarkness).
+		HudElementRegistry.attachElementBefore(VanillaHudElements.MISC_OVERLAYS, Deadlands.id("shader_darkness"), com.deadlands.client.light.ShaderDarkness::render);
+		// Phase 4: opening a door, gate or trapdoor pushes with the hand in first person.
+		net.fabricmc.fabric.api.event.player.UseBlockCallback.EVENT.register((player, world, hand, hit) -> {
+			if (world.isClientSide() && hand == net.minecraft.world.InteractionHand.MAIN_HAND) {
+				net.minecraft.world.level.block.Block block = world.getBlockState(hit.getBlockPos()).getBlock();
+				if (block instanceof net.minecraft.world.level.block.DoorBlock || block instanceof net.minecraft.world.level.block.TrapDoorBlock
+					|| block instanceof net.minecraft.world.level.block.FenceGateBlock) {
+					com.deadlands.client.firstperson.FirstPersonMotion.push();
+				}
+			}
+			return net.minecraft.world.InteractionResult.PASS;
+		});
+		// Phase 4 jumpscares: a blink darkens the whole screen for a moment.
+		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Deadlands.id("scare_blink"), (graphics, delta) -> {
+			float dark = com.deadlands.client.horror.ScarePlayer.blink();
+			if (dark > 0.0F) {
+				graphics.fill(0, 0, graphics.guiWidth(), graphics.guiHeight(), net.minecraft.util.ARGB.color((int) (dark * 255.0F), 0, 0, 0));
+			}
+		});
 		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Deadlands.id("town_card"), TownCardHud::render);
 		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Deadlands.id("horde"), HordeHud::render);
 		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Deadlands.id("boss_card"), com.deadlands.client.hud.BossCardHud::render);
@@ -93,11 +113,20 @@ public final class DeadlandsClient implements ClientModInitializer {
 		com.deadlands.client.hud.VitalsHud.register();
 		ClientBridge.install(DeadlandsClient::openJournal);
 		ClientBridge.installInfected(VOICES);
-		ClientBridge.installEffects(degrees -> {
-			net.minecraft.client.player.LocalPlayer player = net.minecraft.client.Minecraft.getInstance().player;
-			if (player != null) {
-				player.setXRot(Math.max(-90.0F, player.getXRot() - degrees));
-				player.setYRot(player.getYRot() + (player.getRandom().nextFloat() - 0.5F) * degrees * 0.4F);
+		ClientBridge.installEffects(new ClientBridge.EffectsHandler() {
+			@Override
+			public void recoil(float degrees) {
+				net.minecraft.client.player.LocalPlayer player = net.minecraft.client.Minecraft.getInstance().player;
+				if (player != null) {
+					player.setXRot(Math.max(-90.0F, player.getXRot() - degrees));
+					player.setYRot(player.getYRot() + (player.getRandom().nextFloat() - 0.5F) * degrees * 0.4F);
+					com.deadlands.client.firstperson.FirstPersonMotion.kick(degrees);
+				}
+			}
+
+			@Override
+			public void reload(int ticks) {
+				com.deadlands.client.firstperson.FirstPersonMotion.reload(ticks);
 			}
 		});
 		ClientBridge.installStory(new ClientBridge.StoryHandler() {
@@ -133,6 +162,7 @@ public final class DeadlandsClient implements ClientModInitializer {
 			com.deadlands.client.sound.VehicleEngineSounds.tick(client);
 			VOICES.tickAll(client);
 			com.deadlands.client.horror.ScarePlayer.tick(client);
+			com.deadlands.client.firstperson.FirstPersonMotion.tick(client);
 		});
 		com.deadlands.client.camera.PerspectiveLock.init();
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {

@@ -1,0 +1,41 @@
+{
+  "format_version": "1.8.0",
+  "_说明": "掏出武器：手肘抬到前上方、小臂往后折，手在右肩外后上方握住剑柄（右肩下沉后收），然后按作者在 Blender 里做的路径（tools/bake/authored/draw_weapon_down.json）落到身侧，手臂垂在右侧略向外、手肘微弯。只有旋转，位移跟着移动层。",
+  "animations": {
+    "draw_weapon": {
+      "animation_length": 1.2,
+      "bones": {
+        "right_arm": {
+          "rotation": {
+            "0.0": {"vector": [-10.0, 0.0, 0.0], "easing": "linear"},
+            "0.12": {"vector": [-80.0, 25.0, -5.0], "easing": "easeInOutSine"},
+            "0.25": {"vector": [-154.6, 37.1, -29.0], "easing": "easeInOutSine"},
+            "0.35": {"vector": [-154.6, 37.1, -29.0], "easing": "easeInOutSine"},
+            "0.383": {"vector": [-151.95, 38.155, -28.14], "easing": "linear"},
+            "0.417": {"vector": [-143.849, 40.948, -25.142], "easing": "linear"},
+            "0.45": {"vector": [-129.033, 44.779, -18.679], "easing": "linear"},
+            "0.483": {"vector": [-105.646, 47.73, -6.887], "easing": "linear"},
+            "0.517": {"vector": [-75.052, 46.351, 9.105], "easing": "linear"},
+            "0.55": {"vector": [-45.056, 38.884, 22.279], "easing": "linear"},
+            "0.583": {"vector": [-21.385, 28.264, 28.401], "easing": "linear"},
+            "0.617": {"vector": [-4.017, 18.415, 29.374], "easing": "linear"},
+            "0.65": {"vector": [8.282, 11.146, 28.097], "easing": "linear"},
+            "0.683": {"vector": [16.294, 6.594, 26.438], "easing": "linear"},
+            "0.717": {"vector": [20.349, 4.402, 25.373], "easing": "linear"},
+            "0.75": {"vector": [20.875, 4.125, 25.224], "easing": "linear"},
+            "1.183": {"vector": [20.875, 4.125, 25.224], "easing": "linear"}
+          }
+        },
+        "torso": {
+          "rotation": {
+            "0.0": {"vector": [0, 0.0, 0], "easing": "linear"},
+            "0.12": {"vector": [0, 5.0, 0], "easing": "easeInOutSine"},
+            "0.25": {"vector": [0, 0.0, 0], "easing": "easeInOutSine"},
+            "0.35": {"vector": [0, 0.0, 0], "easing": "easeInOutSine"},
+            "1.2": {"vector": [0, 0.0, 0], "easing": "linear"}
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+    "pack": {
+        "description": "EnhancedVisuals resources",
+        "min_format": 50,
+        "max_format": 75,
+        "forge:data_pack_format": 94
+    }
+}

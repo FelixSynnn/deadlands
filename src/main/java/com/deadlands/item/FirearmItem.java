@@ -82,8 +82,14 @@ public class FirearmItem extends Item {
 		}
 		if (!(level instanceof ServerLevel server) || !(player instanceof ServerPlayer shooter)) {
 			// The server decides whether there was a round to fire; the shooter feels the kick at once.
-			if (level.isClientSide() && loaded(gun) > 0 && !player.isSecondaryUseActive()) {
-				com.deadlands.bridge.ClientBridge.recoil(Math.min(7.0F, 1.5F + spec.damage() * spec.pellets() * 0.18F));
+			if (level.isClientSide()) {
+				int loaded = loaded(gun);
+				boolean reloading = loaded <= 0 || (player.isSecondaryUseActive() && loaded < spec.magazine());
+				if (reloading && (player.isCreative() || player.getInventory().countItem(spec.ammo().get()) > 0)) {
+					com.deadlands.bridge.ClientBridge.reload(spec.reloadTicks()); // the same rule the server uses below
+				} else if (loaded > 0 && !player.isSecondaryUseActive()) {
+					com.deadlands.bridge.ClientBridge.recoil(Math.min(7.0F, 1.5F + spec.damage() * spec.pellets() * 0.18F));
+				}
 			}
 			return InteractionResult.CONSUME;
 		}

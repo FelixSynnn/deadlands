@@ -31,6 +31,37 @@ public class DLAchievementsScreen extends Screen implements ClientAdvancements.L
 
 	private final @Nullable Screen parent;
 	private final Map<AdvancementHolder, AdvancementProgress> progress = new HashMap<>();
+	/** Hidden achievements the server told us exist (Minecraft only sends them once earned). */
+	private static List<String> secretIds = List.of();
+
+	public static void secrets(List<String> ids) {
+		secretIds = List.copyOf(ids);
+	}
+
+	/** One row: a known achievement, or a secret not yet earned (holder null). */
+	private record Row(String path, AdvancementHolder holder) {
+	}
+
+	private List<Row> rows() {
+		List<Row> rows = new ArrayList<>();
+		List<String> known = new ArrayList<>();
+		for (AdvancementHolder holder : achievements) {
+			rows.add(new Row(holder.id().getPath(), holder));
+			known.add(holder.id().getPath());
+		}
+		for (String id : secretIds) {
+			if (!known.contains(id)) {
+				rows.add(new Row(id, null));
+			}
+		}
+		rows.sort(Comparator.comparing(Row::path));
+		return rows;
+	}
+
+	private static String category(String path) {
+		int slash = path.indexOf('/');
+		return slash < 0 ? "general" : path.substring(0, slash);
+	}
 	private final List<AdvancementHolder> achievements = new ArrayList<>();
 	private double scroll;
 
@@ -105,26 +136,10 @@ public class DLAchievementsScreen extends Screen implements ClientAdvancements.L
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
 		int visible = (H - 70) / ROW;
-		int rows = achievements.size() + categories();
+		List<Row> all = rows();
+		int rows = all.size() + (int) all.stream().map(r -> category(r.path())).distinct().count();
 		scroll = Math.max(0, Math.min(Math.max(0, rows - visible), scroll - scrollY));
 		return true;
-	}
-
-	private int categories() {
-		List<String> seen = new ArrayList<>();
-		for (AdvancementHolder holder : achievements) {
-			String category = category(holder);
-			if (!seen.contains(category)) {
-				seen.add(category);
-			}
-		}
-		return seen.size();
-	}
-
-	private static String category(AdvancementHolder holder) {
-		String path = holder.id().getPath();
-		int slash = path.indexOf('/');
-		return slash < 0 ? "general" : path.substring(0, slash);
 	}
 
 	@Override
@@ -133,18 +148,20 @@ public class DLAchievementsScreen extends Screen implements ClientAdvancements.L
 		int x = (width - W) / 2;
 		int y = (height - H) / 2;
 		int earned = 0;
+		List<Row> rows = rows();
 		for (AdvancementHolder holder : achievements) {
 			earned += done(holder) ? 1 : 0;
 		}
 		graphics.drawString(font, title, x + 10, y + 10, DLTheme.ACCENT, false);
-		Component count = Component.translatable("achievement.deadlands.count", earned, achievements.size());
+		Component count = Component.translatable("achievement.deadlands.count", earned, rows.size());
 		graphics.drawString(font, count, x + W - 10 - font.width(count), y + 10, DLTheme.TEXT_DIM, false);
 		graphics.enableScissor(x + 6, y + 26, x + W - 6, y + H - 32);
 		int row = 0;
 		String category = "";
 		int top = y + 30;
-		for (AdvancementHolder holder : achievements) {
-			String next = category(holder);
+		for (Row entry : rows) {
+			AdvancementHolder holder = entry.holder();
+			String next = category(entry.path());
 			if (!next.equals(category)) {
 				category = next;
 				int ry = top + (int) ((row - scroll) * ROW);
@@ -152,9 +169,9 @@ public class DLAchievementsScreen extends Screen implements ClientAdvancements.L
 				row++;
 			}
 			int ry = top + (int) ((row - scroll) * ROW);
-			DisplayInfo display = holder.value().display().orElseThrow();
-			boolean has = done(holder);
-			boolean secret = display.isHidden() && !has;
+			DisplayInfo display = holder == null ? null : holder.value().display().orElseThrow();
+			boolean has = holder != null && done(holder);
+			boolean secret = holder == null || (display.isHidden() && !has);
 			graphics.fill(x + 10, ry, x + W - 10, ry + ROW - 2, has ? 0x33C8902E : 0x22000000);
 			if (!secret) {
 				graphics.renderFakeItem(display.getIcon(), x + 14, ry + 3);

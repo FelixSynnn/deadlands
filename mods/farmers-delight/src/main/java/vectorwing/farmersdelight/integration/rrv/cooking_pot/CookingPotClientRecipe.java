@@ -1,0 +1,111 @@
+package vectorwing.farmersdelight.integration.rrv.cooking_pot;
+
+import cc.cassian.rrv.api.ActionType;
+import cc.cassian.rrv.api.recipe.ReliableClientRecipe;
+import cc.cassian.rrv.api.recipe.ReliableClientRecipeType;
+import cc.cassian.rrv.api.recipe.ReliableClientRecipe.RecipePosition;
+import cc.cassian.rrv.api.recipe.ReliableClientRecipe.RecipeTransferMap;
+import cc.cassian.rrv.common.recipe.inventory.RecipeViewScreen;
+import cc.cassian.rrv.common.recipe.inventory.SlotContent;
+import cc.cassian.rrv.common.recipe.inventory.RecipeViewMenu.SlotFillContext;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import vectorwing.farmersdelight.client.gui.CookingPotScreen;
+import vectorwing.farmersdelight.common.utility.ClientRenderUtils;
+
+public class CookingPotClientRecipe implements ReliableClientRecipe {
+    private final SlotContent result;
+    private final List<SlotContent> ingredients;
+    private final SlotContent container;
+    private final int cookTime;
+    private final float experience;
+    private final Identifier id;
+
+    public CookingPotClientRecipe(Identifier identifier, List<Ingredient> ingredients, ItemStack result, ItemStack container, float experience, int cookTime) {
+        this.id = identifier;
+        this.ingredients = new ArrayList<>();
+        ingredients.forEach(ingredient -> this.ingredients.add(SlotContent.of(ingredient)));
+        this.result = SlotContent.of(result);
+        this.container = SlotContent.of(container);
+        this.experience = experience;
+        this.cookTime = cookTime;
+        this.container.setType(ActionType.RESULT);
+    }
+
+    public ReliableClientRecipeType getViewType() {
+        return CookingPotClientRecipeType.INSTANCE;
+    }
+
+    public Identifier getId() {
+        return this.id;
+    }
+
+    public void bindSlots(SlotFillContext slotFillContext) {
+        for (int i = 0; i < this.ingredients.size() && i < 6; i++) {
+            slotFillContext.bindSlot(i, this.ingredients.get(i));
+        }
+
+        slotFillContext.bindSlot(6, this.result);
+        slotFillContext.bindSlot(7, this.container);
+    }
+
+    public void renderRecipe(RecipeViewScreen screen, RecipePosition recipePosition, GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        guiGraphics.renderItem(this.result.getByIndex(0), 103, 17);
+        if (mouseX > 65 && mouseX < 90 && mouseY < 37 && mouseY > 5) {
+            List<Component> tooltip = new ArrayList<>();
+            if (this.cookTime > 0) {
+                tooltip.add(Component.translatable("gui.jei.category.smelting.time.seconds", this.cookTime / 20));
+            }
+
+            if (this.experience > 0.0F) {
+                tooltip.add(Component.translatable("gui.jei.category.smelting.experience", this.experience));
+            }
+
+            guiGraphics.setTooltipForNextFrame(
+                Minecraft.getInstance().font, tooltip, Optional.empty(), mouseX + recipePosition.left(), mouseY + recipePosition.top()
+            );
+        }
+
+        if (ClientRenderUtils.isCursorInsideBounds(103, 17, 18, 18, mouseX, mouseY)) {
+            guiGraphics.setTooltipForNextFrame(
+                Minecraft.getInstance().font, this.result.getByIndex(0), mouseX + recipePosition.left(), mouseY + recipePosition.top()
+            );
+        }
+    }
+
+    public List<SlotContent> getIngredients() {
+        return this.ingredients;
+    }
+
+    public List<SlotContent> getResults() {
+        return List.of(this.result);
+    }
+
+    public boolean supportsItemTransfer() {
+        return true;
+    }
+
+    public void mapRecipeItems(RecipeTransferMap transferMap, AbstractContainerScreen<?> screen) {
+        for (int i = 0; i < this.ingredients.size() && i < 6; i++) {
+            transferMap.linkSlots(i, i);
+        }
+
+        transferMap.linkSlots(7, 7);
+    }
+
+    public List<Class<? extends AbstractContainerScreen<?>>> getTransferClasses() {
+        return List.of(CookingPotScreen.class);
+    }
+
+    public boolean canTransferToScreen(AbstractContainerScreen<?> screen) {
+        return screen instanceof CookingPotScreen;
+    }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "enhancedvisuals",
+  "version": "1.8.27",
+  "name": "EnhancedVisuals",
+  "description": "Experience realism and extra video effects for your in-game experience.",
+  "authors": [
+    "CreativeMD",
+    "AriaFreeze"
+  ],
+  "contact": {
+    "sources": "https://github.com/CreativeMD/EnhancedVisuals",
+    "homepage": "https://modrinth.com/mod/enhancedvisuals",
+    "issues": "https://github.com/CreativeMD/EnhancedVisuals/issues"
+  },
+  "license": "LGPL-3.0-only",
+  "icon": "enhancedvisuals.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "team.creative.enhancedvisuals.EnhancedVisuals"
+    ],
+    "client": [
+      "team.creative.enhancedvisuals.EnhancedVisuals"
+    ]
+  },
+  "mixins": [
+    "enhancedvisuals.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": "\u003e\u003d0.18.2",
+    "fabric-api": "*",
+    "minecraft": "\u003e\u003d1.21.11",
+    "creativecore": "\u003e\u003d2.14.1"
+  }
+}

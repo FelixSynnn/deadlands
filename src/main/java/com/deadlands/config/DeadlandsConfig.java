@@ -229,6 +229,12 @@ public final class DeadlandsConfig {
 
 		@ConfigEntry(comment = "How strongly the camera reacts to scares (0 = not at all).", min = 0.0, max = 1.0, client = true)
 		public double cameraShake = 1.0;
+
+		@ConfigEntry(comment = "How much the hands move in first person: raising a newly drawn item, breathing, trembling when hurt or chased (0 = still).", min = 0.0, max = 1.0, client = true)
+		public double firstPersonMotion = 1.0;
+
+		@ConfigEntry(comment = "Shader compatibility: with a shader pack (Iris) or Sodium, draw the night's darkness and the flashlight beam on the screen, so they work with any pack.", client = true)
+		public boolean shaderCompatibility = true;
 	}
 
 	public static final class Audio {

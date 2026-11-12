@@ -36,14 +36,14 @@ import net.minecraft.world.level.block.state.BlockState;
  * {@link LocationTracker}), the time of day, the weather and whether there is a roof overhead.
  *
  * <p><b>Mostly quiet</b> (Hard Rule 5; 2026-11-11: "the ambiance is too loud, make it not always
- * play"). The soundscape alternates between <i>spells of sound</i> (one to two and a half minutes)
- * and <i>hushes</i> (one to three and a half minutes, longer at night) in which the calm beds fade out
+ * play"). The soundscape alternates between <i>spells of sound</i> (one and a half to four minutes)
+ * and <i>hushes</i> (30 to 90 seconds since 2026-11-12) in which the calm beds fade out
  * and no everyday sound plays. Weather is never hushed: rain on the roof and a real storm wind go on.
- * Everything is about half as loud as before, everyday one-shots are at least ten seconds apart, and
+ * Everything is about half as loud as before, everyday one-shots are at least six seconds apart, and
  * at most two play at once.
  *
- * <p><b>Scary sounds, sometimes.</b> Every three to seven minutes after dark (or underground), and
- * every eight to fifteen by day, the world first goes quiet for a few seconds and then lets one eerie
+ * <p><b>Scary sounds, sometimes.</b> Every one and a half to three and a half minutes after dark (or
+ * underground), and every four to eight by day, the world first goes quiet for a few seconds and then lets one eerie
  * sound through: the far call of something at night, distant infected, an unexplained noise, a low
  * dread swell, or water creaking in the pipes indoors. It waits while a scare from the Horror
  * Director is recent (two minutes), during a chase and in cutscenes, so the two never pile up.
@@ -76,7 +76,7 @@ public final class AmbienceDirector {
 	private static final float ONE_SHOT_GAIN = 0.5F;
 	private static final float BED_GAIN = 0.45F;
 	/** At least ten seconds between two everyday one-shots, and at most two at once. */
-	private static final int MIN_GAP = 200;
+	private static final int MIN_GAP = 120;
 	private static final int MAX_PLAYING = 2;
 
 	/** Where the listener is, as far as the soundscape cares. */
@@ -220,7 +220,7 @@ public final class AmbienceDirector {
 	private static float bedLevel;
 
 	// Eerie moments.
-	private static int eerieIn = 3000;
+	private static int eerieIn = 1800;
 	private static int eerieAt = -1;
 	private static Eerie eerie;
 	private static String lastEerie = "";
@@ -258,7 +258,7 @@ public final class AmbienceDirector {
 		hush = true;
 		spellLeft = 600;
 		bedLevel = 0.0F;
-		eerieIn = 3000;
+		eerieIn = 1800;
 		eerieAt = -1;
 		eerie = null;
 		lastEerie = "";
@@ -326,10 +326,10 @@ public final class AmbienceDirector {
 			}
 			if (play(minecraft, player, layer, random, volume)) {
 				last = layer.sound();
-				globalGap = MIN_GAP + random.nextInt(300);
+				globalGap = MIN_GAP + random.nextInt(200);
 			}
 			int span = Math.max(1, layer.maxGap() - layer.minGap());
-			CLOCKS.put(key, (int) ((layer.minGap() + random.nextInt(span)) * 20 / density));
+			CLOCKS.put(key, (int) ((layer.minGap() + random.nextInt(span)) * 20 * 0.7 / density)); // a third sooner (2026-11-12)
 		}
 	}
 
@@ -339,9 +339,9 @@ public final class AmbienceDirector {
 			hush = !hush;
 			boolean night = (now & NIGHT) != 0;
 			if (hush) {
-				spellLeft = (night ? 1800 : 1200) + random.nextInt(2400); // 1.5 to 3.5 minutes at night, 1 to 3 by day
+				spellLeft = 600 + random.nextInt(1200); // 30 to 90 seconds (2026-11-12: "play more often")
 			} else {
-				spellLeft = (night ? 900 : 1200) + random.nextInt(1800); // 45 s to 2.25 min at night, 1 to 2.5 min by day
+				spellLeft = (night ? 1800 : 2400) + random.nextInt(2400); // 1.5 to 3.5 min at night, 2 to 4 min by day
 				globalGap = 100 + random.nextInt(200);
 			}
 		}
@@ -361,7 +361,7 @@ public final class AmbienceDirector {
 		if (--eerieIn > 0) {
 			return;
 		}
-		if (ScarePlayer.sinceLastScare() < 2400 || MusicDirector.chased() || CutscenePlayer.active()) {
+		if (ScarePlayer.sinceLastScare() < 1200 || MusicDirector.chased() || CutscenePlayer.active()) {
 			eerieIn = 600; // try again in half a minute
 			return;
 		}
@@ -369,7 +369,7 @@ public final class AmbienceDirector {
 		boolean night = (now & NIGHT) != 0;
 		List<Eerie> pool = indoors || below ? EERIE_INSIDE : night ? EERIE_NIGHT : EERIE_DAY;
 		eerie = pick(pool, random);
-		eerieIn = night || below ? 3600 + random.nextInt(4800) : 9600 + random.nextInt(8400);
+		eerieIn = night || below ? 1800 + random.nextInt(2400) : 4800 + random.nextInt(4800); // 1.5-3.5 min after dark, 4-8 by day
 		// The world goes quiet first: the beds fade for four seconds, then it comes.
 		hush = true;
 		spellLeft = Math.max(spellLeft, 900);

@@ -1,0 +1,33 @@
+{
+	"parent": "deadlands:root",
+	"criteria": {
+		"done": {
+			"trigger": "minecraft:consume_item",
+			"conditions": {
+				"item": {
+					"items": "deadlands:dirty_water_bottle"
+				}
+			}
+		}
+	},
+	"requirements": [
+		[
+			"done"
+		]
+	],
+	"display": {
+		"icon": {
+			"id": "deadlands:dirty_water_bottle"
+		},
+		"title": {
+			"translate": "achievement.deadlands.survival.bad_water.title"
+		},
+		"description": {
+			"translate": "achievement.deadlands.survival.bad_water.description"
+		},
+		"frame": "task",
+		"show_toast": true,
+		"announce_to_chat": false,
+		"hidden": false
+	}
+}

@@ -107,6 +107,12 @@ public final class DLSounds {
 	public static final Holder.Reference<SoundEvent> INFECTED_STALKER_POUNCE = register("infected.stalker.pounce");
 	public static final Holder.Reference<SoundEvent> INFECTED_STALKER_HURT = register("infected.stalker.hurt");
 	public static final Holder.Reference<SoundEvent> INFECTED_STALKER_DEATH = register("infected.stalker.death");
+	// Phase 4 jumpscares and feeding (files from tools/assetgen/import_zombie_sfx.py).
+	public static final Holder.Reference<SoundEvent> HORROR_BREATH = register("horror.breath");
+	public static final Holder.Reference<SoundEvent> HORROR_STALKER_CHANT = register("horror.stalker_chant");
+	public static final Holder.Reference<SoundEvent> HORROR_STALKER_LAUGH = register("horror.stalker_laugh");
+	public static final Holder.Reference<SoundEvent> INFECTED_FEEDING = register("infected.feeding");
+	public static final Holder.Reference<SoundEvent> INFECTED_FEEDING_SCREECH = register("infected.feeding_screech");
 	public static final Holder.Reference<SoundEvent> INFECTED_CHARRED_AMBIENT = register("infected.charred.ambient");
 	public static final Holder.Reference<SoundEvent> INFECTED_BREATH = register("infected.breath");
 	public static final Holder.Reference<SoundEvent> INFECTED_SCRATCH = register("infected.scratch");
@@ -132,6 +138,10 @@ public final class DLSounds {
 	public static final Holder.Reference<SoundEvent> WEAPON_SHOTGUN_SHOT = register("weapon.shotgun_shot");
 	public static final Holder.Reference<SoundEvent> WEAPON_RIFLE_SHOT = register("weapon.rifle_shot");
 	public static final Holder.Reference<SoundEvent> WEAPON_RELOAD = register("weapon.reload");
+	// Phase 4 melee (tools/assetgen/gen_weapon_sfx.py).
+	public static final Holder.Reference<SoundEvent> WEAPON_SWING = register("weapon.swing");
+	public static final Holder.Reference<SoundEvent> WEAPON_HIT_BLUNT = register("weapon.hit_blunt");
+	public static final Holder.Reference<SoundEvent> WEAPON_HIT_BLADE = register("weapon.hit_blade");
 	public static final Holder.Reference<SoundEvent> VEHICLE_ENGINE = register("vehicle.engine");
 	public static final Holder.Reference<SoundEvent> VEHICLE_IMPACT = register("vehicle.impact");
 	public static final Holder.Reference<SoundEvent> VEHICLE_REPAIR = register("vehicle.repair");

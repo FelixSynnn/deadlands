@@ -130,6 +130,11 @@ public final class MissionManager {
 		return true;
 	}
 
+	/** Whether this mission is under way. */
+	public static boolean isActive(MinecraftServer server, Identifier id) {
+		return state(server).active.containsKey(id.toString());
+	}
+
 	public static boolean complete(MinecraftServer server, Identifier id) {
 		State state = state(server);
 		String key = id.toString();
