@@ -266,12 +266,15 @@ def particles(*entries: tuple[str, float]) -> list[dict]:
 # at a distance and from a direction (crows on the rooftops, a dog streets away), so the biome's own
 # additions (which play at the listener's head) keep only its character sound, five times rarer
 # (about one every 20 to 40 seconds instead of every 4 to 8), and leave the crows to the director.
-ADDITION_SCALE = 0.2
+# Horror pass (2026-11-11, "the ambiance is too loud, make it not always play"): halved again, and
+# the biome's loop is no longer played by Minecraft (which never stops it). The AmbienceDirector
+# plays the same loop itself, quietly, and lets it fall silent for minutes at a time.
+ADDITION_SCALE = 0.1
 
 
 def ambience(loop: str, additions: list[tuple[str, float]]) -> dict:
+    # `loop` names the biome's bed; the client's AmbienceDirector plays it (BIOME_BEDS there).
     return {
-        "loop": f"{NS}:ambient.{loop}.loop",
         "mood": {"sound": f"{NS}:ambient.mood", "tick_delay": 6000, "block_search_extent": 8, "offset": 2.0},
         "additions": [{"sound": f"{NS}:ambient.{a}", "tick_chance": round(chance * ADDITION_SCALE, 5)} for a, chance in additions if a != "crow"],
     }

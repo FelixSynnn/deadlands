@@ -46,6 +46,12 @@ import gen_world
 import gen_immersion
 import import_sfx
 import gen_framework
+import gen_models3d
+import gen_equipment3d
+import gen_decor3d
+import gen_character3d
+import gen_interiors
+import gen_visuals
 import dl_realism
 import gen_variants
 
@@ -83,6 +89,12 @@ GROUPS = {
     "immersion": gen_immersion.build,  # horror Phase 1: vanilla structures off, vanilla ambience silenced, music placeholders, flashlight
     "sfx": import_sfx.build,  # after immersion: the chosen third-party horror sounds and music (skipped if the source folder is missing)
     "framework": gen_framework.build,  # horror Phase 2: scares, mission givers, achievements, cutscenes as data, the campaign dimension
+    "models3d": gen_models3d.build,  # horror Phase 3: 3D models for every weapon and the flashlight (replaces the flashlight's box model)
+    "equipment3d": gen_equipment3d.build,  # horror Phase 3: 3D models for equipment, food, medicine, ammunition
+    "decor3d": gen_decor3d.build,  # horror Phase 3: detailed furniture and roadside models (after gen_decor), random desk/shelf/counter versions
+    "character3d": gen_character3d.build,  # horror Phase 3: 3D gear for the characters (Java geometry + texture)
+    "interiors": gen_interiors.build,  # horror Phase 3: wallpapers, panelling, carpet, linoleum (before realism finishes them)
+    "visuals": gen_visuals.build,  # horror Phase 3: light fixtures (models, states, loot, names), weather text
     "realism": dl_realism.build,  # last: the finishing pass over block and item textures (originals in texture-backup/)
     "variants": gen_variants.build,  # after realism: per-position variants blended from the finished textures
 }

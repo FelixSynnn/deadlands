@@ -1,19 +1,57 @@
 {
 	"variants": {
-		"facing=north": {
-			"model": "deadlands:block/desk"
-		},
-		"facing=east": {
-			"model": "deadlands:block/desk",
-			"y": 90
-		},
-		"facing=south": {
-			"model": "deadlands:block/desk",
-			"y": 180
-		},
-		"facing=west": {
-			"model": "deadlands:block/desk",
-			"y": 270
-		}
+		"facing=north": [
+			{
+				"model": "deadlands:block/desk"
+			},
+			{
+				"model": "deadlands:block/desk_computer"
+			},
+			{
+				"model": "deadlands:block/desk_lamp"
+			}
+		],
+		"facing=east": [
+			{
+				"model": "deadlands:block/desk",
+				"y": 90
+			},
+			{
+				"model": "deadlands:block/desk_computer",
+				"y": 90
+			},
+			{
+				"model": "deadlands:block/desk_lamp",
+				"y": 90
+			}
+		],
+		"facing=south": [
+			{
+				"model": "deadlands:block/desk",
+				"y": 180
+			},
+			{
+				"model": "deadlands:block/desk_computer",
+				"y": 180
+			},
+			{
+				"model": "deadlands:block/desk_lamp",
+				"y": 180
+			}
+		],
+		"facing=west": [
+			{
+				"model": "deadlands:block/desk",
+				"y": 270
+			},
+			{
+				"model": "deadlands:block/desk_computer",
+				"y": 270
+			},
+			{
+				"model": "deadlands:block/desk_lamp",
+				"y": 270
+			}
+		]
 	}
 }

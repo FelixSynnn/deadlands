@@ -61,6 +61,8 @@ public final class Deadlands implements ModInitializer {
 		DLWeapons.init();
 		DLBlocks.init();
 		DLDecor.init();
+		com.deadlands.registry.DLLights.init();
+		com.deadlands.registry.DLInteriors.init();
 		DLNests.init();
 		DLContainers.init();
 		DLBlockEntities.init();

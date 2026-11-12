@@ -1,6 +1,21 @@
 {
 	"model": {
-		"type": "minecraft:model",
-		"model": "deadlands:item/rifle_round"
+		"type": "minecraft:select",
+		"property": "minecraft:display_context",
+		"cases": [
+			{
+				"when": [
+					"gui"
+				],
+				"model": {
+					"type": "minecraft:model",
+					"model": "deadlands:item/rifle_round"
+				}
+			}
+		],
+		"fallback": {
+			"type": "minecraft:model",
+			"model": "deadlands:item/rifle_round_3d"
+		}
 	}
 }

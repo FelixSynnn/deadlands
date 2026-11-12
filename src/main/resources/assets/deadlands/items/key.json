@@ -1,6 +1,21 @@
 {
 	"model": {
-		"type": "minecraft:model",
-		"model": "deadlands:item/key"
+		"type": "minecraft:select",
+		"property": "minecraft:display_context",
+		"cases": [
+			{
+				"when": [
+					"gui"
+				],
+				"model": {
+					"type": "minecraft:model",
+					"model": "deadlands:item/key"
+				}
+			}
+		],
+		"fallback": {
+			"type": "minecraft:model",
+			"model": "deadlands:item/key_3d"
+		}
 	}
 }

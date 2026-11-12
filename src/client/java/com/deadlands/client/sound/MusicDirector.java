@@ -105,6 +105,11 @@ public final class MusicDirector {
 		chased = value;
 	}
 
+	/** Whether a crowd is chasing this survivor right now (the server's word). */
+	public static boolean chased() {
+		return chased;
+	}
+
 	public static void setSafeZone(boolean safe) {
 		safeZone = safe;
 	}

@@ -52,6 +52,7 @@ public final class ScarePlayer {
 	private static int joltLeft;
 	private static float joltStrength;
 	private static int busy = -1;
+	private static int lastScareAt = -1_000_000;
 
 	private ScarePlayer() {
 	}
@@ -64,6 +65,12 @@ public final class ScarePlayer {
 		for (HorrorScarePayload.Step step : payload.steps()) {
 			QUEUE.add(new Due(now + Math.max(0, step.at()), step));
 		}
+		lastScareAt = now;
+	}
+
+	/** Ticks of play since the last scare arrived (the ambience keeps its eerie sounds away from scares). */
+	public static int sinceLastScare() {
+		return now - lastScareAt;
 	}
 
 	public static void tick(Minecraft minecraft) {
@@ -187,5 +194,6 @@ public final class ScarePlayer {
 		beamOffUntil = 0;
 		joltLeft = 0;
 		busy = -1;
+		lastScareAt = -1_000_000;
 	}
 }

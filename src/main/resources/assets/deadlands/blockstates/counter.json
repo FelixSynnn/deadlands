@@ -1,19 +1,57 @@
 {
 	"variants": {
-		"facing=north": {
-			"model": "deadlands:block/counter"
-		},
-		"facing=east": {
-			"model": "deadlands:block/counter",
-			"y": 90
-		},
-		"facing=south": {
-			"model": "deadlands:block/counter",
-			"y": 180
-		},
-		"facing=west": {
-			"model": "deadlands:block/counter",
-			"y": 270
-		}
+		"facing=north": [
+			{
+				"model": "deadlands:block/counter"
+			},
+			{
+				"model": "deadlands:block/counter"
+			},
+			{
+				"model": "deadlands:block/counter_microwave"
+			}
+		],
+		"facing=east": [
+			{
+				"model": "deadlands:block/counter",
+				"y": 90
+			},
+			{
+				"model": "deadlands:block/counter",
+				"y": 90
+			},
+			{
+				"model": "deadlands:block/counter_microwave",
+				"y": 90
+			}
+		],
+		"facing=south": [
+			{
+				"model": "deadlands:block/counter",
+				"y": 180
+			},
+			{
+				"model": "deadlands:block/counter",
+				"y": 180
+			},
+			{
+				"model": "deadlands:block/counter_microwave",
+				"y": 180
+			}
+		],
+		"facing=west": [
+			{
+				"model": "deadlands:block/counter",
+				"y": 270
+			},
+			{
+				"model": "deadlands:block/counter",
+				"y": 270
+			},
+			{
+				"model": "deadlands:block/counter_microwave",
+				"y": 270
+			}
+		]
 	}
 }

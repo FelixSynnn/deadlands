@@ -1613,5 +1613,14 @@
 	"command.deadlands.achievement": "Granted achievement %s.",
 	"command.deadlands.campaign.status": "Campaign %s, chapter %s, checkpoint %s, dimension loaded: %s.",
 	"command.deadlands.campaign.failed": "The campaign dimension is not available.",
-	"command.deadlands.content": "Loaded: %s scares, %s missions, %s mission givers, %s dialogues, %s endings, %s DEADLANDS achievements; vanilla advancements left: %s."
+	"command.deadlands.content": "Loaded: %s scares, %s missions, %s mission givers, %s dialogues, %s endings, %s DEADLANDS achievements; vanilla advancements left: %s.",
+	"block.deadlands.fluorescent_light": "Fluorescent Light",
+	"block.deadlands.emergency_light": "Emergency Light",
+	"weather.deadlands.heavy_rain": "heavy rain",
+	"command.deadlands.lights": "Faulty light fixtures have flickered %s times since the server started.",
+	"block.deadlands.faded_wallpaper": "Faded Wallpaper",
+	"block.deadlands.striped_wallpaper": "Striped Wallpaper",
+	"block.deadlands.wood_paneling": "Wood Paneling",
+	"block.deadlands.stained_carpet": "Stained Carpet",
+	"block.deadlands.linoleum_tiles": "Linoleum Tiles"
 }

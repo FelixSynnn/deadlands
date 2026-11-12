@@ -184,6 +184,7 @@ def flashlight() -> None:
             "head": {"translation": [0, 10, -4]},
         },
     }
+    # Phase 3: gen_models3d (a later group) replaces this box model with a detailed one, keeping this display.
     D.asset_json("models/item/flashlight.json", model)
     D.item_model_definition("flashlight", t)
 

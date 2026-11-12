@@ -55,6 +55,9 @@
 		"deadlands:industrial_panel",
 		"deadlands:dirty_glass",
 		"deadlands:cracked_glass",
-		"deadlands:dusty_glass"
+		"deadlands:dusty_glass",
+		"deadlands:fluorescent_light",
+		"deadlands:emergency_light",
+		"deadlands:linoleum_tiles"
 	]
 }

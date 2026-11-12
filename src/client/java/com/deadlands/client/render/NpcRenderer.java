@@ -35,6 +35,8 @@ public class NpcRenderer extends HumanoidMobRenderer<NpcEntity, NpcRenderer.Stat
 	public static class State extends HumanoidRenderState {
 		public Identifier skin = Deadlands.id("textures/entity/survivor/settler_0.png");
 		public boolean slim;
+		/** The character's 3D gear texture (Phase 3), or null for none. */
+		public Identifier gear;
 	}
 
 	private record CharacterSkin(Identifier texture, boolean slim) {
@@ -48,6 +50,7 @@ public class NpcRenderer extends HumanoidMobRenderer<NpcEntity, NpcRenderer.Stat
 		super(context, new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER)), 0.5F);
 		this.wideModel = getModel();
 		this.slimModel = new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM));
+		addLayer(new com.deadlands.client.render.character.CharacterGearLayer(this));
 	}
 
 	@Override
@@ -63,9 +66,11 @@ public class NpcRenderer extends HumanoidMobRenderer<NpcEntity, NpcRenderer.Stat
 			CharacterSkin skin = characterSkin(character);
 			state.skin = skin.texture();
 			state.slim = skin.slim();
+			state.gear = character == NpcCharacter.ITZBREADLOAF ? Deadlands.id("textures/entity/survivor/character/itzbreadloaf_gear.png") : null;
 		} else {
 			state.skin = roleSkin(npc.role(), npc.skin());
 			state.slim = false;
+			state.gear = null;
 		}
 	}
 

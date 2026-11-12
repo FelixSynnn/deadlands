@@ -1,6 +1,21 @@
 {
 	"model": {
-		"type": "minecraft:model",
-		"model": "deadlands:item/pipe_wrench"
+		"type": "minecraft:select",
+		"property": "minecraft:display_context",
+		"cases": [
+			{
+				"when": [
+					"gui"
+				],
+				"model": {
+					"type": "minecraft:model",
+					"model": "deadlands:item/pipe_wrench"
+				}
+			}
+		],
+		"fallback": {
+			"type": "minecraft:model",
+			"model": "deadlands:item/pipe_wrench_3d"
+		}
 	}
 }
