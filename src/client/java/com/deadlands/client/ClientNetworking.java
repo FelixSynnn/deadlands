@@ -36,23 +36,8 @@ public final class ClientNetworking {
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.RadioPayload.TYPE,
 			(payload, context) -> com.deadlands.client.ui.RadioScreen.receive(payload));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.IntroPayload.TYPE,
-			(payload, context) -> {
-				// Phase 5: the outbreak intro first (the first arrival in a world), then Harley's opening.
-				Runnable harley = () -> context.client().setScreen(new com.deadlands.client.ui.IntroScreen(payload.harleyNear(),
-					new net.minecraft.world.phys.Vec3(payload.x(), payload.y(), payload.z())));
-				net.minecraft.client.player.LocalPlayer player = context.client().player;
-				if (player == null) {
-					harley.run();
-					return;
-				}
-				try {
-					com.deadlands.client.cutscene.CutscenePlayer.start("outbreak_intro", player.position(), player.getYRot(), harley);
-				} catch (RuntimeException failure) {
-					com.deadlands.Deadlands.LOGGER.error("DEADLANDS: the intro cutscene failed to start; going on without it", failure);
-					com.deadlands.client.cutscene.CutscenePlayer.stop();
-					harley.run();
-				}
-			});
+			(payload, context) -> context.client().setScreen(new com.deadlands.client.ui.IntroScreen(payload.harleyNear(),
+				new net.minecraft.world.phys.Vec3(payload.x(), payload.y(), payload.z()))));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.HorrorScarePayload.TYPE,
 			(payload, context) -> com.deadlands.client.horror.ScarePlayer.onScare(payload));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.AchievementSecretsPayload.TYPE,
