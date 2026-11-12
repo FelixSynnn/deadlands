@@ -39,7 +39,7 @@ import net.fabricmc.loader.api.FabricLoader;
  * added, missing or invalid.
  */
 public final class ConfigManager {
-	public static final int CURRENT_VERSION = 1;
+	public static final int CURRENT_VERSION = 2;
 	public static final String FILE_NAME = "deadlands.jsonc";
 
 	private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
@@ -139,6 +139,7 @@ public final class ConfigManager {
 				}
 				List<String> problems = new ArrayList<>();
 				rewrite = apply(config, root.getAsJsonObject(), problems);
+				migrate(config, root.getAsJsonObject());
 				problems.forEach(p -> Deadlands.LOGGER.warn("Config {}: {}", FILE_NAME, p));
 			} catch (Exception e) {
 				Deadlands.LOGGER.error("Could not read {}; using defaults and keeping a copy of the broken file", file, e);
@@ -193,6 +194,18 @@ public final class ConfigManager {
 			problems.add("top level is not an object");
 		}
 		return config;
+	}
+
+	/**
+	 * Older files: values that were the old defaults move to the new ones (version 2: the Aberrant's
+	 * damage, 13 to 9). Values the player changed themselves are left alone.
+	 */
+	static void migrate(DeadlandsConfig config, JsonObject root) {
+		JsonElement version = root.get("configVersion");
+		int from = version != null && version.isJsonPrimitive() ? version.getAsInt() : 0;
+		if (from < 2 && config.asesino.damage == 13.0) {
+			config.asesino.damage = 9.0;
+		}
 	}
 
 	/** Copy known values from JSON into the config. Returns true if the file should be rewritten. */

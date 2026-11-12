@@ -32,7 +32,8 @@ public final class AberrantMesh {
 	}
 
 	private static @Nullable AberrantMesh loaded;
-	private static boolean failed;
+	/** When a failed read may be tried again (a resource reload can briefly hide the file). */
+	private static long retryAt;
 
 	public final List<Material> materials;
 	public final List<Group> groups;
@@ -42,13 +43,13 @@ public final class AberrantMesh {
 		this.groups = groups;
 	}
 
-	/** The mesh, or null if it could not be read (logged once; the Aberrant is then not drawn). */
+	/** The mesh, or null if it could not be read (logged; tried again five seconds later). */
 	public static @Nullable AberrantMesh get() {
-		if (loaded == null && !failed) {
+		if (loaded == null && System.currentTimeMillis() >= retryAt) {
 			try {
 				loaded = read();
 			} catch (IOException | RuntimeException failure) {
-				failed = true;
+				retryAt = System.currentTimeMillis() + 5000L;
 				Deadlands.LOGGER.error("DEADLANDS: could not read the Aberrant's mesh {}", FILE, failure);
 			}
 		}

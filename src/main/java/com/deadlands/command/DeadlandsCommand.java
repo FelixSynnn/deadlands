@@ -45,10 +45,21 @@ public final class DeadlandsCommand {
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> register(dispatcher));
 	}
 
+	/** A story choice from a chat button (chapter four's answer). */
+	private static int choose(CommandSourceStack source, String option) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+		if (com.deadlands.story.Pinecrest.choose(source.getPlayerOrException(), option)) {
+			return 1;
+		}
+		source.sendFailure(net.minecraft.network.chat.Component.translatable("command.deadlands.choose.nothing"));
+		return 0;
+	}
+
 	static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 		dispatcher.register(Commands.literal("deadlands")
 			.then(Commands.literal("status").executes(ctx -> status(ctx.getSource())))
 			.then(Commands.literal("chronicle").executes(ctx -> chronicle(ctx.getSource())))
+			.then(Commands.literal("choose").then(Commands.argument("option", StringArgumentType.word())
+				.executes(ctx -> choose(ctx.getSource(), StringArgumentType.getString(ctx, "option")))))
 			.then(Commands.literal("config")
 				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 				.then(Commands.literal("reload").executes(ctx -> reloadConfig(ctx.getSource()))))

@@ -67,9 +67,7 @@ FILES = {
     "static_storm": ("Thunder Strike", "Universfield", "https://pixabay.com/sound-effects/nature-thunder-strike-124463/",
                      "https://cdn.pixabay.com/download/audio/2022/10/30/audio_65a2d39d7c.mp3?filename=universfield-thunder-strike-124463.mp3",
                      1, None, 1, ["disaster.static_storm"]),
-    "melee_swing": ("Swing Whoosh Weapon 1", "floraphonic", "https://pixabay.com/sound-effects/film-special-effects-swing-whoosh-weapon-1-189819/",
-                    "https://cdn.pixabay.com/download/audio/2024/02/06/audio_f018c74fc7.mp3?filename=floraphonic-swing-whoosh-weapon-1-189819.mp3",
-                    1, 1.5, 0.3, ["weapon.swing"]),
+    # melee_swing removed: the recording sounds like a voice saying "whoosh"; weapon.swing keeps gen_weapon_sfx's.
     "melee_hit_blunt": ("Punch 05", "Universfield", "https://pixabay.com/sound-effects/film-special-effects-punch-05-634843/",
                         "https://cdn.pixabay.com/download/audio/2026/11/10/audio_eb7873bf40.mp3?filename=universfield-punch-05-634843.mp3",
                         1, 1.5, 0.3, ["weapon.hit_blunt"]),

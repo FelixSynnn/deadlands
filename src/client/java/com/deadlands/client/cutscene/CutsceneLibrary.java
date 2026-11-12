@@ -53,10 +53,10 @@ public final class CutsceneLibrary extends SimpleJsonResourceReloadListener<Cuts
 	 * A cast member (Phase 5): {@code who} is a story character id ({@code felixsyn}) or an entity id
 	 * ({@code walker}, {@code deadlands:runner}); it is there from {@code start} to {@code end} ticks and walks
 	 * from {@code from} to {@code to} between the move ticks (default: its whole time), standing on the ground,
-	 * facing where it walks or {@code face}; {@code item} goes in its hand.
+	 * facing where it walks or {@code face}; {@code item} goes in its hand; {@code scale} sizes it (a child: 0.6).
 	 */
 	public record ActorDef(String who, int start, int end, Vec3 from, Vec3 to, Optional<Vec3> face, Optional<Identifier> item,
-		Optional<Integer> moveStart, Optional<Integer> moveEnd) {
+		Optional<Integer> moveStart, Optional<Integer> moveEnd, Optional<Float> scale) {
 		static final Codec<ActorDef> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.STRING.fieldOf("who").forGetter(ActorDef::who),
 			Codec.INT.fieldOf("start").forGetter(ActorDef::start),
@@ -66,7 +66,8 @@ public final class CutsceneLibrary extends SimpleJsonResourceReloadListener<Cuts
 			Vec3.CODEC.optionalFieldOf("face").forGetter(ActorDef::face),
 			Identifier.CODEC.optionalFieldOf("item").forGetter(ActorDef::item),
 			Codec.INT.optionalFieldOf("move_start").forGetter(ActorDef::moveStart),
-			Codec.INT.optionalFieldOf("move_end").forGetter(ActorDef::moveEnd)
+			Codec.INT.optionalFieldOf("move_end").forGetter(ActorDef::moveEnd),
+			Codec.FLOAT.optionalFieldOf("scale").forGetter(ActorDef::scale)
 		).apply(instance, ActorDef::new));
 	}
 

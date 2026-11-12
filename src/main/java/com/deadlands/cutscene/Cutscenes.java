@@ -31,6 +31,8 @@ public final class Cutscenes {
 	public static final String REUNION = "reunion";
 	/** Phase 5 step 3: Adam's empty house ({@code story.FamilyHouse}). */
 	public static final String FAMILY_HOUSE = "family_house";
+	/** Phase 5 step 4: the arrival at Pinecrest ({@code story.Pinecrest}). */
+	public static final String PINECREST = "pinecrest";
 
 	public static final AttachmentType<List<String>> SEEN = AttachmentRegistry.create(Deadlands.id("cutscenes_seen"),
 		builder -> builder.persistent(Codec.STRING.listOf()).initializer(List::of).copyOnDeath());

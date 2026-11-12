@@ -68,7 +68,9 @@ public final class InfectedSpawner {
 		}
 		RandomSource random = level.getRandom();
 		boolean night = level.isDarkOutside();
-		int target = (int) Math.round(InfectedManager.localCap() * (night ? 1.0 : config.daytimePopulation));
+		// 40% fewer than before (zombies.spawnRateFactor); by day, the daytime population indoors and in caves.
+		int nightTarget = (int) Math.round(InfectedManager.localCap() * config.spawnRateFactor);
+		int target = (int) Math.round(nightTarget * (night ? 1.0 : config.daytimePopulation));
 		int near = InfectedManager.countNear(level, player.blockPosition());
 		if (near >= target || InfectedManager.loadedCount(level.getServer()) >= config.globalCap) {
 			return;
@@ -82,8 +84,8 @@ public final class InfectedSpawner {
 				continue;
 			}
 			boolean open = level.canSeeSky(pos);
-			if (!night && open && random.nextFloat() < 0.8F) {
-				continue;
+			if (!night && open && (random.nextFloat() < 0.8F || near >= Math.round(nightTarget * config.daytimeOutdoorCap))) {
+				continue; // by day, very few out in the open (zombies.daytimeOutdoorCap of the night's number)
 			}
 			boolean underground = pos.getY() < level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ()) - 10;
 			TownSite town = TownLookup.nearest(level, pos, TOWN_RADIUS).orElse(null);

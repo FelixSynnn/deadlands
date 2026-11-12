@@ -21,7 +21,6 @@ and trimmed for the game (`tools/assetgen/import_pixabay.py`).
 | `caustic_rain` (disaster.caustic_rain) | Heavy Rain Outside the Window | DRAGON-STUDIO | https://pixabay.com/sound-effects/nature-heavy-rain-outside-the-window-515266/ | Pixabay Content License |
 | `caustic_burn` (disaster.caustic_rain.burn) | sizzle | freesound_community | https://pixabay.com/sound-effects/household-sizzle-62476/ | Pixabay Content License |
 | `static_storm` (disaster.static_storm) | Thunder Strike | Universfield | https://pixabay.com/sound-effects/nature-thunder-strike-124463/ | Pixabay Content License |
-| `melee_swing` (weapon.swing) | Swing Whoosh Weapon 1 | floraphonic | https://pixabay.com/sound-effects/film-special-effects-swing-whoosh-weapon-1-189819/ | Pixabay Content License |
 | `melee_hit_blunt` (weapon.hit_blunt) | Punch 05 | Universfield | https://pixabay.com/sound-effects/film-special-effects-punch-05-634843/ | Pixabay Content License |
 | `melee_hit_blade` (weapon.hit_blade) | Knife Stab | Universfield | https://pixabay.com/sound-effects/film-special-effects-knife-stab-121084/ | Pixabay Content License |
 | `title_theme` (music.title) | Horror Ambient | leberch | https://pixabay.com/music/horror-scene-horror-ambient-609124/ | Pixabay Content License |
@@ -80,3 +79,12 @@ The Aberrant uses the fan-made **"Aberrant Slasher (Fanmade, Forsaken)"** 3D mod
 | Model | Creator | Page | License |
 |---|---|---|---|
 | Aberrant Slasher (Fanmade, Forsaken) | _creator's Sketchfab name (to be filled in)_ | _Sketchfab page link (to be filled in)_ | Free to use with credit (per the creator's page) |
+
+## The Guest's 3D model
+
+The Guest uses **"Sixer aka Guest 666 - Forsaken"** by **Fourteen** ([sketchfab.com/LFourteen_](https://sketchfab.com/LFourteen_)),
+licensed under [CC BY 4.0](http://creativecommons.org/licenses/by/4.0/), from
+https://sketchfab.com/3d-models/sixer-aka-guest-666-forsaken-8dc1a8bee1eb4ee38f10baf3185be6fc.
+Changes: simplified, re-rigged onto DEADLANDS' animation rig, recoloured to a new palette, given a glow layer and
+new animations (`tools/assetgen/import_guest.py`).
+

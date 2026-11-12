@@ -131,6 +131,21 @@ public final class MissionManager {
 	}
 
 	/** Whether this mission is under way. */
+	/** Whether an active mission's objective has been met (its saved progress reached its count). */
+	public static boolean objectiveDone(MinecraftServer server, Identifier id, String objectiveId) {
+		Map<String, Integer> progress = state(server).active.get(id.toString());
+		MissionDef def = DLContent.MISSIONS.get(id).orElse(null);
+		if (progress == null || def == null) {
+			return false;
+		}
+		for (MissionDef.Objective objective : def.objectives()) {
+			if (objective.id().equals(objectiveId)) {
+				return progress.getOrDefault(objectiveId, 0) >= Math.max(1, objective.count());
+			}
+		}
+		return false;
+	}
+
 	public static boolean isActive(MinecraftServer server, Identifier id) {
 		return state(server).active.containsKey(id.toString());
 	}

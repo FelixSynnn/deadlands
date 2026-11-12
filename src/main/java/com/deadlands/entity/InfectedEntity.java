@@ -127,6 +127,8 @@ public class InfectedEntity extends Monster {
 	private long investigateUntil;
 	private double investigateSpeed = 1.0;
 	private @Nullable Vec3 lastKnownTargetPos;
+	/** AI steps the target has been out of sight while in the dark ({@link com.deadlands.entity.ai.Stealth}). */
+	private int unseenTicks;
 	private long lastKnownTargetTime;
 	private long lastAlertTime;
 	private long busySince;
@@ -142,6 +144,11 @@ public class InfectedEntity extends Monster {
 		super(type, level);
 		this.xpReward = kind().xp();
 		this.getNavigation().setCanOpenDoors(true);
+		if (this.getNavigation() instanceof net.minecraft.world.entity.ai.navigation.GroundPathNavigation ground) {
+			ground.setCanFloat(true);
+		}
+		// Swims: floats at the surface and paths through water rather than around it or sinking.
+		setPathfindingMalus(net.minecraft.world.level.pathfinder.PathType.WATER, 2.0F);
 	}
 
 	public static AttributeSupplier.Builder createAttributes(InfectedKind kind) {
@@ -574,6 +581,15 @@ public class InfectedEntity extends Monster {
 		if (target != null && target.isAlive() && getSensing().hasLineOfSight(target)) {
 			lastKnownTargetPos = target.position();
 			lastKnownTargetTime = now;
+			unseenTicks = 0;
+		} else if (target != null && com.deadlands.entity.ai.Stealth.inDarkness(target)) {
+			// Out of sight in the dark: after a few seconds the chase is lost, and it searches where they were.
+			if (++unseenTicks >= com.deadlands.entity.ai.Stealth.loseTicks() / Math.max(1, aiInterval)) {
+				unseenTicks = 0;
+				setTarget(null);
+			}
+		} else {
+			unseenTicks = 0;
 		}
 		if (target != null || investigatePos != null) {
 			busySince = now;

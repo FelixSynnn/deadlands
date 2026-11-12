@@ -28,7 +28,14 @@ public enum Disaster {
 	/** Rain that burns: stay under cover or wear a helmet. */
 	CAUSTIC_RAIN("caustic_rain", 40, 90, 180, 8, WeatherDirector.Kind.HEAVY_RAIN),
 	/** A lightning storm that strikes close and often. */
-	STATIC_STORM("static_storm", 30, 90, 180, 12, null);
+	STATIC_STORM("static_storm", 30, 90, 180, 12, null),
+	/**
+	 * Uncommon: a green, spore-thick tornado from the Kessler zone. It pulls less than a twister but
+	 * poisons and sickens anyone near it, worsens an infection already taken hold, and stirs the
+	 * infected into a frenzy. Its weight is {@code disasters.greenTornadoWeight}; it has a character
+	 * of its own ({@link GreenTornadoCharacter}, not in yet).
+	 */
+	GREEN_TORNADO("green_tornado", 45, 60, 120, 3, WeatherDirector.Kind.WIND);
 
 	private final String id;
 	private final int warnSeconds;
@@ -68,6 +75,11 @@ public enum Disaster {
 		return weight;
 	}
 
+	/** The weight in use: the Green Tornado's comes from the config. */
+	public int weight(DeadlandsConfig.Disasters config) {
+		return this == GREEN_TORNADO ? config.greenTornadoWeight : weight;
+	}
+
 	/** The DEADLANDS weather it brings with it for its looks (fog, dust, rain), or null. */
 	public WeatherDirector.@Nullable Kind sky() {
 		return sky;
@@ -83,6 +95,7 @@ public enum Disaster {
 			case DUST_WALL -> config.dustWall;
 			case CAUSTIC_RAIN -> config.causticRain;
 			case STATIC_STORM -> config.staticStorm;
+			case GREEN_TORNADO -> config.greenTornado;
 		};
 	}
 

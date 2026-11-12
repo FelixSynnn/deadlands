@@ -916,3 +916,56 @@ The owner's report: the flashlight does nothing even with Lamb's Dynamic Lights,
   - Lurking is silent: layer 1 only plays while he is stalking or searching.
 - **New animations:** a backhand slash alternating with the overhead slash, and a crouched lurk pose.
 - **Verified:** build success, 57/57 tests, dedicated server clean, offline renders of the imported model checked.
+
+### The Guest, and balance (2026-11-12)
+
+- **The Guest:**
+  - Model: "Sixer aka Guest 666 - Forsaken" by Fourteen (Sketchfab), CC-BY-4.0, credited in `CREDITS.md`.
+  - `tools/assetgen/import_guest.py`:
+    - simplifies the model from 221k to about 13.7k triangles;
+    - assigns each triangle to a rig bone by skin weight (spine, neck, head, jaw, horns, arms, clawed hands, legs, a 13-part tail), with pivots at the model's own joints;
+    - recolours it to the owner's palette, with the bright reds as the glow layer.
+  - Code: `GuestEntity` and `GuestSpawner`, drawn by `RiggedMesh.Layer`, posed by `GuestModel` in the style of the reference clips.
+  - **AI:** it spots, charges and never retreats.
+  - **Abilities:** the Knock, Let Me In (3x3 tearing, stone stops it), Grab and slam, Swipe (3.5 damage), Fever (thirst drain and slow; water douses it), and Feeding (heals and grows up to 1.2x on infected deaths).
+  - **Leaves at dawn.**
+  - **Sounds:** the owner's GuestSoundsPack (`import_guest_sfx.py`), and the Guest666 layers plus the chase theme as layered music (`GuestMusic`, which takes over from the Aberrant's).
+- **Balance:**
+  - Bleeding stops at 1 HP and never kills.
+  - Infection chance per infected hit: 0.10 → 0.05 (`survival.infectionChancePerHit`).
+  - Aberrant damage: 13 → 9 (config version 2 migrates the old default).
+- **Verified:** build success, 57/57 tests, dedicated server clean, offline pose renders checked.
+
+### The Guest on all fours, and chapter four (2026-11-12)
+
+- **The Guest moves like an animal** (`GuestModel`, rewritten):
+  - The importer now bakes the arms hanging down, so they work as front legs.
+  - Stance: hips tipped forward, back near level, head low, claws planted ahead, tail held out. It breathes hard, scans, flexes its claws and flicks its tail.
+  - Prowl: a four-beat walk in diagonal pairs, with rolling shoulders and a steady head.
+  - Charge: a bounding gallop (forelegs together, then hind legs driving, spine coiling and stretching).
+  - Actions: rears up to scream; swipes from a half-rear; crouches, springs, rears up holding the survivor and slams them down; staggers after a miss; rears to knock and rake walls; feeds face-down.
+- **Chapter four, "Pinecrest"** (Phase 5 step 4, the bittersweet ending of Harley's story; `story/Pinecrest.java`, `gen_story_ch4.py`):
+  - After the house, and once FelixSyn and Harley have reunited, Adam asks the survivor to lead everyone north.
+  - The camp is built once, 300 to 450 blocks from Adam: a palisade, a gate with two watchtowers, tents, a medical tent, a fire, the reservoir behind, and a lean-to outside the gate. Its coordinates go on screen and in chat.
+  - At the gate, a 50-second cutscene plays. Adam's wife and their two kids (unnamed) run out to him. The guard finds the bite Harley hid since the bridge, and the camp can't take her in. She stays outside and leaves the cure to Adam.
+  - FelixSyn asks the survivor what they would do. Two chat buttons (`/deadlands choose`) decide whether he stays outside with Harley or goes in.
+  - Afterwards, Adam and his family live in the camp and Harley at the lean-to. The choice is recorded in the chronicle, and the hidden achievement is "Home by Seven".
+  - Cutscene actors can now be scaled (`scale`), for the kids.
+- **Not changed:** the helicopter endings still take Harley aboard. Her infection is a story flag (`harley_infected`) that nothing else reads yet.
+- **Verified:** build success, 57/57 tests, seven missions load; offline pose renders of the walk, gallop and rears checked. Not playtested (client-side and needs a player).
+
+### Sixth round (2026-11-12): hiding in the dark, swimming, terror radii, the lunge, lore, the Green Tornado, safe respawn, fewer zombies, Imlilylol chapter one
+
+- **Fixes first:**
+  - The melee swing plays the synthesized whoosh again; the Pixabay "Swing Whoosh" sounded like a voice.
+  - A failed read of the Aberrant's or the Guest's model is retried every 5 seconds instead of hiding them for the session.
+- **Hiding in the dark** (`entity/ai/Stealth.java`, config section `stealth`): sight range scales with the light at the survivor. It is 35% at light 0 to 3, rising to full at light 12, and crouching halves it again. Sprinting, attacking in the last 3 seconds, or holding a light gives full range. Out of sight in the dark (light 7 or less) for 5 seconds loses a chaser, which then searches for 10. Applies to every infected kind, the Aberrant and the Guest (not bosses).
+- **Swimming:** every infected kind, the Aberrant and the Guest float and path through water (water path cost 2 instead of 8). The Guest dog-paddles with its head up.
+- **Terror radius** (`client/sound/TerrorRadius.java`): the Aberrant is 40 blocks and the Guest 32 (`audio.*TerrorRadius`). Layer 1 plays within 100% of the radius, layer 2 within 50%, layer 3 within 25%, and layer 4 while chasing. Whichever killer is nearest relative to its own radius plays.
+- **The Aberrant's lunge:** a 0.6-second crouch and growl, then a 6-block dash with the axe (8 s cooldown, slash damage, `asesino.lunge*`).
+- **Lore:** the Aberrant is now Dr. T. Reyes, whose batch-twelve cure failed his daughter Mia (the three `asesino_file` entries rewritten). The Guest is Biscuit, a Kessler maintenance worker's dog with bone cancer, bitten in the breach (`guest_file_1` to `3`).
+- **Green Tornado** (uncommon, weight 3): a green, spore-thick funnel. It pulls half as hard as a twister and doesn't lift. Up close it poisons and sickens, worsens an existing infection, and frenzies the infected. Destructive mode turns ground to moss. Its character is a placeholder hook (`GreenTornadoCharacter`).
+- **Safe respawn** (`player/SafeRespawn.java`): on respawn after death, hostile DEADLANDS creatures and vanilla zombies within 50 blocks vanish in a puff, with no loot or XP. Named creatures and bosses stay.
+- **Fewer zombies:** natural spawning fills 60% of the local cap, and groups are 60% the size. By day in the open, the cap is 25% of the night's number; caves and indoors are unchanged (`zombies.spawnRateFactor`, `groupSizeFactor`, `daytimeOutdoorCap`).
+- **Imlilylol, chapter one "Open Road"** (Phase 5 step 5; `story/ImlilylolCampaign.java`, `gen_lily1.py`): The North Pumps (3 purification tablets), then East Road (scout the evacuation camp), then A Promise (carry her word to Harley). Hidden achievement "Mostly".
+- **Verified:** build success, 57/57 tests, 10 missions load. Not playtested.

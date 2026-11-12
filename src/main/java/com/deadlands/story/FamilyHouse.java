@@ -80,6 +80,7 @@ public final class FamilyHouse {
 	static void talkedToAdam(MinecraftServer server, ServerPlayer player) {
 		StoryFlags flags = StoryFlags.get(server);
 		if (flags.has(TOLD)) {
+			Pinecrest.talkedToAdam(server, player); // chapter four
 			return;
 		}
 		if (!MissionManager.isActive(server, MISSION)) {

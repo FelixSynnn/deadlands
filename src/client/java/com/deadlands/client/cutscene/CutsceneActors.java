@@ -16,6 +16,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -119,6 +120,11 @@ final class CutsceneActors {
 		entity.noPhysics = true;
 		entity.setSilent(true);
 		entity.setInvulnerable(true);
+		def.scale().ifPresent(scale -> {
+			if (entity.getAttribute(Attributes.SCALE) != null) {
+				entity.getAttribute(Attributes.SCALE).setBaseValue(scale);
+			}
+		});
 		def.item().ifPresent(itemId -> {
 			Item item = BuiltInRegistries.ITEM.getValue(itemId);
 			entity.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(item));

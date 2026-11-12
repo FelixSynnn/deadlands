@@ -1,0 +1,20 @@
+{
+	"title": "mission.deadlands.imlilylol.a_promise",
+	"description": "mission.deadlands.imlilylol.a_promise.description",
+	"requires": [
+		"lily_east_road_told"
+	],
+	"objectives": [
+		{
+			"id": "tell",
+			"type": "flag",
+			"text": "mission.deadlands.imlilylol.a_promise.tell_harley",
+			"flag": "lily_word_to_harley"
+		}
+	],
+	"reward_items": [],
+	"reward_flags": [
+		"imlilylol_chapter_one"
+	],
+	"lore": []
+}

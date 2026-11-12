@@ -134,6 +134,31 @@ public final class DLSounds {
 	public static final Holder.Reference<SoundEvent> ASESINO_SCENT = register("asesino.scent");
 	public static final Holder.Reference<SoundEvent> ASESINO_FRENZY = register("asesino.frenzy");
 	public static final Holder.Reference<SoundEvent> ASESINO_SHRIEK = register("asesino.shriek");
+	// The Guest (the owner's GuestSoundsPack; tools/assetgen/import_guest_sfx.py).
+	public static final Holder.Reference<SoundEvent> GUEST_AMBIENT = register("guest.ambient");
+	public static final Holder.Reference<SoundEvent> GUEST_STEP = register("guest.step");
+	public static final Holder.Reference<SoundEvent> GUEST_SWING = register("guest.swing");
+	public static final Holder.Reference<SoundEvent> GUEST_FEED = register("guest.feed");
+	public static final Holder.Reference<SoundEvent> GUEST_KILL = register("guest.kill");
+	public static final Holder.Reference<SoundEvent> GUEST_ROAR = register("guest.roar");
+	public static final Holder.Reference<SoundEvent> GUEST_ROAR_BLAST = register("guest.roar_blast");
+	public static final Holder.Reference<SoundEvent> GUEST_SENSE = register("guest.sense");
+	public static final Holder.Reference<SoundEvent> GUEST_GRAB_WARN = register("guest.grab_warn");
+	public static final Holder.Reference<SoundEvent> GUEST_GRAB_PREPARE = register("guest.grab_prepare");
+	public static final Holder.Reference<SoundEvent> GUEST_GRAB_LUNGE = register("guest.grab_lunge");
+	public static final Holder.Reference<SoundEvent> GUEST_GRAB_HIT = register("guest.grab_hit");
+	public static final Holder.Reference<SoundEvent> GUEST_GRAB_MISS = register("guest.grab_miss");
+	public static final Holder.Reference<SoundEvent> GUEST_SLAM = register("guest.slam");
+	public static final Holder.Reference<SoundEvent> GUEST_HEAL = register("guest.heal");
+	public static final Holder.Reference<SoundEvent> GUEST_ARRIVE = register("guest.arrive");
+	public static final Holder.Reference<SoundEvent> GUEST_LEAVE = register("guest.leave");
+	public static final Holder.Reference<SoundEvent> GUEST_FEVER = register("guest.fever");
+	public static final Holder.Reference<SoundEvent> GUEST_KNOCK = register("guest.knock");
+	public static final Holder.Reference<SoundEvent> GUEST_TEAR = register("guest.tear");
+	public static final Holder.Reference<SoundEvent> GUEST_HURT = register("guest.hurt");
+	public static final Holder.Reference<SoundEvent> GUEST_DEATH = register("guest.death");
+	public static final List<Holder.Reference<SoundEvent>> GUEST_MUSIC = List.of(register("music.guest.layer1"), register("music.guest.layer2"),
+		register("music.guest.layer3"), register("music.guest.layer4"));
 	public static final List<Holder.Reference<SoundEvent>> ASESINO_MUSIC = List.of(register("music.asesino.layer1"), register("music.asesino.layer2"),
 		register("music.asesino.layer3"), register("music.asesino.layer4"));
 	public static final Holder.Reference<SoundEvent> DISASTER_CAUSTIC_BURN = register("disaster.caustic_rain.burn");

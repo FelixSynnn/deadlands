@@ -21,6 +21,8 @@ public final class DeadlandsConfig {
 	public WorldEvents events = new WorldEvents();
 	public Disasters disasters = new Disasters();
 	public Asesino asesino = new Asesino();
+	public Guest guest = new Guest();
+	public Stealth stealth = new Stealth();
 	public Performance performance = new Performance();
 	public Horror horror = new Horror();
 	public Audio audio = new Audio();
@@ -101,6 +103,15 @@ public final class DeadlandsConfig {
 
 		@ConfigEntry(comment = "Nests release infected when they hear survivors nearby.")
 		public boolean nestReleases = true;
+
+		@ConfigEntry(comment = "Natural spawning: share of the local cap that fills up (0.6 = 40% fewer infected than before).", min = 0.0, max = 2.0)
+		public double spawnRateFactor = 0.6;
+
+		@ConfigEntry(comment = "Natural spawning: multiplier on how many appear together in a group (at least one).", min = 0.1, max = 2.0)
+		public double groupSizeFactor = 0.6;
+
+		@ConfigEntry(comment = "By day, out in the open: most infected around you, as a share of the night's number. Caves and indoors keep the daytime population above.", min = 0.0, max = 1.0)
+		public double daytimeOutdoorCap = 0.25;
 	}
 
 	public static final class Hordes {
@@ -176,8 +187,17 @@ public final class DeadlandsConfig {
 		@ConfigEntry(comment = "Infected bites can infect you.")
 		public boolean infection = true;
 
+		@ConfigEntry(comment = "Chance that a hit from an infected starts an infection (before the difficulty's multiplier). Was 0.10.", min = 0.0, max = 1.0)
+		public double infectionChancePerHit = 0.05;
+
 		@ConfigEntry(comment = "Multiplier on how fast hunger, thirst and fatigue drain.", min = 0.25, max = 3.0)
 		public double drainMultiplier = 1.0;
+
+		@ConfigEntry(comment = "Safe respawn: when you come back after dying, hostile creatures and zombies near your respawn point vanish (no loot or experience).")
+		public boolean safeRespawn = true;
+
+		@ConfigEntry(comment = "Safe respawn: how far around the respawn point, in blocks.", min = 8, max = 128)
+		public int safeRespawnRadius = 50;
 	}
 
 	public static final class Weather {
@@ -189,6 +209,71 @@ public final class DeadlandsConfig {
 
 		@ConfigEntry(comment = "Allow dust storms in dry biomes.")
 		public boolean dustStorms = true;
+	}
+
+	/** Phase 5: the Guest ({@code entity.GuestEntity}, {@code entity.GuestSpawner}). */
+	public static final class Stealth {
+		@ConfigEntry(comment = "Hiding in the dark: hostile DEADLANDS creatures see less far where it is dark, and lose survivors who stay out of sight in the dark.")
+		public boolean enabled = true;
+
+		@ConfigEntry(comment = "Share of the normal sight range at light 0 to 3 (it rises to the full range at light 12).", min = 0.05, max = 1.0)
+		public double darkRangeFactor = 0.35;
+
+		@ConfigEntry(comment = "Crouching multiplies the sight range by this again.", min = 0.1, max = 1.0)
+		public double crouchFactor = 0.5;
+
+		@ConfigEntry(comment = "Highest light level (at the survivor) that counts as darkness for losing a chaser.", min = 0, max = 15)
+		public int darkLight = 7;
+
+		@ConfigEntry(comment = "Seconds out of sight, in the dark, before a chaser loses its target.", min = 1, max = 60)
+		public int loseSeconds = 5;
+
+		@ConfigEntry(comment = "Seconds a creature searches the last place it saw its target before giving up.", min = 0, max = 120)
+		public int searchSeconds = 10;
+
+		@ConfigEntry(comment = "Seconds after a survivor attacks during which they are seen at full range.", min = 0, max = 30)
+		public int attackRevealSeconds = 3;
+	}
+
+	public static final class Guest {
+		@ConfigEntry(comment = "Let the Guest come.")
+		public boolean enabled = true;
+
+		@ConfigEntry(comment = "Only at night (it leaves at dawn).")
+		public boolean nightOnly = true;
+
+		@ConfigEntry(comment = "Chance per survivor every 30 seconds at night that it comes for them.", min = 0.0, max = 1.0)
+		public double spawnChance = 0.12;
+
+		@ConfigEntry(comment = "Most Guests in the world at once.", min = 1, max = 10)
+		public int maxAlive = 2;
+
+		@ConfigEntry(comment = "Minutes sheltering in the same spot at night before it is certain to come.", min = 1.0, max = 60.0)
+		public double campMinutes = 5.0;
+
+		@ConfigEntry(comment = "Let it tear through doors, glass and wooden walls (also needs the mobGriefing rule).")
+		public boolean breaksBlocks = true;
+
+		@ConfigEntry(comment = "Health.", min = 20.0, max = 3000.0)
+		public double health = 300.0;
+
+		@ConfigEntry(comment = "Claw damage before Minecraft's difficulty scaling: 3.5 kills an unarmoured survivor in 6 hits on Normal.", min = 0.5, max = 100.0)
+		public double damage = 3.5;
+
+		@ConfigEntry(comment = "Damage of the grab-and-slam.", min = 0.5, max = 100.0)
+		public double grabDamage = 7.0;
+
+		@ConfigEntry(comment = "Walking speed.", min = 0.1, max = 0.8)
+		public double speed = 0.31;
+
+		@ConfigEntry(comment = "Speed while charging.", min = 0.1, max = 1.0)
+		public double chargeSpeed = 0.37;
+
+		@ConfigEntry(comment = "How far it notices survivors in sight, in blocks.", min = 16.0, max = 128.0)
+		public double followRange = 48.0;
+
+		@ConfigEntry(comment = "Armor.", min = 0.0, max = 30.0)
+		public double armor = 10.0;
 	}
 
 	/** Phase 5: the Asesino ({@code entity.AsesinoEntity}, {@code entity.AsesinoSpawner}). */
@@ -215,7 +300,13 @@ public final class DeadlandsConfig {
 		public double health = 160.0;
 
 		@ConfigEntry(comment = "Damage per hit.", min = 1.0, max = 100.0)
-		public double damage = 13.0;
+		public double damage = 9.0;
+
+		@ConfigEntry(comment = "The Aberrant's lunge: seconds between lunges.", min = 2, max = 60)
+		public int lungeCooldownSeconds = 8;
+
+		@ConfigEntry(comment = "The Aberrant's lunge: damage as a share of his slash damage.", min = 0.0, max = 3.0)
+		public double lungeDamageFactor = 1.0;
 
 		@ConfigEntry(comment = "Speed while roaming and stalking.", min = 0.1, max = 0.6)
 		public double stalkSpeed = 0.26;
@@ -273,6 +364,15 @@ public final class DeadlandsConfig {
 
 		@ConfigEntry(comment = "Static storms: lightning that strikes close and often.")
 		public boolean staticStorm = true;
+
+		@ConfigEntry(comment = "The Green Tornado (uncommon): a green, spore-thick twister that poisons and sickens instead of tearing things up.")
+		public boolean greenTornado = true;
+
+		@ConfigEntry(comment = "How likely the Green Tornado is against the others (twister 9, static storm 12; 3 is uncommon).", min = 0, max = 50)
+		public int greenTornadoWeight = 3;
+
+		@ConfigEntry(comment = "The Green Tornado brings its character with it (not in yet: a placeholder).")
+		public boolean greenTornadoCharacter = true;
 	}
 
 	public static final class WorldEvents {
@@ -330,14 +430,11 @@ public final class DeadlandsConfig {
 		@ConfigEntry(comment = "Layered chase music when the Asesino is near.", client = true)
 		public boolean asesinoMusic = true;
 
-		@ConfigEntry(comment = "Asesino music, layer 1: within this many blocks.", min = 8.0, max = 128.0, client = true)
-		public double asesinoLayer1 = 48.0;
+		@ConfigEntry(comment = "The Aberrant's terror radius in blocks: his music's layer 1 within it, layer 2 within half, layer 3 within a quarter, layer 4 while he chases you.", min = 8.0, max = 128.0, client = true)
+		public double aberrantTerrorRadius = 40.0;
 
-		@ConfigEntry(comment = "Asesino music, layer 2: within this many blocks.", min = 4.0, max = 96.0, client = true)
-		public double asesinoLayer2 = 24.0;
-
-		@ConfigEntry(comment = "Asesino music, layer 3: within this many blocks.", min = 2.0, max = 64.0, client = true)
-		public double asesinoLayer3 = 12.0;
+		@ConfigEntry(comment = "The Guest's terror radius in blocks: its music's layer 1 within it, layer 2 within half, layer 3 within a quarter, layer 4 while it hunts you.", min = 8.0, max = 128.0, client = true)
+		public double guestTerrorRadius = 32.0;
 
 		@ConfigEntry(comment = "Volume of DEADLANDS ambience.", min = 0.0, max = 1.0, client = true)
 		public double ambienceVolume = 1.0;

@@ -305,6 +305,9 @@ public final class Quests {
 
 	private static Component imlilylol(ServerPlayer player, NpcEntity npc, StoryState story) {
 		if (story.has(StoryState.LILY_DONE)) {
+			if (ImlilylolCampaign.talked(player.level().getServer(), player)) {
+				return Component.translatable("quest.deadlands.imlilylol.campaign"); // her chapter one speaks for itself in chat
+			}
 			return Component.translatable("quest.deadlands.imlilylol.after");
 		}
 		if (story.towers().isEmpty()) {

@@ -11,7 +11,8 @@ import net.minecraft.world.entity.player.Player;
  */
 public class InfectedTargetGoal extends NearestAttackableTargetGoal<Player> {
 	public InfectedTargetGoal(InfectedEntity mob) {
-		super(mob, Player.class, 10, true, false, null);
+		// Darkness and crouching shorten how far each survivor is seen (Stealth).
+		super(mob, Player.class, 10, true, false, (target, level) -> mob.distanceTo(target) <= mob.detectionRange() * Stealth.rangeFactor(target));
 	}
 
 	/** Also called from the super constructor, so it must only use {@code mob}. */

@@ -35,7 +35,7 @@ public class SearchGoal extends Goal {
 
 	@Override
 	public void start() {
-		timer = SEARCH_TICKS;
+		timer = Math.min(SEARCH_TICKS, Stealth.searchTicks());
 		points = 0;
 		if (center != null) {
 			InfectedNav.moveToward(mob, center, 1.0);

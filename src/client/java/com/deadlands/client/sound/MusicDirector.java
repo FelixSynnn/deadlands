@@ -365,7 +365,7 @@ public final class MusicDirector {
 				level = Math.min(1.0F, level + 1.0F / fadeIn);
 			}
 			float live = target * (float) ConfigManager.get().audio.musicVolume;
-			volume = Math.max(0.0001F, live * level * level * com.deadlands.client.horror.ScarePlayer.musicDuck() * AsesinoMusic.duck());
+			volume = Math.max(0.0001F, live * level * level * com.deadlands.client.horror.ScarePlayer.musicDuck() * AsesinoMusic.duck() * GuestMusic.duck());
 		}
 	}
 }

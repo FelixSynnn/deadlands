@@ -56,10 +56,15 @@ import gen_gameplay
 import gen_weapon_sfx
 import gen_story5
 import gen_cinematics
+import gen_story_ch4
+import gen_round6
+import gen_lily1
 import import_pixabay
 import import_asesino
 import gen_asesino_model
 import import_aberrant
+import import_guest
+import import_guest_sfx
 import import_pixabay_creatures
 import gen_visuals
 import dl_realism
@@ -110,11 +115,16 @@ GROUPS = {
     "gameplay": gen_gameplay.build,
     "story5": gen_story5.build,  # Phase 5: chapter one (Harley's questline, Adam, the sample case)  # Phase 4: gameplay settings text
     "cinematics": gen_cinematics.build,  # Phase 5: the intro cutscene, the day 10 reunion, weather disasters text
+    "story_ch4": gen_story_ch4.build,  # Phase 5: chapter four (Pinecrest: the mission, the arrival cutscene, its text)
+    "lily1": gen_lily1.build,  # Phase 5 step 5: Imlilylol's campaign, chapter one (Open Road)
     "pixabay": import_pixabay.build,  # Phase 5: real recordings from Pixabay (after every sound generator; see CREDITS.md)
     "pixabay_creatures": import_pixabay_creatures.build,  # Phase 5: real recordings for every infected, boss and nest sound (after pixabay: appends to CREDITS.md)
     "asesino_model": gen_asesino_model.build,  # Phase 5: the Asesino's own rig (Java) and texture
     "aberrant": import_aberrant.build,  # Phase 5: the Aberrant's imported fan-made model (Sketchfab, credited), rigged for his animations
+    "guest": import_guest.build,  # Phase 5: the Guest's imported model (Fourteen, CC-BY-4.0), simplified, rigged, recoloured
+    "guest_sfx": import_guest_sfx.build,  # Phase 5: the Guest's sounds and music (the owner's pack), egg, text, credits
     "asesino": import_asesino.build,  # Phase 5: the Asesino's skin, eyes, egg, sounds and music (the owner's files)
+    "round6": gen_round6.build,  # Phase 5: hiding in the dark, terror radii, the lunge, the Green Tornado, safe respawn, spawn settings (after pixabay)
     "realism": dl_realism.build,  # last: the finishing pass over block and item textures (originals in texture-backup/)
     "variants": gen_variants.build,  # after realism: per-position variants blended from the finished textures
 }

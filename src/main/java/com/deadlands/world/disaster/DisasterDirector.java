@@ -174,6 +174,8 @@ public final class DisasterDirector {
 		}
 		if (disaster == Disaster.TWISTER) {
 			twister(level, state, strength, config.destructive);
+		} else if (disaster == Disaster.GREEN_TORNADO) {
+			greenTornado(level, state, strength, config.destructive);
 		}
 		if (server.getTickCount() % 60 == 3) {
 			broadcast(server);
@@ -198,15 +200,18 @@ public final class DisasterDirector {
 			if (disaster == Disaster.WHITEOUT && temperature > 0.45F || disaster == Disaster.DUST_WALL && temperature < 0.9F) {
 				continue;
 			}
+			if (disaster.weight(config) <= 0) {
+				continue;
+			}
 			options.add(disaster);
-			total += disaster.weight();
+			total += disaster.weight(config);
 		}
 		if (total <= 0) {
 			return null;
 		}
 		int roll = level.getRandom().nextInt(total);
 		for (Disaster disaster : options) {
-			roll -= disaster.weight();
+			roll -= disaster.weight(config);
 			if (roll < 0) {
 				return disaster;
 			}
@@ -248,6 +253,9 @@ public final class DisasterDirector {
 		if (disaster == Disaster.STATIC_STORM) {
 			level.setWeatherParameters(0, seconds * 20 + 200, true, true);
 		}
+		if (disaster == Disaster.GREEN_TORNADO) {
+			GreenTornadoCharacter.arrive(level, new Vec3(state.x, level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mth.floor(state.x), Mth.floor(state.z)), state.z));
+		}
 		Component line = Component.translatable("disaster.deadlands." + disaster.id() + ".start").withStyle(ChatFormatting.RED);
 		for (ServerPlayer player : players) {
 			player.sendSystemMessage(line);
@@ -259,6 +267,9 @@ public final class DisasterDirector {
 	private static void end(ServerLevel level, State state, @Nullable Disaster disaster, long now, boolean announce) {
 		if (disaster == Disaster.FLASH_FLOOD) {
 			drain(level);
+		}
+		if (disaster == Disaster.GREEN_TORNADO && state.phase == 2) {
+			GreenTornadoCharacter.leave(level);
 		}
 		if (disaster != null && disaster.sky() != null && state.phase == 2) {
 			WeatherDirector.force(level.getServer(), WeatherDirector.Kind.CLEAR, 200);
@@ -382,6 +393,12 @@ public final class DisasterDirector {
 					strike(level, player, random, destructive);
 				}
 			}
+			case GREEN_TORNADO -> {
+				// Spores on the wind, wherever you are outside.
+				if (outside && random.nextInt(2) == 0) {
+					level.sendParticles(player, ParticleTypes.SPORE_BLOSSOM_AIR, false, false, player.getX(), player.getY() + 2, player.getZ(), 10, 6, 2, 6, 0.01);
+				}
+			}
 		}
 	}
 
@@ -432,6 +449,80 @@ public final class DisasterDirector {
 			BlockState block = level.getBlockState(at);
 			if (!block.isAir() && block.getDestroySpeed(level, at) >= 0.0F && block.getDestroySpeed(level, at) < 0.8F) {
 				level.destroyBlock(at, true);
+			}
+		}
+	}
+
+	// ------------------------------------------------------------------------------ the Green Tornado
+
+	private static final net.minecraft.core.particles.DustParticleOptions GREEN = new net.minecraft.core.particles.DustParticleOptions(0x4CFF3A, 2.4F);
+	private static final net.minecraft.core.particles.DustParticleOptions DARK_GREEN = new net.minecraft.core.particles.DustParticleOptions(0x1E7A22, 3.0F);
+
+	/**
+	 * The Green Tornado: a slower, narrower funnel of green dust and spores. It pulls about half as hard as a
+	 * twister and does not lift, but near it survivors are poisoned and sickened and an infection that has
+	 * taken hold worsens; the infected near it are driven into a frenzy (speed and strength). Destructive:
+	 * grass and dirt under its path turn to moss.
+	 */
+	private static void greenTornado(ServerLevel level, State state, float strength, boolean destructive) {
+		RandomSource random = level.getRandom();
+		state.heading += (random.nextDouble() - 0.5) * 0.25;
+		state.x += Math.cos(state.heading) * 0.35;
+		state.z += Math.sin(state.heading) * 0.35;
+		state.setDirty();
+		int ground = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mth.floor(state.x), Mth.floor(state.z));
+		if (!level.isLoaded(BlockPos.containing(state.x, ground, state.z))) {
+			return;
+		}
+		for (int i = 0; i < 22; i++) {
+			double h = random.nextDouble() * 30.0;
+			double r = 0.8 + h * 0.22;
+			double a = random.nextDouble() * Math.PI * 2.0 + h * 0.3;
+			level.sendParticles(i % 3 == 0 ? DARK_GREEN : GREEN, state.x + Math.cos(a) * r, ground + h, state.z + Math.sin(a) * r, 1,
+				-Math.sin(a) * 0.15, 0.04, Math.cos(a) * 0.15, 0.02);
+		}
+		level.sendParticles(ParticleTypes.SPORE_BLOSSOM_AIR, state.x, ground + 2, state.z, 12, 3.0, 2.0, 3.0, 0.02);
+		level.sendParticles(ParticleTypes.HAPPY_VILLAGER, state.x, ground + 0.5, state.z, 4, 2.0, 0.3, 2.0, 0.0);
+		Vec3 eye = new Vec3(state.x, ground, state.z);
+		GreenTornadoCharacter.tick(level, eye, strength);
+		double reach = 16.0 * (0.5 + 0.5 * strength);
+		for (Entity entity : level.getEntities((Entity) null, new AABB(eye, eye).inflate(reach, 24.0, reach), e -> e instanceof LivingEntity && e.isAlive())) {
+			LivingEntity living = (LivingEntity) entity;
+			if (entity instanceof ServerPlayer player && (player.isCreative() || player.isSpectator())) {
+				continue;
+			}
+			Vec3 to = eye.subtract(entity.position());
+			double flat = Math.sqrt(to.x * to.x + to.z * to.z);
+			double near = 1.0 - flat / reach;
+			if (near <= 0.0) {
+				continue;
+			}
+			if (entity instanceof com.deadlands.entity.InfectedEntity) {
+				living.addEffect(new MobEffectInstance(MobEffects.SPEED, 60, 1, true, false));
+				living.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 60, 0, true, false));
+				continue;
+			}
+			Vec3 in = new Vec3(to.x, 0.0, to.z).normalize();
+			double pull = near * 0.055 * strength;
+			entity.push(in.x * pull - in.z * pull, 0.0, in.z * pull + in.x * pull);
+			entity.hurtMarked = true;
+			if (entity instanceof ServerPlayer player) {
+				player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 120, 0, true, false));
+				if (flat < 8.0) {
+					player.addEffect(new MobEffectInstance(MobEffects.POISON, 60, 0, true, false));
+					com.deadlands.survival.SurvivalData data = com.deadlands.survival.SurvivalAttachments.get(player);
+					if (data.infected() && random.nextInt(10) == 0) {
+						data.addInfection(0.5F); // it only worsens an infection already there
+					}
+				}
+			}
+		}
+		if (destructive && random.nextInt(2) == 0) {
+			BlockPos at = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+				BlockPos.containing(state.x + random.nextGaussian() * 3.0, ground, state.z + random.nextGaussian() * 3.0)).below();
+			BlockState block = level.getBlockState(at);
+			if (block.is(Blocks.GRASS_BLOCK) || block.is(Blocks.DIRT) || block.is(Blocks.COARSE_DIRT)) {
+				level.setBlockAndUpdate(at, Blocks.MOSS_BLOCK.defaultBlockState());
 			}
 		}
 	}

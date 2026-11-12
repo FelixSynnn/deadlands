@@ -68,6 +68,9 @@ public final class HarleyQuest {
 	}
 
 	private static void harley(MinecraftServer server, ServerPlayer player) {
+		if (ImlilylolCampaign.talkedToHarley(server, player)) {
+			return; // Imlilylol's word, carried to her (Imlilylol's chapter one)
+		}
 		for (Identifier id : List.of(STATIC, COLD_CHAIN)) {
 			if (!MissionManager.isActive(server, id)) {
 				continue;

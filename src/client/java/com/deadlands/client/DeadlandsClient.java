@@ -57,6 +57,9 @@ public final class DeadlandsClient implements ClientModInitializer {
 		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(com.deadlands.client.render.AberrantGeometry.LAYER,
 			com.deadlands.client.render.AberrantGeometry::create);
 		EntityRendererRegistry.register(com.deadlands.registry.DLAsesino.ASESINO, com.deadlands.client.render.AsesinoRenderer::new);
+		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(com.deadlands.client.render.GuestGeometry.LAYER,
+			com.deadlands.client.render.GuestGeometry::create);
+		EntityRendererRegistry.register(com.deadlands.registry.DLGuest.GUEST, com.deadlands.client.render.GuestRenderer::new);
 		com.deadlands.client.render.vehicle.VehicleRenderer.registerLayers();
 		com.deadlands.client.render.boss.BossRenderer.registerLayers();
 		com.deadlands.client.particle.DLParticleProviders.register();
@@ -168,6 +171,7 @@ public final class DeadlandsClient implements ClientModInitializer {
 			VOICES.tickAll(client);
 			com.deadlands.client.horror.ScarePlayer.tick(client);
 			com.deadlands.client.weather.ClientDisaster.tick(client);
+			com.deadlands.client.sound.GuestMusic.tick(client);
 			com.deadlands.client.sound.AsesinoMusic.tick(client);
 			com.deadlands.client.firstperson.FirstPersonMotion.tick(client);
 		});
@@ -185,6 +189,7 @@ public final class DeadlandsClient implements ClientModInitializer {
 			com.deadlands.client.sound.AmbienceDirector.reset();
 			com.deadlands.client.sound.MusicDirector.reset();
 			com.deadlands.client.sound.AsesinoMusic.reset();
+			com.deadlands.client.sound.GuestMusic.reset();
 			com.deadlands.client.sound.VehicleEngineSounds.reset();
 			com.deadlands.client.horror.ScarePlayer.reset();
 			com.deadlands.client.mission.ClientMissions.reset();

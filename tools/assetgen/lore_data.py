@@ -184,15 +184,27 @@ L("adam_family_letter", "journal", ["story"], "A Letter on the Kitchen Table",
   "it switched on anyway. We are all right. We are together. Home by seven, remember? We're holding you to it. All my love.")
 
 # =============================================================================================== the Asesino (Phase 5)
-L("asesino_file_1", "government", ["police", "office"], "Ashford Sheriff's Office: The Night Caller",
-  "Six victims over nine years, always after dark, always alone, always in town. He telephones first. Nobody has ever heard what he "
-  "says, because nobody who answered lived. Composite sketch attached: medium height, masked, works with a blade.")
-L("asesino_file_2", "government", ["police", "facility"], "Custody Transfer, Inmate 4471",
-  "Inmate transferred from county holding to Kessler Regional Research Laboratory for the LANTERN trial, cohort V (violent offenders). "
-  "Restraints at all times. Do not let him see which of the staff walks home alone.")
-L("asesino_file_3", "medical", ["facility", "lab"], "Trial Note: Cohort V, Subject 3",
-  "NR-7 has done to him what it did to the others, with one exception. The others forgot how to hunt with patience. He did not. "
-  "He waits. He picks. He follows the one at the back. We are asking for the subject to be destroyed. Request denied.")
+# The Aberrant (Story Canon 2026-11-12): a Kessler scientist whose cure was wrong, and who gave it to his sick daughter.
+L("asesino_file_1", "research", ["lab", "facility", "office"], "Cure Notes, Batch Twelve",
+  "Batch twelve reverses NR-7 in the cultures. Sixty hours and not one cell has turned. Rourke says it is nowhere near ready for "
+  "people. Rourke goes home to an empty flat. I go home to Mia coughing through the wall, and I count the coughs, and there are more every week.")
+L("asesino_file_2", "journal", ["house", "lab"], "A Letter Never Sent",
+  "Mia, you were so brave about the needle. You said it felt like a bee. I told you it would make the tired go away, and I believed "
+  "it. I need you to know that I believed it. I am sorry I was wrong. I am sorry I was not a better scientist. I am sorry.")
+L("asesino_file_3", "medical", ["facility", "lab", "medical"], "Ward C, Bed Four",
+  "Patient: Mia Reyes, age 8. Unauthorised compound given by her father, Dr. T. Reyes. She did not wake. Dr. Reyes stayed at the bedside "
+  "all night, holding her hand, and would not speak to staff. By the evening he was gone from the ward, along with the rest of batch twelve.")
+
+# The Guest (Story Canon 2026-11-12): a Kessler worker's old dog, sick with cancer, bitten during the outbreak.
+L("guest_file_1", "medical", ["house", "medical", "store"], "Vet Appointment Card",
+  "Patient: Biscuit (dog, nine years). Owner: D. Mercer, maintenance, Kessler Regional. Bone cancer in the left foreleg; the owner "
+  "declined amputation. Pain relief only. We talked about what comes next. He asked for a little more time with her.")
+L("guest_file_2", "journal", ["facility", "office", "utility"], "Maintenance Log, Night Shift",
+  "Brought Biscuit in again. Security pretends not to see her under my desk. She can't manage the stairs any more, so I carry her. "
+  "Alarms going on and off in Wing D since six. If they send us home early we're going to the lake. She always liked the lake.")
+L("guest_file_3", "government", ["facility", "military", "police"], "Incident Note, Loading Bay",
+  "Maintenance worker Mercer evacuated with minor injuries. Refused treatment until someone found his dog. The dog was bitten by an "
+  "escaped subject during the breach and ran. Witnesses say she was not limping any more. She was standing up on her back legs.")
 
 # =============================================================================================== military
 L("mil_lantern_brief", "military", ["military", "lab", "facility"], "Project LANTERN: Briefing",

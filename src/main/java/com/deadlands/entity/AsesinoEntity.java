@@ -128,6 +128,11 @@ public class AsesinoEntity extends Monster {
 	private int meleeCooldown;
 	private int meleeWindup;
 	private boolean backhand;
+	/** The lunge: crouch (wind-up), then a low dash at the survivor. */
+	private int lungeWindup;
+	private int lungeTicks;
+	private int lungeCooldown = 100;
+	private boolean lungeHit;
 	private int actionLeft;
 	// Sound.
 	private long voiceUntil;
@@ -149,6 +154,8 @@ public class AsesinoEntity extends Monster {
 			ground.setCanOpenDoors(true); // he opens doors like anyone: no smashing (the slash is his only move)
 			ground.setCanFloat(true);
 		}
+		// Swims: floats at the surface and paths through water rather than around it or sinking.
+		setPathfindingMalus(net.minecraft.world.level.pathfinder.PathType.WATER, 2.0F);
 		applyConfig();
 		if (!level.isClientSide()) {
 			setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(DLWeapons.MACHETE));
@@ -257,6 +264,7 @@ public class AsesinoEntity extends Monster {
 		super.customServerAiStep(level);
 		modeTicks++;
 		meleeCooldown = Math.max(0, meleeCooldown - 1);
+		lungeCooldown = Math.max(0, lungeCooldown - 1);
 		peekCooldown = Math.max(0, peekCooldown - 1);
 		if (actionLeft > 0 && --actionLeft == 0) {
 			entityData.set(DATA_ACTION, Action.NONE.ordinal());
@@ -374,8 +382,9 @@ public class AsesinoEntity extends Monster {
 	/** He sees them: in his line of sight and near enough (beyond 20 blocks only if lit). In a chase any line of sight counts. */
 	private boolean sees(Player player) {
 		double distance = distanceTo(player);
-		if (distance > getAttributeValue(Attributes.FOLLOW_RANGE) || !hasLineOfSight(player)) {
-			return distance <= 4.0; // right on top of them, through anything
+		// Darkness and crouching shorten how far he sees (Stealth): a careful survivor can slip away in the dark.
+		if (distance > getAttributeValue(Attributes.FOLLOW_RANGE) * com.deadlands.entity.ai.Stealth.rangeFactor(player) || !hasLineOfSight(player)) {
+			return distance <= 3.0; // right on top of them, through anything
 		}
 		return mode == Mode.CHASE || distance <= 20.0 || lit(player);
 	}
@@ -425,7 +434,7 @@ public class AsesinoEntity extends Monster {
 				continue;
 			}
 			double distance = distanceTo(player);
-			boolean noticed = sees(player) || hears(player) || night() && distance < 32.0;
+			boolean noticed = sees(player) || hears(player) || night() && distance < 32.0 * com.deadlands.entity.ai.Stealth.rangeFactor(player);
 			int company = company(player, players);
 			if (!noticed || company >= 2) {
 				continue;
@@ -654,7 +663,7 @@ public class AsesinoEntity extends Monster {
 		if (seen) {
 			lastKnown = target.position();
 			unseenTicks = 0;
-		} else if (++unseenTicks > LOSE_TICKS) {
+		} else if (++unseenTicks > (com.deadlands.entity.ai.Stealth.inDarkness(target) ? com.deadlands.entity.ai.Stealth.loseTicks() : LOSE_TICKS)) {
 			setMode(Mode.SEARCH);
 			return;
 		}
@@ -700,6 +709,9 @@ public class AsesinoEntity extends Monster {
 
 	/** The slash: a half-second wind-up (the raised arm and the swing sound are the warning), alternating overhead and backhand. */
 	private boolean melee(ServerLevel level, Player target, double distance) {
+		if (lunge(level, target, distance)) {
+			return true;
+		}
 		if (meleeWindup > 0) {
 			getNavigation().stop();
 			getLookControl().setLookAt(target, 40.0F, 40.0F);
@@ -718,6 +730,50 @@ public class AsesinoEntity extends Monster {
 			meleeWindup = MELEE_WINDUP;
 			act(backhand ? Action.WINDUP2 : Action.WINDUP, MELEE_WINDUP);
 			level.playSound(null, getX(), getY(), getZ(), DLSounds.ASESINO_SWING.value(), SoundSource.HOSTILE, 1.0F, 0.95F + random.nextFloat() * 0.1F);
+			getNavigation().stop();
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * The lunge: from 4.5 to 9 blocks, in sight, he drops into a crouch with a growl (0.6 s, the warning),
+	 * then dashes low and fast at them with the axe out, hitting if he reaches them. A sidestep makes him miss.
+	 */
+	private boolean lunge(ServerLevel level, Player target, double distance) {
+		if (lungeTicks > 0) {
+			lungeTicks--;
+			if (!lungeHit && distanceTo(target) < 2.0) {
+				lungeHit = true;
+				level.playSound(null, getX(), getY(), getZ(), DLSounds.ASESINO_POUNCE_HIT.value(), SoundSource.HOSTILE, 1.3F, 1.0F);
+				strike(level, target, (float) (getAttributeValue(Attributes.ATTACK_DAMAGE) * ConfigManager.get().asesino.lungeDamageFactor));
+			}
+			if (lungeTicks == 0 && !lungeHit) {
+				level.playSound(null, getX(), getY(), getZ(), DLSounds.ASESINO_POUNCE_MISS.value(), SoundSource.HOSTILE, 1.2F, 1.0F);
+				meleeCooldown = Math.max(meleeCooldown, 16); // a moment to recover from the miss
+			}
+			return true;
+		}
+		if (lungeWindup > 0) {
+			getNavigation().stop();
+			getLookControl().setLookAt(target, 40.0F, 40.0F);
+			if (--lungeWindup == 0) {
+				act(Action.LEAP, 16);
+				Vec3 dir = target.position().subtract(position()).multiply(1.0, 0.0, 1.0).normalize();
+				setDeltaMovement(dir.x * 1.2, 0.28, dir.z * 1.2);
+				hurtMarked = true;
+				lungeTicks = 12;
+				lungeHit = false;
+				lungeCooldown = ConfigManager.get().asesino.lungeCooldownSeconds * 20;
+				level.playSound(null, getX(), getY(), getZ(), DLSounds.ASESINO_POUNCE.value(), SoundSource.HOSTILE, 1.4F, 1.0F);
+			}
+			return true;
+		}
+		if (lungeCooldown == 0 && meleeWindup == 0 && onGround() && distance > 4.5 && distance < 9.0 && hasLineOfSight(target)
+			&& random.nextInt(8) == 0) {
+			lungeWindup = 12;
+			act(Action.CROUCH, 12);
+			level.playSound(null, getX(), getY(), getZ(), DLSounds.ASESINO_FRENZY.value(), SoundSource.HOSTILE, 0.9F, 0.8F);
 			getNavigation().stop();
 			return true;
 		}

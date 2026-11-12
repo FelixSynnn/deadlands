@@ -17,8 +17,8 @@ import org.jspecify.annotations.Nullable;
  * The Asesino's layered chase music. All four layers start together as loops (so they stay in step)
  * the moment one is in range (or stalking this survivor, from any distance: layer 1); the highest layer that applies is heard and the others are silent, each
  * cross-fading over about a second (the four files are full mixes of rising intensity, so playing them
- * on top of each other only made them overlap): layer 1 within {@code audio.asesinoLayer1} blocks (48),
- * layer 2 within {@code asesinoLayer2} (24), layer 3 within {@code asesinoLayer3} (12), layer 4 while he
+ * on top of each other only made them overlap): layer 1 within its terror radius ({@code audio.*TerrorRadius}),
+ * layer 2 within half of it, layer 3 within a quarter, layer 4 while it
  * is chasing this survivor. With none in range (or the chase over and him gone) everything fades out over about
  * three seconds and stops. Meanwhile the DEADLANDS soundtrack is turned down and Minecraft's own music
  * steps aside ({@code MusicManagerMixin}).
@@ -59,13 +59,12 @@ public final class AsesinoMusic {
 		DeadlandsConfig.Audio config = ConfigManager.get().audio;
 		boolean[] want = new boolean[4];
 		if (player != null && minecraft.level != null && config.asesinoMusic && !player.isSpectator()) {
-			AsesinoEntity nearest = nearest(minecraft, player, config.asesinoLayer1);
-			if (nearest != null) {
-				double distance = nearest.distanceTo(player);
-				want[0] = distance <= config.asesinoLayer1 || nearest.stalkingId() == player.getId(); // stalking you: always layer 1
-				want[1] = distance <= config.asesinoLayer2;
-				want[2] = distance <= config.asesinoLayer3;
-				want[3] = nearest.chasingId() == player.getId();
+			// His own terror radius decides the layer; whichever killer is nearer in terror plays (TerrorRadius).
+			if (TerrorRadius.winner(minecraft, player) == TerrorRadius.ABERRANT) {
+				int layer = TerrorRadius.layer(TerrorRadius.aberrant(minecraft, player));
+				if (layer >= 0) {
+					want[layer] = true;
+				}
 			}
 		}
 		near = player != null && minecraft.level != null && !minecraft.level.getEntitiesOfClass(AsesinoEntity.class,

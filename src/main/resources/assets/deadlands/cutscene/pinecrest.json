@@ -1,0 +1,375 @@
+{
+	"cue": "deadlands:event.reunion",
+	"hide_hud": true,
+	"shots": [
+		{
+			"ticks": 140,
+			"from": [
+				8,
+				12,
+				-8
+			],
+			"to": [
+				4,
+				10,
+				-4
+			],
+			"look": [
+				0,
+				1,
+				10
+			]
+		},
+		{
+			"ticks": 120,
+			"from": [
+				3,
+				1.6,
+				20
+			],
+			"to": [
+				2,
+				1.6,
+				9
+			],
+			"look": [
+				0,
+				1.8,
+				0
+			]
+		},
+		{
+			"ticks": 120,
+			"from": [
+				-6,
+				1.7,
+				2
+			],
+			"to": [
+				-5,
+				1.7,
+				2.5
+			],
+			"look": [
+				0,
+				1.3,
+				1.2
+			]
+		},
+		{
+			"ticks": 100,
+			"from": [
+				3.5,
+				1.7,
+				-1.5
+			],
+			"to": [
+				3,
+				1.7,
+				-1
+			],
+			"look": [
+				0,
+				1.4,
+				1.4
+			]
+		},
+		{
+			"ticks": 140,
+			"from": [
+				-4,
+				1.8,
+				7
+			],
+			"to": [
+				-3.5,
+				1.8,
+				6.5
+			],
+			"look": [
+				-0.5,
+				1.5,
+				4
+			]
+		},
+		{
+			"ticks": 140,
+			"from": [
+				-1.5,
+				1.7,
+				1.6
+			],
+			"to": [
+				-1.4,
+				1.65,
+				2.0
+			],
+			"look": [
+				-1.5,
+				1.55,
+				4
+			]
+		},
+		{
+			"ticks": 120,
+			"from": [
+				2.6,
+				1.7,
+				5.6
+			],
+			"to": [
+				2.3,
+				1.7,
+				5.2
+			],
+			"look": [
+				-1.5,
+				1.55,
+				4
+			]
+		},
+		{
+			"ticks": 120,
+			"from": [
+				1.3,
+				1.7,
+				1.6
+			],
+			"to": [
+				1.0,
+				1.75,
+				2.3
+			],
+			"look": [
+				1.2,
+				1.6,
+				4.2
+			]
+		}
+	],
+	"lines": [
+		{
+			"from": 30,
+			"to": 130,
+			"key": "cutscene.deadlands.pinecrest.0"
+		},
+		{
+			"from": 160,
+			"to": 250,
+			"key": "cutscene.deadlands.pinecrest.1"
+		},
+		{
+			"from": 270,
+			"to": 320,
+			"key": "cutscene.deadlands.pinecrest.2"
+		},
+		{
+			"from": 320,
+			"to": 380,
+			"key": "cutscene.deadlands.pinecrest.3"
+		},
+		{
+			"from": 390,
+			"to": 470,
+			"key": "cutscene.deadlands.pinecrest.4"
+		},
+		{
+			"from": 490,
+			"to": 550,
+			"key": "cutscene.deadlands.pinecrest.5"
+		},
+		{
+			"from": 550,
+			"to": 610,
+			"key": "cutscene.deadlands.pinecrest.6"
+		},
+		{
+			"from": 620,
+			"to": 690,
+			"key": "cutscene.deadlands.pinecrest.7"
+		},
+		{
+			"from": 690,
+			"to": 750,
+			"key": "cutscene.deadlands.pinecrest.8"
+		},
+		{
+			"from": 760,
+			"to": 820,
+			"key": "cutscene.deadlands.pinecrest.9"
+		},
+		{
+			"from": 820,
+			"to": 880,
+			"key": "cutscene.deadlands.pinecrest.10"
+		},
+		{
+			"from": 890,
+			"to": 940,
+			"key": "cutscene.deadlands.pinecrest.11"
+		},
+		{
+			"from": 940,
+			"to": 1000,
+			"key": "cutscene.deadlands.pinecrest.12"
+		}
+	],
+	"actors": [
+		{
+			"who": "adam",
+			"start": 0,
+			"end": 1000,
+			"from": [
+				0,
+				0,
+				16
+			],
+			"to": [
+				0,
+				0,
+				1.6
+			],
+			"face": [
+				0,
+				0,
+				0
+			],
+			"move_start": 0,
+			"move_end": 260
+		},
+		{
+			"who": "harley",
+			"start": 0,
+			"end": 1000,
+			"from": [
+				-1.5,
+				0,
+				17
+			],
+			"to": [
+				-1.5,
+				0,
+				4
+			],
+			"face": [
+				1.2,
+				0,
+				4.2
+			],
+			"move_start": 0,
+			"move_end": 220
+		},
+		{
+			"who": "felixsyn",
+			"start": 0,
+			"end": 1000,
+			"from": [
+				1.5,
+				0,
+				17
+			],
+			"to": [
+				1.2,
+				0,
+				4.2
+			],
+			"face": [
+				-1.5,
+				0,
+				4
+			],
+			"move_start": 0,
+			"move_end": 220
+		},
+		{
+			"who": "survivor",
+			"start": 0,
+			"end": 1000,
+			"from": [
+				0,
+				0,
+				-7
+			],
+			"to": [
+				0,
+				0,
+				0.4
+			],
+			"face": [
+				0,
+				0,
+				2
+			],
+			"move_start": 220,
+			"move_end": 300
+		},
+		{
+			"who": "survivor",
+			"start": 0,
+			"end": 1000,
+			"from": [
+				-1,
+				0,
+				-7
+			],
+			"to": [
+				-0.8,
+				0,
+				0.9
+			],
+			"face": [
+				0,
+				0,
+				2
+			],
+			"move_start": 210,
+			"move_end": 280,
+			"scale": 0.7
+		},
+		{
+			"who": "survivor",
+			"start": 0,
+			"end": 1000,
+			"from": [
+				1,
+				0,
+				-7
+			],
+			"to": [
+				0.7,
+				0,
+				1.0
+			],
+			"face": [
+				0,
+				0,
+				2
+			],
+			"move_start": 200,
+			"move_end": 270,
+			"scale": 0.55
+		},
+		{
+			"who": "survivor",
+			"start": 0,
+			"end": 1000,
+			"from": [
+				2.6,
+				0,
+				-0.5
+			],
+			"to": [
+				-0.3,
+				0,
+				3.4
+			],
+			"face": [
+				-1.5,
+				0,
+				4
+			],
+			"move_start": 460,
+			"move_end": 520
+		}
+	]
+}
