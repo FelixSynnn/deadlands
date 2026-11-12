@@ -24,6 +24,7 @@ from __future__ import annotations
 import io
 import math
 import struct
+import zlib
 from pathlib import Path
 
 import numpy as np
@@ -70,6 +71,130 @@ def tiled(image: Image.Image, u0: int, v0: int, nu: int, nv: int) -> Image.Image
         for k in range(nv):
             out.paste(tile, (i * tile_w, k * tile_h))
     return out
+
+
+# Every material gets its own look. The source textures are near-white overlays meant to sit on tints
+# the model file does not carry, so each is dyed and detailed here: (style, colour, how much of the
+# original texture's light and shade shows through, blood).
+COAT = (122.0, 82.0, 48.0)
+STYLES = {
+    "leftlowerarm1mtl": ("coat", COAT, 0.30, 0.07),            # the long coat
+    "leftupperarm1mtl": ("coat", COAT, 0.30, 0.06),            # its sleeves
+    "cylinder21mtl": ("fur", (150.0, 120.0, 84.0), 0.45, 0.03), # fur trim: cuffs, collar
+    "righthand1mtl": ("leather", (52.0, 38.0, 30.0), 0.25, 0.08),  # gloves
+    "leftfoot1mtl": ("leather", (86.0, 56.0, 34.0), 0.25, 0.03),   # boots
+    "quadsphere42mtl": ("leather", (70.0, 46.0, 28.0), 0.25, 0.0),  # belt pouch
+    "lowertorso1mtl": ("cloth", (62.0, 56.0, 50.0), 0.30, 0.04),    # trousers
+    "cylinder22mtl": ("cloth", (96.0, 30.0, 26.0), 0.30, 0.10),     # the shirt under the coat
+    "quadsphere32mtl": ("cloth", (96.0, 30.0, 26.0), 0.30, 0.06),
+    "box2mtl": ("metal", (120.0, 116.0, 110.0), 0.40, 0.04),        # chains: rusted iron
+    "tube21mtl": ("hair", (178.0, 172.0, 160.0), 0.55, 0.05),       # matted, dirty hair
+    "aberrantslasher1mtl": ("worn", None, 1.0, 0.04),               # the head
+    "mask1mtl": ("worn", None, 1.0, 0.02),                          # the mask: kept, scratched and grimed
+    "box1mtl": ("worn", None, 1.0, 0.0),                            # teeth
+    "mesh1mtl": ("worn", None, 1.0, 0.02),                          # the tag on his chest
+    "uppertorso1mtl": ("worn", None, 1.0, 0.0),
+    "fire_axe_txtr": ("worn", None, 1.0, 0.03),                     # the axe: chipped, scuffed
+}
+
+
+def _noise(rng, h, w, scales):
+    out = np.zeros((h, w))
+    for scale, weight in scales:
+        small = rng.random((max(1, h // scale), max(1, w // scale)))
+        out += np.asarray(Image.fromarray((small * 255).astype(np.uint8)).resize((w, h), Image.BICUBIC), dtype=np.float64) / 255.0 * weight
+    return out
+
+
+def weather(image: Image.Image, name: str) -> Image.Image:
+    if name not in STYLES:
+        return image
+    style, dye, keep, blood = STYLES[name]
+    rng = np.random.default_rng(zlib.crc32(name.encode()))
+    a = np.asarray(image.convert("RGBA"), dtype=np.float64)
+    rgb, alpha = a[..., :3], a[..., 3:4]
+    h, w = rgb.shape[:2]
+    yy, xx = np.mgrid[0:h, 0:w]
+    if dye is not None:
+        # Dye: the original's light and shade (detail drawn out) carried onto the colour.
+        mean = rgb.mean(axis=(0, 1), keepdims=True)
+        rgb = mean + (rgb - mean) * 2.2
+        base = np.array(dye)
+        shade = (rgb.mean(axis=-1, keepdims=True) / 200.0).clip(0.35, 1.4)
+        rgb = base * shade * (1.0 - keep) + rgb * keep * (base / 200.0)
+    if style == "coat":
+        weave = ((xx % 4 < 2) ^ (yy % 4 < 2)) * 0.06 - 0.03
+        rgb *= (1.0 + weave)[..., None]
+        seam = (yy % max(24, h // 6) < 2) | (xx % max(32, w // 5) < 2)
+        stitch = seam & ((xx + yy) % 6 < 3)
+        rgb[seam] *= 0.62
+        rgb[stitch] = rgb[stitch] * 0.4 + np.array([200.0, 170.0, 120.0]) * 0.6
+        near = (yy % max(24, h // 6) < 5) | (xx % max(32, w // 5) < 5)
+        rgb[near & ~seam] *= 1.12
+        tears = _noise(rng, h, w, ((6, 1.0),)) > 0.86                    # frayed, torn patches
+        rgb[tears] *= 0.55
+    elif style == "fur":
+        strands = np.sin(xx * 0.9 + np.sin(yy * 0.21) * 4.0 + _noise(rng, h, w, ((4, 6.0),))) * 0.5 + 0.5
+        rgb *= (0.72 + 0.4 * strands)[..., None]
+        clumps = _noise(rng, h, w, ((16, 1.0),))
+        rgb *= (0.8 + 0.35 * clumps)[..., None]
+    elif style == "leather":
+        crease = np.sin(xx * 0.09 + np.sin(yy * 0.05) * 3.0) * np.sin(yy * 0.13)
+        rgb *= (1.0 + crease * 0.14)[..., None]
+        grain = _noise(rng, h, w, ((2, 1.0),))
+        rgb *= (0.9 + 0.2 * grain)[..., None]
+        scuff = rng.random((h, w)) < 0.012
+        rgb[scuff] = rgb[scuff] * 0.45 + np.array([170.0, 140.0, 110.0]) * 0.55
+        if name == "leftfoot1mtl":
+            rgb[yy > h * 0.88] *= 0.55                                     # the sole
+            lace = ((yy % 18) < 2) & (np.abs(xx - w / 2) < w * 0.12)
+            rgb[lace] = rgb[lace] * 0.3 + np.array([40.0, 30.0, 22.0]) * 0.7
+    elif style == "cloth":
+        twill = ((xx + yy) % 5 < 2) * 0.07 - 0.035
+        rgb *= (1.0 + twill)[..., None]
+        patch = _noise(rng, h, w, ((48, 1.0),)) > 0.8                      # faded, worn patches
+        rgb[patch] = rgb[patch] * 0.75 + np.array([150.0, 140.0, 125.0]) * 0.25
+    elif style == "metal":
+        rust = _noise(rng, h, w, ((3, 0.5), (12, 0.5)))
+        rusty = np.clip((rust - 0.45) * 2.5, 0.0, 1.0)[..., None]
+        rgb = rgb * (1.0 - 0.75 * rusty) + np.array([120.0, 62.0, 30.0]) * 0.75 * rusty
+        shine = (rng.random((h, w)) < 0.02) & (rusty[..., 0] < 0.3)
+        rgb[shine] = rgb[shine] * 0.4 + 200.0 * 0.6
+    elif style == "hair":
+        strands = np.sin(xx * 1.3 + np.sin(yy * 0.08) * 6.0 + _noise(rng, h, w, ((3, 8.0),))) * 0.5 + 0.5
+        rgb *= (0.6 + 0.55 * strands)[..., None]
+        matted = _noise(rng, h, w, ((24, 1.0),)) > 0.7
+        rgb[matted] = rgb[matted] * 0.55 + np.array([70.0, 58.0, 44.0]) * 0.45
+    elif style == "worn":
+        scratches = np.zeros((h, w), dtype=bool)
+        for _ in range(int(14 + w / 40)):                                # thin scratches
+            x0, y0 = rng.integers(0, w), rng.integers(0, h)
+            ang, length = rng.random() * np.pi, rng.integers(w // 20 + 2, w // 6 + 3)
+            for t in range(length):
+                xs, ys = int(x0 + np.cos(ang) * t), int(y0 + np.sin(ang) * t)
+                if 0 <= xs < w and 0 <= ys < h:
+                    scratches[ys, xs] = True
+        rgb[scratches] = rgb[scratches] * 0.55 + np.array([60.0, 50.0, 40.0]) * 0.45
+    # Grime everywhere, heavier toward the bottom; blood stains.
+    noise = _noise(rng, h, w, ((8, 0.5), (32, 0.3), (96, 0.2)))
+    ramp = np.linspace(0.0, 1.0, h)[:, None]
+    grime = np.clip((noise - 0.45) * 1.8 + ramp * 0.3, 0.0, 1.0)[..., None] * (0.35 if style == "worn" else 1.0)
+    rgb = rgb * (1.0 - 0.45 * grime) + np.array([58.0, 46.0, 34.0]) * 0.45 * grime
+    for _ in range(int(blood * 120)):
+        cx, cy, r = rng.integers(0, w), rng.integers(0, h), rng.integers(max(2, w // 60), max(3, w // 14))
+        d = np.sqrt((xx - cx) ** 2 + ((yy - cy) * 1.3) ** 2) / r
+        spot = np.clip(1.0 - d, 0.0, 1.0) ** 0.6 * (rng.random((h, w)) < 0.85)
+        rgb = rgb * (1.0 - 0.7 * spot[..., None]) + np.array([92.0, 14.0, 10.0]) * 0.7 * spot[..., None]
+    out = np.concatenate([np.clip(rgb, 0, 255), alpha if style == "worn" else np.maximum(alpha, 235.0)], axis=-1)
+    return Image.fromarray(out.astype(np.uint8), "RGBA")
+
+
+def glow_map(image: Image.Image) -> Image.Image:
+    """A glow map for the emissive pass: see-through where it is dark (an opaque black glow paints things black)."""
+    a = np.asarray(image.convert("RGBA"), dtype=np.float64)
+    lum = a[..., :3].max(axis=-1)
+    a[..., 3] = np.clip(lum * 1.5, 0, 255)
+    return Image.fromarray(a.astype(np.uint8), "RGBA")
 
 
 def build() -> None:
@@ -166,10 +291,10 @@ def build() -> None:
         nv = max(1, math.ceil(uv[:, 1].max() - 1e-6) - v0)
         uvn = np.stack([(uv[:, 0] - u0) / nu, (uv[:, 1] - v0) / nv], axis=1)
         if name not in materials:
-            tiled(texture_for(j, binary, mat), u0, v0, nu, nv).save(tex_dir / f"{name}.png")
+            weather(tiled(texture_for(j, binary, mat), u0, v0, nu, nv), name).save(tex_dir / f"{name}.png")
             glow = "emissiveTexture" in mat and "index" in mat["emissiveTexture"]
             if glow:
-                tiled(dl_glb.image(j, binary, mat["emissiveTexture"]["index"]), u0, v0, nu, nv).save(tex_dir / f"{name}_glow.png")
+                glow_map(tiled(dl_glb.image(j, binary, mat["emissiveTexture"]["index"]), u0, v0, nu, nv)).save(tex_dir / f"{name}_glow.png")
             materials[name] = (glow, mat.get("alphaMode") == "BLEND")
         is_axe = node != "Abberanr"
         for tri in idx:

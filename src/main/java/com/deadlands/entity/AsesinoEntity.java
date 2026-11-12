@@ -70,7 +70,7 @@ import org.jspecify.annotations.Nullable;
  * </ul>
  * He also thinks about himself: badly hurt, he breaks off and lurks somewhere hidden to recover; facing
  * a group mid-chase, he backs off; with the prey out of reach (up a pillar, across water), he waits
- * nearby instead of pacing beneath them. He never despawns.
+ * nearby instead of pacing beneath them. He leaves with the morning (unseen, in smoke) and never despawns otherwise.
  *
  * <p>Animations are synced as an {@link Action}; his voice never talks over itself.
  */
@@ -134,6 +134,7 @@ public class AsesinoEntity extends Monster {
 	private long chaseCueAt = -CHASE_CUE_GAP;
 	private long hurtSoundAt;
 	private int stepTicks;
+	private int dayTicks;
 	/** Client: the tick the current action started, and the eased stance blends (with last tick's). */
 	private int actionStartTick;
 	private float hunch;
@@ -260,6 +261,9 @@ public class AsesinoEntity extends Monster {
 		if (actionLeft > 0 && --actionLeft == 0) {
 			entityData.set(DATA_ACTION, Action.NONE.ordinal());
 		}
+		if (morning(level)) {
+			return;
+		}
 		Player target = preyPlayer(level);
 		if (mode != Mode.ROAM && target == null) {
 			setMode(Mode.ROAM);
@@ -274,6 +278,37 @@ public class AsesinoEntity extends Monster {
 		if (target != null && mode != Mode.ROAM) {
 			entityData.set(DATA_PREY, target.getId());
 		}
+	}
+
+	/**
+	 * Morning: he does not stay for the day. Once it is light he breaks off (a chase gets thirty more
+	 * seconds) and, the moment nobody is looking at him, he is gone in a breath of smoke; after a minute
+	 * he goes even if someone is. Returns true once he has left.
+	 */
+	private boolean morning(ServerLevel level) {
+		long time = Math.floorMod(level.getDayTime(), 24000L);
+		boolean day = time >= 0L && time < 12500L && ConfigManager.get().asesino.nightOnly;
+		dayTicks = day ? dayTicks + 1 : 0;
+		if (!day || mode == Mode.CHASE && dayTicks < 600) {
+			return false;
+		}
+		boolean seen = false;
+		for (Player player : level.players()) {
+			if (huntable(player) && player.distanceToSqr(this) < 48.0 * 48.0 && player.hasLineOfSight(this) && watching(player)) {
+				seen = true;
+				break;
+			}
+		}
+		if (seen && dayTicks < 1200) {
+			if (mode != Mode.ROAM && mode != Mode.LURK) {
+				setMode(Mode.ROAM);
+			}
+			return false;
+		}
+		level.sendParticles(net.minecraft.core.particles.ParticleTypes.LARGE_SMOKE, getX(), getY() + 1.2, getZ(), 30, 0.4, 0.9, 0.4, 0.02);
+		level.sendParticles(net.minecraft.core.particles.ParticleTypes.SMOKE, getX(), getY() + 1.0, getZ(), 40, 0.5, 1.0, 0.5, 0.01);
+		discard();
+		return true;
 	}
 
 	private void setMode(Mode next) {
