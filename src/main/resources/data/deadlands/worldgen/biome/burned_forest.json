@@ -7,7 +7,6 @@
 		"minecraft:visual/fog_color": "#8f857a",
 		"minecraft:visual/water_fog_color": "#1c1a14",
 		"minecraft:audio/ambient_sounds": {
-			"loop": "deadlands:ambient.burned.loop",
 			"mood": {
 				"sound": "deadlands:ambient.mood",
 				"tick_delay": 6000,
@@ -17,11 +16,11 @@
 			"additions": [
 				{
 					"sound": "deadlands:ambient.ember",
-					"tick_chance": 0.00222
+					"tick_chance": 0.00111
 				},
 				{
 					"sound": "deadlands:ambient.creak",
-					"tick_chance": 0.0006
+					"tick_chance": 0.0003
 				}
 			]
 		},

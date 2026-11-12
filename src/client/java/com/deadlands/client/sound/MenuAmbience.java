@@ -21,7 +21,7 @@ public final class MenuAmbience {
 	public static void tick(Minecraft minecraft) {
 		boolean wanted = minecraft.level == null && minecraft.screen != null && ConfigManager.get().audio.menuAmbience
 			&& ConfigManager.get().ui.menuBackdrop;
-		float target = wanted ? 0.45F * (float) ConfigManager.get().audio.ambienceVolume : 0.0F;
+		float target = wanted ? 0.3F * (float) ConfigManager.get().audio.ambienceVolume : 0.0F; // quieter (2026-11-11)
 		if (bed != null && (bed.isStopped() || !minecraft.getSoundManager().isActive(bed) && bed.age > 40)) {
 			bed = null;
 		}
