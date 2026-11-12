@@ -283,6 +283,12 @@ public final class AmbienceDirector {
 		if (ScarePlayer.silenced()) {
 			return;
 		}
+		// The Asesino is near: the world goes quiet (the calm beds fade, no new sounds).
+		if (AsesinoMusic.near()) {
+			hush = true;
+			spellLeft = Math.max(spellLeft, 400);
+			return;
+		}
 		if (volume <= 0.0F) {
 			return;
 		}

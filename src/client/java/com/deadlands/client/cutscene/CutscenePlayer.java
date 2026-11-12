@@ -102,24 +102,37 @@ public final class CutscenePlayer {
 			onEnd = null;
 			CutsceneActors.clear();
 		}
-		script = script(id, facing);
+		// Open the overlay first: closing a scene's overlay that is still open (the server's opening scene,
+		// replaced by the intro on a first join) must not end the new scene. It used to: the old overlay's
+		// removal wiped the new script, and the next line threw inside the packet handler, which Minecraft
+		// reports as a "Network Protocol Error".
+		replacing = true;
+		try {
+			minecraft.setScreen(new CutsceneScreen());
+		} finally {
+			replacing = false;
+		}
+		Script next = script(id, facing);
+		script = next;
 		anchor = at;
 		yaw = bearingFrame ? 0.0F : facing;
 		ticks = 0;
 		onEnd = then;
-		minecraft.setScreen(new CutsceneScreen());
-		CutsceneActors.begin(script.actors(), at, bearingFrame ? 0.0F : facing);
-		if (script.hideHud() && hudBefore == null) {
+		CutsceneActors.begin(next.actors(), at, bearingFrame ? 0.0F : facing);
+		if (next.hideHud() && hudBefore == null) {
 			hudBefore = minecraft.options.hideGui;
 			minecraft.options.hideGui = true;
 		}
-		if (script.cue() != null) {
-			minecraft.getSoundManager().play(SimpleSoundInstance.forUI(script.cue(), 1.0F, 0.9F));
+		if (next.cue() != null) {
+			minecraft.getSoundManager().play(SimpleSoundInstance.forUI(next.cue(), 1.0F, 0.9F));
 		}
-		if (script.ambience() != null) {
-			minecraft.getSoundManager().play(SimpleSoundInstance.forUI(script.ambience(), 1.0F, 0.6F));
+		if (next.ambience() != null) {
+			minecraft.getSoundManager().play(SimpleSoundInstance.forUI(next.ambience(), 1.0F, 0.6F));
 		}
 	}
+
+	/** True while {@link #start} swaps one overlay for another (the old one closing is not an ending). */
+	private static boolean replacing;
 
 	public static boolean active() {
 		return script != null;
@@ -151,6 +164,9 @@ public final class CutscenePlayer {
 
 	/** The overlay was closed by something else (death, disconnecting): end without touching screens. */
 	static void abandon() {
+		if (replacing) {
+			return;
+		}
 		if (script != null) {
 			script = null;
 			runEnd();

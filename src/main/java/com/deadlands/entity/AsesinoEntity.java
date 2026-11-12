@@ -3,136 +3,157 @@ package com.deadlands.entity;
 import com.deadlands.Deadlands;
 import com.deadlands.config.ConfigManager;
 import com.deadlands.config.DeadlandsConfig;
+import com.deadlands.item.FlashlightItem;
 import com.deadlands.registry.DLSounds;
-import com.deadlands.registry.DLTags;
-import java.util.HashMap;
-import java.util.Iterator;
+import com.deadlands.registry.DLWeapons;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gamerules.GameRules;
-import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The Asesino (Phase 5): DEADLANDS' slasher. Before the outbreak he was the county's unsolved killer,
- * "the Night Caller"; caught at last, he was moved to Kessler for an NR-7 trial on violent inmates.
- * NR-7 kept the hunter and erased the rest.
+ * The Aberrant (internal id {@code asesino}): DEADLANDS' slasher. One weapon, one move: a heavy slash.
+ * Everything else is how he hunts.
  *
- * <p>His mind is a state machine, not vanilla targeting:
+ * <p><b>His mind</b> is a state machine that decides for itself:
  * <ul>
- *   <li><b>Roam</b>: wanders at night, picking a prey: the most isolated, then the most hurt, survivor
- *       he can see or hear (he leaves groups of three or more alone until someone strays).</li>
- *   <li><b>Stalk</b>: keeps 20 to 30 blocks off, behind the prey and out of their sight, until they are
- *       alone and either looking away for a while, closer than 12 blocks, or he has stalked long enough
- *       (or they hurt him).</li>
- *   <li><b>Chase</b>: runs for where the prey is going (their movement led a half second ahead), breaks
- *       doors and barricades in his way, and gets faster the longer it lasts.</li>
- *   <li><b>Search</b>: twelve seconds without seeing the prey, he hunts around where he last saw them;
- *       ten seconds more and he gives up and roams again, leaving that survivor alone for a minute.</li>
+ *   <li><b>Roam</b>: wanders until he picks a prey, the most isolated, then the most hurt, survivor he
+ *       notices (sees, hears, or senses within 32 blocks at night). He leaves groups of three or more.</li>
+ *   <li><b>Stalk</b> (about {@code asesino.stalkMinutes}, 10 by default): he follows from 16 to 28 blocks,
+ *       choosing spots the prey cannot see, behind them, and moving on as they move. Caught watching, he
+ *       freezes and stares, then slips away. Every minute or two he lets himself be seen: steps out at a
+ *       distance, stares, and is gone. He keeps track of them by sound and scent even out of sight.</li>
+ *   <li><b>Deciding to attack</b>: when the stalk has run its course and the prey is alone, he commits. He
+ *       strikes sooner if they give him a chance: hurt, alone in the dark, looking the other way, busy
+ *       standing still, or walking right up to him. He never commits on a group, or by day unless they are
+ *       in the dark.</li>
+ *   <li><b>Chase</b>: relentless, faster the longer it lasts, through the dark (darkness does not hide
+ *       you once he is on you). He leads you, opens doors, and slashes with a half-second wind-up. Only
+ *       breaking his line of sight for eight seconds loses him.</li>
+ *   <li><b>Search</b>: thirty seconds checking where he lost you and the hiding places around it, rooms
+ *       first, listening: running or walking uncrouched within 16 blocks gives you away; within 20 blocks
+ *       in view (4 through anything) he finds you.</li>
+ *   <li><b>Lurk</b>: if the search finds nothing he hides nearby, silent and still, no music: crouched out
+ *       of sight near where you vanished, for one to two minutes. Come out close and unaware and he
+ *       ambushes; spot him first and he slips back into stalking.</li>
  * </ul>
- * Melee has a half-second wind-up. Abilities: Pounce Cut, Breach, Scent of Fear, Frenzy, Dread Shriek
- * (see each method). Stats come from the {@code asesino} config section. By day he slips away.
+ * He also thinks about himself: badly hurt, he breaks off and lurks somewhere hidden to recover; facing
+ * a group mid-chase, he backs off; with the prey out of reach (up a pillar, across water), he waits
+ * nearby instead of pacing beneath them. He never despawns.
+ *
+ * <p>Animations are synced as an {@link Action}; his voice never talks over itself.
  */
 public class AsesinoEntity extends Monster {
 	public enum Mode {
-		ROAM, STALK, CHASE, SEARCH
+		ROAM, STALK, CHASE, SEARCH, LURK // append only
+	}
+
+	/** What his body is doing, for the animations (append only; the old ability poses stay so indices hold). */
+	public enum Action {
+		NONE, WINDUP, SWING, CROUCH, LEAP, STUN, SHRIEK, BREACH, FRENZY, SCENT, STARE, WINDUP2, SWING2
 	}
 
 	private static final EntityDataAccessor<Integer> DATA_PREY = SynchedEntityData.defineId(AsesinoEntity.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> DATA_MODE = SynchedEntityData.defineId(AsesinoEntity.class, EntityDataSerializers.INT);
-	private static final Identifier FRENZY = Deadlands.id("asesino_frenzy");
+	private static final EntityDataAccessor<Integer> DATA_ACTION = SynchedEntityData.defineId(AsesinoEntity.class, EntityDataSerializers.INT);
 	private static final Identifier CHASE_SPEED = Deadlands.id("asesino_chase_speed");
 
 	private static final int MELEE_WINDUP = 10;
-	private static final int POUNCE_COOLDOWN = 240;
-	private static final int POUNCE_CROUCH = 12;
-	private static final int POUNCE_FLIGHT = 16;
-	private static final int STUN_TICKS = 30;
-	private static final int BREACH_COOLDOWN = 120;
-	private static final int BREACH_WINDUP = 24;
-	private static final int SCENT_COOLDOWN = 900;
-	private static final int SCENT_TICKS = 120;
-	private static final int FRENZY_COOLDOWN = 500;
-	private static final int FRENZY_TICKS = 100;
-	private static final int SHRIEK_COOLDOWN = 600;
-	private static final int SHRIEK_WINDUP = 20;
-	private static final int LOSE_TICKS = 240;
-	private static final int SEARCH_TICKS = 200;
+	private static final int SWING_TICKS = 7;
+	private static final int LOSE_TICKS = 160;
+	private static final int SEARCH_TICKS = 600;
 	private static final int RAMP_TICKS = 600;
+	private static final int CHASE_CUE_GAP = 600;
 
 	private Mode mode = Mode.ROAM;
 	private @Nullable UUID prey;
 	private int modeTicks;
 	private int unseenTicks;
-	private int lookedAwayTicks;
 	private @Nullable Vec3 lastKnown;
-	private final Map<UUID, Long> leftAlone = new HashMap<>();
-	private final Map<UUID, Integer> bleeding = new HashMap<>();
+	// Stalking.
+	private int stalkTicks;
+	private int stalkPlan = 12000;
+	private int lookedAwayTicks;
+	private int watchedTicks;
+	private int stillTicks;
+	private @Nullable Vec3 preyLastPos;
+	private double lastDistance;
+	private int peekCooldown = 1200;
+	private int peekLeft;
+	private @Nullable Vec3 peekSpot;
+	private @Nullable Vec3 stalkSpot;
+	private int replanIn;
+	private boolean slipping;
+	// Chase.
+	private int unreachableTicks;
+	private boolean recovering;
+	// Search and lurk.
+	private final ArrayList<Vec3> searchSpots = new ArrayList<>();
+	private int searchLeft;
+	private int lookingAround;
+	private @Nullable Vec3 lurkSpot;
+	private int lurkLeft;
+	// Melee.
 	private int meleeCooldown;
 	private int meleeWindup;
-	private int pounceCooldown = 80;
-	private int pounceCrouch;
-	private int pounceFlight;
-	private boolean pounceHit;
-	private int stunned;
-	private int breachCooldown;
-	private int breachWindup;
-	private @Nullable BlockPos breaching;
-	private final Map<BlockPos, Integer> breachHits = new HashMap<>();
-	private int scentCooldown = 200;
-	private int scenting;
-	private int frenzyCooldown;
-	private int frenzy;
-	private int shriekCooldown = 200;
-	private int shriekWindup;
+	private boolean backhand;
+	private int actionLeft;
+	// Sound.
+	private long voiceUntil;
+	private long chaseCueAt = -CHASE_CUE_GAP;
+	private long hurtSoundAt;
 	private int stepTicks;
+	/** Client: the tick the current action started, and the eased stance blends (with last tick's). */
+	private int actionStartTick;
+	private float hunch;
+	private float hunchO;
+	private float sprint;
+	private float sprintO;
 
 	public AsesinoEntity(EntityType<? extends AsesinoEntity> type, Level level) {
 		super(type, level);
 		this.xpReward = 60;
 		if (getNavigation() instanceof GroundPathNavigation ground) {
-			ground.setCanOpenDoors(false);
-			ground.getNodeEvaluator().setCanPassDoors(true); // paths go through doors; Breach takes care of them
+			ground.setCanOpenDoors(true); // he opens doors like anyone: no smashing (the slash is his only move)
 			ground.setCanFloat(true);
 		}
 		applyConfig();
+		if (!level.isClientSide()) {
+			setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(DLWeapons.MACHETE));
+			setDropChance(EquipmentSlot.MAINHAND, 0.0F);
+			setPersistenceRequired(); // he never despawns
+		}
 	}
 
 	public static AttributeSupplier.Builder createAttributes() {
@@ -147,7 +168,6 @@ public class AsesinoEntity extends Monster {
 			.add(Attributes.STEP_HEIGHT, 1.0);
 	}
 
-	/** The config's stats (it can change between worlds). */
 	private void applyConfig() {
 		DeadlandsConfig.Asesino config = ConfigManager.get().asesino;
 		getAttribute(Attributes.MAX_HEALTH).setBaseValue(config.health);
@@ -164,49 +184,69 @@ public class AsesinoEntity extends Monster {
 		super.defineSynchedData(builder);
 		builder.define(DATA_PREY, -1);
 		builder.define(DATA_MODE, 0);
+		builder.define(DATA_ACTION, 0);
+	}
+
+	@Override
+	public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+		super.onSyncedDataUpdated(key);
+		if (DATA_ACTION.equals(key)) {
+			actionStartTick = tickCount;
+		}
 	}
 
 	@Override
 	protected void registerGoals() {
 		goalSelector.addGoal(0, new FloatGoal(this));
-		goalSelector.addGoal(6, new RoamGoal(this));
-		goalSelector.addGoal(7, new RandomLookAroundGoal(this) {
+		goalSelector.addGoal(1, new OpenDoorGoal(this, true));
+		goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.85) {
 			@Override
 			public boolean canUse() {
 				return mode == Mode.ROAM && super.canUse();
 			}
+
+			@Override
+			public boolean canContinueToUse() {
+				return mode == Mode.ROAM && super.canContinueToUse();
+			}
 		});
-	}
-
-	/** Wandering, only while roaming. */
-	private static final class RoamGoal extends WaterAvoidingRandomStrollGoal {
-		private final AsesinoEntity asesino;
-
-		RoamGoal(AsesinoEntity asesino) {
-			super(asesino, 0.9);
-			this.asesino = asesino;
-		}
-
-		@Override
-		public boolean canUse() {
-			return asesino.mode == Mode.ROAM && asesino.stunned == 0 && super.canUse();
-		}
-
-		@Override
-		public boolean canContinueToUse() {
-			return asesino.mode == Mode.ROAM && super.canContinueToUse();
-		}
 	}
 
 	// ======================================================================================== what the client reads
 
-	/** The entity id of the survivor he is chasing (the chase music's layer 4), or -1. */
+	/** The survivor he is chasing (the chase music's layer 4), or -1. */
 	public int chasingId() {
-		return entityData.get(DATA_PREY);
+		return mode() == Mode.CHASE ? entityData.get(DATA_PREY) : -1;
+	}
+
+	/** The survivor he is stalking or searching for (layer 1 plays for them), or -1. Lurking is silent: -1. */
+	public int stalkingId() {
+		return mode() == Mode.STALK || mode() == Mode.SEARCH ? entityData.get(DATA_PREY) : -1;
 	}
 
 	public Mode mode() {
 		return Mode.values()[Mth.clamp(entityData.get(DATA_MODE), 0, Mode.values().length - 1)];
+	}
+
+	public Action action() {
+		return Action.values()[Mth.clamp(entityData.get(DATA_ACTION), 0, Action.values().length - 1)];
+	}
+
+	public float actionAge(float partialTick) {
+		return tickCount - actionStartTick + partialTick;
+	}
+
+	public float hunch(float partialTick) {
+		return Mth.lerp(partialTick, hunchO, hunch);
+	}
+
+	public float sprint(float partialTick) {
+		return Mth.lerp(partialTick, sprintO, sprint);
+	}
+
+	private void act(Action action, int ticks) {
+		entityData.set(DATA_ACTION, action.ordinal());
+		actionLeft = ticks;
 	}
 
 	// ======================================================================================== the mind
@@ -215,51 +255,24 @@ public class AsesinoEntity extends Monster {
 	protected void customServerAiStep(ServerLevel level) {
 		super.customServerAiStep(level);
 		modeTicks++;
-		tickTimers();
-		tickBleeding(level);
-		if (stunned > 0) {
-			getNavigation().stop();
-			return;
-		}
-		if (pounceCrouch > 0 || pounceFlight > 0) {
-			tickPounce(level);
-			return;
-		}
-		if (breachWindup > 0) {
-			tickBreach(level);
-			return;
-		}
-		if (shriekWindup > 0) {
-			tickShriek(level);
-			return;
+		meleeCooldown = Math.max(0, meleeCooldown - 1);
+		peekCooldown = Math.max(0, peekCooldown - 1);
+		if (actionLeft > 0 && --actionLeft == 0) {
+			entityData.set(DATA_ACTION, Action.NONE.ordinal());
 		}
 		Player target = preyPlayer(level);
+		if (mode != Mode.ROAM && target == null) {
+			setMode(Mode.ROAM);
+		}
 		switch (mode) {
 			case ROAM -> roam(level);
 			case STALK -> stalk(level, target);
 			case CHASE -> chase(level, target);
 			case SEARCH -> search(level, target);
+			case LURK -> lurk(level, target);
 		}
-		if (level.isBrightOutside() && mode == Mode.ROAM && level.getNearestPlayer(this, 32.0) == null && modeTicks > 100) {
-			discard(); // by day he slips away
-		}
-	}
-
-	private void tickTimers() {
-		meleeCooldown = Math.max(0, meleeCooldown - 1);
-		pounceCooldown = Math.max(0, pounceCooldown - 1);
-		breachCooldown = Math.max(0, breachCooldown - 1);
-		scentCooldown = Math.max(0, scentCooldown - 1);
-		frenzyCooldown = Math.max(0, frenzyCooldown - 1);
-		shriekCooldown = Math.max(0, shriekCooldown - 1);
-		if (stunned > 0 && --stunned == 0) {
-			setPose(Pose.STANDING);
-		}
-		if (scenting > 0) {
-			scenting--;
-		}
-		if (frenzy > 0 && --frenzy == 0) {
-			getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(FRENZY);
+		if (target != null && mode != Mode.ROAM) {
+			entityData.set(DATA_PREY, target.getId());
 		}
 	}
 
@@ -270,17 +283,29 @@ public class AsesinoEntity extends Monster {
 		mode = next;
 		modeTicks = 0;
 		unseenTicks = 0;
+		watchedTicks = 0;
 		lookedAwayTicks = 0;
+		unreachableTicks = 0;
+		stalkSpot = null;
+		peekSpot = null;
+		peekLeft = 0;
+		slipping = false;
+		searchSpots.clear();
+		lookingAround = 0;
+		meleeWindup = 0;
 		entityData.set(DATA_MODE, next.ordinal());
 		if (next != Mode.CHASE) {
 			getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(CHASE_SPEED);
-			entityData.set(DATA_PREY, -1);
+			setTarget(null);
 		}
 		if (next == Mode.ROAM) {
 			prey = null;
 			lastKnown = null;
-			setTarget(null);
+			stalkTicks = 0;
+			recovering = false;
+			entityData.set(DATA_PREY, -1);
 		}
+		getNavigation().stop();
 	}
 
 	private @Nullable Player preyPlayer(ServerLevel level) {
@@ -288,55 +313,49 @@ public class AsesinoEntity extends Monster {
 			return null;
 		}
 		Player player = level.getPlayerByUUID(prey);
-		if (player == null || !player.isAlive() || player.isSpectator() || player.isCreative() || player.level() != level()) {
-			return null;
-		}
-		return player;
+		return player != null && huntable(player) && player.level() == level() ? player : null;
 	}
 
-	/** Roam: look for prey (seen within the follow range, or heard close by), or sniff it out with Scent of Fear. */
-	private void roam(ServerLevel level) {
-		if ((tickCount + getId()) % 20 != 0) {
-			return;
-		}
-		double range = getAttributeValue(Attributes.FOLLOW_RANGE);
-		Player best = null;
-		double bestScore = Double.MAX_VALUE;
-		long now = level.getGameTime();
-		leftAlone.values().removeIf(until -> until < now);
-		List<? extends Player> players = level.players();
-		for (Player player : players) {
-			if (!huntable(player) || leftAlone.containsKey(player.getUUID())) {
-				continue;
-			}
-			double distance = distanceTo(player);
-			boolean noticed = distance < 16.0 || distance < range && hasLineOfSight(player) || scenting > 0 && distance < 40.0;
-			if (!noticed) {
-				continue;
-			}
-			int company = company(player, players);
-			if (company >= 2) {
-				continue; // a group of three: wait for someone to stray
-			}
-			double score = company * 40.0 + player.getHealth() * 2.0 + distance * 0.5;
-			if (score < bestScore) {
-				bestScore = score;
-				best = player;
-			}
-		}
-		if (best != null) {
-			prey = best.getUUID();
-			lastKnown = best.position();
-			setMode(Mode.STALK);
-			return;
-		}
-		if (scentCooldown == 0) {
-			scentOfFear(level);
-		}
-	}
-
-	private boolean huntable(Player player) {
+	private static boolean huntable(Player player) {
 		return player.isAlive() && !player.isSpectator() && !player.isCreative();
+	}
+
+	private boolean night() {
+		return !level().isBrightOutside();
+	}
+
+	// ---------------------------------------------------------------------------------------- perception
+
+	/** Whether a survivor is lit: a flashlight shining in either hand, light where they stand, or daylight. */
+	public static boolean lit(Player player) {
+		if (FlashlightItem.shining(player.getMainHandItem()) || FlashlightItem.shining(player.getOffhandItem())) {
+			return true;
+		}
+		Level level = player.level();
+		BlockPos eyes = BlockPos.containing(player.getEyePosition());
+		return level.getBrightness(LightLayer.BLOCK, eyes) >= 9 || level.isBrightOutside() && level.getBrightness(LightLayer.SKY, eyes) >= 10;
+	}
+
+	/** He sees them: in his line of sight and near enough (beyond 20 blocks only if lit). In a chase any line of sight counts. */
+	private boolean sees(Player player) {
+		double distance = distanceTo(player);
+		if (distance > getAttributeValue(Attributes.FOLLOW_RANGE) || !hasLineOfSight(player)) {
+			return distance <= 4.0; // right on top of them, through anything
+		}
+		return mode == Mode.CHASE || distance <= 20.0 || lit(player);
+	}
+
+	/** He hears them: running, or walking uncrouched, within 16 blocks; anything within 6. */
+	private boolean hears(Player player) {
+		double distance = distanceTo(player);
+		boolean moving = player.getDeltaMovement().horizontalDistanceSqr() > 0.004;
+		return distance <= 6.0 || distance <= 16.0 && (player.isSprinting() || moving && !player.isShiftKeyDown());
+	}
+
+	/** The survivor is looking roughly at him and can see him. */
+	private boolean watching(Player player) {
+		Vec3 to = getEyePosition().subtract(player.getEyePosition()).normalize();
+		return player.getViewVector(1.0F).dot(to) > 0.75 && player.hasLineOfSight(this);
 	}
 
 	/** Other survivors within 10 blocks of this one. */
@@ -350,68 +369,253 @@ public class AsesinoEntity extends Monster {
 		return count;
 	}
 
-	/** Stalk: keep 20 to 30 blocks off, behind the prey and out of their sight, then commit. */
-	private void stalk(ServerLevel level, @Nullable Player target) {
-		if (target == null || distanceTo(target) > getAttributeValue(Attributes.FOLLOW_RANGE) + 16.0) {
+	/** Whether the survivor could see a person standing at {@code feet}. */
+	private static boolean visibleFrom(Player player, Vec3 feet) {
+		Vec3 head = feet.add(0.0, 1.8, 0.0);
+		return player.level().clip(new ClipContext(player.getEyePosition(), head, ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, player))
+			.getType() == HitResult.Type.MISS;
+	}
+
+	// ---------------------------------------------------------------------------------------- roam
+
+	private void roam(ServerLevel level) {
+		if ((tickCount + getId()) % 20 != 0) {
+			return;
+		}
+		Player best = null;
+		double bestScore = Double.MAX_VALUE;
+		List<? extends Player> players = level.players();
+		for (Player player : players) {
+			if (!huntable(player)) {
+				continue;
+			}
+			double distance = distanceTo(player);
+			boolean noticed = sees(player) || hears(player) || night() && distance < 32.0;
+			int company = company(player, players);
+			if (!noticed || company >= 2) {
+				continue;
+			}
+			double score = company * 40.0 + player.getHealth() * 2.0 + distance * 0.5;
+			if (score < bestScore) {
+				bestScore = score;
+				best = player;
+			}
+		}
+		if (best != null) {
+			prey = best.getUUID();
+			lastKnown = best.position();
+			lastDistance = distanceTo(best);
+			double minutes = ConfigManager.get().asesino.stalkMinutes;
+			stalkPlan = (int) (minutes * 1200.0 * (0.8 + random.nextDouble() * 0.4));
+			stalkTicks = 0;
+			peekCooldown = 900 + random.nextInt(900);
+			setMode(Mode.STALK);
+		}
+	}
+
+	// ---------------------------------------------------------------------------------------- stalk
+
+	private void stalk(ServerLevel level, Player target) {
+		double distance = distanceTo(target);
+		if (distance > 160.0) {
 			setMode(Mode.ROAM);
 			return;
 		}
-		boolean seen = hasLineOfSight(target);
-		if (seen) {
-			lastKnown = target.position();
-		}
-		getLookControl().setLookAt(target, 20.0F, 20.0F);
-		double distance = distanceTo(target);
+		stalkTicks++;
+		lastKnown = target.position(); // he keeps track of them by sound and scent
 		boolean watched = watching(target);
 		lookedAwayTicks = watched ? 0 : lookedAwayTicks + 1;
+		Vec3 now = target.position();
+		stillTicks = preyLastPos != null && now.distanceToSqr(preyLastPos) < 0.02 ? stillTicks + 1 : 0;
+		preyLastPos = now;
+		boolean approaching = watched && distance < lastDistance - 0.04 && distance < 14.0;
+		lastDistance = distance;
 		boolean alone = company(target, level.players()) == 0;
-		boolean commit = alone && (lookedAwayTicks > 60 && distance < 30.0 || distance < 12.0 || modeTicks > 800)
-			|| getLastHurtByMob() == target && tickCount - getLastHurtByMobTimestamp() < 40;
-		if (commit) {
+
+		if (recovering && getHealth() >= getMaxHealth() * 0.7F) {
+			recovering = false;
+		}
+		if (!recovering && decideToAttack(target, distance, alone, approaching)) {
 			startChase(level, target);
 			return;
 		}
-		if ((tickCount + getId()) % 10 != 0) {
-			return;
-		}
-		Vec3 spot;
-		if (watched && distance < 34.0) {
-			// Seen: step out of their sight, sideways from their gaze.
-			Vec3 gaze = target.getViewVector(1.0F);
-			Vec3 side = new Vec3(-gaze.z, 0.0, gaze.x).normalize().scale((getId() & 1) == 0 ? 8.0 : -8.0);
-			spot = position().add(side);
-		} else {
-			// Hang back behind them, at about 24 blocks.
-			Vec3 behind = target.getViewVector(1.0F).multiply(1.0, 0.0, 1.0).normalize().scale(-24.0);
-			spot = target.position().add(behind);
-			if (distance > 20.0 && distance < 30.0 && position().distanceTo(spot) < 10.0) {
-				getNavigation().stop();
+		getLookControl().setLookAt(target, 20.0F, 20.0F);
+
+		// Peeking: now and then he lets himself be seen, stares, and goes.
+		if (peekSpot != null || peekCooldown == 0 && !watched && distance < 40.0 && night()) {
+			if (peek(level, target, watched)) {
 				return;
 			}
 		}
-		getNavigation().moveTo(spot.x, spot.y, spot.z, 0.8);
+		if (watched && distance < 40.0 && !slipping) {
+			// Caught: freeze and stare, then slip away out of sight.
+			if (++watchedTicks < 50) {
+				getNavigation().stop();
+				if (action() == Action.NONE) {
+					act(Action.STARE, 50);
+				}
+				return;
+			}
+			slipping = true;
+			stalkSpot = hiddenSpot(level, target, 18.0, 30.0, true);
+			replanIn = 60;
+		}
+		if (!watched) {
+			watchedTicks = 0;
+		}
+		if (approaching && !slipping) {
+			slipping = true; // they are coming: not yet, so he melts away
+			stalkSpot = hiddenSpot(level, target, 20.0, 30.0, true);
+			replanIn = 60;
+		}
+		if (--replanIn <= 0 || stalkSpot == null) {
+			replanIn = 40 + random.nextInt(20);
+			slipping = false;
+			Vec3 spot = hiddenSpot(level, target, 16.0, 28.0, false);
+			if (spot != null) {
+				stalkSpot = spot;
+			}
+		}
+		if (stalkSpot == null) {
+			return;
+		}
+		if (position().distanceToSqr(stalkSpot) < 2.0) {
+			getNavigation().stop();
+			return;
+		}
+		double pace = slipping ? 1.15 : distance > 34.0 ? 1.1 : 0.75;
+		if (getNavigation().isDone() || (tickCount + getId()) % 10 == 0) {
+			getNavigation().moveTo(stalkSpot.x, stalkSpot.y, stalkSpot.z, pace);
+		}
 	}
 
-	/** Whether the prey is looking roughly at him. */
-	private boolean watching(Player target) {
-		Vec3 to = position().add(0.0, getEyeHeight(), 0.0).subtract(target.getEyePosition()).normalize();
-		return target.getViewVector(1.0F).dot(to) > 0.75 && target.hasLineOfSight(this);
+	/**
+	 * When to attack. Never on a group; by day only if they are in the dark. Otherwise when the stalk has
+	 * run its course, or sooner on an opening: hurt, alone in the dark, looking away, standing still, or
+	 * walking right up to him. The better the opening, the sooner (but at least a third of the stalk).
+	 */
+	private boolean decideToAttack(Player target, double distance, boolean alone, boolean approaching) {
+		if (getLastHurtByMob() == target && tickCount - getLastHurtByMobTimestamp() < 40) {
+			return true;
+		}
+		if (!alone || !night() && lit(target)) {
+			return false;
+		}
+		if (distance < 5.0 && !watching(target)) {
+			return true; // they walked right into him
+		}
+		if (stalkTicks >= stalkPlan) {
+			return distance < 30.0;
+		}
+		if (stalkTicks < stalkPlan / 3 || (tickCount + getId()) % 20 != 0) {
+			return false;
+		}
+		float opening = 0.0F;
+		float health = target.getHealth() / target.getMaxHealth();
+		opening += health < 0.25F ? 2.0F : health < 0.5F ? 1.0F : 0.0F;
+		opening += lit(target) ? 0.0F : 1.0F;
+		opening += lookedAwayTicks > 200 ? 1.0F : 0.0F;
+		opening += stillTicks > 200 ? 1.0F : 0.0F;
+		opening += approaching ? 1.0F : 0.0F;
+		opening += distance < 14.0 ? 0.5F : 0.0F;
+		float needed = 4.0F - 2.0F * (stalkTicks / (float) stalkPlan); // about 3.3 a third of the way in, 2 near the end
+		return opening >= needed;
 	}
+
+	/** Stepping into view at a distance, staring, and going. Returns true while it is in charge. */
+	private boolean peek(ServerLevel level, Player target, boolean watched) {
+		if (peekSpot == null) {
+			peekSpot = visibleSpot(level, target);
+			peekLeft = 200;
+			if (peekSpot == null) {
+				peekCooldown = 300;
+				return false;
+			}
+		}
+		if (watched) {
+			watchedTicks++;
+		}
+		if (--peekLeft <= 0 || watchedTicks > 40) {
+			peekSpot = null;
+			peekCooldown = 1200 + random.nextInt(1200); // one to two minutes until the next time
+			watchedTicks = 0;
+			slipping = true;
+			stalkSpot = hiddenSpot(level, target, 18.0, 30.0, true);
+			replanIn = 60;
+			return false;
+		}
+		if (position().distanceToSqr(peekSpot) > 2.0) {
+			if (getNavigation().isDone() || (tickCount + getId()) % 10 == 0) {
+				getNavigation().moveTo(peekSpot.x, peekSpot.y, peekSpot.z, 0.8);
+			}
+		} else {
+			getNavigation().stop();
+			getLookControl().setLookAt(target, 30.0F, 30.0F);
+			if (action() == Action.NONE) {
+				act(Action.STARE, 60);
+			}
+		}
+		return true;
+	}
+
+	/** A spot {@code near}-{@code far} blocks from the prey that they cannot see, behind them and dark if it can be. */
+	private @Nullable Vec3 hiddenSpot(ServerLevel level, Player target, double near, double far, boolean awayFromMe) {
+		Vec3 gaze = target.getViewVector(1.0F).multiply(1.0, 0.0, 1.0);
+		gaze = gaze.lengthSqr() < 1.0E-4 ? new Vec3(0, 0, 1) : gaze.normalize();
+		Vec3 best = null;
+		double bestScore = Double.MAX_VALUE;
+		for (int attempt = 0; attempt < 14; attempt++) {
+			double angle = random.nextDouble() * Math.PI * 2.0;
+			double r = near + random.nextDouble() * (far - near);
+			BlockPos floor = standable(level, BlockPos.containing(target.getX() + Math.cos(angle) * r, target.getY(), target.getZ() + Math.sin(angle) * r));
+			if (floor == null) {
+				continue;
+			}
+			Vec3 at = Vec3.atBottomCenterOf(floor);
+			Vec3 dir = at.subtract(target.position()).multiply(1.0, 0.0, 1.0).normalize();
+			double score = position().distanceTo(at) * (awayFromMe ? -0.2 : 0.4);
+			score += visibleFrom(target, at) ? 60.0 : 0.0;
+			score += dir.dot(gaze) * 12.0; // behind them is better
+			score += level.getMaxLocalRawBrightness(floor) * 0.6; // darker is better
+			if (score < bestScore) {
+				bestScore = score;
+				best = at;
+			}
+		}
+		return best;
+	}
+
+	/** A spot in front of the prey, 18-26 blocks off, in their view. */
+	private @Nullable Vec3 visibleSpot(ServerLevel level, Player target) {
+		Vec3 gaze = target.getViewVector(1.0F).multiply(1.0, 0.0, 1.0);
+		gaze = gaze.lengthSqr() < 1.0E-4 ? new Vec3(0, 0, 1) : gaze.normalize();
+		for (int attempt = 0; attempt < 12; attempt++) {
+			Vec3 dir = gaze.yRot((float) ((random.nextDouble() - 0.5) * 1.2));
+			double r = 18.0 + random.nextDouble() * 8.0;
+			BlockPos floor = standable(level, BlockPos.containing(target.position().add(dir.scale(r))));
+			if (floor != null && visibleFrom(target, Vec3.atBottomCenterOf(floor))) {
+				return Vec3.atBottomCenterOf(floor);
+			}
+		}
+		return null;
+	}
+
+	// ---------------------------------------------------------------------------------------- chase
 
 	private void startChase(ServerLevel level, Player target) {
 		setMode(Mode.CHASE);
 		setTarget(target);
-		entityData.set(DATA_PREY, target.getId());
-		playSound(DLSounds.ASESINO_CHASE_START.value(), 1.4F, 1.0F);
+		lastKnown = target.position();
+		long now = level.getGameTime();
+		if (now - chaseCueAt > CHASE_CUE_GAP) {
+			chaseCueAt = now;
+			voice(level, DLSounds.ASESINO_CHASE_START.value(), 1.4F, 1.0F, 60);
+		}
 	}
 
-	/** Chase: lead the prey's movement, break through what is in the way, speed up; lose them after twelve unseen seconds. */
-	private void chase(ServerLevel level, @Nullable Player target) {
-		if (target == null) {
-			setMode(Mode.ROAM);
-			return;
-		}
-		boolean seen = hasLineOfSight(target);
+	private void chase(ServerLevel level, Player target) {
+		double distance = distanceTo(target);
+		boolean seen = sees(target);
 		if (seen) {
 			lastKnown = target.position();
 			unseenTicks = 0;
@@ -419,328 +623,254 @@ public class AsesinoEntity extends Monster {
 			setMode(Mode.SEARCH);
 			return;
 		}
+		// Thinking about himself.
+		if (getHealth() < getMaxHealth() * 0.3F && !recovering) {
+			recovering = true; // badly hurt: break off and recover somewhere hidden
+			startLurk(level, target, 28.0, 44.0, 900 + random.nextInt(600));
+			return;
+		}
+		if (company(target, level.players()) >= 2 && getHealth() < getMaxHealth() * 0.6F) {
+			setMode(Mode.STALK); // a group fighting back: wait for a better moment
+			stalkTicks = Math.max(stalkTicks, stalkPlan / 2);
+			return;
+		}
 		double ramp = Math.min(1.0, modeTicks / (double) RAMP_TICKS);
 		DeadlandsConfig.Asesino config = ConfigManager.get().asesino;
-		double extra = (config.chaseSpeedMax - config.stalkSpeed) * ramp;
-		getAttribute(Attributes.MOVEMENT_SPEED).addOrReplacePermanentModifier(new AttributeModifier(CHASE_SPEED, extra, AttributeModifier.Operation.ADD_VALUE));
-		getLookControl().setLookAt(target, 30.0F, 30.0F);
-		double distance = distanceTo(target);
-
-		if (frenzyCooldown == 0 && (modeTicks > 200 && seen || getHealth() < getMaxHealth() * 0.5F)) {
-			frenzy();
-		}
-		if (shriekCooldown == 0 && seen && distance < 12.0 && distance > 3.5 && fleeing(target)) {
-			shriekWindup = SHRIEK_WINDUP;
-			getNavigation().stop();
-			return;
-		}
-		if (pounceCooldown == 0 && seen && distance > 5.0 && distance < 9.0 && Math.abs(target.getY() - getY()) < 2.0) {
-			pounceCrouch = POUNCE_CROUCH;
-			setPose(Pose.CROUCHING);
-			getNavigation().stop();
-			return;
+		getAttribute(Attributes.MOVEMENT_SPEED).addOrReplacePermanentModifier(
+			new AttributeModifier(CHASE_SPEED, (config.chaseSpeedMax - config.stalkSpeed) * ramp, AttributeModifier.Operation.ADD_VALUE));
+		if (seen) {
+			getLookControl().setLookAt(target, 30.0F, 30.0F);
 		}
 		if (melee(level, target, distance)) {
 			return;
 		}
-		if (breachCooldown == 0 && blocked() && griefing(level)) {
-			BlockPos block = findBarricade(target.position());
-			if (block != null) {
-				breaching = block;
-				breachWindup = BREACH_WINDUP;
-				getNavigation().stop();
-				return;
-			}
+		// Out of reach (up a pillar, across water): wait nearby rather than pace beneath them.
+		Path path = getNavigation().getPath();
+		boolean reachable = path == null || path.canReach() || distance < 3.0;
+		unreachableTicks = reachable ? 0 : unreachableTicks + 1;
+		if (unreachableTicks > 120) {
+			startLurk(level, target, 8.0, 16.0, 600 + random.nextInt(600));
+			return;
 		}
-		if ((tickCount + getId()) % 6 == 0 || getNavigation().isDone()) {
+		if ((tickCount + getId()) % 5 == 0 || getNavigation().isDone()) {
 			Vec3 aim = seen ? target.position() : lastKnown;
-			if (seen && distance > 6.0) {
-				aim = aim.add(target.getDeltaMovement().multiply(10.0, 0.0, 10.0)); // where they will be
+			if (aim != null) {
+				if (seen && distance > 6.0) {
+					aim = aim.add(target.getDeltaMovement().multiply(10.0, 0.0, 10.0)); // where they will be
+				}
+				getNavigation().moveTo(aim.x, aim.y, aim.z, 1.0);
 			}
-			getNavigation().moveTo(aim.x, aim.y, aim.z, 1.0);
 		}
 	}
 
-	private boolean fleeing(Player target) {
-		Vec3 away = target.position().subtract(position()).multiply(1.0, 0.0, 1.0).normalize();
-		Vec3 moving = target.getDeltaMovement().multiply(1.0, 0.0, 1.0);
-		return moving.lengthSqr() > 0.004 && moving.normalize().dot(away) > 0.5;
-	}
-
-	/** Search: hunt around where he last saw the prey; give up after ten seconds. */
-	private void search(ServerLevel level, @Nullable Player target) {
-		if (target != null && hasLineOfSight(target) && distanceTo(target) < 40.0) {
-			startChase(level, target);
-			return;
-		}
-		if (scentCooldown == 0) {
-			scentOfFear(level);
-		}
-		if (scenting > 0 && target != null && distanceTo(target) < 40.0) {
-			lastKnown = target.position(); // the scent gives them away
-		}
-		if (modeTicks > SEARCH_TICKS) {
-			if (prey != null) {
-				leftAlone.put(prey, level.getGameTime() + 1200L);
-			}
-			setMode(Mode.ROAM);
-			return;
-		}
-		if (lastKnown != null && (getNavigation().isDone() || modeTicks % 40 == 0)) {
-			Vec3 around = lastKnown.add(random.nextGaussian() * 6.0, 0.0, random.nextGaussian() * 6.0);
-			getNavigation().moveTo(around.x, around.y, around.z, 0.9);
-		}
-	}
-
-	// ======================================================================================== melee
-
-	/** A heavy hit with a half-second wind-up (the swing sound and arm are the warning). */
+	/** The slash: a half-second wind-up (the raised arm and the swing sound are the warning), alternating overhead and backhand. */
 	private boolean melee(ServerLevel level, Player target, double distance) {
 		if (meleeWindup > 0) {
 			getNavigation().stop();
+			getLookControl().setLookAt(target, 40.0F, 40.0F);
 			if (--meleeWindup == 0) {
+				act(backhand ? Action.SWING2 : Action.SWING, SWING_TICKS);
+				swing(InteractionHand.MAIN_HAND);
 				if (distanceTo(target) < 3.4 && hasLineOfSight(target)) {
-					swing(InteractionHand.MAIN_HAND);
-					if (doHurtTarget(level, target)) {
-						playSound(DLSounds.ASESINO_HIT.value(), 1.2F, 0.9F + random.nextFloat() * 0.2F);
-						if (!target.isAlive()) {
-							killed(level);
-						}
-					}
+					strike(level, target, (float) getAttributeValue(Attributes.ATTACK_DAMAGE));
 				}
-				meleeCooldown = 16;
+				backhand = !backhand;
+				meleeCooldown = 14 + random.nextInt(8);
 			}
 			return true;
 		}
 		if (meleeCooldown == 0 && distance < 2.6) {
 			meleeWindup = MELEE_WINDUP;
-			playSound(DLSounds.ASESINO_SWING.value(), 1.1F, 0.95F + random.nextFloat() * 0.1F);
+			act(backhand ? Action.WINDUP2 : Action.WINDUP, MELEE_WINDUP);
+			level.playSound(null, getX(), getY(), getZ(), DLSounds.ASESINO_SWING.value(), SoundSource.HOSTILE, 1.0F, 0.95F + random.nextFloat() * 0.1F);
 			getNavigation().stop();
 			return true;
 		}
 		return false;
 	}
 
-	private void killed(ServerLevel level) {
-		level.playSound(null, getX(), getY(), getZ(), DLSounds.ASESINO_EXECUTION.value(), SoundSource.HOSTILE, 1.5F, 1.0F);
-		setMode(Mode.ROAM);
-	}
-
-	// ======================================================================================== abilities
-
-	/** Pounce Cut: a 0.6 s crouch, then a leap: 10 damage and four seconds of bleeding. A miss leaves him stunned for 1.5 s. */
-	private void tickPounce(ServerLevel level) {
-		Player target = preyPlayer(level);
-		if (pounceCrouch > 0) {
-			getNavigation().stop();
-			if (target != null) {
-				getLookControl().setLookAt(target, 40.0F, 40.0F);
-			}
-			if (--pounceCrouch == 0) {
-				setPose(Pose.STANDING);
-				if (target == null) {
-					pounceCooldown = POUNCE_COOLDOWN;
-					return;
-				}
-				Vec3 to = target.position().add(target.getDeltaMovement().scale(6.0)).subtract(position());
-				Vec3 flat = new Vec3(to.x, 0.0, to.z);
-				double reach = Math.min(flat.length(), 9.0);
-				Vec3 leap = flat.normalize().scale(0.25 + reach * 0.11);
-				setDeltaMovement(leap.x, 0.42, leap.z);
-				hurtMarked = true;
-				pounceFlight = POUNCE_FLIGHT;
-				pounceHit = false;
-				playSound(DLSounds.ASESINO_POUNCE.value(), 1.3F, 1.0F);
-			}
-			return;
-		}
-		pounceFlight--;
-		if (!pounceHit && target != null && getBoundingBox().inflate(0.6).intersects(target.getBoundingBox())) {
-			pounceHit = true;
-			swing(InteractionHand.MAIN_HAND);
-			target.hurtServer(level, damageSources().mobAttack(this), 10.0F);
-			bleeding.put(target.getUUID(), 80);
-			level.playSound(null, getX(), getY(), getZ(), DLSounds.ASESINO_POUNCE_HIT.value(), SoundSource.HOSTILE, 1.3F, 1.0F);
+	private void strike(ServerLevel level, Player target, float damage) {
+		if (target.hurtServer(level, damageSources().mobAttack(this), damage)) {
+			Vec3 push = target.position().subtract(position()).multiply(1.0, 0.0, 1.0).normalize().scale(0.4);
+			target.push(push.x, 0.15, push.z);
+			target.hurtMarked = true;
+			level.playSound(null, getX(), getY(), getZ(), DLSounds.ASESINO_HIT.value(), SoundSource.HOSTILE, 1.1F, 0.9F + random.nextFloat() * 0.2F);
 			if (!target.isAlive()) {
-				killed(level);
-			}
-		}
-		if (pounceFlight <= 0 || pounceHit && onGround()) {
-			pounceFlight = 0;
-			pounceCooldown = POUNCE_COOLDOWN;
-			if (!pounceHit) {
-				stunned = STUN_TICKS;
-				setPose(Pose.CROUCHING);
-				level.playSound(null, getX(), getY(), getZ(), DLSounds.ASESINO_POUNCE_MISS.value(), SoundSource.HOSTILE, 1.2F, 1.0F);
-				level.playSound(null, getX(), getY(), getZ(), DLSounds.ASESINO_STUN.value(), SoundSource.HOSTILE, 1.2F, 1.0F);
+				voice(level, DLSounds.ASESINO_EXECUTION.value(), 1.5F, 1.0F, 60);
+				setMode(Mode.ROAM);
 			}
 		}
 	}
 
-	private void tickBleeding(ServerLevel level) {
-		Iterator<Map.Entry<UUID, Integer>> it = bleeding.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry<UUID, Integer> entry = it.next();
-			int left = entry.getValue() - 1;
-			Player player = level.getPlayerByUUID(entry.getKey());
-			if (player == null || !player.isAlive() || left <= 0) {
-				it.remove();
-				continue;
-			}
-			entry.setValue(left);
-			if (left % 20 == 0) {
-				player.hurtServer(level, damageSources().generic(), 1.0F);
-			}
-		}
-	}
+	// ---------------------------------------------------------------------------------------- search
 
-	/** Breach: a 1.2 s wind-up, then he smashes the door, gate, trapdoor or barricade (an iron door takes three). */
-	private void tickBreach(ServerLevel level) {
-		getNavigation().stop();
-		if (breaching != null) {
-			getLookControl().setLookAt(Vec3.atCenterOf(breaching));
-		}
-		if (--breachWindup > 0) {
+	private void search(ServerLevel level, Player target) {
+		if (sees(target)) {
+			startChase(level, target);
 			return;
 		}
-		breachCooldown = BREACH_COOLDOWN;
-		BlockPos block = breaching;
-		breaching = null;
-		if (block == null || !breakable(block)) {
+		if (hears(target)) {
+			lastKnown = target.position();
+			searchSpots.clear();
+			searchSpots.add(target.position()); // straight there
+			searchLeft = Math.max(searchLeft, 200);
+		}
+		if (modeTicks == 1) {
+			searchLeft = SEARCH_TICKS;
+			planSearch(level);
+		}
+		if (--searchLeft <= 0) {
+			startLurk(level, target, 8.0, 18.0, 1200 + random.nextInt(1200)); // nothing: hide nearby and wait
 			return;
 		}
-		swing(InteractionHand.MAIN_HAND);
-		level.playSound(null, block, DLSounds.ASESINO_BREACH.value(), SoundSource.HOSTILE, 1.4F, 0.8F);
-		BlockState state = level.getBlockState(block);
-		int needed = state.is(Blocks.IRON_DOOR) || state.is(Blocks.IRON_TRAPDOOR) ? 3 : 1;
-		int hits = breachHits.merge(block.immutable(), 1, Integer::sum);
-		level.destroyBlockProgress(getId(), block, Math.min(9, hits * 10 / needed));
-		if (hits >= needed) {
-			breachHits.remove(block);
-			level.destroyBlockProgress(getId(), block, -1);
-			level.destroyBlock(block, true, this);
-			breachCooldown = 20; // straight on through
+		if (lookingAround > 0) {
+			lookingAround--;
+			getNavigation().stop();
+			return;
 		}
-	}
-
-	private boolean blocked() {
-		return horizontalCollision || getNavigation().isStuck() || getNavigation().isDone();
-	}
-
-	private boolean griefing(ServerLevel level) {
-		return ConfigManager.get().zombies.breakBarricades && level.getGameRules().get(GameRules.MOB_GRIEFING);
-	}
-
-	private boolean breakable(BlockPos pos) {
-		BlockState state = level().getBlockState(pos);
-		return state.is(DLTags.INFECTED_BREAKABLE) || state.is(DLTags.BRUTE_BREAKABLE) || state.is(Blocks.IRON_DOOR) || state.is(Blocks.IRON_TRAPDOOR);
-	}
-
-	/** A breakable block on the next steps of his path, or straight ahead toward the goal. */
-	private @Nullable BlockPos findBarricade(Vec3 goal) {
-		Path path = getNavigation().getPath();
-		if (path != null && !path.isDone()) {
-			int end = Math.min(path.getNextNodeIndex() + 2, path.getNodeCount());
-			for (int i = path.getNextNodeIndex(); i < end; i++) {
-				Node node = path.getNode(i);
-				for (int dy = 0; dy <= 1; dy++) {
-					BlockPos pos = new BlockPos(node.x, node.y + dy, node.z);
-					if (pos.distToCenterSqr(position()) < 9.0 && breakable(pos)) {
-						return pos;
-					}
-				}
+		if (searchSpots.isEmpty()) {
+			planSearch(level);
+			if (searchSpots.isEmpty()) {
+				return;
 			}
 		}
-		Vec3 ahead = goal.subtract(position()).multiply(1.0, 0.0, 1.0);
-		if (ahead.lengthSqr() < 1.0E-4) {
+		Vec3 spot = searchSpots.getFirst();
+		if (position().distanceToSqr(spot) < 2.5 * 2.5) {
+			searchSpots.removeFirst();
+			lookingAround = 25 + random.nextInt(20); // stop, look, listen
+			if (action() == Action.NONE) {
+				act(Action.SCENT, 30);
+			}
+			return;
+		}
+		if (getNavigation().isDone() || (tickCount + getId()) % 20 == 0) {
+			if (!getNavigation().moveTo(spot.x, spot.y, spot.z, 0.95)) {
+				searchSpots.removeFirst(); // cannot get there
+			}
+		}
+	}
+
+	/** Where to look: where he lost them, then up to eight hiding places around it, indoors first. */
+	private void planSearch(ServerLevel level) {
+		searchSpots.clear();
+		if (lastKnown == null) {
+			return;
+		}
+		searchSpots.add(lastKnown);
+		BlockPos centre = BlockPos.containing(lastKnown);
+		List<Vec3> inside = new ArrayList<>();
+		List<Vec3> outside = new ArrayList<>();
+		for (int attempt = 0; attempt < 48 && inside.size() + outside.size() < 16; attempt++) {
+			BlockPos floor = standable(level, centre.offset(random.nextInt(25) - 12, random.nextInt(7) - 3, random.nextInt(25) - 12));
+			if (floor != null) {
+				(level.canSeeSky(floor) ? outside : inside).add(Vec3.atBottomCenterOf(floor));
+			}
+		}
+		Vec3 from = lastKnown;
+		inside.sort(Comparator.comparingDouble(v -> v.distanceToSqr(from)));
+		outside.sort(Comparator.comparingDouble(v -> v.distanceToSqr(from)));
+		inside.stream().limit(6).forEach(searchSpots::add);
+		outside.stream().limit(2).forEach(searchSpots::add);
+	}
+
+	/** A spot near {@code probe} with solid ground and two blocks of room (searching up and down a little). */
+	private static @Nullable BlockPos standable(ServerLevel level, BlockPos probe) {
+		if (!level.isLoaded(probe)) {
 			return null;
 		}
-		ahead = ahead.normalize();
-		for (double step = 0.8; step <= 2.0; step += 0.6) {
-			for (int dy = 0; dy <= 1; dy++) {
-				BlockPos pos = BlockPos.containing(getX() + ahead.x * step, getY() + dy + 0.1, getZ() + ahead.z * step);
-				if (breakable(pos)) {
-					return pos;
+		for (int dy = 0; dy <= 4; dy++) {
+			for (int sign : new int[] {1, -1}) {
+				BlockPos at = probe.offset(0, dy * sign, 0);
+				if (level.getBlockState(at.below()).isSolid() && level.getBlockState(at).getCollisionShape(level, at).isEmpty()
+					&& level.getBlockState(at.above()).getCollisionShape(level, at.above()).isEmpty()
+					&& level.getFluidState(at).isEmpty()) {
+					return at;
 				}
 			}
 		}
 		return null;
 	}
 
-	/** Scent of Fear: for six seconds he knows where every survivor within 40 blocks is; they feel it. */
-	private void scentOfFear(ServerLevel level) {
-		scentCooldown = SCENT_COOLDOWN;
-		scenting = SCENT_TICKS;
-		level.playSound(null, getX(), getY(), getZ(), DLSounds.ASESINO_SCENT.value(), SoundSource.HOSTILE, 1.0F, 0.6F);
-		for (ServerPlayer player : level.getEntitiesOfClass(ServerPlayer.class, getBoundingBox().inflate(40.0), this::huntable)) {
-			player.connection.send(new ClientboundSetActionBarTextPacket(Component.translatable("entity.deadlands.asesino.watched").withStyle(ChatFormatting.DARK_RED)));
-			player.level().playSound(null, player.getX(), player.getY(), player.getZ(), DLSounds.ASESINO_SCENT.value(), SoundSource.HOSTILE, 0.5F, 0.5F);
-			if (mode == Mode.ROAM && prey == null && company(player, level.players()) < 2) {
-				prey = player.getUUID();
-				lastKnown = player.position();
-				setMode(Mode.STALK);
+	// ---------------------------------------------------------------------------------------- lurk
+
+	/** Hide near the prey, out of their sight, silent (no music) and still, for {@code ticks}. */
+	private void startLurk(ServerLevel level, Player target, double near, double far, int ticks) {
+		setMode(Mode.LURK);
+		lurkLeft = ticks;
+		lurkSpot = hiddenSpot(level, target, near, far, false);
+	}
+
+	private void lurk(ServerLevel level, Player target) {
+		double distance = distanceTo(target);
+		if (recovering && tickCount % 40 == 0) {
+			heal(1.0F);
+		}
+		if (lurkSpot != null && position().distanceToSqr(lurkSpot) > 2.0) {
+			if (getNavigation().isDone() || (tickCount + getId()) % 20 == 0) {
+				getNavigation().moveTo(lurkSpot.x, lurkSpot.y, lurkSpot.z, recovering ? 1.15 : 0.9);
+			}
+		} else {
+			getNavigation().stop();
+		}
+		boolean seesThem = hasLineOfSight(target) && distance < 24.0;
+		boolean alone = company(target, level.players()) == 0;
+		if (seesThem && !recovering && alone) {
+			if (distance < 10.0 && !watching(target)) {
+				startChase(level, target); // they came out: ambush
+				return;
+			}
+			if (watching(target)) {
+				lastDistance = distance;
+				setMode(Mode.STALK); // spotted: slip back into the shadows
+				stalkTicks = Math.max(stalkTicks, stalkPlan - 1200);
+				return;
 			}
 		}
-	}
-
-	/** Frenzy: +35% speed for five seconds. */
-	private void frenzy() {
-		frenzyCooldown = FRENZY_COOLDOWN;
-		frenzy = FRENZY_TICKS;
-		getAttribute(Attributes.MOVEMENT_SPEED).addOrReplacePermanentModifier(
-			new AttributeModifier(FRENZY, 0.35, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
-		playSound(DLSounds.ASESINO_FRENZY.value(), 1.5F, 1.0F);
-	}
-
-	/** Dread Shriek: after a one-second wind-up, Slowness II (3 s) and Darkness (2 s) for everyone within 12 blocks. */
-	private void tickShriek(ServerLevel level) {
-		getNavigation().stop();
-		if (shriekWindup == SHRIEK_WINDUP) {
-			level.playSound(null, getX(), getY(), getZ(), DLSounds.ASESINO_SHRIEK.value(), SoundSource.HOSTILE, 2.0F, 0.85F);
-		}
-		if (--shriekWindup > 0) {
+		if (recovering && getHealth() >= getMaxHealth() * 0.7F) {
+			recovering = false;
+			setMode(Mode.STALK);
 			return;
 		}
-		shriekCooldown = SHRIEK_COOLDOWN;
-		for (ServerPlayer player : level.getEntitiesOfClass(ServerPlayer.class, getBoundingBox().inflate(12.0), this::huntable)) {
-			player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 60, 1), this);
-			player.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 40, 0), this);
+		if (--lurkLeft <= 0 || distance > 96.0) {
+			setMode(Mode.STALK); // back to following them, close to deciding
+			stalkTicks = Math.max(stalkTicks, stalkPlan - 1800);
 		}
 	}
 
-	// ======================================================================================== the rest
+	// ======================================================================================== sounds: one voice at a time
 
-	@Override
-	public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
-		boolean hurt = super.hurtServer(level, source, amount);
-		if (hurt && source.getEntity() instanceof Player player && huntable(player) && (mode == Mode.ROAM || mode == Mode.STALK)) {
-			prey = player.getUUID();
-			startChase(level, player);
+	private void voice(ServerLevel level, SoundEvent sound, float volume, float pitch, int ticks) {
+		long now = level.getGameTime();
+		if (now < voiceUntil) {
+			return;
 		}
-		return hurt;
+		voiceUntil = now + ticks;
+		level.playSound(null, getX(), getY(), getZ(), sound, SoundSource.HOSTILE, volume, pitch);
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
-		if (!level().isClientSide() && onGround() && getDeltaMovement().horizontalDistanceSqr() > 0.002 && ++stepTicks % (mode == Mode.CHASE ? 6 : 10) == 0) {
-			playSound(DLSounds.ASESINO_STEP.value(), mode == Mode.CHASE ? 0.9F : 0.5F, 0.95F + random.nextFloat() * 0.1F);
+	public void playAmbientSound() {
+		if (level() instanceof ServerLevel level && mode == Mode.ROAM) {
+			voice(level, DLSounds.ASESINO_AMBIENT.value(), 0.8F, 1.0F, 60); // silent while hunting
 		}
-	}
-
-	@Override
-	protected void playStepSound(BlockPos pos, BlockState state) {
-		// His own footsteps (tick).
 	}
 
 	@Override
 	protected @Nullable SoundEvent getAmbientSound() {
-		return mode == Mode.STALK ? null : DLSounds.ASESINO_AMBIENT.value(); // silent while stalking
+		return DLSounds.ASESINO_AMBIENT.value();
 	}
 
 	@Override
 	public int getAmbientSoundInterval() {
-		return 400;
+		return 500;
+	}
+
+	@Override
+	protected void playHurtSound(DamageSource source) {
+		if (level() instanceof ServerLevel level && level.getGameTime() - hurtSoundAt > 12) {
+			hurtSoundAt = level.getGameTime();
+			level.playSound(null, getX(), getY(), getZ(), DLSounds.ASESINO_HURT.value(), SoundSource.HOSTILE, 1.0F, 0.95F + random.nextFloat() * 0.1F);
+		}
 	}
 
 	@Override
@@ -754,12 +884,71 @@ public class AsesinoEntity extends Monster {
 	}
 
 	@Override
+	protected void playStepSound(BlockPos pos, BlockState state) {
+		// His own footsteps, paced by how fast he moves (tick); silent while lurking or creeping.
+	}
+
+	@Override
+	public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
+		boolean hurt = super.hurtServer(level, source, amount);
+		if (hurt && source.getEntity() instanceof Player player && huntable(player) && !recovering && mode != Mode.CHASE) {
+			prey = player.getUUID();
+			startChase(level, player);
+		}
+		return hurt;
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+		if (level().isClientSide()) {
+			Mode now = mode();
+			float hunchGoal = switch (now) {
+				case ROAM -> 0.05F;
+				case STALK -> 0.65F;
+				case CHASE -> 0.45F;
+				case SEARCH -> 0.25F;
+				case LURK -> 1.0F;
+			};
+			float moving = (float) Math.min(1.0, getDeltaMovement().horizontalDistance() / 0.22);
+			hunchO = hunch;
+			sprintO = sprint;
+			hunch = Mth.approach(hunch, hunchGoal, 0.06F);
+			sprint = Mth.approach(sprint, now == Mode.CHASE ? moving : 0.0F, 0.08F);
+			return;
+		}
+		if (!onGround() || mode == Mode.LURK) {
+			return;
+		}
+		double speed = getDeltaMovement().horizontalDistance();
+		if (speed < 0.03 || mode == Mode.STALK && speed < 0.12) {
+			stepTicks = 0;
+			return; // creeping is silent
+		}
+		int every = speed > 0.2 ? 7 : speed > 0.12 ? 10 : 14;
+		if (++stepTicks % every == 0) {
+			level().playSound(null, getX(), getY(), getZ(), DLSounds.ASESINO_STEP.value(), SoundSource.HOSTILE,
+				mode == Mode.CHASE ? 0.8F : 0.35F, 0.95F + random.nextFloat() * 0.1F);
+		}
+	}
+
+	@Override
 	public boolean removeWhenFarAway(double distance) {
-		return mode == Mode.ROAM && distance > 128.0 * 128.0;
+		return false;
+	}
+
+	@Override
+	public void checkDespawn() {
+		// Never.
 	}
 
 	@Override
 	public boolean canBeLeashed() {
+		return false;
+	}
+
+	@Override
+	public boolean canPickUpLoot() {
 		return false;
 	}
 }

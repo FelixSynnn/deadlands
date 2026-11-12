@@ -72,3 +72,11 @@ converted to OGG Vorbis (`tools/assetgen/import_pixabay_creatures.py`), under th
 | Monster Warrior Roar | dffdv | https://pixabay.com/sound-effects/horror-monster-warrior-roar-195877/ | Pixabay Content License |
 | zombie roar | freesound_community | https://pixabay.com/sound-effects/horror-zombie-roar-104542/ | Pixabay Content License |
 | Zombie Sound 2 | DRAGON-STUDIO | https://pixabay.com/sound-effects/horror-zombie-sound-2-357976/ | Pixabay Content License |
+
+## The Aberrant's 3D model
+
+The Aberrant uses the fan-made **"Aberrant Slasher (Fanmade, Forsaken)"** 3D model from Sketchfab, published by its creator as free to use with credit. It was imported, re-rigged, re-textured for Minecraft and given new animations for DEADLANDS (`tools/assetgen/import_aberrant.py`). The model includes a fire axe.
+
+| Model | Creator | Page | License |
+|---|---|---|---|
+| Aberrant Slasher (Fanmade, Forsaken) | _creator's Sketchfab name (to be filled in)_ | _Sketchfab page link (to be filled in)_ | Free to use with credit (per the creator's page) |

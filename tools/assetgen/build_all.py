@@ -58,6 +58,8 @@ import gen_story5
 import gen_cinematics
 import import_pixabay
 import import_asesino
+import gen_asesino_model
+import import_aberrant
 import import_pixabay_creatures
 import gen_visuals
 import dl_realism
@@ -110,6 +112,8 @@ GROUPS = {
     "cinematics": gen_cinematics.build,  # Phase 5: the intro cutscene, the day 10 reunion, weather disasters text
     "pixabay": import_pixabay.build,  # Phase 5: real recordings from Pixabay (after every sound generator; see CREDITS.md)
     "pixabay_creatures": import_pixabay_creatures.build,  # Phase 5: real recordings for every infected, boss and nest sound (after pixabay: appends to CREDITS.md)
+    "asesino_model": gen_asesino_model.build,  # Phase 5: the Asesino's own rig (Java) and texture
+    "aberrant": import_aberrant.build,  # Phase 5: the Aberrant's imported fan-made model (Sketchfab, credited), rigged for his animations
     "asesino": import_asesino.build,  # Phase 5: the Asesino's skin, eyes, egg, sounds and music (the owner's files)
     "realism": dl_realism.build,  # last: the finishing pass over block and item textures (originals in texture-backup/)
     "variants": gen_variants.build,  # after realism: per-position variants blended from the finished textures

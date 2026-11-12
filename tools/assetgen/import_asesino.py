@@ -54,24 +54,25 @@ REUSE = {
 MUSIC = {"music.asesino.layer1": "Layer_1_slasher", "music.asesino.layer2": "Layer_2_slasher",
          "music.asesino.layer3": "Layer_3_slasher", "music.asesino.layer4": "Chase_slasher"}
 SUBTITLES = {
-    "asesino.ambient": "Asesino breathes", "asesino.hurt": "Asesino hurts", "asesino.death": "Asesino dies",
+    "asesino.ambient": "The Aberrant breathes", "asesino.hurt": "The Aberrant hurts", "asesino.death": "The Aberrant dies",
     "asesino.step": "Heavy footsteps", "asesino.swing": "Blade swings", "asesino.hit": "Blade cuts",
-    "asesino.execution": "A killing blow", "asesino.chase_start": "Asesino gives chase", "asesino.pounce": "Asesino leaps",
-    "asesino.pounce_hit": "Asesino slashes", "asesino.pounce_miss": "Asesino misses", "asesino.stun": "Asesino reels",
-    "asesino.breach": "Something smashes through", "asesino.scent": "You feel watched", "asesino.frenzy": "Asesino rages",
-    "asesino.shriek": "Asesino shrieks",
+    "asesino.execution": "A killing blow", "asesino.chase_start": "The Aberrant gives chase", "asesino.pounce": "The Aberrant leaps",
+    "asesino.pounce_hit": "The Aberrant slashes", "asesino.pounce_miss": "The Aberrant misses", "asesino.stun": "The Aberrant reels",
+    "asesino.breach": "Something smashes through", "asesino.scent": "You feel watched", "asesino.frenzy": "The Aberrant rages",
+    "asesino.shriek": "The Aberrant shrieks",
 }
 TEXT = {
-    "entity.deadlands.asesino": "Asesino",
-    "item.deadlands.asesino_spawn_egg": "Asesino Spawn Egg",
+    "entity.deadlands.asesino": "The Aberrant",
+    "item.deadlands.asesino_spawn_egg": "The Aberrant Spawn Egg",
     "entity.deadlands.asesino.watched": "You feel watched.",
-    "config.deadlands.section.asesino": "Asesino",
-    "config.deadlands.asesino.enabled": "Asesino",
+    "config.deadlands.section.asesino": "The Aberrant",
+    "config.deadlands.asesino.enabled": "The Aberrant",
     "config.deadlands.asesino.nightOnly": "Night only",
     "config.deadlands.asesino.townSpawnChance": "Town spawn chance",
     "config.deadlands.asesino.wildSpawnChance": "Wild spawn chance",
     "config.deadlands.asesino.areaRadius": "One per area (blocks)",
     "config.deadlands.asesino.maxAlive": "Most at once",
+    "config.deadlands.asesino.stalkMinutes": "Stalk time (minutes)",
     "config.deadlands.asesino.health": "Health",
     "config.deadlands.asesino.damage": "Damage",
     "config.deadlands.asesino.stalkSpeed": "Stalking speed",
@@ -79,10 +80,10 @@ TEXT = {
     "config.deadlands.asesino.followRange": "Follow range",
     "config.deadlands.asesino.knockbackResistance": "Knockback resistance",
     "config.deadlands.asesino.armor": "Armor",
-    "config.deadlands.audio.asesinoMusic": "Asesino chase music",
-    "config.deadlands.audio.asesinoLayer1": "Asesino music: layer 1 range",
-    "config.deadlands.audio.asesinoLayer2": "Asesino music: layer 2 range",
-    "config.deadlands.audio.asesinoLayer3": "Asesino music: layer 3 range",
+    "config.deadlands.audio.asesinoMusic": "The Aberrant's chase music",
+    "config.deadlands.audio.asesinoLayer1": "Aberrant music: layer 1 range",
+    "config.deadlands.audio.asesinoLayer2": "Aberrant music: layer 2 range",
+    "config.deadlands.audio.asesinoLayer3": "Aberrant music: layer 3 range",
 }
 
 
@@ -107,11 +108,11 @@ def skin() -> None:
         image = Image.open(SKIN).convert("RGBA")
         assert image.size == (64, 64), "the Asesino skin must be 64 x 64"
         image.save(out)
-    # The eyes: red, on the face's eye holes (base layer and hat layer), everything else clear.
+    # The eyes: red, on the face's eye holes only. Not on the hat layer: that drew them a second time, a
+    # little in front of the face (the "overlapping" eyes). Two 2x2 eyes, mirrored about the face's middle.
     eyes = np.zeros((64, 64, 4), dtype=np.uint8)
-    for x, y in ((10, 10), (10, 11), (13, 11), (14, 11), (13, 10), (14, 10)):
-        for dx in (0, 32):
-            eyes[y, x + dx] = (255, 28, 18, 255)
+    for x, y in ((9, 10), (10, 10), (9, 11), (10, 11), (13, 10), (14, 10), (13, 11), (14, 11)):
+        eyes[y, x] = (255, 28, 18, 255)
     Image.fromarray(eyes, "RGBA").save(N.asset("textures/entity/asesino/asesino_eyes.png"))
 
 

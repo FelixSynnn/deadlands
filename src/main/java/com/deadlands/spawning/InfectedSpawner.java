@@ -62,6 +62,10 @@ public final class InfectedSpawner {
 	}
 
 	private static void populateAround(ServerLevel level, ServerPlayer player, List<ServerPlayer> players, DeadlandsConfig.Zombies config) {
+		if (!level.getEntitiesOfClass(com.deadlands.entity.AsesinoEntity.class, player.getBoundingBox().inflate(QUIET_RADIUS),
+			net.minecraft.world.entity.Entity::isAlive).isEmpty()) {
+			return; // the Asesino is near: nothing else comes out (Phase 5)
+		}
 		RandomSource random = level.getRandom();
 		boolean night = level.isDarkOutside();
 		int target = (int) Math.round(InfectedManager.localCap() * (night ? 1.0 : config.daytimePopulation));
@@ -94,6 +98,9 @@ public final class InfectedSpawner {
 			}
 		}
 	}
+
+	/** No infected spawn within this many blocks of a survivor while an Asesino is this close to them. */
+	private static final double QUIET_RADIUS = 96.0;
 
 	private static boolean farFromEveryone(BlockPos pos, List<ServerPlayer> players, double min) {
 		for (ServerPlayer player : players) {

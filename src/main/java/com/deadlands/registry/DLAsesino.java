@@ -23,7 +23,7 @@ public final class DLAsesino {
 	private static EntityType<AsesinoEntity> register() {
 		ResourceKey<EntityType<?>> key = ResourceKey.create(Registries.ENTITY_TYPE, Deadlands.id("asesino"));
 		EntityType<AsesinoEntity> type = Registry.register(BuiltInRegistries.ENTITY_TYPE, key,
-			EntityType.Builder.of(AsesinoEntity::new, MobCategory.MONSTER).sized(0.6F, 1.95F).eyeHeight(1.74F).clientTrackingRange(10)
+			EntityType.Builder.of(AsesinoEntity::new, MobCategory.MONSTER).sized(0.7F, 2.3F).eyeHeight(2.05F).clientTrackingRange(10)
 				.notInPeaceful().build(key));
 		FabricDefaultAttributeRegistry.register(type, AsesinoEntity.createAttributes());
 		return type;

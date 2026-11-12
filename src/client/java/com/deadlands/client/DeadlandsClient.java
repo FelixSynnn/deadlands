@@ -52,6 +52,10 @@ public final class DeadlandsClient implements ClientModInitializer {
 			EntityRendererRegistry.<InfectedEntity>register(DLEntities.type(kind), context -> new InfectedRenderer(context, kind));
 		}
 		EntityRendererRegistry.register(com.deadlands.registry.DLMarkers.SURVIVOR, com.deadlands.client.render.NpcRenderer::new);
+		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(com.deadlands.client.render.AsesinoGeometry.LAYER,
+			com.deadlands.client.render.AsesinoGeometry::create);
+		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(com.deadlands.client.render.AberrantGeometry.LAYER,
+			com.deadlands.client.render.AberrantGeometry::create);
 		EntityRendererRegistry.register(com.deadlands.registry.DLAsesino.ASESINO, com.deadlands.client.render.AsesinoRenderer::new);
 		com.deadlands.client.render.vehicle.VehicleRenderer.registerLayers();
 		com.deadlands.client.render.boss.BossRenderer.registerLayers();

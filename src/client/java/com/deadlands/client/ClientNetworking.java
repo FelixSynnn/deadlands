@@ -45,7 +45,13 @@ public final class ClientNetworking {
 					harley.run();
 					return;
 				}
-				com.deadlands.client.cutscene.CutscenePlayer.start("outbreak_intro", player.position(), player.getYRot(), harley);
+				try {
+					com.deadlands.client.cutscene.CutscenePlayer.start("outbreak_intro", player.position(), player.getYRot(), harley);
+				} catch (RuntimeException failure) {
+					com.deadlands.Deadlands.LOGGER.error("DEADLANDS: the intro cutscene failed to start; going on without it", failure);
+					com.deadlands.client.cutscene.CutscenePlayer.stop();
+					harley.run();
+				}
 			});
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.HorrorScarePayload.TYPE,
 			(payload, context) -> com.deadlands.client.horror.ScarePlayer.onScare(payload));
@@ -62,7 +68,14 @@ public final class ClientNetworking {
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.DisasterPayload.TYPE,
 			(payload, context) -> com.deadlands.client.weather.ClientDisaster.update(payload));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.CutscenePayload.TYPE,
-			(payload, context) -> com.deadlands.client.cutscene.CutscenePlayer.start(payload));
+			(payload, context) -> {
+				try {
+					com.deadlands.client.cutscene.CutscenePlayer.start(payload);
+				} catch (RuntimeException failure) {
+					com.deadlands.Deadlands.LOGGER.error("DEADLANDS: cutscene {} failed to start; skipped", payload.id(), failure);
+					com.deadlands.client.cutscene.CutscenePlayer.stop();
+				}
+			});
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.WorldEventPayload.TYPE,
 			(payload, context) -> com.deadlands.client.hud.BossCardHud.event(payload));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.SkillsPayload.TYPE, (payload, context) -> ClientState.setSkills(payload));

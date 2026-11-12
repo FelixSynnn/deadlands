@@ -807,3 +807,112 @@ The owner's report: the flashlight does nothing even with Lamb's Dynamic Lights,
   - Layers fade over 1 s, and everything fades out over 3 s.
   - The DEADLANDS soundtrack drops to 20% and Minecraft's music stops while it plays.
 - **Verified:** build success, 57/57 tests.
+
+### Asesino fixes (2026-11-12, after the 1.1.0-beta.2 playtest)
+
+- **Overlapping sounds:**
+  - His voice plays one sound at a time.
+  - The chase cue plays at most every 30 s.
+  - Hurt sounds are spaced out, and footsteps are paced to his speed.
+  - Scent of Fear plays once, to the player only.
+  - Ambient sounds only play while he roams or searches.
+- **Overlapping music:** the four chase files are full mixes, so playing them on top of each other doubled up. Now only the highest layer that applies plays, crossfading over about a second, and the DEADLANDS soundtrack is silent underneath.
+- **Overlapping overlays:** the glowing eyes were also painted on the skin's hat layer, so they drew twice. They are now on the face only, mirrored, and not drawn while he is invisible.
+- **Custom animations** (`client/render/AsesinoModel.java`, synced `Action`):
+  - Gaits:
+    - roaming: a heavy walk;
+    - stalking: hunched;
+    - chasing: a sprint lean with pumping arms;
+    - searching: the head sweeps from side to side.
+  - Actions:
+    - an overhead wind-up and a machete swing;
+    - the pounce crouch and leap;
+    - a reeling stun;
+    - the shriek with head back and arms wide;
+    - a two-handed breach smash;
+    - frenzy shaking;
+    - the scent sniff;
+    - a head-tilted stare.
+  - He carries a machete. His damage stays the configured 13; the machete adds nothing.
+- **Flashlight escape:**
+  - In the dark he sees only lit survivors: a shining flashlight in either hand, a light where they stand, or daylight. Beyond 8 blocks, a survivor with the flashlight off in the dark is invisible to him.
+  - In a chase, five seconds unseen in the dark sends him searching (twelve if lit); after ten more seconds he gives up.
+- **Night stalking:**
+  - Longer stalks.
+  - Caught watching, he freezes and stares for 3 s, then slips out of view.
+  - Walking toward him makes him commit.
+  - He gives up the hunt by day and slips away.
+- **Around him:**
+  - No infected spawn within 96 blocks of a survivor he is near.
+  - The ambience goes silent within 96 blocks.
+- **Verified:** build success, 57/57 tests, dedicated server clean.
+
+### The Asesino's own model (2026-11-12)
+
+- **New rig:**
+  - An original design, about 2.3 blocks tall (`tools/assetgen/gen_asesino_model.py` writes `client/render/AsesinoGeometry.java` and the texture).
+  - Look: hood, cracked bone-white mask with two eye holes, long stained work coat with raised collar and split tails, leather harness, belt and pouch, black gloves, worn trousers, heavy boots, a long taped machete.
+  - Joints: 18 parts, with elbows, knees and coat tails.
+  - The eyes glow on an emissive layer.
+  - His hitbox is now 0.7 x 2.3.
+  - The owner offered a fan-ripped game model; it was not used.
+- **New animations** (`client/render/AsesinoModel.java`):
+  - Always: breathing and head tracking.
+  - A walk cycle with bending knees, a dipping and swaying pelvis, a counter-turning torso, lagging elbows, and coat tails that trail behind.
+  - Stance blends are eased on the client: hunched while stalking, a sprint lean while chasing.
+  - Keyframed actions:
+    - the wind-up, and a slash with follow-through;
+    - the pounce crouch and leaping cut;
+    - a stun stagger;
+    - the shriek;
+    - the breach smash;
+    - frenzy thrashing;
+    - the scent sniff;
+    - the head-tilted stare.
+- **Verified:**
+  - Build: success, 57/57 tests.
+  - Offline front, side and in-the-dark renders of the rest pose checked.
+
+### First-join fix and Asesino hunting rework (2026-11-12)
+
+- **"Network Protocol Error" on a world's first join:**
+  - Cause: the server sends Harley's opening scene and then the intro. Starting the intro closed the opening scene's overlay, and that close was taken as the intro ending: it wiped the intro's script, and the next line threw inside the packet handler, which Minecraft reports as a protocol error.
+  - Fix: swapping overlays no longer ends the new scene (`CutscenePlayer.replacing`).
+  - The cutscene packet handlers now log a failure and carry on instead of dropping the connection.
+- **He never despawns:** persistent, with no distance or day removal.
+- **Follows you:**
+  - Once he picks a survivor he keeps track of them by sound and scent, following 14 to 22 blocks behind and out of their gaze, and hurrying to catch up when far.
+  - He only lets go beyond 160 blocks.
+  - By day he follows but never commits.
+- **Music:** layer 1 plays whenever he is stalking you, from any distance.
+- **Chase, then search:**
+  - Losing him in a chase means breaking line of sight; in the dark, with the flashlight off, it takes 5 s.
+  - Then he searches for 30 s: where he last saw you, then up to eight hiding spots around it, rooms under a roof first. He smashes doors on the way and pauses at each spot to look and listen.
+  - Running, or walking without crouching, within 16 blocks gives you away.
+  - He finds you within 8 blocks with line of sight, or 4 through anything.
+  - If he finds nothing, he goes back to stalking you.
+- **Verified:** build success, 57/57 tests, dedicated server clean.
+
+### The Aberrant (2026-11-12): imported model, slash-only AI rework
+
+- **Name:** the Asesino is now **The Aberrant** in game (internal id `asesino` unchanged, so worlds keep him).
+- **Model:**
+  - Source: the fan-made "Aberrant Slasher" model from Sketchfab (free to use with credit; credited in `CREDITS.md`). The creator's name and link are still to be filled in.
+  - `tools/assetgen/import_aberrant.py` reads the glb (`dl_glb.py`):
+    - swings the T-posed arms down;
+    - assigns each triangle to a bone of the existing animation rig;
+    - bakes each material's UV tiling into its texture;
+    - writes `models/entity/aberrant.bin`, `textures/entity/aberrant/*` and `AberrantGeometry.java`.
+  - `AberrantMeshLayer` draws the mesh at each animated bone, and the emissive maps on the glow pass. No new dependency.
+- **AI rewrite** (slash only; Pounce, Breach, Scent, Frenzy and Shriek removed; he opens doors normally):
+  - Stalk lasts about 10 minutes (`asesino.stalkMinutes`). He stays out of sight behind you, freezes and stares when seen, peeks every one to two minutes, and slips away if approached early.
+  - He decides to attack on openings: hurt, dark, looking away, standing still, or walking into him. Never a group, never by day unless you are in the dark.
+  - The chase ignores darkness; 8 s without line of sight loses him.
+  - Then he searches for 30 s, rooms first, listening.
+  - If the search fails, he **lurks**: hidden nearby, silent, no music, ambushing if you come out unaware.
+  - He retreats to heal below 30% health, backs off from groups, and waits nearby if you are out of reach.
+- **Bugs fixed:**
+  - After a failed search he no longer freezes forever at a distance waiting to be hit: he lurks, then resumes stalking close to deciding.
+  - Lurking is silent: layer 1 only plays while he is stalking or searching.
+- **New animations:** a backhand slash alternating with the overhead slash, and a crouched lurk pose.
+- **Verified:** build success, 57/57 tests, dedicated server clean, offline renders of the imported model checked.

@@ -223,6 +223,9 @@ public final class DeadlandsConfig {
 		@ConfigEntry(comment = "Speed after 30 seconds of chasing (it rises from the stalking speed).", min = 0.1, max = 0.8)
 		public double chaseSpeedMax = 0.34;
 
+		@ConfigEntry(comment = "About how long he stalks someone before he decides to attack, in minutes (he may strike sooner if they give him a chance).", min = 1.0, max = 30.0)
+		public double stalkMinutes = 10.0;
+
 		@ConfigEntry(comment = "How far he follows and notices survivors, in blocks.", min = 16.0, max = 128.0)
 		public double followRange = 64.0;
 

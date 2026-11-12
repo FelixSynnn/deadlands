@@ -2,35 +2,51 @@ package com.deadlands.client.render;
 
 import com.deadlands.Deadlands;
 import com.deadlands.entity.AsesinoEntity;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minecraft.client.renderer.entity.layers.LivingEntityEmissiveLayer;
-import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.Identifier;
 
 /**
- * The Asesino: Minecraft's player model in the owner's 64x64 skin, with glowing red eyes drawn on an
- * emissive layer ({@code asesino_eyes.png}, full bright), so they show in the dark.
+ * The Aberrant: the imported fan-made model ({@link AberrantMesh}, credited in CREDITS.md) drawn by
+ * {@link AberrantMeshLayer} on a rig ({@link AberrantGeometry}) that his animations ({@link AsesinoModel})
+ * pose; its glowing parts show in the dark. (The earlier box model, {@link AsesinoGeometry}, is kept but unused.)
  */
-public class AsesinoRenderer extends HumanoidMobRenderer<AsesinoEntity, HumanoidRenderState, HumanoidModel<HumanoidRenderState>> {
-	private static final Identifier SKIN = Deadlands.id("textures/entity/asesino/asesino.png");
-	private static final Identifier EYES = Deadlands.id("textures/entity/asesino/asesino_eyes.png");
+public class AsesinoRenderer extends MobRenderer<AsesinoEntity, AsesinoRenderer.State, AsesinoModel> {
+	private static final Identifier TEXTURE = Deadlands.id("textures/entity/asesino/asesino_model.png");
+
+	/** What the animations need. */
+	public static class State extends LivingEntityRenderState {
+		public AsesinoEntity.Mode mode = AsesinoEntity.Mode.ROAM;
+		public AsesinoEntity.Action action = AsesinoEntity.Action.NONE;
+		public float actionAge;
+		public float hunch;
+		public float sprint;
+	}
 
 	public AsesinoRenderer(EntityRendererProvider.Context context) {
-		super(context, new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER)), 0.5F);
-		addLayer(new LivingEntityEmissiveLayer<>(this, state -> EYES, (state, age) -> 1.0F, getModel(), RenderTypes::eyes, true));
+		super(context, new AsesinoModel(context.bakeLayer(AberrantGeometry.LAYER)), 0.6F);
+		// The Aberrant's imported model, drawn on the animated rig (the rig itself has no boxes).
+		addLayer(new AberrantMeshLayer(this, getModel().root()));
 	}
 
 	@Override
-	public HumanoidRenderState createRenderState() {
-		return new HumanoidRenderState();
+	public State createRenderState() {
+		return new State();
 	}
 
 	@Override
-	public Identifier getTextureLocation(HumanoidRenderState state) {
-		return SKIN;
+	public void extractRenderState(AsesinoEntity asesino, State state, float partialTick) {
+		super.extractRenderState(asesino, state, partialTick);
+		state.mode = asesino.mode();
+		state.action = asesino.action();
+		state.actionAge = asesino.actionAge(partialTick);
+		state.hunch = asesino.hunch(partialTick);
+		state.sprint = asesino.sprint(partialTick);
+	}
+
+	@Override
+	public Identifier getTextureLocation(State state) {
+		return TEXTURE;
 	}
 }

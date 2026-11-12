@@ -15,22 +15,26 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * The Asesino's layered chase music. All four layers start together as loops (so they stay in step)
- * the moment one is in range, and each layer's volume fades in or out over about a second as the
- * nearest Asesino comes closer: layer 1 within {@code audio.asesinoLayer1} blocks (48), layer 2 within
- * {@code asesinoLayer2} (24), layer 3 within {@code asesinoLayer3} (12), layer 4 while he is chasing
- * this survivor. With none in range (or the chase over and him gone) everything fades out over about
+ * the moment one is in range (or stalking this survivor, from any distance: layer 1); the highest layer that applies is heard and the others are silent, each
+ * cross-fading over about a second (the four files are full mixes of rising intensity, so playing them
+ * on top of each other only made them overlap): layer 1 within {@code audio.asesinoLayer1} blocks (48),
+ * layer 2 within {@code asesinoLayer2} (24), layer 3 within {@code asesinoLayer3} (12), layer 4 while he
+ * is chasing this survivor. With none in range (or the chase over and him gone) everything fades out over about
  * three seconds and stops. Meanwhile the DEADLANDS soundtrack is turned down and Minecraft's own music
  * steps aside ({@code MusicManagerMixin}).
  */
 public final class AsesinoMusic {
 	private static final float FADE_IN = 1.0F / 20.0F;
 	private static final float FADE_OUT_ALL = 1.0F / 60.0F;
-	private static final float DUCKED = 0.2F;
+	private static final float DUCKED = 0.0F; // the soundtrack goes silent under the chase music (no overlap)
 
 	private static final Layer[] LAYERS = new Layer[4];
 	private static boolean running;
 	private static float master;
 	private static float duck = 1.0F;
+	/** Whether an Asesino is within {@link #QUIET_RANGE}: the world goes quiet (the ambience holds its breath). */
+	private static boolean near;
+	private static final double QUIET_RANGE = 96.0;
 
 	private AsesinoMusic() {
 	}
@@ -38,6 +42,11 @@ public final class AsesinoMusic {
 	/** True while the layers are playing (Minecraft's music stays off). */
 	public static boolean playing() {
 		return running;
+	}
+
+	/** Whether an Asesino is close enough that the world goes quiet. */
+	public static boolean near() {
+		return near;
 	}
 
 	/** How loud the DEADLANDS soundtrack may be, 0 to 1. */
@@ -53,13 +62,21 @@ public final class AsesinoMusic {
 			AsesinoEntity nearest = nearest(minecraft, player, config.asesinoLayer1);
 			if (nearest != null) {
 				double distance = nearest.distanceTo(player);
-				want[0] = distance <= config.asesinoLayer1;
+				want[0] = distance <= config.asesinoLayer1 || nearest.stalkingId() == player.getId(); // stalking you: always layer 1
 				want[1] = distance <= config.asesinoLayer2;
 				want[2] = distance <= config.asesinoLayer3;
 				want[3] = nearest.chasingId() == player.getId();
 			}
 		}
-		boolean any = want[0] || want[3];
+		near = player != null && minecraft.level != null && !minecraft.level.getEntitiesOfClass(AsesinoEntity.class,
+			player.getBoundingBox().inflate(QUIET_RANGE), AsesinoEntity::isAlive).isEmpty();
+		int top = -1;
+		for (int i = 0; i < want.length; i++) {
+			if (want[i]) {
+				top = i;
+			}
+		}
+		boolean any = top >= 0;
 		if (any && !running && player != null) {
 			start(minecraft);
 		}
@@ -72,7 +89,7 @@ public final class AsesinoMusic {
 		for (int i = 0; i < LAYERS.length; i++) {
 			Layer layer = LAYERS[i];
 			if (layer != null) {
-				layer.level = want[i] ? Math.min(1.0F, layer.level + FADE_IN) : Math.max(0.0F, layer.level - FADE_IN);
+				layer.level = i == top ? Math.min(1.0F, layer.level + FADE_IN) : Math.max(0.0F, layer.level - FADE_IN);
 			}
 		}
 		if (!any && master <= 0.0F || player == null) {
@@ -93,8 +110,8 @@ public final class AsesinoMusic {
 		}
 		// Chasing from beyond layer 1's range still counts (layer 4).
 		if (best == null) {
-			for (AsesinoEntity asesino : minecraft.level.getEntitiesOfClass(AsesinoEntity.class, player.getBoundingBox().inflate(96.0),
-				a -> a.isAlive() && a.chasingId() == player.getId())) {
+			for (AsesinoEntity asesino : minecraft.level.getEntitiesOfClass(AsesinoEntity.class, player.getBoundingBox().inflate(160.0),
+				a -> a.isAlive() && (a.chasingId() == player.getId() || a.stalkingId() == player.getId()))) {
 				return asesino;
 			}
 		}
@@ -125,6 +142,7 @@ public final class AsesinoMusic {
 	public static void reset() {
 		stop(Minecraft.getInstance());
 		duck = 1.0F;
+		near = false;
 	}
 
 	/** One looping layer; its volume follows {@link #level} times the master fade. */
