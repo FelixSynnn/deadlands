@@ -1,0 +1,369 @@
+{
+	"cue": "deadlands:music.intro",
+	"ambience": "deadlands:ambient.intro",
+	"hide_hud": true,
+	"title": "cutscene.deadlands.outbreak_intro.title",
+	"shots": [
+		{
+			"ticks": 140,
+			"from": [
+				0,
+				22,
+				-6
+			],
+			"to": [
+				10,
+				12,
+				-16
+			],
+			"look": [
+				0,
+				0,
+				6
+			]
+		},
+		{
+			"ticks": 160,
+			"from": [
+				-8,
+				1.5,
+				8
+			],
+			"to": [
+				8,
+				1.5,
+				8
+			],
+			"look": [
+				0,
+				1.2,
+				12
+			]
+		},
+		{
+			"ticks": 140,
+			"from": [
+				6,
+				3,
+				20
+			],
+			"to": [
+				3,
+				2.2,
+				15
+			],
+			"look": [
+				0,
+				1.6,
+				12
+			]
+		},
+		{
+			"ticks": 120,
+			"from": [
+				-3,
+				1.7,
+				13
+			],
+			"to": [
+				0,
+				1.65,
+				9
+			],
+			"look": [
+				0,
+				1.6,
+				12
+			]
+		},
+		{
+			"ticks": 160,
+			"from": [
+				-10,
+				2,
+				2
+			],
+			"to": [
+				-5,
+				2,
+				3
+			],
+			"look": [
+				-3,
+				1.5,
+				6
+			]
+		},
+		{
+			"ticks": 160,
+			"from": [
+				6,
+				2,
+				2
+			],
+			"to": [
+				5,
+				1.9,
+				3
+			],
+			"look": [
+				3,
+				1.5,
+				5
+			]
+		},
+		{
+			"ticks": 120,
+			"from": [
+				0,
+				4,
+				-6
+			],
+			"to": [
+				0,
+				3,
+				-2
+			],
+			"look": [
+				0,
+				1.2,
+				6
+			]
+		},
+		{
+			"ticks": 200,
+			"from": [
+				0.6,
+				2.4,
+				4.2
+			],
+			"to": [
+				0.6,
+				6,
+				2
+			],
+			"look": [
+				0,
+				1.8,
+				30
+			],
+			"look_rise": 8.0
+		}
+	],
+	"lines": [
+		{
+			"from": 20,
+			"to": 120,
+			"key": "cutscene.deadlands.outbreak_intro.0"
+		},
+		{
+			"from": 120,
+			"to": 220,
+			"key": "cutscene.deadlands.outbreak_intro.1"
+		},
+		{
+			"from": 220,
+			"to": 340,
+			"key": "cutscene.deadlands.outbreak_intro.2"
+		},
+		{
+			"from": 340,
+			"to": 440,
+			"key": "cutscene.deadlands.outbreak_intro.3"
+		},
+		{
+			"from": 440,
+			"to": 560,
+			"key": "cutscene.deadlands.outbreak_intro.4"
+		},
+		{
+			"from": 560,
+			"to": 720,
+			"key": "cutscene.deadlands.outbreak_intro.5"
+		},
+		{
+			"from": 720,
+			"to": 880,
+			"key": "cutscene.deadlands.outbreak_intro.6"
+		},
+		{
+			"from": 880,
+			"to": 1000,
+			"key": "cutscene.deadlands.outbreak_intro.7"
+		},
+		{
+			"from": 1000,
+			"to": 1100,
+			"key": "cutscene.deadlands.outbreak_intro.8"
+		},
+		{
+			"from": 1100,
+			"to": 1190,
+			"key": "cutscene.deadlands.outbreak_intro.9"
+		}
+	],
+	"actors": [
+		{
+			"who": "walker",
+			"start": 140,
+			"end": 300,
+			"from": [
+				-3,
+				0,
+				12
+			],
+			"to": [
+				1,
+				0,
+				14
+			]
+		},
+		{
+			"who": "walker",
+			"start": 140,
+			"end": 300,
+			"from": [
+				2,
+				0,
+				11
+			],
+			"to": [
+				4,
+				0,
+				15
+			]
+		},
+		{
+			"who": "walker",
+			"start": 140,
+			"end": 300,
+			"from": [
+				5,
+				0,
+				13
+			],
+			"to": [
+				3,
+				0,
+				17
+			]
+		},
+		{
+			"who": "felixsyn",
+			"start": 300,
+			"end": 560,
+			"from": [
+				0,
+				0,
+				12
+			],
+			"to": [
+				0,
+				0,
+				12
+			],
+			"face": [
+				0,
+				0,
+				30
+			]
+		},
+		{
+			"who": "itzbreadloaf",
+			"start": 560,
+			"end": 720,
+			"from": [
+				-6,
+				0,
+				4
+			],
+			"to": [
+				-2,
+				0,
+				6
+			]
+		},
+		{
+			"who": "adam",
+			"start": 720,
+			"end": 880,
+			"from": [
+				3,
+				0,
+				5
+			],
+			"to": [
+				3,
+				0,
+				5
+			],
+			"face": [
+				2,
+				0,
+				4
+			],
+			"item": "deadlands:adam_field_notebook"
+		},
+		{
+			"who": "felixsyn",
+			"start": 880,
+			"end": 1200,
+			"from": [
+				0,
+				0,
+				6
+			],
+			"to": [
+				0,
+				0,
+				6
+			],
+			"face": [
+				0,
+				0,
+				30
+			]
+		},
+		{
+			"who": "itzbreadloaf",
+			"start": 880,
+			"end": 1200,
+			"from": [
+				-1.6,
+				0,
+				5
+			],
+			"to": [
+				-1.6,
+				0,
+				5
+			],
+			"face": [
+				0,
+				0,
+				30
+			]
+		},
+		{
+			"who": "adam",
+			"start": 880,
+			"end": 1200,
+			"from": [
+				1.7,
+				0,
+				5.2
+			],
+			"to": [
+				1.7,
+				0,
+				5.2
+			],
+			"face": [
+				0,
+				0,
+				30
+			],
+			"item": "deadlands:adam_field_notebook"
+		}
+	]
+}

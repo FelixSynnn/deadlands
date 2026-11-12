@@ -70,6 +70,7 @@ public final class Deadlands implements ModInitializer {
 		DLEntities.init();
 		com.deadlands.registry.DLMarkers.init();
 		com.deadlands.registry.DLBosses.init();
+		com.deadlands.registry.DLAsesino.init();
 		com.deadlands.registry.DLVehicles.init();
 		com.deadlands.registry.DLStory.init();
 		com.deadlands.registry.DLParticles.init();
@@ -92,6 +93,10 @@ public final class Deadlands implements ModInitializer {
 		com.deadlands.story.Archive.init();
 		com.deadlands.story.StoryDirector.init();
 		com.deadlands.story.StoryIntro.init();
+		com.deadlands.story.StoryReunion.init();
+		com.deadlands.story.FamilyHouse.init();
+		com.deadlands.world.disaster.DisasterDirector.init();
+		com.deadlands.entity.AsesinoSpawner.init();
 		com.deadlands.story.Radio.init();
 		com.deadlands.horde.BossDirector.init();
 		com.deadlands.story.Endings.init();

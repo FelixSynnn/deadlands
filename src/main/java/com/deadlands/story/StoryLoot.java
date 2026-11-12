@@ -1,5 +1,7 @@
 package com.deadlands.story;
 
+import com.deadlands.mission.MissionManager;
+
 import com.deadlands.npc.NpcCharacter;
 import com.deadlands.npc.NpcWorldData;
 import com.deadlands.registry.DLStory;
@@ -80,6 +82,10 @@ public final class StoryLoot {
 			}
 			case RESEARCH_FACILITY -> {
 				need(DLStory.RESEARCH_DOCUMENTS, 0.45F, story, player, random, out);
+				if (player != null && MissionManager.isActive(player.level().getServer(), HarleyQuest.ADAMS_LAB)) {
+					boolean office = table.contains("office") || table.contains("filing") || table.contains("desk") || table.contains("lab");
+					need(DLStory.ADAM_FIELD_NOTEBOOK, office ? 0.6F : 0.25F, story, player, random, out);
+				}
 				need(DLStory.EXPERIMENTAL_FORMULA, table.contains("lab") ? 0.35F : 0.1F, story, player, random, out);
 				need(DLStory.PATIENT_ZERO_RECORDS, table.contains("filing") || table.contains("lab") ? 0.25F : 0.05F, story, player, random, out);
 			}

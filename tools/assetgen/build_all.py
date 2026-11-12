@@ -55,6 +55,10 @@ import import_zombie_sfx
 import gen_gameplay
 import gen_weapon_sfx
 import gen_story5
+import gen_cinematics
+import import_pixabay
+import import_asesino
+import import_pixabay_creatures
 import gen_visuals
 import dl_realism
 import gen_variants
@@ -103,6 +107,10 @@ GROUPS = {
     "weapon_sfx": gen_weapon_sfx.build,  # Phase 4: melee swing and impact sounds (synthesised)
     "gameplay": gen_gameplay.build,
     "story5": gen_story5.build,  # Phase 5: chapter one (Harley's questline, Adam, the sample case)  # Phase 4: gameplay settings text
+    "cinematics": gen_cinematics.build,  # Phase 5: the intro cutscene, the day 10 reunion, weather disasters text
+    "pixabay": import_pixabay.build,  # Phase 5: real recordings from Pixabay (after every sound generator; see CREDITS.md)
+    "pixabay_creatures": import_pixabay_creatures.build,  # Phase 5: real recordings for every infected, boss and nest sound (after pixabay: appends to CREDITS.md)
+    "asesino": import_asesino.build,  # Phase 5: the Asesino's skin, eyes, egg, sounds and music (the owner's files)
     "realism": dl_realism.build,  # last: the finishing pass over block and item textures (originals in texture-backup/)
     "variants": gen_variants.build,  # after realism: per-position variants blended from the finished textures
 }

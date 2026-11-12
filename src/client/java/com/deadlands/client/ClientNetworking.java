@@ -36,8 +36,17 @@ public final class ClientNetworking {
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.RadioPayload.TYPE,
 			(payload, context) -> com.deadlands.client.ui.RadioScreen.receive(payload));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.IntroPayload.TYPE,
-			(payload, context) -> context.client().setScreen(new com.deadlands.client.ui.IntroScreen(payload.harleyNear(),
-				new net.minecraft.world.phys.Vec3(payload.x(), payload.y(), payload.z()))));
+			(payload, context) -> {
+				// Phase 5: the outbreak intro first (the first arrival in a world), then Harley's opening.
+				Runnable harley = () -> context.client().setScreen(new com.deadlands.client.ui.IntroScreen(payload.harleyNear(),
+					new net.minecraft.world.phys.Vec3(payload.x(), payload.y(), payload.z())));
+				net.minecraft.client.player.LocalPlayer player = context.client().player;
+				if (player == null) {
+					harley.run();
+					return;
+				}
+				com.deadlands.client.cutscene.CutscenePlayer.start("outbreak_intro", player.position(), player.getYRot(), harley);
+			});
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.HorrorScarePayload.TYPE,
 			(payload, context) -> com.deadlands.client.horror.ScarePlayer.onScare(payload));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.AchievementSecretsPayload.TYPE,
@@ -50,6 +59,8 @@ public final class ClientNetworking {
 			(payload, context) -> com.deadlands.client.weather.ClientWeather.set(payload));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.LocationPayload.TYPE,
 			(payload, context) -> com.deadlands.client.sound.AmbienceDirector.set(payload));
+		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.DisasterPayload.TYPE,
+			(payload, context) -> com.deadlands.client.weather.ClientDisaster.update(payload));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.CutscenePayload.TYPE,
 			(payload, context) -> com.deadlands.client.cutscene.CutscenePlayer.start(payload));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.WorldEventPayload.TYPE,

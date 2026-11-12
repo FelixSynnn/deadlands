@@ -49,6 +49,8 @@ public final class HarleyQuest {
 	public static final Identifier STATIC = Deadlands.id("harley/static");
 	public static final Identifier COLD_CHAIN = Deadlands.id("harley/cold_chain");
 	public static final Identifier THE_CASE = Deadlands.id("story/the_case");
+	public static final Identifier ADAMS_LAB = Deadlands.id("story/adams_lab");
+	public static final String NOTEBOOK_RETURNED = "adam_notebook_returned";
 	public static final String GAVE_CASE = "harley_gave_case";
 	public static final String ADAM_SAW_CASE = "adam_saw_case";
 
@@ -98,6 +100,7 @@ public final class HarleyQuest {
 
 	private static void adam(MinecraftServer server, ServerPlayer player) {
 		if (!MissionManager.isActive(server, THE_CASE) || StoryFlags.get(server).has(ADAM_SAW_CASE)) {
+			adamsLab(server, player);
 			return;
 		}
 		Inventory inventory = player.getInventory();
@@ -111,6 +114,40 @@ public final class HarleyQuest {
 			say(player, "Adam", "mission.deadlands.story.the_case.adam." + line);
 		}
 		Achievements.award(player, "story/the_case");
+	}
+
+	/**
+	 * Chapter two (Phase 5 step 2), after the case: Adam asks for his field notebook from his office at
+	 * Kessler (it turns up in the facility's offices while the mission runs); bringing it ends the chapter.
+	 */
+	private static void adamsLab(MinecraftServer server, ServerPlayer player) {
+		StoryFlags flags = StoryFlags.get(server);
+		if (flags.has(NOTEBOOK_RETURNED)) {
+			FamilyHouse.talkedToAdam(server, player);
+			return;
+		}
+		if (!flags.has("chapter_one_case_delivered")) {
+			return;
+		}
+		if (!MissionManager.isActive(server, ADAMS_LAB)) {
+			if (MissionManager.start(server, ADAMS_LAB, player)) {
+				for (int line = 1; line <= 3; line++) {
+					say(player, "Adam", "mission.deadlands.story.adams_lab.ask." + line);
+				}
+			}
+			return;
+		}
+		Inventory inventory = player.getInventory();
+		if (inventory.countItem(DLStory.ADAM_FIELD_NOTEBOOK) <= 0) {
+			say(player, "Adam", "mission.deadlands.story.adams_lab.waiting");
+			return;
+		}
+		takeOne(inventory, DLStory.ADAM_FIELD_NOTEBOOK);
+		flags.set(NOTEBOOK_RETURNED); // the mission's last objective: it completes on the next mission tick
+		for (int line = 1; line <= 3; line++) {
+			say(player, "Adam", "mission.deadlands.story.adams_lab.adam." + line);
+		}
+		Achievements.award(player, "story/adams_lab");
 	}
 
 	/** Adam: somewhere safe 120 to 200 blocks from Harley's camp, once. Coordinates on screen and in chat. */
@@ -169,7 +206,7 @@ public final class HarleyQuest {
 		}
 	}
 
-	private static void say(ServerPlayer player, String who, String key) {
+	static void say(ServerPlayer player, String who, String key) {
 		player.sendSystemMessage(Component.literal(who + ": ").withStyle(ChatFormatting.YELLOW).append(Component.translatable(key).withStyle(ChatFormatting.WHITE)));
 	}
 }

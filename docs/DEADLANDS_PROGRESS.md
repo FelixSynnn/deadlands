@@ -751,3 +751,59 @@ The owner's report: the flashlight does nothing even with Lamb's Dynamic Lights,
 **Known limitations:**
 - **Chat-only scenes:** chapter one's lines play in chat. Adam's recognition is a scene for the cutscene library (step 6), with a skippable cinematic.
 - **Adam's skin** is a placeholder: the researcher's, with glasses and greying hair. It is listed in the asset manifest.
+
+### Phase 5, second round (2026-11-12): Adam's lab, the intro, the reunion, disasters
+
+**Story canon change (from the owner):**
+- FelixSyn and Harley are a couple, apart since the outbreak. They find each other on day 10.
+- FelixSyn, Itzbreadloaf and Adam are fellow survivors.
+- Harley still meets the player on day 1.
+
+**What changed:**
+- **Step 2 of the plan (Adam's research and belongings):**
+  - lore: 4 lab notes, 3 voice memos and a family photo;
+  - Adam's own skin;
+  - chapter two, "Adam's Lab": the notebook drops at Kessler; bring it to him for the hidden achievement "Office Hours".
+- **Intro cutscene "Ninety-Five Days":**
+  - Plays on a player's first arrival, before Harley's opening (60 s, script in `docs/INTRO_CUTSCENE_SCRIPT.md`).
+  - Uses client-only actors, the HUD is hidden, and any key skips it.
+  - The cutscene system gained `actors`, `hide_hud` and `title`.
+- **Day 10 reunion (`story/StoryReunion.java`):**
+  - Fires once per world, saved as the flag `felixsyn_harley_reunited`.
+  - A 35 s scene with subtitles and a sound cue, after which FelixSyn joins Harley's camp.
+  - FelixSyn is story-only before that.
+- **Disasters (`world/disaster/`):**
+  - Twister, flash flood, tremor, skyfall, whiteout, dust wall, caustic rain and static storm.
+  - Each has a warning, a duration, a rarity weight and a setting. World damage is off by default (`disasters.destructive`).
+
+**Verified:**
+- Build: success, 57/57 tests.
+- Dedicated server: starts cleanly with 5 missions and no errors.
+
+**Pixabay audio (approved list, `docs/PIXABAY_AUDIO_PLAN.md`):**
+- 21 recordings, imported by `tools/assetgen/import_pixabay.py` into `sounds/pixabay/` (OGG Vorbis, 44.1 kHz; mono in the world, stereo for music and stings).
+- They cover the intro music and wind bed, the reunion cue, the disaster siren and sounds, a caustic-rain burn, melee swing and hits, the menu theme and four stings.
+- The old synthesised files are left in place, no longer used.
+- Credits are in `CREDITS.md`.
+
+### Phase 5, third round (2026-11-12): chapter three, the Asesino, layered chase music
+
+- **Chapter three, "The House"** (Phase 5 step 3, the family mystery: bittersweet):
+  - After the notebook, Adam asks you to look in on his home. A house is placed 150 to 250 blocks away, with its coordinates in chat and on screen.
+  - Arriving plays the empty-house cutscene and gives his wife's letter: they waited four days and then went north to the reservoir camp at Pinecrest.
+  - Telling Adam ends the chapter (hidden achievement "Porch Light").
+  - The trail of hope: a checkpoint register, a radio log and a child's drawing.
+  - Files: `story/FamilyHouse.java`.
+- **The Asesino** (`entity/AsesinoEntity.java`, `entity/AsesinoSpawner.java`, `registry/DLAsesino.java`):
+  - An original slasher: the county's pre-outbreak "Night Caller", given NR-7 at Kessler. Three lore documents tell his story.
+  - Custom AI: roam, stalk (out of sight, 20 to 30 blocks), commit, chase (leads the target, speeds up from 0.26 to 0.34 over 30 s), search, give up.
+  - Abilities: Pounce Cut (a miss stuns him), Breach, Scent of Fear, Frenzy, Dread Shriek.
+  - Stats in the `asesino` config section: 160 health, 13 damage, 64 follow range, 0.9 knockback resistance, 6 armor.
+  - Spawning: at night, about one per town area, rare in the wild.
+  - Rendering: the owner's skin on the player model, red eyes on an emissive layer.
+  - Sounds are the owner's own files (`tools/assetgen/import_asesino.py`).
+- **Layered chase music** (`client/sound/AsesinoMusic.java`):
+  - Four looping layers start together. Layer 1 plays within 48 blocks, layer 2 within 24, layer 3 within 12 (all three configurable), and layer 4 while he chases you.
+  - Layers fade over 1 s, and everything fades out over 3 s.
+  - The DEADLANDS soundtrack drops to 20% and Minecraft's music stops while it plays.
+- **Verified:** build success, 57/57 tests.

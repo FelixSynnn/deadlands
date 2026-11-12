@@ -113,6 +113,35 @@ public final class DLSounds {
 	public static final Holder.Reference<SoundEvent> HORROR_STALKER_LAUGH = register("horror.stalker_laugh");
 	public static final Holder.Reference<SoundEvent> INFECTED_FEEDING = register("infected.feeding");
 	public static final Holder.Reference<SoundEvent> INFECTED_FEEDING_SCREECH = register("infected.feeding_screech");
+	// Phase 5 cinematics (tools/assetgen/gen_cinematics.py).
+	public static final Holder.Reference<SoundEvent> MUSIC_INTRO = register("music.intro");
+	public static final Holder.Reference<SoundEvent> EVENT_REUNION = register("event.reunion");
+	public static final Holder.Reference<SoundEvent> AMBIENT_INTRO = register("ambient.intro");
+	// The Asesino (files from the owner's Serial folder; tools/assetgen/import_asesino.py).
+	public static final Holder.Reference<SoundEvent> ASESINO_AMBIENT = register("asesino.ambient");
+	public static final Holder.Reference<SoundEvent> ASESINO_HURT = register("asesino.hurt");
+	public static final Holder.Reference<SoundEvent> ASESINO_DEATH = register("asesino.death");
+	public static final Holder.Reference<SoundEvent> ASESINO_STEP = register("asesino.step");
+	public static final Holder.Reference<SoundEvent> ASESINO_SWING = register("asesino.swing");
+	public static final Holder.Reference<SoundEvent> ASESINO_HIT = register("asesino.hit");
+	public static final Holder.Reference<SoundEvent> ASESINO_EXECUTION = register("asesino.execution");
+	public static final Holder.Reference<SoundEvent> ASESINO_CHASE_START = register("asesino.chase_start");
+	public static final Holder.Reference<SoundEvent> ASESINO_POUNCE = register("asesino.pounce");
+	public static final Holder.Reference<SoundEvent> ASESINO_POUNCE_HIT = register("asesino.pounce_hit");
+	public static final Holder.Reference<SoundEvent> ASESINO_POUNCE_MISS = register("asesino.pounce_miss");
+	public static final Holder.Reference<SoundEvent> ASESINO_STUN = register("asesino.stun");
+	public static final Holder.Reference<SoundEvent> ASESINO_BREACH = register("asesino.breach");
+	public static final Holder.Reference<SoundEvent> ASESINO_SCENT = register("asesino.scent");
+	public static final Holder.Reference<SoundEvent> ASESINO_FRENZY = register("asesino.frenzy");
+	public static final Holder.Reference<SoundEvent> ASESINO_SHRIEK = register("asesino.shriek");
+	public static final List<Holder.Reference<SoundEvent>> ASESINO_MUSIC = List.of(register("music.asesino.layer1"), register("music.asesino.layer2"),
+		register("music.asesino.layer3"), register("music.asesino.layer4"));
+	public static final Holder.Reference<SoundEvent> DISASTER_CAUSTIC_BURN = register("disaster.caustic_rain.burn");
+	/** Disasters, in {@code world.disaster.Disaster} order: the warning, and the sound while it lasts. */
+	public static final List<Holder.Reference<SoundEvent>> DISASTER_WARNINGS = java.util.Arrays.stream(com.deadlands.world.disaster.Disaster.values())
+		.map(d -> register("disaster." + d.id() + ".warning")).toList();
+	public static final List<Holder.Reference<SoundEvent>> DISASTER_SOUNDS = java.util.Arrays.stream(com.deadlands.world.disaster.Disaster.values())
+		.map(d -> register("disaster." + d.id())).toList();
 	public static final Holder.Reference<SoundEvent> INFECTED_CHARRED_AMBIENT = register("infected.charred.ambient");
 	public static final Holder.Reference<SoundEvent> INFECTED_BREATH = register("infected.breath");
 	public static final Holder.Reference<SoundEvent> INFECTED_SCRATCH = register("infected.scratch");

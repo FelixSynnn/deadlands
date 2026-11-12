@@ -27,6 +27,10 @@ public final class Cutscenes {
 	public static final String HORDE = "horde";
 	public static final String CURE = "cure";
 	public static final String EXTRACTION = "extraction";
+	/** Phase 5: FelixSyn and Harley find each other on day 10 ({@code story.StoryReunion}). */
+	public static final String REUNION = "reunion";
+	/** Phase 5 step 3: Adam's empty house ({@code story.FamilyHouse}). */
+	public static final String FAMILY_HOUSE = "family_house";
 
 	public static final AttachmentType<List<String>> SEEN = AttachmentRegistry.create(Deadlands.id("cutscenes_seen"),
 		builder -> builder.persistent(Codec.STRING.listOf()).initializer(List::of).copyOnDeath());

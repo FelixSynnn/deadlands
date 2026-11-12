@@ -19,6 +19,8 @@ public final class DeadlandsConfig {
 	public Survival survival = new Survival();
 	public Weather weather = new Weather();
 	public WorldEvents events = new WorldEvents();
+	public Disasters disasters = new Disasters();
+	public Asesino asesino = new Asesino();
 	public Performance performance = new Performance();
 	public Horror horror = new Horror();
 	public Audio audio = new Audio();
@@ -189,6 +191,87 @@ public final class DeadlandsConfig {
 		public boolean dustStorms = true;
 	}
 
+	/** Phase 5: the Asesino ({@code entity.AsesinoEntity}, {@code entity.AsesinoSpawner}). */
+	public static final class Asesino {
+		@ConfigEntry(comment = "Let the Asesino hunt.")
+		public boolean enabled = true;
+
+		@ConfigEntry(comment = "Only at night.")
+		public boolean nightOnly = true;
+
+		@ConfigEntry(comment = "Chance per survivor every 30 seconds in or near a town.", min = 0.0, max = 1.0)
+		public double townSpawnChance = 0.25;
+
+		@ConfigEntry(comment = "Chance per survivor every 30 seconds away from towns.", min = 0.0, max = 1.0)
+		public double wildSpawnChance = 0.02;
+
+		@ConfigEntry(comment = "No second Asesino within this many blocks of a survivor (about one per town).", min = 32, max = 512)
+		public int areaRadius = 160;
+
+		@ConfigEntry(comment = "Most Asesinos in the world at once.", min = 1, max = 20)
+		public int maxAlive = 3;
+
+		@ConfigEntry(comment = "Health.", min = 20.0, max = 2000.0)
+		public double health = 160.0;
+
+		@ConfigEntry(comment = "Damage per hit.", min = 1.0, max = 100.0)
+		public double damage = 13.0;
+
+		@ConfigEntry(comment = "Speed while roaming and stalking.", min = 0.1, max = 0.6)
+		public double stalkSpeed = 0.26;
+
+		@ConfigEntry(comment = "Speed after 30 seconds of chasing (it rises from the stalking speed).", min = 0.1, max = 0.8)
+		public double chaseSpeedMax = 0.34;
+
+		@ConfigEntry(comment = "How far he follows and notices survivors, in blocks.", min = 16.0, max = 128.0)
+		public double followRange = 64.0;
+
+		@ConfigEntry(comment = "Knockback resistance, 0 to 1.", min = 0.0, max = 1.0)
+		public double knockbackResistance = 0.9;
+
+		@ConfigEntry(comment = "Armor.", min = 0.0, max = 30.0)
+		public double armor = 6.0;
+	}
+
+	/** Phase 5: disaster weather ({@code world.disaster.DisasterDirector}). */
+	public static final class Disasters {
+		@ConfigEntry(comment = "Allow disasters: twisters, floods, tremors and more, each announced before it starts.")
+		public boolean enabled = true;
+
+		@ConfigEntry(comment = "Average days between disasters.", min = 1, max = 60)
+		public int averageDaysBetween = 4;
+
+		@ConfigEntry(comment = "The first day a disaster can happen.", min = 1, max = 100)
+		public int firstDay = 3;
+
+		@ConfigEntry(comment = "Let disasters change the world: break blocks, place water and snow, start fires. Off keeps the world as it is.")
+		public boolean destructive = false;
+
+		@ConfigEntry(comment = "Twisters that drag and lift anything near them.")
+		public boolean twister = true;
+
+		@ConfigEntry(comment = "Flash floods: torrential rain, low ground runs with water.")
+		public boolean flashFlood = true;
+
+		@ConfigEntry(comment = "Tremors: the ground shakes in waves.")
+		public boolean tremor = true;
+
+		@ConfigEntry(comment = "Skyfall: burning rocks falling around survivors.")
+		public boolean skyfall = true;
+
+		@ConfigEntry(comment = "Whiteouts: freezing snowstorms in cold country.")
+		public boolean whiteout = true;
+
+		@ConfigEntry(comment = "Dust walls: choking dust storms in hot, dry country.")
+		public boolean dustWall = true;
+
+		@ConfigEntry(comment = "Caustic rain that burns anyone outside without a helmet.")
+		public boolean causticRain = true;
+
+		@ConfigEntry(comment = "Static storms: lightning that strikes close and often.")
+		public boolean staticStorm = true;
+	}
+
 	public static final class WorldEvents {
 		@ConfigEntry(comment = "Enable announced supply drops.")
 		public boolean supplyDrops = true;
@@ -240,6 +323,18 @@ public final class DeadlandsConfig {
 	public static final class Audio {
 		@ConfigEntry(comment = "Play DEADLANDS interface sounds.", client = true)
 		public boolean interfaceSounds = true;
+
+		@ConfigEntry(comment = "Layered chase music when the Asesino is near.", client = true)
+		public boolean asesinoMusic = true;
+
+		@ConfigEntry(comment = "Asesino music, layer 1: within this many blocks.", min = 8.0, max = 128.0, client = true)
+		public double asesinoLayer1 = 48.0;
+
+		@ConfigEntry(comment = "Asesino music, layer 2: within this many blocks.", min = 4.0, max = 96.0, client = true)
+		public double asesinoLayer2 = 24.0;
+
+		@ConfigEntry(comment = "Asesino music, layer 3: within this many blocks.", min = 2.0, max = 64.0, client = true)
+		public double asesinoLayer3 = 12.0;
 
 		@ConfigEntry(comment = "Volume of DEADLANDS ambience.", min = 0.0, max = 1.0, client = true)
 		public double ambienceVolume = 1.0;

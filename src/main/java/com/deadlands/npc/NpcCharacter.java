@@ -39,7 +39,7 @@ public enum NpcCharacter {
 
 	/** Placed only by the story, never by a chance encounter. */
 	public boolean storyOnly() {
-		return this == ADAM;
+		return this == ADAM || this == FELIXSYN; // FelixSyn: only from the day 10 reunion (story.StoryReunion)
 	}
 
 	public String id() {

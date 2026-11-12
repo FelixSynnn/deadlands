@@ -52,6 +52,7 @@ public final class DeadlandsClient implements ClientModInitializer {
 			EntityRendererRegistry.<InfectedEntity>register(DLEntities.type(kind), context -> new InfectedRenderer(context, kind));
 		}
 		EntityRendererRegistry.register(com.deadlands.registry.DLMarkers.SURVIVOR, com.deadlands.client.render.NpcRenderer::new);
+		EntityRendererRegistry.register(com.deadlands.registry.DLAsesino.ASESINO, com.deadlands.client.render.AsesinoRenderer::new);
 		com.deadlands.client.render.vehicle.VehicleRenderer.registerLayers();
 		com.deadlands.client.render.boss.BossRenderer.registerLayers();
 		com.deadlands.client.particle.DLParticleProviders.register();
@@ -162,6 +163,8 @@ public final class DeadlandsClient implements ClientModInitializer {
 			com.deadlands.client.sound.VehicleEngineSounds.tick(client);
 			VOICES.tickAll(client);
 			com.deadlands.client.horror.ScarePlayer.tick(client);
+			com.deadlands.client.weather.ClientDisaster.tick(client);
+			com.deadlands.client.sound.AsesinoMusic.tick(client);
 			com.deadlands.client.firstperson.FirstPersonMotion.tick(client);
 		});
 		com.deadlands.client.camera.PerspectiveLock.init();
@@ -177,6 +180,7 @@ public final class DeadlandsClient implements ClientModInitializer {
 			com.deadlands.client.weather.ClientWeather.reset();
 			com.deadlands.client.sound.AmbienceDirector.reset();
 			com.deadlands.client.sound.MusicDirector.reset();
+			com.deadlands.client.sound.AsesinoMusic.reset();
 			com.deadlands.client.sound.VehicleEngineSounds.reset();
 			com.deadlands.client.horror.ScarePlayer.reset();
 			com.deadlands.client.mission.ClientMissions.reset();

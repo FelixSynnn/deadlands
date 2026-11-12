@@ -26,7 +26,8 @@ public final class CutscenePlayer {
 	record Line(int from, int to, String key) {
 	}
 
-	record Script(List<Shot> shots, List<Line> lines, @Nullable SoundEvent cue) {
+	record Script(List<Shot> shots, List<Line> lines, @Nullable SoundEvent cue, List<CutsceneLibrary.ActorDef> actors, boolean hideHud,
+		@Nullable String title, @Nullable SoundEvent ambience) {
 		int length() {
 			int total = 0;
 			for (Shot shot : shots) {
@@ -41,6 +42,8 @@ public final class CutscenePlayer {
 	private static float yaw;
 	private static int ticks;
 	private static @Nullable Runnable onEnd;
+	/** The HUD setting before a scene that hides it, restored when it ends; null when untouched. */
+	private static @Nullable Boolean hudBefore;
 
 	private CutscenePlayer() {
 	}
@@ -56,7 +59,7 @@ public final class CutscenePlayer {
 		CutsceneLibrary.Def def = CutsceneLibrary.get(id).orElse(null);
 		if (def == null) {
 			bearingFrame = false;
-			return new Script(List.of(new Shot(40, new Vec3(3, 2, 3), new Vec3(3, 2, 3), Vec3.ZERO, 0.0)), List.of(), null);
+			return new Script(List.of(new Shot(40, new Vec3(3, 2, 3), new Vec3(3, 2, 3), Vec3.ZERO, 0.0)), List.of(), null, List.of(), false, null, null);
 		}
 		bearingFrame = def.frame().equals("bearing");
 		double cos = Math.cos(facing);
@@ -72,7 +75,8 @@ public final class CutscenePlayer {
 			lines.add(new Line(line.from(), line.to(), line.key()));
 		}
 		SoundEvent cue = def.cue().map(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT::getValue).orElse(null);
-		return new Script(shots, lines, cue);
+		SoundEvent ambience = def.ambience().map(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT::getValue).orElse(null);
+		return new Script(shots, lines, cue, def.actors(), def.hideHud(), def.title().orElse(null), ambience);
 	}
 
 	private static Vec3 alongBearing(Vec3 point, double cos, double sin) {
@@ -92,14 +96,28 @@ public final class CutscenePlayer {
 			}
 			return;
 		}
+		if (script != null) {
+			// Replacing a scene still playing: forget it quietly (its overlay closing must not end the new one).
+			script = null;
+			onEnd = null;
+			CutsceneActors.clear();
+		}
 		script = script(id, facing);
 		anchor = at;
 		yaw = bearingFrame ? 0.0F : facing;
 		ticks = 0;
 		onEnd = then;
 		minecraft.setScreen(new CutsceneScreen());
+		CutsceneActors.begin(script.actors(), at, bearingFrame ? 0.0F : facing);
+		if (script.hideHud() && hudBefore == null) {
+			hudBefore = minecraft.options.hideGui;
+			minecraft.options.hideGui = true;
+		}
 		if (script.cue() != null) {
 			minecraft.getSoundManager().play(SimpleSoundInstance.forUI(script.cue(), 1.0F, 0.9F));
+		}
+		if (script.ambience() != null) {
+			minecraft.getSoundManager().play(SimpleSoundInstance.forUI(script.ambience(), 1.0F, 0.6F));
 		}
 	}
 
@@ -112,6 +130,7 @@ public final class CutscenePlayer {
 			return;
 		}
 		ticks++;
+		CutsceneActors.tick(ticks);
 		if (ticks >= script.length()) {
 			stop();
 		}
@@ -139,6 +158,11 @@ public final class CutscenePlayer {
 	}
 
 	private static void runEnd() {
+		CutsceneActors.clear();
+		if (hudBefore != null) {
+			Minecraft.getInstance().options.hideGui = hudBefore;
+			hudBefore = null;
+		}
 		Runnable then = onEnd;
 		onEnd = null;
 		if (then != null) {
@@ -192,6 +216,19 @@ public final class CutscenePlayer {
 		float t = ticks + partialTick;
 		float end = script.length() - t;
 		return Mth.clamp(Math.max(1.0F - t / 12.0F, 1.0F - end / 12.0F), 0.0F, 1.0F);
+	}
+
+	/** The scene's title and how strongly to show it (0 to 1), over its last two seconds; null when none. */
+	public static @Nullable Component title(float[] alpha) {
+		if (script == null || script.title() == null) {
+			return null;
+		}
+		float left = script.length() - ticks;
+		if (left > 40) {
+			return null;
+		}
+		alpha[0] = Mth.clamp((40 - left) / 12.0F, 0.0F, 1.0F);
+		return Component.translatable(script.title());
 	}
 
 	public static @Nullable Component subtitle() {

@@ -227,6 +227,17 @@ public class NpcEntity extends PathfinderMob implements Merchant {
 		applyRoutine(true);
 	}
 
+	/**
+	 * A cutscene stand-in (client only, never saved): looks like {@code character}, with no name tag,
+	 * stock or routine. See {@code client.cutscene.CutsceneActors}.
+	 */
+	public void actAs(NpcCharacter character) {
+		entityData.set(DATA_ROLE, character.role().ordinal());
+		entityData.set(DATA_FACTION, character.faction().ordinal());
+		entityData.set(DATA_CHARACTER, character.id());
+		this.lossChecked = true;
+	}
+
 	/** A wanderer who moves on when nobody has been near for a while. */
 	public void setLeavesAt(long gameTime) {
 		this.leavesAt = gameTime;

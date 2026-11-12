@@ -55,6 +55,8 @@ public final class DLStory {
 
 	// Phase 5: Harley's questline. The case she gives the survivor to take to Adam.
 	public static final Item SEALED_SAMPLE_CASE = story("sealed_sample_case", Rarity.RARE);
+	/** Phase 5, chapter two: Adam's notebook, found at Kessler while "Adam's Lab" is under way. */
+	public static final Item ADAM_FIELD_NOTEBOOK = story("adam_field_notebook", Rarity.RARE);
 
 	// What the bosses leave behind.
 	public static final Item FUSED_TISSUE = story("fused_tissue", Rarity.EPIC);
