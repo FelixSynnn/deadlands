@@ -329,6 +329,9 @@ public final class Quests {
 
 	private static Component felixsyn(ServerPlayer player, StoryState story) {
 		if (story.has(StoryState.FELIX_DONE)) {
+			if (FelixsynCampaign.talked(player.level().getServer(), player)) {
+				return Component.translatable("quest.deadlands.felixsyn.campaign"); // his chapter one speaks for itself in chat
+			}
 			return Component.translatable("quest.deadlands.felixsyn.after");
 		}
 		String orders = DLStory.idOf(DLStory.EVACUATION_ORDERS);

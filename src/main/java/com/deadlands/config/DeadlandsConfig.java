@@ -236,6 +236,9 @@ public final class DeadlandsConfig {
 	}
 
 	public static final class Guest {
+		@ConfigEntry(comment = "Minutes after nightfall before the Guest can come (it never appears the moment night falls).", min = 0.0, max = 8.0)
+		public double nightDelayMinutes = 3.0;
+
 		@ConfigEntry(comment = "Let the Guest come.")
 		public boolean enabled = true;
 
@@ -464,6 +467,12 @@ public final class DeadlandsConfig {
 	}
 
 	public static final class Interface {
+		@ConfigEntry(comment = "Music in the main menu: a shuffled DEADLANDS track every visit, never the same one twice in a row.", client = true)
+		public boolean menuMusic = true;
+
+		@ConfigEntry(comment = "Main menu music volume (0 mutes it).", min = 0.0, max = 1.0, client = true)
+		public double menuMusicVolume = 0.8;
+
 		@ConfigEntry(comment = "Replace the Minecraft title screen with the DEADLANDS menu.", client = true)
 		public boolean replaceTitleScreen = true;
 

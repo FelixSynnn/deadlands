@@ -59,6 +59,8 @@ public final class GuestSpawner {
 		}
 		long time = Math.floorMod(level.getDayTime(), 24000L);
 		boolean night = time >= 13000L && time <= 22500L;
+		// Not the moment night falls: it comes after config.nightDelayMinutes of darkness.
+		boolean ready = time >= 13000L + (long) (config.nightDelayMinutes * 1200.0) && time <= 22500L;
 		int alive = level.getEntities(DLGuest.GUEST, e -> e.isAlive()).size();
 		for (ServerPlayer player : level.players()) {
 			if (player.isSpectator() || player.isCreative()) {
@@ -69,10 +71,10 @@ public final class GuestSpawner {
 			if (anchor == null || anchor.distSqr(player.blockPosition()) > 24 * 24) {
 				ANCHOR.put(id, player.blockPosition());
 				CAMPED.put(id, 0);
-			} else {
-				CAMPED.merge(id, 600, Integer::sum);
+			} else if (night) {
+				CAMPED.merge(id, 600, Integer::sum); // sheltering only counts at night
 			}
-			if (config.nightOnly && !night || alive >= config.maxAlive) {
+			if (config.nightOnly && !ready || alive >= config.maxAlive) {
 				continue;
 			}
 			if (!level.getEntitiesOfClass(AsesinoEntity.class, player.getBoundingBox().inflate(96.0), a -> a.isAlive()).isEmpty()
@@ -90,7 +92,7 @@ public final class GuestSpawner {
 	private static boolean spawn(ServerLevel level, ServerPlayer player, RandomSource random) {
 		for (int attempt = 0; attempt < 8; attempt++) {
 			double angle = random.nextDouble() * Math.PI * 2.0;
-			double distance = 30.0 + random.nextDouble() * 20.0;
+			double distance = 56.0 + random.nextDouble() * 24.0; // far off: it finds you, it doesn't appear beside you
 			BlockPos around = BlockPos.containing(player.getX() + Math.cos(angle) * distance, player.getY(), player.getZ() + Math.sin(angle) * distance);
 			if (!level.isLoaded(around)) {
 				continue;
@@ -106,7 +108,7 @@ public final class GuestSpawner {
 			}
 			guest.snapTo(spot.getX() + 0.5, spot.getY(), spot.getZ() + 0.5, random.nextFloat() * 360.0F, 0.0F);
 			level.addFreshEntity(guest);
-			guest.hunt(level, player, true);
+			guest.stalk(level, player); // far off and out of sight; it follows before it comes
 			return true;
 		}
 		return false;

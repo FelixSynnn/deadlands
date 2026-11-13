@@ -160,6 +160,18 @@ public final class HarleyQuest {
 		BlockPos where = data.position(NpcCharacter.ADAM);
 		if (!data.isPlaced(NpcCharacter.ADAM)) {
 			BlockPos camp = data.position(NpcCharacter.HARLEY) != null ? data.position(NpcCharacter.HARLEY) : player.blockPosition();
+			// Most of the time he is underground, in the subway station nearest her camp (world.subway.SubwayPlaces).
+			BlockPos underground = com.deadlands.world.subway.SubwayPlaces.adam(level, camp, player.getRandom());
+			if (underground != null) {
+				NpcEntity adam = NpcSpawns.place(level, NpcCharacter.ADAM, underground, player.getRandom().nextFloat() * 360.0F);
+				if (adam != null) {
+					adam.setPersistenceRequired();
+				}
+				where = adam != null ? adam.blockPosition() : underground;
+			}
+		}
+		if (!data.isPlaced(NpcCharacter.ADAM)) {
+			BlockPos camp = data.position(NpcCharacter.HARLEY) != null ? data.position(NpcCharacter.HARLEY) : player.blockPosition();
 			double angle = player.getRandom().nextDouble() * Math.PI * 2.0;
 			double distance = 120.0 + player.getRandom().nextDouble() * 80.0;
 			BlockPos around = camp.offset((int) (Math.cos(angle) * distance), 0, (int) (Math.sin(angle) * distance));

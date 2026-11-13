@@ -969,3 +969,64 @@ The owner's report: the flashlight does nothing even with Lamb's Dynamic Lights,
 - **Fewer zombies:** natural spawning fills 60% of the local cap, and groups are 60% the size. By day in the open, the cap is 25% of the night's number; caves and indoors are unchanged (`zombies.spawnRateFactor`, `groupSizeFactor`, `daytimeOutdoorCap`).
 - **Imlilylol, chapter one "Open Road"** (Phase 5 step 5; `story/ImlilylolCampaign.java`, `gen_lily1.py`): The North Pumps (3 purification tablets), then East Road (scout the evacuation camp), then A Promise (carry her word to Harley). Hidden achievement "Mostly".
 - **Verified:** build success, 57/57 tests, 10 missions load. Not playtested.
+
+### Seventh round (2026-11-13): killers that stalk, catch up and swim; FelixSyn chapter one
+
+- **The Guest no longer appears beside you at nightfall.** It can't come until 3 minutes into the night (`guest.nightDelayMinutes`). It arrives 56 to 80 blocks away, out of sight, and the sheltering timer only counts at night.
+- **The Guest stalks first** (new `STALK` mode):
+  - It follows from cover for 1.5 to 3 minutes, closing from 20–32 blocks to 10–18.
+  - It moves only when you move.
+  - When you look at it, it freezes low to the ground and growls, then slips out of sight.
+  - Behind you, out of view, you hear sniffs and steps.
+  - It comes when the stalk runs out, or sooner if you hurt it, are below half health, are alone in the dark within 14 blocks, or walk within 6.
+  - Its hunting scream roots you for a second.
+- **Shared stalking and chasing** (`entity/ai/Stalking.java`):
+  - hidden spots behind you, in the dark, out of your sight;
+  - sounds played behind you;
+  - swimming at the surface along the path.
+  - `Unstuck` notices a chaser getting nowhere and teleports it near you, out of sight, in smoke. It also does this when the chaser is more than 40 blocks behind.
+- **The Aberrant:**
+  - His stalk closes in over time (22–34 blocks to 10–18).
+  - He waits when you wait, and footsteps and breathing come from behind you.
+  - In a chase he speeds up when you pull away and teleports near you when stuck or far behind.
+  - The Darkness effect falls over you for 4 seconds the moment he comes for you.
+- **FelixSyn, chapter one "The East Gate"** (Phase 5 step 5; `story/FelixsynCampaign.java`, `gen_felix1.py`):
+  - **Okafor:** scout a military post.
+  - **The Two Hundred:** 4 canned beans and 3 bandages.
+  - **Hale's Trail:** a military research file.
+  - Hidden achievement "The East Gate".
+- **Verified:** build success, 57/57 tests, 13 missions load. Not playtested.
+
+### Eighth round (2026-11-13): the main menu, the fire axe, the subway
+
+- **Main menu backgrounds** (`client/ui/MenuBackgrounds.java`, `import_menu_backgrounds.py`):
+  - The owner's 21 shader screenshots plus the rat replace the painted street.
+  - The painted street's layers are no longer drawn; the files are kept.
+  - A new picture every 10 seconds with a 1.4-second crossfade.
+  - Each picture covers the screen without stretching and drifts in slowly. A darkening gradient keeps the menu readable.
+  - Each visit: a random screenshot first, then the rat. After that the rat appears on about 1 change in 4, never twice in a row.
+  - Only the two pictures on screen are in video memory. The pictures add 51 MB to the jar.
+- **Main menu music** (`client/sound/MenuMusic.java`):
+  - Always plays: eight quiet DEADLANDS tracks, shuffled like a deck, so nothing repeats until all have played.
+  - A new track each visit. Each track fades in, and the old one fades out before the next starts.
+  - It fades out when you join a world.
+  - Settings `ui.menuMusic` and `ui.menuMusicVolume` (0 mutes). Minecraft's own menu music stays silent.
+- **Fire axe:** mines wooden blocks (the `mineable/axe` tag) at iron-axe speed and drops them. Its damage and speed are unchanged.
+- **The subway** (`deadlands:subway_station`, `gen_subway.py`): 5 underground station templates, spacing 26 chunks.
+  - Each has a street kiosk, stairs, a ticket hall with booths, two tiled platforms, a track with a rail, and a 6-room band: ticket hall, maintenance, storage, office, a survivor hideout behind a barricade, and a flooded utility room.
+  - Tunnels run off both ends. The west one collapses; the east one is collapsed, flooded, or blocked by a wrecked car you walk through.
+  - Lights: fluorescent tubes (dead, flickering, lit) and emergency lights. Evacuation notices and survivor marks on the walls.
+  - **Trains:** stationary block cars that can't be driven, in five setups: none, one car, two cars, derailed, wrecked. Doors are open or shut. Inside are seats, luggage containers (rare loot 15%), papers, and blood.
+  - **Hideouts** (recent, long gone, ended badly, sealed): bedrolls, water, candles or lanterns, a locker that is stocked or nearly empty, survivor marks and blood.
+  - Loot tables: `train_luggage`, `train_luggage_rare`, `subway_maintenance`, `subway_ticket`, `subway_hideout`, `subway_hideout_old`.
+- **Subway sound** (`world/subway/SubwayAmbience.java`, `gen_subway_audio.py`):
+  - **PA:** 8 announcements spoken by the Windows voices and turned into a dying PA (telephone band, overdrive, echo, hum, static, dropouts). Some cut off mid-sentence.
+    - Every 2 to 5 minutes from the speaker nearest you.
+    - Each station has its own three; a quarter of stations only hiss.
+  - **Distant noise:** every 25 to 70 seconds, from a tunnel end or behind the rooms, at least 14 blocks away and never twice running: groans, shuffling, heavy steps, bangs, wrenched metal.
+- **Adam underground** (`world/subway/SubwayPlaces.java`): 80% of the time, in the subway station nearest Harley's camp. He's in one of three dressed spots: his lab in the maintenance room, a camp at the far end of the platform, or the barricaded office.
+- **Subway lore:** 5 entries (a final newspaper, a driver's log, a child's note, hideout rules, a staff memo), found in subway and train containers.
+- **Not done:**
+  - The stations are separate. Their tunnels end in collapses, not a world-spanning network.
+  - No subway maps on the walls, and no abandoned vehicles at the entrances.
+- **Verified:** build success, 57/57 tests, worldgen files load, every template block exists, offline floor plans checked. Not generated or played in a world.

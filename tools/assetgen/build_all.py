@@ -59,6 +59,11 @@ import gen_cinematics
 import gen_story_ch4
 import gen_round6
 import gen_lily1
+import gen_felix1
+import gen_round8
+import gen_subway
+import gen_subway_audio
+import import_menu_backgrounds
 import import_pixabay
 import import_asesino
 import gen_asesino_model
@@ -117,6 +122,11 @@ GROUPS = {
     "cinematics": gen_cinematics.build,  # Phase 5: the intro cutscene, the day 10 reunion, weather disasters text
     "story_ch4": gen_story_ch4.build,  # Phase 5: chapter four (Pinecrest: the mission, the arrival cutscene, its text)
     "lily1": gen_lily1.build,  # Phase 5 step 5: Imlilylol's campaign, chapter one (Open Road)
+    "felix1": gen_felix1.build,  # Phase 5 step 5: FelixSyn's campaign, chapter one (The East Gate)
+    "subway": gen_subway.build,  # Phase 5: the abandoned subway stations (templates, worldgen, loot)
+    "subway_audio": gen_subway_audio.build,  # Phase 5: the subway PA announcements (Windows speech + ffmpeg)
+    "menu_backgrounds": import_menu_backgrounds.build,  # the main menu's background pool (the owner's screenshots)
+    "round8": gen_round8.build,  # the menu music settings text
     "pixabay": import_pixabay.build,  # Phase 5: real recordings from Pixabay (after every sound generator; see CREDITS.md)
     "pixabay_creatures": import_pixabay_creatures.build,  # Phase 5: real recordings for every infected, boss and nest sound (after pixabay: appends to CREDITS.md)
     "asesino_model": gen_asesino_model.build,  # Phase 5: the Asesino's own rig (Java) and texture

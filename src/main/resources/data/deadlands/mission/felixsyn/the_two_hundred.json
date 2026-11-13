@@ -1,0 +1,26 @@
+{
+	"title": "mission.deadlands.felixsyn.the_two_hundred",
+	"description": "mission.deadlands.felixsyn.the_two_hundred.description",
+	"requires": [
+		"felix_okafor_told"
+	],
+	"objectives": [
+		{
+			"id": "beans",
+			"type": "have_item",
+			"text": "mission.deadlands.felixsyn.the_two_hundred.beans",
+			"target": "deadlands:canned_beans",
+			"count": 4
+		},
+		{
+			"id": "bandages",
+			"type": "have_item",
+			"text": "mission.deadlands.felixsyn.the_two_hundred.bandages",
+			"target": "deadlands:bandage",
+			"count": 3
+		}
+	],
+	"reward_items": [],
+	"reward_flags": [],
+	"lore": []
+}

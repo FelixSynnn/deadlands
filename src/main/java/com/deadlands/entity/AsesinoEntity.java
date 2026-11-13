@@ -133,6 +133,11 @@ public class AsesinoEntity extends Monster {
 	private int lungeTicks;
 	private int lungeCooldown = 100;
 	private boolean lungeHit;
+	/** Never stuck for long in a chase: he comes back near them, out of sight (Stalking.Unstuck). */
+	private final com.deadlands.entity.ai.Stalking.Unstuck unstuck = new com.deadlands.entity.ai.Stalking.Unstuck();
+	private int catchUpCooldown = 200;
+	/** Ticks until the next sound behind the survivor he is stalking (a step, a breath). */
+	private int creepIn = 600;
 	private int actionLeft;
 	// Sound.
 	private long voiceUntil;
@@ -262,9 +267,11 @@ public class AsesinoEntity extends Monster {
 	@Override
 	protected void customServerAiStep(ServerLevel level) {
 		super.customServerAiStep(level);
+		com.deadlands.entity.ai.Stalking.swim(this);
 		modeTicks++;
 		meleeCooldown = Math.max(0, meleeCooldown - 1);
 		lungeCooldown = Math.max(0, lungeCooldown - 1);
+		catchUpCooldown = Math.max(0, catchUpCooldown - 1);
 		peekCooldown = Math.max(0, peekCooldown - 1);
 		if (actionLeft > 0 && --actionLeft == 0) {
 			entityData.set(DATA_ACTION, Action.NONE.ordinal());
@@ -507,20 +514,35 @@ public class AsesinoEntity extends Monster {
 		if (!watched) {
 			watchedTicks = 0;
 		}
+		// A step or a breath just behind them, out of view, now and then.
+		if (!watched && distance < 28.0 && --creepIn <= 0) {
+			creepIn = 700 + random.nextInt(1100);
+			com.deadlands.entity.ai.Stalking.soundBehind(level, target,
+				random.nextBoolean() ? DLSounds.ASESINO_STEP.value() : DLSounds.ASESINO_AMBIENT.value(), 0.45F, 0.9F, 5.0 + random.nextDouble() * 4.0);
+		}
 		if (approaching && !slipping) {
 			slipping = true; // they are coming: not yet, so he melts away
 			stalkSpot = hiddenSpot(level, target, 20.0, 30.0, true);
 			replanIn = 60;
 		}
+		// He closes in as the stalk goes on: 22-34 blocks at first, 10-18 near the end.
+		float progress = Math.min(1.0F, stalkTicks / (float) stalkPlan);
+		double near = 22.0 - 12.0 * progress;
+		double far = 34.0 - 16.0 * progress;
 		if (--replanIn <= 0 || stalkSpot == null) {
 			replanIn = 40 + random.nextInt(20);
 			slipping = false;
-			Vec3 spot = hiddenSpot(level, target, 16.0, 28.0, false);
+			Vec3 spot = hiddenSpot(level, target, near, far, false);
 			if (spot != null) {
 				stalkSpot = spot;
 			}
 		}
 		if (stalkSpot == null) {
+			return;
+		}
+		// When they stand still, so does he (if they can't see him): moving only when they move, like a hunter.
+		if (stillTicks > 15 && !slipping && distance < far + 6.0 && !visibleFrom(target, position())) {
+			getNavigation().stop();
 			return;
 		}
 		if (position().distanceToSqr(stalkSpot) < 2.0) {
@@ -647,6 +669,10 @@ public class AsesinoEntity extends Monster {
 	// ---------------------------------------------------------------------------------------- chase
 
 	private void startChase(ServerLevel level, Player target) {
+		if (mode != Mode.CHASE && distanceTo(target) < 24.0) {
+			// The moment he comes for them, the dark closes in for a few seconds.
+			target.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.DARKNESS, 80, 0, true, false));
+		}
 		setMode(Mode.CHASE);
 		setTarget(target);
 		lastKnown = target.position();
@@ -681,18 +707,28 @@ public class AsesinoEntity extends Monster {
 		double ramp = Math.min(1.0, modeTicks / (double) RAMP_TICKS);
 		DeadlandsConfig.Asesino config = ConfigManager.get().asesino;
 		getAttribute(Attributes.MOVEMENT_SPEED).addOrReplacePermanentModifier(
-			new AttributeModifier(CHASE_SPEED, (config.chaseSpeedMax - config.stalkSpeed) * ramp, AttributeModifier.Operation.ADD_VALUE));
+			new AttributeModifier(CHASE_SPEED, (config.chaseSpeedMax - config.stalkSpeed) * ramp
+				+ (distance > 10.0 ? Math.min(0.14, (distance - 10.0) * 0.01) : 0.0), // left behind: he closes the gap, always
+				AttributeModifier.Operation.ADD_VALUE));
 		if (seen) {
 			getLookControl().setLookAt(target, 30.0F, 30.0F);
 		}
 		if (melee(level, target, distance)) {
 			return;
 		}
-		// Out of reach (up a pillar, across water): wait nearby rather than pace beneath them.
+		// Stuck (no way to them, or getting nowhere), or left far behind: he comes back near them, out of sight.
+		if (unstuck.tick(this, target, 60) || distance > 40.0 && catchUpCooldown == 0) {
+			catchUpCooldown = 300;
+			if (com.deadlands.entity.ai.Stalking.teleportNear(this, level, target, 7.0, 13.0, 2.0)) {
+				unreachableTicks = 0;
+				return;
+			}
+		}
+		// Truly out of reach (up a pillar) and nowhere to appear: wait nearby rather than pace beneath them.
 		Path path = getNavigation().getPath();
 		boolean reachable = path == null || path.canReach() || distance < 3.0;
 		unreachableTicks = reachable ? 0 : unreachableTicks + 1;
-		if (unreachableTicks > 120) {
+		if (unreachableTicks > 240) {
 			startLurk(level, target, 8.0, 16.0, 600 + random.nextInt(600));
 			return;
 		}

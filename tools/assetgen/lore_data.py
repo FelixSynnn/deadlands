@@ -206,6 +206,23 @@ L("guest_file_3", "government", ["facility", "military", "police"], "Incident No
   "Maintenance worker Mercer evacuated with minor injuries. Refused treatment until someone found his dog. The dog was bitten by an "
   "escaped subject during the breach and ran. Witnesses say she was not limping any more. She was standing up on her back legs.")
 
+# The subway (world/subway): found in train luggage, ticket booths and hideouts.
+L("subway_paper", "newspaper", ["subway"], "The Morning Line, Final Edition",
+  "TRAINS RUN TO THE LAST. The transit authority says services north will continue \"for as long as there are drivers\". "
+  "Queues at Central reached the street by six. Officials ask passengers not to bring pets, livestock, or anyone who is unwell.")
+L("subway_driver_log", "journal", ["subway"], "Driver's Log, Line 2",
+  "Last run. Forty on a car built for twenty. Someone in car two was coughing and they made her get off at Mercer Street. "
+  "She stood on the platform and watched us go. The tunnel lights went out behind us one by one. I didn't stop. I'm sorry.")
+L("subway_child_note", "journal", ["subway"], "A Note in Crayon",
+  "MUM I WAITED BY THE TICKET MACHINE LIKE YOU SAID. THE MAN ON THE SPEAKER SAID YOUR NAME WRONG. "
+  "I AM GOING WITH THE LADY WITH THE RED BAG. SHE SAYS YOU WILL FIND US AT THE CAMP. I LEFT YOU MY TORCH.")
+L("subway_hideout_rules", "journal", ["subway"], "Rules, Pinned Up in a Back Room",
+  "1. No light past the barricade. 2. Nobody comes in bitten. Nobody. 3. Water is shared. 4. If the PA comes on, "
+  "stay quiet: it brings them down the stairs. 5. Day 31: Marcus didn't come back. 6. We're leaving tonight. Take what you need.")
+L("subway_staff_memo", "government", ["subway"], "Transit Staff Memo, Do Not Post",
+  "Staff are reminded NOT to repeat the evacuation announcement after the tunnels are sealed. The recording loops on its own. "
+  "If a station's power fails, the PA's backup battery will keep it running for some weeks. There is no way to switch it off remotely.")
+
 # =============================================================================================== military
 L("mil_lantern_brief", "military", ["military", "lab", "facility"], "Project LANTERN: Briefing",
   "CLASSIFIED. Project LANTERN seeks to restore function to soldiers with catastrophic injuries using the neural regeneration agent "

@@ -150,6 +150,7 @@ public final class DeadlandsClient implements ClientModInitializer {
 		});
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+			com.deadlands.client.sound.MenuMusic.tick(client);
 			while (DLKeyMappings.JOURNAL.consumeClick()) {
 				if (client.screen == null && client.player != null) {
 					openJournal();

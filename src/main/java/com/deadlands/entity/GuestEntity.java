@@ -67,7 +67,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class GuestEntity extends Monster {
 	public enum Mode {
-		ROAM, HUNT, KNOCK, ENTER, FEED // append only
+		ROAM, HUNT, KNOCK, ENTER, FEED, STALK // append only
 	}
 
 	public enum Action {
@@ -106,6 +106,19 @@ public class GuestEntity extends Monster {
 	private int dayTicks;
 	private long voiceUntil;
 	private int stepTicks;
+	// Stalking (it follows from cover first, then comes).
+	private int stalkTicks;
+	private int stalkPlan = 2400;
+	private @Nullable Vec3 stalkSpot;
+	private int replanIn;
+	private int watchedTicks;
+	private boolean slipping;
+	private int creepIn = 400;
+	private int stillTicks;
+	private @Nullable Vec3 preyLastPos;
+	/** Never stuck for long in a hunt: it comes back near them, out of sight. */
+	private final com.deadlands.entity.ai.Stalking.Unstuck unstuck = new com.deadlands.entity.ai.Stalking.Unstuck();
+	private int catchUpCooldown = 200;
 	/** Client: when the current action began, and the eased run blend. */
 	private int actionStartTick;
 	private float run;
@@ -210,6 +223,98 @@ public class GuestEntity extends Monster {
 		setMode(Mode.HUNT);
 		act(Action.ROAR, 40);
 		voice(level, arrival ? DLSounds.GUEST_ARRIVE.value() : DLSounds.GUEST_ROAR.value(), 2.5F, 1.0F, 60);
+		if (distanceTo(player) < 24.0) {
+			// Its scream roots them to the spot for a second.
+			player.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.SLOWNESS, 25, 3, true, false));
+		}
+	}
+
+	/**
+	 * Start stalking a survivor (the spawner does this as it arrives, far off): it follows from cover for one
+	 * and a half to three minutes, closing in, freezing when looked at and slipping out of sight, before it
+	 * comes (sooner if they are hurt, alone in the dark close by, or walk right up to it).
+	 */
+	public void stalk(ServerLevel level, Player player) {
+		prey = player.getUUID();
+		lastKnown = player.position();
+		setMode(Mode.STALK);
+		stalkTicks = 0;
+		stalkPlan = 1800 + random.nextInt(1800);
+		stalkSpot = null;
+		voice(level, DLSounds.GUEST_SENSE.value(), 1.2F, 0.85F, 40);
+	}
+
+	private void stalkTick(ServerLevel level, Player target) {
+		double distance = distanceTo(target);
+		if (distance > 128.0) {
+			setMode(Mode.ROAM);
+			return;
+		}
+		stalkTicks++;
+		lastKnown = target.position();
+		boolean watched = com.deadlands.entity.ai.Stalking.watching(target, this);
+		Vec3 now = target.position();
+		stillTicks = preyLastPos != null && now.distanceToSqr(preyLastPos) < 0.02 ? stillTicks + 1 : 0;
+		preyLastPos = now;
+		float progress = Math.min(1.0F, stalkTicks / (float) stalkPlan);
+		// When it comes.
+		boolean hurtBy = getLastHurtByMob() == target && tickCount - getLastHurtByMobTimestamp() < 40;
+		boolean opening = stalkTicks > stalkPlan / 3 && (target.getHealth() < target.getMaxHealth() * 0.5F
+			|| !watched && distance < 14.0 && com.deadlands.entity.ai.Stealth.light(target) <= 7);
+		if (hurtBy || distance < 6.0 || opening || stalkTicks >= stalkPlan && distance < 40.0) {
+			hunt(level, target, true);
+			return;
+		}
+		getLookControl().setLookAt(target, 20.0F, 20.0F);
+		// Caught looking: it freezes, low to the ground, growls, then melts away out of sight.
+		if (watched && !slipping) {
+			if (++watchedTicks == 1) {
+				voice(level, DLSounds.GUEST_AMBIENT.value(), 0.9F, 0.7F, 60);
+			}
+			if (watchedTicks < 35) {
+				getNavigation().stop();
+				return;
+			}
+			slipping = true;
+			stalkSpot = com.deadlands.entity.ai.Stalking.hiddenSpot(this, level, target, 22.0, 34.0, true, 3.3);
+			replanIn = 60;
+		}
+		if (!watched) {
+			watchedTicks = 0;
+		}
+		// A sniff or a heavy step just behind them, out of view.
+		if (!watched && distance < 30.0 && --creepIn <= 0) {
+			creepIn = 600 + random.nextInt(900);
+			com.deadlands.entity.ai.Stalking.soundBehind(level, target, random.nextBoolean() ? DLSounds.GUEST_SENSE.value() : DLSounds.GUEST_STEP.value(),
+				0.5F, 0.85F, 5.0 + random.nextDouble() * 4.0);
+		}
+		// It closes in as the stalk goes on: 20-32 blocks at first, 10-18 near the end.
+		double near = 20.0 - 10.0 * progress;
+		double far = 32.0 - 14.0 * progress;
+		if (--replanIn <= 0 || stalkSpot == null) {
+			replanIn = 40 + random.nextInt(20);
+			slipping = false;
+			Vec3 spot = com.deadlands.entity.ai.Stalking.hiddenSpot(this, level, target, near, far, false, 3.3);
+			if (spot != null) {
+				stalkSpot = spot;
+			}
+		}
+		if (stalkSpot == null) {
+			return;
+		}
+		// When they stand still, so does it (if they can't see it).
+		if (stillTicks > 15 && !slipping && distance < far + 6.0 && !com.deadlands.entity.ai.Stalking.visibleFrom(target, position(), 3.0)) {
+			getNavigation().stop();
+			return;
+		}
+		if (position().distanceToSqr(stalkSpot) < 3.0) {
+			getNavigation().stop();
+			return;
+		}
+		double pace = slipping ? 1.15 : distance > 36.0 ? 1.0 : 0.6;
+		if (getNavigation().isDone() || (tickCount + getId()) % 10 == 0) {
+			getNavigation().moveTo(stalkSpot.x, stalkSpot.y, stalkSpot.z, pace);
+		}
 	}
 
 	// ======================================================================================== the mind
@@ -217,6 +322,8 @@ public class GuestEntity extends Monster {
 	@Override
 	protected void customServerAiStep(ServerLevel level) {
 		super.customServerAiStep(level);
+		com.deadlands.entity.ai.Stalking.swim(this);
+		catchUpCooldown = Math.max(0, catchUpCooldown - 1);
 		modeTicks++;
 		swipeCooldown = Math.max(0, swipeCooldown - 1);
 		grabCooldown = Math.max(0, grabCooldown - 1);
@@ -258,8 +365,9 @@ public class GuestEntity extends Monster {
 			case KNOCK -> knock(level, target);
 			case ENTER -> enter(level, target);
 			case FEED -> feed(level);
+			case STALK -> stalkTick(level, target);
 		}
-		entityData.set(DATA_PREY, target != null && mode != Mode.ROAM && mode != Mode.FEED ? target.getId() : -1);
+		entityData.set(DATA_PREY, target != null && mode != Mode.ROAM && mode != Mode.FEED && mode != Mode.STALK ? target.getId() : -1);
 	}
 
 	private void setMode(Mode next) {
@@ -312,8 +420,12 @@ public class GuestEntity extends Monster {
 			}
 		}
 		if (best != null) {
-			level.playSound(null, getX(), getY(), getZ(), DLSounds.GUEST_SENSE.value(), SoundSource.HOSTILE, 2.0F, 1.0F);
-			hunt(level, best, false);
+			if (bestDistance < 8.0) {
+				level.playSound(null, getX(), getY(), getZ(), DLSounds.GUEST_SENSE.value(), SoundSource.HOSTILE, 2.0F, 1.0F);
+				hunt(level, best, false);
+			} else {
+				stalk(level, best);
+			}
 		} else if (getNavigation().isDone() && random.nextInt(60) == 0) {
 			Vec3 wander = position().add(random.nextGaussian() * 12.0, 0.0, random.nextGaussian() * 12.0);
 			getNavigation().moveTo(wander.x, wander.y, wander.z, 0.8);
@@ -369,6 +481,13 @@ public class GuestEntity extends Monster {
 				knocks = 0;
 				setMode(knockedThisApproach ? Mode.ENTER : Mode.KNOCK);
 				knockedThisApproach = true;
+				return;
+			}
+		}
+		if (mode == Mode.HUNT && (unstuck.tick(this, target, 80) || distance > 40.0 && seen && catchUpCooldown == 0)) {
+			catchUpCooldown = 300;
+			if (com.deadlands.entity.ai.Stalking.teleportNear(this, level, target, 8.0, 14.0, 3.3)) {
+				voice(level, DLSounds.GUEST_SENSE.value(), 1.5F, 0.8F, 40);
 				return;
 			}
 		}
@@ -651,7 +770,7 @@ public class GuestEntity extends Monster {
 			return false;
 		}
 		boolean hurt = super.hurtServer(level, source, amount);
-		if (hurt && source.getEntity() instanceof Player player && huntable(player) && (mode == Mode.ROAM || mode == Mode.FEED || prey == null)) {
+		if (hurt && source.getEntity() instanceof Player player && huntable(player) && (mode == Mode.ROAM || mode == Mode.FEED || mode == Mode.STALK || prey == null)) {
 			hunt(level, player, false);
 		}
 		return hurt;

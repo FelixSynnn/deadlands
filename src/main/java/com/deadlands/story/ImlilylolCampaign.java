@@ -118,7 +118,7 @@ public final class ImlilylolCampaign {
 		}
 	}
 
-	private static boolean carries(Inventory inventory, MissionDef def) {
+	static boolean carries(Inventory inventory, MissionDef def) {
 		for (MissionDef.Objective objective : def.objectives()) {
 			if (objective.type().equals("have_item")) {
 				Item item = objective.target().map(BuiltInRegistries.ITEM::getValue).orElse(null);
@@ -130,7 +130,7 @@ public final class ImlilylolCampaign {
 		return true;
 	}
 
-	private static void take(Inventory inventory, MissionDef def) {
+	static void take(Inventory inventory, MissionDef def) {
 		for (MissionDef.Objective objective : def.objectives()) {
 			if (!objective.type().equals("have_item")) {
 				continue;

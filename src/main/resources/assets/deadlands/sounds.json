@@ -2750,5 +2750,104 @@
 				"pitch": 0.78
 			}
 		]
+	},
+	"subway.pa_evacuate_1": {
+		"subtitle": "subtitles.deadlands.subway.pa",
+		"sounds": [
+			{
+				"name": "deadlands:subway/pa_evacuate_1",
+				"attenuation_distance": 40
+			}
+		]
+	},
+	"subway.pa_evacuate_2": {
+		"subtitle": "subtitles.deadlands.subway.pa",
+		"sounds": [
+			{
+				"name": "deadlands:subway/pa_evacuate_2",
+				"attenuation_distance": 40
+			}
+		]
+	},
+	"subway.pa_missing": {
+		"subtitle": "subtitles.deadlands.subway.pa",
+		"sounds": [
+			{
+				"name": "deadlands:subway/pa_missing",
+				"attenuation_distance": 40
+			}
+		]
+	},
+	"subway.pa_doors": {
+		"subtitle": "subtitles.deadlands.subway.pa",
+		"sounds": [
+			{
+				"name": "deadlands:subway/pa_doors",
+				"attenuation_distance": 40
+			}
+		]
+	},
+	"subway.pa_north": {
+		"subtitle": "subtitles.deadlands.subway.pa",
+		"sounds": [
+			{
+				"name": "deadlands:subway/pa_north",
+				"attenuation_distance": 40
+			}
+		]
+	},
+	"subway.pa_checks": {
+		"subtitle": "subtitles.deadlands.subway.pa",
+		"sounds": [
+			{
+				"name": "deadlands:subway/pa_checks",
+				"attenuation_distance": 40
+			}
+		]
+	},
+	"subway.pa_lights": {
+		"subtitle": "subtitles.deadlands.subway.pa",
+		"sounds": [
+			{
+				"name": "deadlands:subway/pa_lights",
+				"attenuation_distance": 40
+			}
+		]
+	},
+	"subway.pa_sorry": {
+		"subtitle": "subtitles.deadlands.subway.pa",
+		"sounds": [
+			{
+				"name": "deadlands:subway/pa_sorry",
+				"attenuation_distance": 40
+			}
+		]
+	},
+	"subway.pa_static_1": {
+		"subtitle": "subtitles.deadlands.subway.pa_static",
+		"sounds": [
+			{
+				"name": "deadlands:subway/pa_static_1",
+				"attenuation_distance": 32
+			}
+		]
+	},
+	"subway.pa_static_2": {
+		"subtitle": "subtitles.deadlands.subway.pa_static",
+		"sounds": [
+			{
+				"name": "deadlands:subway/pa_static_2",
+				"attenuation_distance": 32
+			}
+		]
+	},
+	"subway.pa_static_3": {
+		"subtitle": "subtitles.deadlands.subway.pa_static",
+		"sounds": [
+			{
+				"name": "deadlands:subway/pa_static_3",
+				"attenuation_distance": 32
+			}
+		]
 	}
 }

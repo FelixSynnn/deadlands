@@ -1,0 +1,21 @@
+{
+	"title": "mission.deadlands.felixsyn.okafor",
+	"description": "mission.deadlands.felixsyn.okafor.description",
+	"objectives": [
+		{
+			"id": "scout",
+			"type": "visit",
+			"text": "mission.deadlands.felixsyn.okafor.scout",
+			"target": "deadlands:military_post"
+		},
+		{
+			"id": "tell",
+			"type": "flag",
+			"text": "mission.deadlands.felixsyn.okafor.tell",
+			"flag": "felix_okafor_told"
+		}
+	],
+	"reward_items": [],
+	"reward_flags": [],
+	"lore": []
+}

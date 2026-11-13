@@ -87,6 +87,13 @@ public class GuestModel extends EntityModel<GuestRenderer.State> {
 		float a = state.actionAge;
 
 		stance(t, state);
+		if (state.mode == com.deadlands.entity.GuestEntity.Mode.STALK) {
+			// Stalking: belly almost to the ground, head low and level, jaw shut, tail still.
+			pelvis.y += 2.5F;
+			neck.xRot -= 0.2F;
+			head.xRot += 0.25F;
+			jaw.xRot = 0.04F;
+		}
 		prowl(state.walkAnimationPos * 0.62F, walk);
 		if (run > 0.01F) {
 			gallop(state.walkAnimationPos * 0.42F, run, t);
