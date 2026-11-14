@@ -1,0 +1,59 @@
+{
+	"kind": "major",
+	"time": "night",
+	"place": "indoors",
+	"requires": "fixtures",
+	"weight": 14,
+	"steps": [
+		{
+			"at": 0,
+			"type": "silence",
+			"amount": 260
+		},
+		{
+			"at": 0,
+			"type": "fixtures_out",
+			"amount": 50
+		},
+		{
+			"at": 55,
+			"type": "apparition",
+			"amount": 600,
+			"where": "ceiling"
+		},
+		{
+			"at": 60,
+			"type": "sound",
+			"sound": "deadlands:horror.whisper",
+			"where": "above",
+			"volume": 0.8,
+			"pitch": 1.0,
+			"distance": 2.5
+		},
+		{
+			"at": 62,
+			"type": "wait_look",
+			"amount": 220
+		},
+		{
+			"at": 64,
+			"type": "sound",
+			"sound": "deadlands:horror.stalker_chant",
+			"where": "everywhere",
+			"volume": 1.0,
+			"pitch": 1.0,
+			"distance": 0.0
+		},
+		{
+			"at": 64,
+			"type": "jolt",
+			"amount": 0.8
+		},
+		{
+			"at": 66,
+			"type": "apparition",
+			"amount": 0,
+			"where": "drop"
+		}
+	]
+}

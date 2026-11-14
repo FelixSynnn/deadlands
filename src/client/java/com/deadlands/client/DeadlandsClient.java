@@ -52,6 +52,24 @@ public final class DeadlandsClient implements ClientModInitializer {
 			EntityRendererRegistry.<InfectedEntity>register(DLEntities.type(kind), context -> new InfectedRenderer(context, kind));
 		}
 		EntityRendererRegistry.register(com.deadlands.registry.DLMarkers.SURVIVOR, com.deadlands.client.render.NpcRenderer::new);
+		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(com.deadlands.client.render.AsesinoGeometry.LAYER,
+			com.deadlands.client.render.AsesinoGeometry::create);
+		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(com.deadlands.client.render.AberrantGeometry.LAYER,
+			com.deadlands.client.render.AberrantGeometry::create);
+		EntityRendererRegistry.register(com.deadlands.registry.DLAsesino.ASESINO, com.deadlands.client.render.AsesinoRenderer::new);
+		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(com.deadlands.client.render.GuestGeometry.LAYER,
+			com.deadlands.client.render.GuestGeometry::create);
+		EntityRendererRegistry.register(com.deadlands.registry.DLGuest.GUEST, com.deadlands.client.render.GuestRenderer::new);
+		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(com.deadlands.client.render.DotGeometry.LAYER,
+			com.deadlands.client.render.DotGeometry::create);
+		EntityRendererRegistry.register(com.deadlands.registry.DLDot.DOT, com.deadlands.client.render.DotRenderer::new);
+		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(com.deadlands.client.render.MythosGeometry.LAYER,
+			com.deadlands.client.render.MythosGeometry::create);
+		EntityRendererRegistry.register(com.deadlands.registry.DLMythos.MYTHOS, com.deadlands.client.render.MythosRenderer::new);
+		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(com.deadlands.client.render.SubAgentGeometry.LAYER,
+			com.deadlands.client.render.SubAgentGeometry::create);
+		EntityRendererRegistry.register(com.deadlands.registry.DLMythos.SUB_AGENT, com.deadlands.client.render.SubAgentRenderer::new);
+		com.deadlands.client.horror.DotScareOverlay.init();
 		com.deadlands.client.render.vehicle.VehicleRenderer.registerLayers();
 		com.deadlands.client.render.boss.BossRenderer.registerLayers();
 		com.deadlands.client.particle.DLParticleProviders.register();
@@ -72,6 +90,26 @@ public final class DeadlandsClient implements ClientModInitializer {
 		BlockEntityRenderers.register(DLBlockEntities.LOOT_CONTAINER, LootContainerRenderer::new);
 		MenuScreens.register(DLMenus.LOOT_CONTAINER, DLContainerScreen::new);
 		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Deadlands.id("day_card"), DayCardHud::render);
+		// Darkness and the flashlight beam on the screen, for shader packs and Sodium (client/light/ShaderDarkness).
+		HudElementRegistry.attachElementBefore(VanillaHudElements.MISC_OVERLAYS, Deadlands.id("shader_darkness"), com.deadlands.client.light.ShaderDarkness::render);
+		// Phase 4: opening a door, gate or trapdoor pushes with the hand in first person.
+		net.fabricmc.fabric.api.event.player.UseBlockCallback.EVENT.register((player, world, hand, hit) -> {
+			if (world.isClientSide() && hand == net.minecraft.world.InteractionHand.MAIN_HAND) {
+				net.minecraft.world.level.block.Block block = world.getBlockState(hit.getBlockPos()).getBlock();
+				if (block instanceof net.minecraft.world.level.block.DoorBlock || block instanceof net.minecraft.world.level.block.TrapDoorBlock
+					|| block instanceof net.minecraft.world.level.block.FenceGateBlock) {
+					com.deadlands.client.firstperson.FirstPersonMotion.push();
+				}
+			}
+			return net.minecraft.world.InteractionResult.PASS;
+		});
+		// Phase 4 jumpscares: a blink darkens the whole screen for a moment.
+		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Deadlands.id("scare_blink"), (graphics, delta) -> {
+			float dark = com.deadlands.client.horror.ScarePlayer.blink();
+			if (dark > 0.0F) {
+				graphics.fill(0, 0, graphics.guiWidth(), graphics.guiHeight(), net.minecraft.util.ARGB.color((int) (dark * 255.0F), 0, 0, 0));
+			}
+		});
 		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Deadlands.id("town_card"), TownCardHud::render);
 		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Deadlands.id("horde"), HordeHud::render);
 		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Deadlands.id("boss_card"), com.deadlands.client.hud.BossCardHud::render);
@@ -89,15 +127,25 @@ public final class DeadlandsClient implements ClientModInitializer {
 			}
 		});
 		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Deadlands.id("survival"), SurvivalHud::render);
+		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Deadlands.id("awareness"), com.deadlands.client.hud.AwarenessHud::render);
 		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Deadlands.id("vehicle"), com.deadlands.client.hud.VehicleHud::render);
 		com.deadlands.client.hud.VitalsHud.register();
 		ClientBridge.install(DeadlandsClient::openJournal);
 		ClientBridge.installInfected(VOICES);
-		ClientBridge.installEffects(degrees -> {
-			net.minecraft.client.player.LocalPlayer player = net.minecraft.client.Minecraft.getInstance().player;
-			if (player != null) {
-				player.setXRot(Math.max(-90.0F, player.getXRot() - degrees));
-				player.setYRot(player.getYRot() + (player.getRandom().nextFloat() - 0.5F) * degrees * 0.4F);
+		ClientBridge.installEffects(new ClientBridge.EffectsHandler() {
+			@Override
+			public void recoil(float degrees) {
+				net.minecraft.client.player.LocalPlayer player = net.minecraft.client.Minecraft.getInstance().player;
+				if (player != null) {
+					player.setXRot(Math.max(-90.0F, player.getXRot() - degrees));
+					player.setYRot(player.getYRot() + (player.getRandom().nextFloat() - 0.5F) * degrees * 0.4F);
+					com.deadlands.client.firstperson.FirstPersonMotion.kick(degrees);
+				}
+			}
+
+			@Override
+			public void reload(int ticks) {
+				com.deadlands.client.firstperson.FirstPersonMotion.reload(ticks);
 			}
 		});
 		ClientBridge.installStory(new ClientBridge.StoryHandler() {
@@ -113,6 +161,7 @@ public final class DeadlandsClient implements ClientModInitializer {
 		});
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+			com.deadlands.client.sound.MenuMusic.tick(client);
 			while (DLKeyMappings.JOURNAL.consumeClick()) {
 				if (client.screen == null && client.player != null) {
 					openJournal();
@@ -133,6 +182,12 @@ public final class DeadlandsClient implements ClientModInitializer {
 			com.deadlands.client.sound.VehicleEngineSounds.tick(client);
 			VOICES.tickAll(client);
 			com.deadlands.client.horror.ScarePlayer.tick(client);
+			com.deadlands.client.weather.ClientDisaster.tick(client);
+			com.deadlands.client.sound.GuestMusic.tick(client);
+			com.deadlands.client.sound.DotMusic.tick(client);
+			com.deadlands.client.sound.MythosMusic.tick(client);
+			com.deadlands.client.sound.AsesinoMusic.tick(client);
+			com.deadlands.client.firstperson.FirstPersonMotion.tick(client);
 		});
 		com.deadlands.client.camera.PerspectiveLock.init();
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
@@ -147,10 +202,15 @@ public final class DeadlandsClient implements ClientModInitializer {
 			com.deadlands.client.weather.ClientWeather.reset();
 			com.deadlands.client.sound.AmbienceDirector.reset();
 			com.deadlands.client.sound.MusicDirector.reset();
+			com.deadlands.client.sound.AsesinoMusic.reset();
+			com.deadlands.client.sound.GuestMusic.reset();
+			com.deadlands.client.sound.DotMusic.reset();
+			com.deadlands.client.sound.MythosMusic.reset();
 			com.deadlands.client.sound.VehicleEngineSounds.reset();
 			com.deadlands.client.horror.ScarePlayer.reset();
 			com.deadlands.client.mission.ClientMissions.reset();
 			SurvivalHud.reset();
+			com.deadlands.client.hud.AwarenessHud.reset();
 			LocalSurvival.reset();
 			VOICES.reset();
 		});

@@ -107,6 +107,108 @@ public final class DLSounds {
 	public static final Holder.Reference<SoundEvent> INFECTED_STALKER_POUNCE = register("infected.stalker.pounce");
 	public static final Holder.Reference<SoundEvent> INFECTED_STALKER_HURT = register("infected.stalker.hurt");
 	public static final Holder.Reference<SoundEvent> INFECTED_STALKER_DEATH = register("infected.stalker.death");
+	// Phase 4 jumpscares and feeding (files from tools/assetgen/import_zombie_sfx.py).
+	public static final Holder.Reference<SoundEvent> HORROR_BREATH = register("horror.breath");
+	public static final Holder.Reference<SoundEvent> HORROR_STALKER_CHANT = register("horror.stalker_chant");
+	public static final Holder.Reference<SoundEvent> HORROR_STALKER_LAUGH = register("horror.stalker_laugh");
+	public static final Holder.Reference<SoundEvent> INFECTED_FEEDING = register("infected.feeding");
+	public static final Holder.Reference<SoundEvent> INFECTED_FEEDING_SCREECH = register("infected.feeding_screech");
+	// Phase 5 cinematics (tools/assetgen/gen_cinematics.py).
+	public static final Holder.Reference<SoundEvent> MUSIC_INTRO = register("music.intro");
+	public static final Holder.Reference<SoundEvent> EVENT_REUNION = register("event.reunion");
+	public static final Holder.Reference<SoundEvent> AMBIENT_INTRO = register("ambient.intro");
+	// The Asesino (files from the owner's Serial folder; tools/assetgen/import_asesino.py).
+	public static final Holder.Reference<SoundEvent> ASESINO_AMBIENT = register("asesino.ambient");
+	public static final Holder.Reference<SoundEvent> ASESINO_HURT = register("asesino.hurt");
+	public static final Holder.Reference<SoundEvent> ASESINO_DEATH = register("asesino.death");
+	public static final Holder.Reference<SoundEvent> ASESINO_STEP = register("asesino.step");
+	public static final Holder.Reference<SoundEvent> ASESINO_SWING = register("asesino.swing");
+	public static final Holder.Reference<SoundEvent> ASESINO_HIT = register("asesino.hit");
+	public static final Holder.Reference<SoundEvent> ASESINO_EXECUTION = register("asesino.execution");
+	public static final Holder.Reference<SoundEvent> ASESINO_CHASE_START = register("asesino.chase_start");
+	public static final Holder.Reference<SoundEvent> ASESINO_POUNCE = register("asesino.pounce");
+	public static final Holder.Reference<SoundEvent> ASESINO_POUNCE_HIT = register("asesino.pounce_hit");
+	public static final Holder.Reference<SoundEvent> ASESINO_POUNCE_MISS = register("asesino.pounce_miss");
+	public static final Holder.Reference<SoundEvent> ASESINO_STUN = register("asesino.stun");
+	public static final Holder.Reference<SoundEvent> ASESINO_BREACH = register("asesino.breach");
+	public static final Holder.Reference<SoundEvent> ASESINO_SCENT = register("asesino.scent");
+	public static final Holder.Reference<SoundEvent> ASESINO_FRENZY = register("asesino.frenzy");
+	public static final Holder.Reference<SoundEvent> ASESINO_SHRIEK = register("asesino.shriek");
+	// The Guest (the owner's GuestSoundsPack; tools/assetgen/import_guest_sfx.py).
+	public static final Holder.Reference<SoundEvent> GUEST_AMBIENT = register("guest.ambient");
+	public static final Holder.Reference<SoundEvent> GUEST_STEP = register("guest.step");
+	public static final Holder.Reference<SoundEvent> GUEST_SWING = register("guest.swing");
+	public static final Holder.Reference<SoundEvent> GUEST_FEED = register("guest.feed");
+	public static final Holder.Reference<SoundEvent> GUEST_KILL = register("guest.kill");
+	public static final Holder.Reference<SoundEvent> GUEST_ROAR = register("guest.roar");
+	public static final Holder.Reference<SoundEvent> GUEST_ROAR_BLAST = register("guest.roar_blast");
+	public static final Holder.Reference<SoundEvent> GUEST_SENSE = register("guest.sense");
+	public static final Holder.Reference<SoundEvent> GUEST_GRAB_WARN = register("guest.grab_warn");
+	public static final Holder.Reference<SoundEvent> GUEST_GRAB_PREPARE = register("guest.grab_prepare");
+	public static final Holder.Reference<SoundEvent> GUEST_GRAB_LUNGE = register("guest.grab_lunge");
+	public static final Holder.Reference<SoundEvent> GUEST_GRAB_HIT = register("guest.grab_hit");
+	public static final Holder.Reference<SoundEvent> GUEST_GRAB_MISS = register("guest.grab_miss");
+	public static final Holder.Reference<SoundEvent> GUEST_SLAM = register("guest.slam");
+	public static final Holder.Reference<SoundEvent> GUEST_HEAL = register("guest.heal");
+	public static final Holder.Reference<SoundEvent> GUEST_ARRIVE = register("guest.arrive");
+	public static final Holder.Reference<SoundEvent> GUEST_LEAVE = register("guest.leave");
+	public static final Holder.Reference<SoundEvent> GUEST_FEVER = register("guest.fever");
+	public static final Holder.Reference<SoundEvent> GUEST_KNOCK = register("guest.knock");
+	public static final Holder.Reference<SoundEvent> GUEST_TEAR = register("guest.tear");
+	public static final Holder.Reference<SoundEvent> GUEST_HURT = register("guest.hurt");
+	public static final Holder.Reference<SoundEvent> GUEST_DEATH = register("guest.death");
+	// D.O.T. (the owner's sounds; tools/assetgen/import_dot_sfx.py)
+	public static final Holder.Reference<SoundEvent> DOT_IDLE = register("dot.idle");
+	public static final Holder.Reference<SoundEvent> DOT_STEP = register("dot.step");
+	public static final Holder.Reference<SoundEvent> DOT_SWING = register("dot.swing");
+	public static final Holder.Reference<SoundEvent> DOT_KILL = register("dot.kill");
+	public static final Holder.Reference<SoundEvent> DOT_PROVOKED = register("dot.provoked");
+	public static final Holder.Reference<SoundEvent> DOT_STATIC_STEP = register("dot.static_step");
+	public static final Holder.Reference<SoundEvent> DOT_RESTORE = register("dot.restore");
+	public static final Holder.Reference<SoundEvent> DOT_GRASP_WINDUP = register("dot.grasp_windup");
+	public static final Holder.Reference<SoundEvent> DOT_GRASP = register("dot.grasp");
+	public static final Holder.Reference<SoundEvent> DOT_FIELD_START = register("dot.field_start");
+	public static final Holder.Reference<SoundEvent> DOT_FIELD_LOOP = register("dot.field_loop");
+	public static final Holder.Reference<SoundEvent> DOT_FIELD_END = register("dot.field_end");
+	public static final Holder.Reference<SoundEvent> DOT_HURT = register("dot.hurt");
+	public static final Holder.Reference<SoundEvent> DOT_DEATH = register("dot.death");
+	// Mythos and his sub-agents (tools/assetgen/import_mythos_sfx.py).
+	public static final Holder.Reference<SoundEvent> MYTHOS_IDLE = register("mythos.idle");
+	public static final Holder.Reference<SoundEvent> MYTHOS_STEP = register("mythos.step");
+	public static final Holder.Reference<SoundEvent> MYTHOS_SLASH = register("mythos.slash");
+	public static final Holder.Reference<SoundEvent> MYTHOS_SLASH_HIT = register("mythos.slash_hit");
+	public static final Holder.Reference<SoundEvent> MYTHOS_ENTANGLE = register("mythos.entangle");
+	public static final Holder.Reference<SoundEvent> MYTHOS_ENTANGLE_HIT = register("mythos.entangle_hit");
+	public static final Holder.Reference<SoundEvent> MYTHOS_MASS_INFECTION = register("mythos.mass_infection");
+	public static final Holder.Reference<SoundEvent> MYTHOS_MASS_INFECTION_FAR = register("mythos.mass_infection_far");
+	public static final Holder.Reference<SoundEvent> MYTHOS_PACKET = register("mythos.packet");
+	public static final Holder.Reference<SoundEvent> MYTHOS_PUDDLE = register("mythos.puddle");
+	public static final Holder.Reference<SoundEvent> MYTHOS_REJUVENATE = register("mythos.rejuvenate");
+	public static final Holder.Reference<SoundEvent> MYTHOS_KILL = register("mythos.kill");
+	public static final Holder.Reference<SoundEvent> MYTHOS_SUMMON = register("mythos.summon");
+	public static final Holder.Reference<SoundEvent> MYTHOS_HURT = register("mythos.hurt");
+	public static final Holder.Reference<SoundEvent> MYTHOS_DEATH = register("mythos.death");
+	public static final Holder.Reference<SoundEvent> MYTHOS_BLINK = register("mythos.blink");
+	public static final Holder.Reference<SoundEvent> MYTHOS_PHASE = register("mythos.phase");
+	public static final Holder.Reference<SoundEvent> MYTHOS_TORNADO_WARNING = register("mythos.tornado_warning");
+	public static final Holder.Reference<SoundEvent> SUB_AGENT_IDLE = register("sub_agent.idle");
+	public static final Holder.Reference<SoundEvent> SUB_AGENT_STEP = register("sub_agent.step");
+	public static final Holder.Reference<SoundEvent> SUB_AGENT_HIT = register("sub_agent.hit");
+	public static final Holder.Reference<SoundEvent> SUB_AGENT_DEATH = register("sub_agent.death");
+	public static final List<Holder.Reference<SoundEvent>> MYTHOS_MUSIC = List.of(register("music.mythos.layer1"), register("music.mythos.layer2"),
+		register("music.mythos.layer3"), register("music.mythos.layer4"));
+	public static final List<Holder.Reference<SoundEvent>> DOT_MUSIC = List.of(register("music.dot.layer1"), register("music.dot.layer2"),
+		register("music.dot.layer3"), register("music.dot.layer4"));
+	public static final List<Holder.Reference<SoundEvent>> GUEST_MUSIC = List.of(register("music.guest.layer1"), register("music.guest.layer2"),
+		register("music.guest.layer3"), register("music.guest.layer4"));
+	public static final List<Holder.Reference<SoundEvent>> ASESINO_MUSIC = List.of(register("music.asesino.layer1"), register("music.asesino.layer2"),
+		register("music.asesino.layer3"), register("music.asesino.layer4"));
+	public static final Holder.Reference<SoundEvent> DISASTER_CAUSTIC_BURN = register("disaster.caustic_rain.burn");
+	/** Disasters, in {@code world.disaster.Disaster} order: the warning, and the sound while it lasts. */
+	public static final List<Holder.Reference<SoundEvent>> DISASTER_WARNINGS = java.util.Arrays.stream(com.deadlands.world.disaster.Disaster.values())
+		.map(d -> register("disaster." + d.id() + ".warning")).toList();
+	public static final List<Holder.Reference<SoundEvent>> DISASTER_SOUNDS = java.util.Arrays.stream(com.deadlands.world.disaster.Disaster.values())
+		.map(d -> register("disaster." + d.id())).toList();
 	public static final Holder.Reference<SoundEvent> INFECTED_CHARRED_AMBIENT = register("infected.charred.ambient");
 	public static final Holder.Reference<SoundEvent> INFECTED_BREATH = register("infected.breath");
 	public static final Holder.Reference<SoundEvent> INFECTED_SCRATCH = register("infected.scratch");
@@ -132,6 +234,10 @@ public final class DLSounds {
 	public static final Holder.Reference<SoundEvent> WEAPON_SHOTGUN_SHOT = register("weapon.shotgun_shot");
 	public static final Holder.Reference<SoundEvent> WEAPON_RIFLE_SHOT = register("weapon.rifle_shot");
 	public static final Holder.Reference<SoundEvent> WEAPON_RELOAD = register("weapon.reload");
+	// Phase 4 melee (tools/assetgen/gen_weapon_sfx.py).
+	public static final Holder.Reference<SoundEvent> WEAPON_SWING = register("weapon.swing");
+	public static final Holder.Reference<SoundEvent> WEAPON_HIT_BLUNT = register("weapon.hit_blunt");
+	public static final Holder.Reference<SoundEvent> WEAPON_HIT_BLADE = register("weapon.hit_blade");
 	public static final Holder.Reference<SoundEvent> VEHICLE_ENGINE = register("vehicle.engine");
 	public static final Holder.Reference<SoundEvent> VEHICLE_IMPACT = register("vehicle.impact");
 	public static final Holder.Reference<SoundEvent> VEHICLE_REPAIR = register("vehicle.repair");

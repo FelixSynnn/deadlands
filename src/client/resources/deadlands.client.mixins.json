@@ -15,7 +15,8 @@
 		"LightTextureMixin",
 		"SkyRendererMixin",
 		"GlobalSettingsUniformMixin",
-		"ClientAdvancementsMixin"
+		"ClientAdvancementsMixin",
+		"ItemInHandRendererMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

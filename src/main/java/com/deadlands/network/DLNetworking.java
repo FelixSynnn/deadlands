@@ -25,14 +25,17 @@ public final class DLNetworking {
 
 	public static void init() {
 		PayloadTypeRegistry.playS2C().register(WorldStatusPayload.TYPE, WorldStatusPayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(DisasterPayload.TYPE, DisasterPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(ChaseMusicPayload.TYPE, ChaseMusicPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(HorrorScarePayload.TYPE, HorrorScarePayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(MissionSyncPayload.TYPE, MissionSyncPayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(AchievementSecretsPayload.TYPE, AchievementSecretsPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(HorrorBusyPayload.TYPE, HorrorBusyPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(DayBeginPayload.TYPE, DayBeginPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(TownCardPayload.TYPE, TownCardPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(HordeEventPayload.TYPE, HordeEventPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(SurvivalPayload.TYPE, SurvivalPayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(NoisePayload.TYPE, NoisePayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(SkillsPayload.TYPE, SkillsPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(DialoguePayload.TYPE, DialoguePayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(JournalPayload.TYPE, JournalPayload.CODEC);
@@ -45,6 +48,8 @@ public final class DLNetworking {
 		PayloadTypeRegistry.playS2C().register(LocationPayload.TYPE, LocationPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(CutscenePayload.TYPE, CutscenePayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(EndingChosenPayload.TYPE, EndingChosenPayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(StoryPayload.TYPE, StoryPayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(StoryRequestPayload.TYPE, StoryRequestPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(IntroPayload.TYPE, IntroPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(RadioPayload.TYPE, RadioPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(IntroDonePayload.TYPE, IntroDonePayload.CODEC);

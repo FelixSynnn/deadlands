@@ -41,6 +41,8 @@ public abstract class InfectedModel extends EntityModel<InfectedRenderState> {
 	private final KeyframeAnimation breach;
 	private final KeyframeAnimation emerge;
 	private final @Nullable KeyframeAnimation swell;
+	/** The animations keyed in Blender ({@code tools/assetgen/blender/infected_anims.py}); the procedural poses below are the fallback. */
+	private final com.deadlands.client.render.ClipRig clips;
 
 	protected InfectedModel(ModelPart root) {
 		super(root, RenderTypes::entityCutoutNoCull);
@@ -65,6 +67,9 @@ public abstract class InfectedModel extends EntityModel<InfectedRenderState> {
 		this.breach = InfectedAnimations.BREACH.bake(root);
 		this.emerge = InfectedAnimations.EMERGE.bake(root);
 		this.swell = root.createPartLookup().apply("belly") != null ? InfectedAnimations.SWELL.bake(root) : null;
+		boolean humanoid = root.createPartLookup().apply("belly") != null;
+		this.clips = new com.deadlands.client.render.ClipRig(root.createPartLookup(), "body",
+			com.deadlands.Deadlands.id(humanoid ? "models/entity/infected.anim" : "models/entity/brute.anim"));
 	}
 
 	@Override
@@ -74,6 +79,13 @@ public abstract class InfectedModel extends EntityModel<InfectedRenderState> {
 		float age = state.ageInTicks;
 		float walk = state.walkAnimationPos;
 		float speed = Math.min(1.0F, state.walkAnimationSpeed);
+		if (clips.anim() != null && clipAnim(state, age, walk, speed)) {
+			extras(state, age, walk, speed);
+			if (swell != null && state.swelling) {
+				play(swell, state.swellAnimationState, age, weight(state.swellAnimationState, age, 0.8F, true));
+			}
+			return;
+		}
 
 		switch (state.kind) {
 			case RUNNER -> run(state, age, walk, speed);
@@ -94,6 +106,101 @@ public abstract class InfectedModel extends EntityModel<InfectedRenderState> {
 		if (state.kind != InfectedKind.CRAWLER) {
 			look(state);
 			actions(state, age);
+		}
+	}
+
+	private static boolean lower(String bone) {
+		return bone.equals("body") || bone.endsWith("_leg") || bone.endsWith("_shin");
+	}
+
+	/**
+	 * The Blender clips: the kind's idle blending into its gait by speed (the walk animation's position drives the
+	 * stride, so the feet keep pace); a crawler's prone set; a stalker's crouch and its climb; each variant's own walk
+	 * (some limp, some reach with one arm or both, some mirrored, from its seed); the actions eased in and out over the
+	 * top (an attack on the move leaves the legs to the walk); then its own tilt and where it looks.
+	 */
+	private boolean clipAnim(InfectedRenderState state, float age, float walk, float speed) {
+		com.deadlands.client.render.ClipRig r = clips;
+		InfectedKind kind = state.kind;
+		float move = com.deadlands.client.render.ClipRig.smooth(speed * 1.4F);
+		String idle = kind == InfectedKind.CRAWLER ? "crawl_idle" : kind == InfectedKind.STALKER ? "stalk_idle" : "idle";
+		if (!r.sample(idle, age + (state.seed & 255) * 7, r.pose)) {
+			return false;
+		}
+		if (kind == InfectedKind.STALKER && state.climbing && r.sample("climb", age, r.layer)) {
+			com.deadlands.client.render.ClipRig.mix(r.pose, r.layer, 1.0F);
+		} else if (move > 0.001F) {
+			boolean ok;
+			boolean mirror = false;
+			switch (kind) {
+				case RUNNER -> {
+					float sprint = state.sprinting ? 1.0F : Mth.clamp(speed * 1.6F - 0.3F, 0.0F, 1.0F);
+					ok = r.sampleStride("jog", walk, 9.4F, r.layer) && r.sampleStride("sprint", walk, 9.4F, r.layer2);
+					if (ok) {
+						com.deadlands.client.render.ClipRig.mix(r.layer, r.layer2, sprint);
+					}
+				}
+				case CRAWLER -> ok = r.sampleStride("crawl", walk, 12.6F, r.layer);
+				case STALKER -> ok = r.sampleStride("stalk", walk, 10.5F, r.layer);
+				case BLOATER -> ok = r.sampleStride("waddle", walk, 14.0F, r.layer);
+				case BRUTE -> ok = r.sampleStride("lumber", walk, 14.0F, r.layer);
+				default -> {
+					String gait;
+					if (state.seeded(1) < 0.3F) {
+						gait = "limp";
+						mirror = state.seeded(1) >= 0.15F;
+					} else {
+						int reach = kind == InfectedKind.SCREAMER ? 0 : (int) (state.seeded(4) * 3.0F);
+						if (kind == InfectedKind.MILITARY && reach == 2) {
+							reach = 1;
+						}
+						gait = reach == 0 ? "shamble" : reach == 1 ? "shamble_reach1" : "shamble_reach";
+						mirror = reach == 1 && state.seeded(6) < 0.5F;
+					}
+					ok = r.sampleStride(gait, walk, 11.4F, r.layer);
+				}
+			}
+			if (ok) {
+				if (mirror) {
+					r.mirror(r.layer);
+				}
+				com.deadlands.client.render.ClipRig.mix(r.pose, r.layer, move);
+			}
+		}
+		// Actions over the top.
+		boolean crawler = kind == InfectedKind.CRAWLER;
+		action(state, state.attackAnimationState, age, crawler ? "crawl_attack" : "attack", 0.55F, false, !crawler, move);
+		if (!crawler) {
+			action(state, state.slamAnimationState, age, "slam", 1.1F, false, false, move);
+			action(state, state.screamAnimationState, age, "scream", 2.0F, false, false, move);
+			action(state, state.pounceAnimationState, age, "pounce", 0.8F, false, false, move);
+			if (state.breaching) {
+				action(state, state.breachAnimationState, age, "breach", 1.0F, true, false, move);
+			}
+			action(state, state.emergeAnimationState, age, "emerge", 1.4F, false, false, move);
+		}
+		r.apply();
+		// Its own way of standing, and where it looks.
+		body.zRot += (state.seeded(2) - 0.5F) * 0.06F;
+		if (crawler) {
+			head.xRot += Mth.clamp(state.xRot, -30.0F, 30.0F) * Mth.DEG_TO_RAD;
+			head.zRot -= Mth.clamp(state.yRot, -60.0F, 60.0F) * Mth.DEG_TO_RAD * 0.8F;
+		} else {
+			head.zRot += (state.seeded(3) - 0.5F) * 0.35F;
+			look(state);
+		}
+		return true;
+	}
+
+	private void action(InfectedRenderState state, AnimationState animation, float age, String clip, float length, boolean looping,
+		boolean upperOnly, float move) {
+		float w = weight(animation, age, length, looping);
+		if (w <= 0.0F || !clips.has(clip)) {
+			return;
+		}
+		float ticks = animation.getTimeInMillis(age) / 50.0F;
+		if (clips.sample(clip, ticks, clips.layer2)) {
+			clips.mixMasked(clips.pose, clips.layer2, w, upperOnly ? w * (1.0F - move) : w, InfectedModel::lower);
 		}
 	}
 

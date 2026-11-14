@@ -1,0 +1,70 @@
+{
+	"kind": "major",
+	"time": "night",
+	"place": "outdoors",
+	"flashlight": true,
+	"requires": "open_ground",
+	"weight": 12,
+	"steps": [
+		{
+			"at": 0,
+			"type": "silence",
+			"amount": 140
+		},
+		{
+			"at": 0,
+			"type": "apparition",
+			"amount": 130,
+			"where": "beam",
+			"distance": 18.0
+		},
+		{
+			"at": 30,
+			"type": "flicker",
+			"amount": 12
+		},
+		{
+			"at": 42,
+			"type": "apparition",
+			"amount": 90,
+			"where": "beam",
+			"distance": 12.0
+		},
+		{
+			"at": 70,
+			"type": "flicker",
+			"amount": 12
+		},
+		{
+			"at": 82,
+			"type": "apparition",
+			"amount": 40,
+			"where": "beam",
+			"distance": 6.0
+		},
+		{
+			"at": 100,
+			"type": "beam_off",
+			"amount": 18
+		},
+		{
+			"at": 104,
+			"type": "apparition_hide",
+			"amount": 0.0
+		},
+		{
+			"at": 112,
+			"type": "sound",
+			"sound": "deadlands:horror.stalker_laugh",
+			"where": "behind",
+			"volume": 0.9,
+			"pitch": 1.0,
+			"distance": 3.0
+		},
+		{
+			"at": 112,
+			"type": "jolt",
+			"amount": 0.5
+		}
+	]
+}

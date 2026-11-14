@@ -105,6 +105,11 @@ public final class MusicDirector {
 		chased = value;
 	}
 
+	/** Whether a crowd is chasing this survivor right now (the server's word). */
+	public static boolean chased() {
+		return chased;
+	}
+
 	public static void setSafeZone(boolean safe) {
 		safeZone = safe;
 	}
@@ -360,7 +365,7 @@ public final class MusicDirector {
 				level = Math.min(1.0F, level + 1.0F / fadeIn);
 			}
 			float live = target * (float) ConfigManager.get().audio.musicVolume;
-			volume = Math.max(0.0001F, live * level * level * com.deadlands.client.horror.ScarePlayer.musicDuck());
+			volume = Math.max(0.0001F, live * level * level * com.deadlands.client.horror.ScarePlayer.musicDuck() * AsesinoMusic.duck() * GuestMusic.duck() * DotMusic.duck() * MythosMusic.duck());
 		}
 	}
 }

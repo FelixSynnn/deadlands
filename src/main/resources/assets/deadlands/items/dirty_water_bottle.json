@@ -1,6 +1,21 @@
 {
 	"model": {
-		"type": "minecraft:model",
-		"model": "deadlands:item/dirty_water_bottle"
+		"type": "minecraft:select",
+		"property": "minecraft:display_context",
+		"cases": [
+			{
+				"when": [
+					"gui"
+				],
+				"model": {
+					"type": "minecraft:model",
+					"model": "deadlands:item/dirty_water_bottle"
+				}
+			}
+		],
+		"fallback": {
+			"type": "minecraft:model",
+			"model": "deadlands:item/dirty_water_bottle_3d"
+		}
 	}
 }

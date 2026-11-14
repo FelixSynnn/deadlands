@@ -1,0 +1,31 @@
+package vectorwing.farmersdelight.common.block;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.CeilingHangingSignBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.state.properties.WoodType;
+import org.jspecify.annotations.Nullable;
+import vectorwing.farmersdelight.common.block.state.CanvasSign;
+import vectorwing.farmersdelight.common.registry.ModBlockEntityTypes;
+
+public class CeilingHangingCanvasSignBlock extends CeilingHangingSignBlock implements CanvasSign {
+    private final DyeColor backgroundColor;
+
+    public CeilingHangingCanvasSignBlock(Properties properties, @Nullable DyeColor backgroundColor) {
+        super(WoodType.SPRUCE, properties);
+        this.backgroundColor = backgroundColor;
+    }
+
+    @Override
+    public @Nullable DyeColor getBackgroundColor() {
+        return this.backgroundColor;
+    }
+
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return ModBlockEntityTypes.HANGING_CANVAS_SIGN.get().create(pos, state);
+    }
+}

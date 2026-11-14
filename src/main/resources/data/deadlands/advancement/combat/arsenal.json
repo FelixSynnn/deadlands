@@ -1,0 +1,61 @@
+{
+	"parent": "deadlands:root",
+	"criteria": {
+		"pistol": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "deadlands:pistol"
+					}
+				]
+			}
+		},
+		"shotgun": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "deadlands:shotgun"
+					}
+				]
+			}
+		},
+		"rifle": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "deadlands:hunting_rifle"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"pistol"
+		],
+		[
+			"shotgun"
+		],
+		[
+			"rifle"
+		]
+	],
+	"display": {
+		"icon": {
+			"id": "deadlands:pistol"
+		},
+		"title": {
+			"translate": "achievement.deadlands.combat.arsenal.title"
+		},
+		"description": {
+			"translate": "achievement.deadlands.combat.arsenal.description"
+		},
+		"frame": "goal",
+		"show_toast": true,
+		"announce_to_chat": false,
+		"hidden": false
+	}
+}

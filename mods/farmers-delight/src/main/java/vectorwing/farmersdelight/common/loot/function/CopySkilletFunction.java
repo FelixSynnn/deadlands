@@ -1,0 +1,47 @@
+package vectorwing.farmersdelight.common.loot.function;
+
+import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.List;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import vectorwing.farmersdelight.common.block.entity.SkilletBlockEntity;
+import vectorwing.farmersdelight.common.registry.ModLootFunctions;
+
+@MethodsReturnNonnullByDefault
+public class CopySkilletFunction extends LootItemConditionalFunction {
+    public static final Identifier ID = Identifier.fromNamespaceAndPath("farmersdelight", "copy_skillet");
+    public static final MapCodec<CopySkilletFunction> CODEC = RecordCodecBuilder.mapCodec(
+        p_298131_ -> commonFields(p_298131_).apply(p_298131_, CopySkilletFunction::new)
+    );
+
+    private CopySkilletFunction(List<LootItemCondition> conditions) {
+        super(conditions);
+    }
+
+    public static LootItemConditionalFunction.Builder<?> builder() {
+        return simpleBuilder(CopySkilletFunction::new);
+    }
+
+    @Override
+    protected ItemStack run(ItemStack stack, LootContext context) {
+        BlockEntity tile = context.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        if (tile instanceof SkilletBlockEntity blockEntity) {
+            stack = blockEntity.getSkilletAsItem();
+        }
+
+        return stack;
+    }
+
+    @Override
+    public LootItemFunctionType<? extends LootItemConditionalFunction> getType() {
+        return ModLootFunctions.COPY_SKILLET.get();
+    }
+}

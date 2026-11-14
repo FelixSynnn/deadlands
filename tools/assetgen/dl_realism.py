@@ -316,6 +316,8 @@ def targets():
                     continue
                 if "variant" in path.parent.parts:
                     continue  # gen_variants blends these from finished textures: never finish them twice
+                if "model" in path.parent.parts:
+                    continue  # UV-unwrapped 3D model textures (gen_models3d): islands, not sprites
                 yield kind, path
 
 

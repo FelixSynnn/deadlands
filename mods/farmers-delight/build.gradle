@@ -1,0 +1,47 @@
+plugins {
+    id 'net.fabricmc.fabric-loom-remap' // version from the DEADLANDS root build (1.19.3)
+}
+
+version = project.mod_version
+base { archivesName = project.archives_base_name }
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://api.modrinth.com/maven' }
+    maven { url = 'https://maven.terraformersmc.com/releases/' }
+    maven { url = 'https://maven.shedaniel.me/' }
+    maven { url = 'https://maven.neoforged.net/releases/' }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    compileOnly "org.jspecify:jspecify:1.0.0"
+    // optional integrations (soft dependencies)
+    modCompileOnly "maven.modrinth:jei:e56U66Sq"
+    modCompileOnly "maven.modrinth:rei:QEiKPzyl"
+    modCompileOnly "me.shedaniel.cloth:basic-math:0.6.1"
+    modCompileOnly "maven.modrinth:architectury-api:uNdfrcQ8" // needed by REI API types
+    modCompileOnly "maven.modrinth:rrv:dmL0Iqz0"
+    modCompileOnly "maven.modrinth:yacl:pHWDw3Vc"
+    modCompileOnly "maven.modrinth:cloth-config:xuX40TN5"
+    modCompileOnly "maven.modrinth:modmenu:cLkYaVuL"
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/farmersdelight.classtweaker")
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+}
+tasks.withType(JavaCompile).configureEach { it.options.release = 21 }
+
+processResources {
+    // Read the version while configuring (DEADLANDS builds with Gradle's configuration cache).
+    def modVersion = project.version
+    inputs.property 'version', modVersion
+    filesMatching('fabric.mod.json') { expand 'version': modVersion }
+}

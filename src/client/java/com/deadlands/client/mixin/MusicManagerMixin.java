@@ -15,7 +15,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MusicManagerMixin {
 	@Inject(method = "tick", at = @At("HEAD"), cancellable = true)
 	private void deadlands$quietWhileDirected(CallbackInfo ci) {
-		if (MusicDirector.ownsMusic()) {
+		if (com.deadlands.client.sound.MenuMusic.active()) {
+			((net.minecraft.client.sounds.MusicManager) (Object) this).stopPlaying(); // the menu plays its own
+			ci.cancel();
+		} else if (MusicDirector.ownsMusic()) {
+			ci.cancel();
+		} else if (com.deadlands.client.sound.AsesinoMusic.playing() || com.deadlands.client.sound.GuestMusic.playing()
+			|| com.deadlands.client.sound.DotMusic.playing() || com.deadlands.client.sound.MythosMusic.playing()) {
+			// The Asesino's chase music: Minecraft's own music steps aside (stopped, then held off).
+			((net.minecraft.client.sounds.MusicManager) (Object) this).stopPlaying();
 			ci.cancel();
 		}
 	}

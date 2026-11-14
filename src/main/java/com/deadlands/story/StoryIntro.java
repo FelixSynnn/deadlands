@@ -46,9 +46,10 @@ public final class StoryIntro {
 	public static void begin(ServerPlayer player) {
 		ServerLevel level = player.level();
 		StoryState story = StoryState.get(level.getServer());
-		NpcEntity harley = harleyNear(player, 32.0);
+		NpcEntity harley = harleyNear(player, 64.0); // her camp may be up to 48 blocks off when the ground nearby is unsafe
 		if (harley != null && story.set(CAMP_BUILT)) {
 			buildCamp(level, harley.blockPosition());
+			HarleyRoad.ensure(level, harley.blockPosition()); // Part 19: a road from her camp to the road network, always
 		}
 		for (ItemStack stack : new ItemStack[] {new ItemStack(DLStory.RADIO), new ItemStack(DLSurvivalItems.BANDAGE, 2),
 			new ItemStack(DLSurvivalItems.WATER_BOTTLE, 2), new ItemStack(DLSurvivalItems.CANNED_BEANS, 2)}) {
@@ -60,6 +61,15 @@ public final class StoryIntro {
 			ServerPlayNetworking.send(player, new IntroPayload(harley != null, camp.x, camp.y, camp.z));
 		} else {
 			done(player);
+		}
+	}
+
+	/** A world whose Harley never came (the old spawn bug): place her now and build her camp. */
+	public static void repairHarley(ServerPlayer player) {
+		NpcEntity harley = com.deadlands.npc.NpcSpawns.onFirstArrival(player);
+		if (harley != null && StoryState.get(player.level().getServer()).set(CAMP_BUILT)) {
+			buildCamp(player.level(), harley.blockPosition());
+			HarleyRoad.ensure(player.level(), harley.blockPosition());
 		}
 	}
 

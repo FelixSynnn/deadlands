@@ -45,10 +45,31 @@ public final class DeadlandsCommand {
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> register(dispatcher));
 	}
 
+	/** A story choice from a chat button (chapter four's answer). */
+	private static int choose(CommandSourceStack source, String option) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+		if (com.deadlands.story.Pinecrest.choose(source.getPlayerOrException(), option)) {
+			return 1;
+		}
+		source.sendFailure(net.minecraft.network.chat.Component.translatable("command.deadlands.choose.nothing"));
+		return 0;
+	}
+
 	static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 		dispatcher.register(Commands.literal("deadlands")
 			.then(Commands.literal("status").executes(ctx -> status(ctx.getSource())))
 			.then(Commands.literal("chronicle").executes(ctx -> chronicle(ctx.getSource())))
+			.then(Commands.literal("story").executes(ctx -> com.deadlands.story.StoryArchive.story(ctx.getSource().getPlayerOrException())))
+			.then(Commands.literal("cinematics").executes(ctx -> com.deadlands.story.StoryArchive.cinematics(ctx.getSource().getPlayerOrException())))
+			.then(Commands.literal("watch").then(Commands.argument("cutscene", StringArgumentType.word())
+				.executes(ctx -> {
+					if (com.deadlands.story.StoryArchive.watch(ctx.getSource().getPlayerOrException(), StringArgumentType.getString(ctx, "cutscene"))) {
+						return 1;
+					}
+					ctx.getSource().sendFailure(Component.translatable("story.deadlands.cinematics.not_seen"));
+					return 0;
+				})))
+			.then(Commands.literal("choose").then(Commands.argument("option", StringArgumentType.word())
+				.executes(ctx -> choose(ctx.getSource(), StringArgumentType.getString(ctx, "option")))))
 			.then(Commands.literal("config")
 				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 				.then(Commands.literal("reload").executes(ctx -> reloadConfig(ctx.getSource()))))
@@ -112,6 +133,13 @@ public final class DeadlandsCommand {
 			.then(Commands.literal("content")
 				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 				.executes(ctx -> content(ctx.getSource())))
+			.then(Commands.literal("lights")
+				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+				.executes(ctx -> {
+					ctx.getSource().sendSuccess(() -> Component.translatable("command.deadlands.lights", com.deadlands.block.FluorescentLightBlock.toggles(),
+						com.deadlands.horror.DarkBuildings.status(ctx.getSource().getServer().overworld())), false);
+					return 1;
+				}))
 			.then(Commands.literal("mobs")
 				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 				.executes(ctx -> mobs(ctx.getSource())))

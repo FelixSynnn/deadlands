@@ -46,6 +46,8 @@ public final class SurvivorTracker {
 			com.deadlands.npc.NpcSpawns.onFirstArrival(player);
 			com.deadlands.story.StoryIntro.begin(player);
 			data.addChronicle(new ChronicleEntry(dayIndex + 1, "chronicle.deadlands.arrived", List.of(name)), config.general.chronicleLength);
+		} else if (!com.deadlands.npc.NpcWorldData.get(server).isPlaced(com.deadlands.npc.NpcCharacter.HARLEY)) {
+			com.deadlands.story.StoryIntro.repairHarley(player); // her spawn failed in an earlier version
 		}
 		if (config.general.giveJournalOnFirstJoin && !record.journalGiven()) {
 			giveJournal(player);

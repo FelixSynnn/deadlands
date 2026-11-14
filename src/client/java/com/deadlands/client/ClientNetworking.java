@@ -25,9 +25,13 @@ public final class ClientNetworking {
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.DialoguePayload.TYPE,
 			(payload, context) -> com.deadlands.client.ui.DialogueScreen.show(payload));
 		ClientPlayNetworking.registerGlobalReceiver(SurvivalPayload.TYPE, (payload, context) -> LocalSurvival.set(payload));
+		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.NoisePayload.TYPE,
+			(payload, context) -> com.deadlands.client.hud.AwarenessHud.setNoise(payload.level()));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.JournalPayload.TYPE, (payload, context) -> ClientState.setJournal(payload));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.EndingChoicePayload.TYPE,
 			(payload, context) -> context.client().setScreen(new com.deadlands.client.ui.EndingScreen.Choice(payload)));
+		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.StoryPayload.TYPE,
+			(payload, context) -> com.deadlands.client.ui.JournalScreen.story(payload));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.EndingPayload.TYPE,
 			(payload, context) -> context.client().setScreen(new com.deadlands.client.ui.EndingScreen(payload)));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.BossEventPayload.TYPE,
@@ -40,6 +44,8 @@ public final class ClientNetworking {
 				new net.minecraft.world.phys.Vec3(payload.x(), payload.y(), payload.z()))));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.HorrorScarePayload.TYPE,
 			(payload, context) -> com.deadlands.client.horror.ScarePlayer.onScare(payload));
+		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.AchievementSecretsPayload.TYPE,
+			(payload, context) -> com.deadlands.client.achievement.DLAchievementsScreen.secrets(payload.ids()));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.MissionSyncPayload.TYPE,
 			(payload, context) -> com.deadlands.client.mission.ClientMissions.update(payload));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.ChaseMusicPayload.TYPE,
@@ -48,8 +54,17 @@ public final class ClientNetworking {
 			(payload, context) -> com.deadlands.client.weather.ClientWeather.set(payload));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.LocationPayload.TYPE,
 			(payload, context) -> com.deadlands.client.sound.AmbienceDirector.set(payload));
+		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.DisasterPayload.TYPE,
+			(payload, context) -> com.deadlands.client.weather.ClientDisaster.update(payload));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.CutscenePayload.TYPE,
-			(payload, context) -> com.deadlands.client.cutscene.CutscenePlayer.start(payload));
+			(payload, context) -> {
+				try {
+					com.deadlands.client.cutscene.CutscenePlayer.start(payload);
+				} catch (RuntimeException failure) {
+					com.deadlands.Deadlands.LOGGER.error("DEADLANDS: cutscene {} failed to start; skipped", payload.id(), failure);
+					com.deadlands.client.cutscene.CutscenePlayer.stop();
+				}
+			});
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.WorldEventPayload.TYPE,
 			(payload, context) -> com.deadlands.client.hud.BossCardHud.event(payload));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.SkillsPayload.TYPE, (payload, context) -> ClientState.setSkills(payload));

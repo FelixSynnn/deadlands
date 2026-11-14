@@ -86,6 +86,12 @@ public final class InfectedSpawnTable {
 
 	/** How many of a kind appear together. */
 	public static int groupSize(InfectedKind kind, RandomSource random) {
+		int base = baseGroupSize(kind, random);
+		return Math.max(1, (int) Math.round(base * ConfigManager.get().zombies.groupSizeFactor));
+	}
+
+	/** The group size before {@code zombies.groupSizeFactor}. */
+	private static int baseGroupSize(InfectedKind kind, RandomSource random) {
 		return switch (kind) {
 			case WALKER -> 2 + random.nextInt(3);
 			case RUNNER -> 1 + random.nextInt(3);

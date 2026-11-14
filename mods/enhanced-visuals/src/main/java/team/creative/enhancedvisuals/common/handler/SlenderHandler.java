@@ -1,0 +1,97 @@
+package team.creative.enhancedvisuals.common.handler;
+
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.Nullable;
+import team.creative.creativecore.CreativeCore;
+import team.creative.creativecore.common.config.api.CreativeConfig;
+import team.creative.enhancedvisuals.api.Visual;
+import team.creative.enhancedvisuals.api.VisualHandler;
+import team.creative.enhancedvisuals.api.event.SelectEndermanEvent;
+import team.creative.enhancedvisuals.api.type.VisualType;
+import team.creative.enhancedvisuals.api.type.VisualTypeOverlay;
+
+public class SlenderHandler extends VisualHandler {
+    private static final AABB INFINITE = new AABB(
+        Double.NEGATIVE_INFINITY,
+        Double.NEGATIVE_INFINITY,
+        Double.NEGATIVE_INFINITY,
+        Double.POSITIVE_INFINITY,
+        Double.POSITIVE_INFINITY,
+        Double.POSITIVE_INFINITY
+    );
+    @CreativeConfig
+    public double defaultIntensity = 0.0;
+    @CreativeConfig
+    public double maxIntensity = 0.3;
+    @CreativeConfig
+    public double distanceFactor = 0.25;
+    @CreativeConfig
+    public VisualType slender = new VisualTypeOverlay("slender", 50);
+    public Visual slenderVisual;
+    public Class mutantEnderman = this.loadMutantEnderman();
+
+    private Class loadMutantEnderman() {
+        try {
+            return Class.forName("fuzs.mutantmonsters.world.entity.mutant.MutantEnderman");
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public void tick(@Nullable Player player) {
+        if (this.slenderVisual == null) {
+            this.slenderVisual = new Visual(this.slender, this, 0);
+            this.add(this.slenderVisual);
+        }
+
+        float intensity = (float)this.defaultIntensity;
+        if (player != null) {
+            float modifier = 0.0F;
+            double d0 = player.getX();
+            double d1 = player.getY();
+            double d2 = player.getZ();
+            AABB box = player.getBoundingBox();
+            box = box.inflate(16.0, 16.0, 16.0);
+            SelectEndermanEvent event = new SelectEndermanEvent(TargetingConditions.forNonCombat());
+            CreativeCore.loader().postForge(event);
+            if (!event.isCanceled()) {
+                Entity closest = null;
+                double distance = Double.POSITIVE_INFINITY;
+                double tempDistance = 0.0;
+
+                for (Entity mob : player.level()
+                    .getEntities((Entity)null, INFINITE, x -> x instanceof EnderMan || this.mutantEnderman != null && this.mutantEnderman.isInstance(x))) {
+                    if (closest == null || distance > (tempDistance = mob.distanceToSqr(player))) {
+                        closest = mob;
+                        distance = tempDistance;
+                    }
+                }
+
+                if (closest != null) {
+                    float distModifier = (float)(
+                        1.0
+                            / Math.pow(
+                                Math.sqrt(Math.pow(d0 - closest.getX(), 2.0) + Math.pow(d1 - closest.getY(), 2.0) + Math.pow(d2 - closest.getZ(), 2.0)) / 3.0,
+                                2.0
+                            )
+                    );
+                    if (distModifier > modifier) {
+                        modifier = distModifier;
+                        if (modifier > 3.5F) {
+                            modifier = 3.5F;
+                        }
+                    }
+
+                    intensity = (float)Math.max(this.defaultIntensity, Math.min(this.maxIntensity, this.distanceFactor * modifier));
+                }
+            }
+        }
+
+        this.slenderVisual.setOpacityInternal(intensity);
+    }
+}

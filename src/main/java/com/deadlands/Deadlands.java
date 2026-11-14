@@ -61,6 +61,8 @@ public final class Deadlands implements ModInitializer {
 		DLWeapons.init();
 		DLBlocks.init();
 		DLDecor.init();
+		com.deadlands.registry.DLLights.init();
+		com.deadlands.registry.DLInteriors.init();
 		DLNests.init();
 		DLContainers.init();
 		DLBlockEntities.init();
@@ -68,10 +70,16 @@ public final class Deadlands implements ModInitializer {
 		DLEntities.init();
 		com.deadlands.registry.DLMarkers.init();
 		com.deadlands.registry.DLBosses.init();
+		com.deadlands.registry.DLAsesino.init();
+		com.deadlands.registry.DLGuest.init();
+		com.deadlands.registry.DLDot.init();
+		com.deadlands.registry.DLMythos.init();
+		com.deadlands.world.disaster.MythosTornado.init();
 		com.deadlands.registry.DLVehicles.init();
 		com.deadlands.registry.DLStory.init();
 		com.deadlands.registry.DLParticles.init();
 		com.deadlands.registry.DLEvents.init();
+		com.deadlands.world.subway.SubwayStructure.register(); // before the worldgen data loads
 		DLWorldgen.init();
 		DLCreativeTabs.init();
 
@@ -90,6 +98,20 @@ public final class Deadlands implements ModInitializer {
 		com.deadlands.story.Archive.init();
 		com.deadlands.story.StoryDirector.init();
 		com.deadlands.story.StoryIntro.init();
+		com.deadlands.story.StoryReunion.init();
+		com.deadlands.story.FamilyHouse.init();
+		com.deadlands.story.HarleyRoad.init();
+		com.deadlands.story.MythosTerminal.init();
+		com.deadlands.story.Pinecrest.init();
+		com.deadlands.player.SafeRespawn.init();
+		com.deadlands.item.FlashlightBeam.init();
+		com.deadlands.player.RestlessNights.init();
+		com.deadlands.story.StoryArchive.init();
+		com.deadlands.world.subway.SubwayAmbience.init();
+		com.deadlands.world.disaster.DisasterDirector.init();
+		com.deadlands.entity.AsesinoSpawner.init();
+		com.deadlands.entity.GuestSpawner.init();
+		com.deadlands.entity.DotSpawner.init();
 		com.deadlands.story.Radio.init();
 		com.deadlands.horde.BossDirector.init();
 		com.deadlands.story.Endings.init();
@@ -99,6 +121,7 @@ public final class Deadlands implements ModInitializer {
 		com.deadlands.audio.ChaseTracker.init();
 		com.deadlands.content.DLContent.init();
 		com.deadlands.horror.HorrorDirector.init();
+		com.deadlands.horror.DarkBuildings.init();
 		com.deadlands.mission.MissionManager.init();
 		com.deadlands.achievement.Achievements.init();
 		com.deadlands.vehicle.VehicleEntity.init();

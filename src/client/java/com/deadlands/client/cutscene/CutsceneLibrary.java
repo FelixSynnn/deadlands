@@ -21,7 +21,11 @@ import net.minecraft.world.phys.Vec3;
  *   "cue": "deadlands:event.day_begin",       optional sound at the start
  *   "frame": "anchor",                         "anchor" (turned by the anchor's yaw) or "bearing"
  *   "shots": [{"ticks": 110, "from": [14, 9, 12], "to": [-12, 6, 12], "look": [0, 1, 0], "look_rise": 0}],
- *   "lines": [{"from": 10, "to": 95, "key": "cutscene.deadlands.opening.0"}]
+ *   "lines": [{"from": 10, "to": 95, "key": "cutscene.deadlands.opening.0"}],
+ *   "actors": [{"who": "felixsyn", "start": 0, "end": 100, "from": [0, 0, 6], "to": [2, 0, 8]}],   optional, see ActorDef
+ *   "hide_hud": true,                          optional: hide the HUD while it plays
+ *   "title": "cutscene.deadlands.x.title",     optional: a large title over the last two seconds
+ *   "ambience": "deadlands:ambient.intro"      optional: a second sound under the cue
  * }</pre>
  * In the {@code bearing} frame the server's yaw is a bearing in radians and +X points along it
  * (used by the horde scene, which looks out toward where the horde comes from).
@@ -45,12 +49,39 @@ public final class CutsceneLibrary extends SimpleJsonResourceReloadListener<Cuts
 		).apply(instance, LineDef::new));
 	}
 
-	public record Def(Optional<Identifier> cue, String frame, List<ShotDef> shots, List<LineDef> lines) {
+	/**
+	 * A cast member (Phase 5): {@code who} is a story character id ({@code felixsyn}) or an entity id
+	 * ({@code walker}, {@code deadlands:runner}); it is there from {@code start} to {@code end} ticks and walks
+	 * from {@code from} to {@code to} between the move ticks (default: its whole time), standing on the ground,
+	 * facing where it walks or {@code face}; {@code item} goes in its hand; {@code scale} sizes it (a child: 0.6).
+	 */
+	public record ActorDef(String who, int start, int end, Vec3 from, Vec3 to, Optional<Vec3> face, Optional<Identifier> item,
+		Optional<Integer> moveStart, Optional<Integer> moveEnd, Optional<Float> scale) {
+		static final Codec<ActorDef> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			Codec.STRING.fieldOf("who").forGetter(ActorDef::who),
+			Codec.INT.fieldOf("start").forGetter(ActorDef::start),
+			Codec.INT.fieldOf("end").forGetter(ActorDef::end),
+			Vec3.CODEC.fieldOf("from").forGetter(ActorDef::from),
+			Vec3.CODEC.fieldOf("to").forGetter(ActorDef::to),
+			Vec3.CODEC.optionalFieldOf("face").forGetter(ActorDef::face),
+			Identifier.CODEC.optionalFieldOf("item").forGetter(ActorDef::item),
+			Codec.INT.optionalFieldOf("move_start").forGetter(ActorDef::moveStart),
+			Codec.INT.optionalFieldOf("move_end").forGetter(ActorDef::moveEnd),
+			Codec.FLOAT.optionalFieldOf("scale").forGetter(ActorDef::scale)
+		).apply(instance, ActorDef::new));
+	}
+
+	public record Def(Optional<Identifier> cue, String frame, List<ShotDef> shots, List<LineDef> lines, List<ActorDef> actors,
+		boolean hideHud, Optional<String> title, Optional<Identifier> ambience) {
 		static final Codec<Def> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Identifier.CODEC.optionalFieldOf("cue").forGetter(Def::cue),
 			Codec.STRING.optionalFieldOf("frame", "anchor").forGetter(Def::frame),
 			ShotDef.CODEC.listOf().fieldOf("shots").forGetter(Def::shots),
-			LineDef.CODEC.listOf().optionalFieldOf("lines", List.of()).forGetter(Def::lines)
+			LineDef.CODEC.listOf().optionalFieldOf("lines", List.of()).forGetter(Def::lines),
+			ActorDef.CODEC.listOf().optionalFieldOf("actors", List.of()).forGetter(Def::actors),
+			Codec.BOOL.optionalFieldOf("hide_hud", false).forGetter(Def::hideHud),
+			Codec.STRING.optionalFieldOf("title").forGetter(Def::title),
+			Identifier.CODEC.optionalFieldOf("ambience").forGetter(Def::ambience)
 		).apply(instance, Def::new));
 	}
 

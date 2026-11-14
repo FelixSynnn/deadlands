@@ -1,0 +1,21 @@
+{
+	"title": "mission.deadlands.imlilylol.north_pumps",
+	"description": "mission.deadlands.imlilylol.north_pumps.description",
+	"objectives": [
+		{
+			"id": "tablets",
+			"type": "have_item",
+			"text": "mission.deadlands.imlilylol.north_pumps.tablets",
+			"target": "deadlands:purification_tablet",
+			"count": 3
+		}
+	],
+	"reward_items": [
+		{
+			"item": "deadlands:bandage",
+			"count": 3
+		}
+	],
+	"reward_flags": [],
+	"lore": []
+}

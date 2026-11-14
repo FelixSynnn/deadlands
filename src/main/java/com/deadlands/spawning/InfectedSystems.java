@@ -23,6 +23,7 @@ public final class InfectedSystems {
 	public static void init() {
 		InfectedManager.init();
 		NoiseSystem.init();
+		com.deadlands.noise.NoiseMeter.init();
 		NestRegistry.init();
 		BreachTracker.init();
 		InfectedSpawner.init();

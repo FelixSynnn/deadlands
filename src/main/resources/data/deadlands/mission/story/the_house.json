@@ -1,0 +1,26 @@
+{
+	"title": "mission.deadlands.story.the_house",
+	"description": "mission.deadlands.story.the_house.description",
+	"requires": [
+		"chapter_two_notebook"
+	],
+	"objectives": [
+		{
+			"id": "find",
+			"type": "flag",
+			"text": "mission.deadlands.story.the_house.find",
+			"flag": "family_house_found"
+		},
+		{
+			"id": "tell",
+			"type": "flag",
+			"text": "mission.deadlands.story.the_house.tell",
+			"flag": "adam_heard_news"
+		}
+	],
+	"reward_items": [],
+	"reward_flags": [
+		"chapter_three_house"
+	],
+	"lore": []
+}

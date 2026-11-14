@@ -1,0 +1,39 @@
+{
+	"parent": "deadlands:root",
+	"criteria": {
+		"done": {
+			"trigger": "minecraft:player_killed_entity",
+			"conditions": {
+				"entity": [
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"type": "deadlands:bloater"
+						}
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"done"
+		]
+	],
+	"display": {
+		"icon": {
+			"id": "deadlands:lead_pipe"
+		},
+		"title": {
+			"translate": "achievement.deadlands.combat.bloater_down.title"
+		},
+		"description": {
+			"translate": "achievement.deadlands.combat.bloater_down.description"
+		},
+		"frame": "task",
+		"show_toast": true,
+		"announce_to_chat": false,
+		"hidden": false
+	}
+}

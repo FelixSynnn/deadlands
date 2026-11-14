@@ -39,7 +39,7 @@ import net.fabricmc.loader.api.FabricLoader;
  * added, missing or invalid.
  */
 public final class ConfigManager {
-	public static final int CURRENT_VERSION = 1;
+	public static final int CURRENT_VERSION = 5;
 	public static final String FILE_NAME = "deadlands.jsonc";
 
 	private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
@@ -139,6 +139,7 @@ public final class ConfigManager {
 				}
 				List<String> problems = new ArrayList<>();
 				rewrite = apply(config, root.getAsJsonObject(), problems);
+				migrate(config, root.getAsJsonObject());
 				problems.forEach(p -> Deadlands.LOGGER.warn("Config {}: {}", FILE_NAME, p));
 			} catch (Exception e) {
 				Deadlands.LOGGER.error("Could not read {}; using defaults and keeping a copy of the broken file", file, e);
@@ -193,6 +194,50 @@ public final class ConfigManager {
 			problems.add("top level is not an object");
 		}
 		return config;
+	}
+
+	/**
+	 * Older files: values that were the old defaults move to the new ones (version 2: the Aberrant's
+	 * damage, 13 to 9). Values the player changed themselves are left alone.
+	 */
+	static void migrate(DeadlandsConfig config, JsonObject root) {
+		JsonElement version = root.get("configVersion");
+		int from = version != null && version.isJsonPrimitive() ? version.getAsInt() : 0;
+		if (from < 2 && config.asesino.damage == 13.0) {
+			config.asesino.damage = 9.0;
+		}
+		// D.O.T. became a fast predator (the old walking speeds were the defaults before version 3).
+		if (from < 3 && config.dot.speed == 0.2) {
+			config.dot.speed = 0.26;
+		}
+		if (from < 3 && config.dot.aggroSpeed == 0.28) {
+			config.dot.aggroSpeed = 0.36;
+		}
+		// 4: no killer is invulnerable, and each can be killed in 30-60 seconds with iron gear (old defaults only).
+		if (from < 4) {
+			if (config.dot.health == 800.0) {
+				config.dot.health = 300.0;
+			}
+			if (config.dot.damageResistance == 0.75) {
+				config.dot.damageResistance = 0.0;
+			}
+			if (config.dot.damage == 10.0) {
+				config.dot.damage = 8.0;
+			}
+			if (config.guest.health == 300.0) {
+				config.guest.health = 260.0;
+			}
+			if (config.asesino.health == 160.0) {
+				config.asesino.health = 260.0;
+			}
+			if (config.dot.aggroSpeed == 0.36) {
+				config.dot.aggroSpeed = 0.37; // about 105% of sprint speed
+			}
+		}
+		// 5: Mythos comes on the night of day 3, not day 2 (old default only).
+		if (from < 5 && config.mythos.guaranteedNight == 2) {
+			config.mythos.guaranteedNight = 3;
+		}
 	}
 
 	/** Copy known values from JSON into the config. Returns true if the file should be rewritten. */

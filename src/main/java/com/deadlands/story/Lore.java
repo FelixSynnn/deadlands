@@ -49,6 +49,7 @@ public final class Lore {
 		{"campsite", "camp"}, {"hunting", "camp"}, {"ranger", "camp"}, {"camp", "camp"},
 		{"farm", "farm"}, {"barn", "farm"},
 		{"utility", "utility"}, {"workshop", "utility"}, {"toolbox", "utility"}, {"radio", "utility"},
+		{"subway", "subway"}, {"train", "subway"},
 	};
 
 	private Lore() {

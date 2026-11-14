@@ -19,6 +19,12 @@ public final class DeadlandsConfig {
 	public Survival survival = new Survival();
 	public Weather weather = new Weather();
 	public WorldEvents events = new WorldEvents();
+	public Disasters disasters = new Disasters();
+	public Asesino asesino = new Asesino();
+	public Guest guest = new Guest();
+	public Stealth stealth = new Stealth();
+	public Dot dot = new Dot();
+	public Mythos mythos = new Mythos();
 	public Performance performance = new Performance();
 	public Horror horror = new Horror();
 	public Audio audio = new Audio();
@@ -64,6 +70,9 @@ public final class DeadlandsConfig {
 
 		@ConfigEntry(comment = "Abandoned vehicles on and beside the roads.")
 		public boolean abandonedVehicles = true;
+
+		@ConfigEntry(comment = "How common towns are (1 = the old spacing of 34 chunks; 1.5 = about one and a half times as many). Read when a world loads; affects newly generated chunks.", min = 0.5, max = 3.0)
+		public double townFrequency = 1.5;
 	}
 
 	public static final class Zombies {
@@ -82,6 +91,18 @@ public final class DeadlandsConfig {
 		@ConfigEntry(comment = "Farthest distance in blocks an infected may spawn from a player.", min = 16, max = 256)
 		public int spawnDistanceMax = 96;
 
+		@ConfigEntry(comment = "Stalkers' climbing speed as a share of their walking speed.", min = 0.0, max = 1.0)
+		public double stalkerClimbFactor = 0.3;
+
+		@ConfigEntry(comment = "Stalker health (about 30 seconds of fighting with iron gear and an iron sword).", min = 4.0, max = 1000.0)
+		public double stalkerHealth = 200.0;
+
+		@ConfigEntry(comment = "Stalker armor.", min = 0.0, max = 30.0)
+		public double stalkerArmor = 4.0;
+
+		@ConfigEntry(comment = "Stalker damage per hit.", min = 0.5, max = 50.0)
+		public double stalkerDamage = 6.0;
+
 		@ConfigEntry(comment = "Share of infected that are Runners.", min = 0.0, max = 1.0)
 		public double runnerShare = 0.15;
 
@@ -99,6 +120,15 @@ public final class DeadlandsConfig {
 
 		@ConfigEntry(comment = "Nests release infected when they hear survivors nearby.")
 		public boolean nestReleases = true;
+
+		@ConfigEntry(comment = "Natural spawning: share of the local cap that fills up (0.6 = 40% fewer infected than before).", min = 0.0, max = 2.0)
+		public double spawnRateFactor = 0.6;
+
+		@ConfigEntry(comment = "Natural spawning: multiplier on how many appear together in a group (at least one).", min = 0.1, max = 2.0)
+		public double groupSizeFactor = 0.6;
+
+		@ConfigEntry(comment = "By day, out in the open: most infected around you, as a share of the night's number. Caves and indoors keep the daytime population above.", min = 0.0, max = 1.0)
+		public double daytimeOutdoorCap = 0.25;
 	}
 
 	public static final class Hordes {
@@ -174,8 +204,17 @@ public final class DeadlandsConfig {
 		@ConfigEntry(comment = "Infected bites can infect you.")
 		public boolean infection = true;
 
+		@ConfigEntry(comment = "Chance that a hit from an infected starts an infection (before the difficulty's multiplier). Was 0.10.", min = 0.0, max = 1.0)
+		public double infectionChancePerHit = 0.05;
+
 		@ConfigEntry(comment = "Multiplier on how fast hunger, thirst and fatigue drain.", min = 0.25, max = 3.0)
 		public double drainMultiplier = 1.0;
+
+		@ConfigEntry(comment = "Safe respawn: when you come back after dying, hostile creatures and zombies near your respawn point vanish (no loot or experience).")
+		public boolean safeRespawn = true;
+
+		@ConfigEntry(comment = "Safe respawn: how far around the respawn point, in blocks.", min = 8, max = 128)
+		public int safeRespawnRadius = 50;
 	}
 
 	public static final class Weather {
@@ -187,6 +226,323 @@ public final class DeadlandsConfig {
 
 		@ConfigEntry(comment = "Allow dust storms in dry biomes.")
 		public boolean dustStorms = true;
+	}
+
+	/** Phase 5: the Guest ({@code entity.GuestEntity}, {@code entity.GuestSpawner}). */
+	/** D.O.T. (Deceased On Transfer), Patient-4 ({@code entity.DotEntity}). */
+	public static final class Dot {
+		@ConfigEntry(comment = "D.O.T., Patient-4: a rare night walker in big structures and on town roads. Passive until provoked.")
+		public boolean enabled = true;
+
+		@ConfigEntry(comment = "Chance each minute at night, per survivor, that he comes (when none is near).", min = 0.0, max = 1.0)
+		public double spawnChance = 0.04;
+
+		@ConfigEntry(comment = "Spawn him inside big structures (subway stations, the research facility, Site Calder, the school, the power station, the treatment plant).")
+		public boolean inStructures = true;
+
+		@ConfigEntry(comment = "Spawn him standing in the road in towns, in your way.")
+		public boolean onTownRoads = true;
+
+		@ConfigEntry(comment = "At most one within this many blocks.", min = 32, max = 512)
+		public int areaRadius = 160;
+
+		@ConfigEntry(comment = "Damage per hit on Normal (Minecraft scales it for Easy and Hard).", min = 1.0, max = 100.0)
+		public double damage = 8.0;
+
+		@ConfigEntry(comment = "Health. He can be killed: about a minute of fighting with iron gear and an iron sword.", min = 20.0, max = 5000.0)
+		public double health = 300.0;
+
+		@ConfigEntry(comment = "Armor.", min = 0.0, max = 30.0)
+		public double armor = 10.0;
+
+		@ConfigEntry(comment = "Share of incoming damage he ignores, on top of his armor.", min = 0.0, max = 0.9)
+		public double damageResistance = 0.0;
+
+		@ConfigEntry(comment = "Passive (the old D.O.T.): only hitting him, blocking him or staring at him provokes him. Off (the default): a predator, he hunts whoever he sees.")
+		public boolean passive = false;
+
+		@ConfigEntry(comment = "Prowling speed.", min = 0.05, max = 0.6)
+		public double speed = 0.26;
+
+		@ConfigEntry(comment = "Chase speed. A mob covers about 43 x speed x speed blocks a second: 0.37 is 5.9, about 105% of a sprinting survivor (5.6), so a straight chase is close but you can lose him by breaking his line of sight, hiding or keeping to the dark.", min = 0.05, max = 0.8)
+		public double aggroSpeed = 0.37;
+
+		@ConfigEntry(comment = "Seconds he keeps after you, once provoked, if you stay away and out of sight.", min = 5, max = 600)
+		public int giveUpSeconds = 30;
+
+		@ConfigEntry(comment = "Player names that always provoke him on sight, and that he hunts twice as long (comma-separated).")
+		public String alwaysProvokes = "itzbreadloaf";
+
+		@ConfigEntry(comment = "Seconds of looking straight at him that provoke him.", min = 0.5, max = 20.0)
+		public double stareSeconds = 2.0;
+
+		@ConfigEntry(comment = "He walks through doors, fences, glass panes and leaves, breaking them (needs mobGriefing).")
+		public boolean pushesThrough = true;
+
+		@ConfigEntry(comment = "Climbing speed as a share of his walking speed.", min = 0.0, max = 1.0)
+		public double climbFactor = 0.3;
+
+		@ConfigEntry(comment = "His jumpscares (Wrong Frame, Behind the Light, Road Ghost, 404 Death). They respect the Photosensitivity setting.")
+		public boolean jumpscares = true;
+	}
+
+	public static final class Stealth {
+		@ConfigEntry(comment = "Hiding in the dark: hostile DEADLANDS creatures see less far where it is dark, and lose survivors who stay out of sight in the dark.")
+		public boolean enabled = true;
+
+		@ConfigEntry(comment = "Share of the normal sight range at light 0 to 3 (it rises to the full range at light 12).", min = 0.05, max = 1.0)
+		public double darkRangeFactor = 0.35;
+
+		@ConfigEntry(comment = "Crouching multiplies the sight range by this again.", min = 0.1, max = 1.0)
+		public double crouchFactor = 0.5;
+
+		@ConfigEntry(comment = "Highest light level (at the survivor) that counts as darkness for losing a chaser.", min = 0, max = 15)
+		public int darkLight = 7;
+
+		@ConfigEntry(comment = "Seconds out of sight, in the dark, before a chaser loses its target.", min = 1, max = 60)
+		public int loseSeconds = 5;
+
+		@ConfigEntry(comment = "Seconds a creature searches the last place it saw its target before giving up.", min = 0, max = 120)
+		public int searchSeconds = 10;
+
+		@ConfigEntry(comment = "Seconds after a survivor attacks during which they are seen at full range.", min = 0, max = 30)
+		public int attackRevealSeconds = 3;
+	}
+
+	public static final class Guest {
+		@ConfigEntry(comment = "Climbing speed as a share of its walking speed.", min = 0.0, max = 1.0)
+		public double climbFactor = 0.3;
+
+		@ConfigEntry(comment = "Minutes after nightfall before the Guest can come (it never appears the moment night falls).", min = 0.0, max = 8.0)
+		public double nightDelayMinutes = 3.0;
+
+		@ConfigEntry(comment = "Let the Guest come.")
+		public boolean enabled = true;
+
+		@ConfigEntry(comment = "Only at night (it leaves at dawn).")
+		public boolean nightOnly = true;
+
+		@ConfigEntry(comment = "Chance per survivor every 30 seconds at night that it comes for them.", min = 0.0, max = 1.0)
+		public double spawnChance = 0.12;
+
+		@ConfigEntry(comment = "Most Guests in the world at once.", min = 1, max = 10)
+		public int maxAlive = 2;
+
+		@ConfigEntry(comment = "Minutes sheltering in the same spot at night before it is certain to come.", min = 1.0, max = 60.0)
+		public double campMinutes = 5.0;
+
+		@ConfigEntry(comment = "Let it tear through doors, glass and wooden walls (also needs the mobGriefing rule).")
+		public boolean breaksBlocks = true;
+
+		@ConfigEntry(comment = "Health (about 50 seconds of fighting with iron gear and an iron sword).", min = 20.0, max = 3000.0)
+		public double health = 260.0;
+
+		@ConfigEntry(comment = "Claw damage before Minecraft's difficulty scaling: 3.5 kills an unarmoured survivor in 6 hits on Normal.", min = 0.5, max = 100.0)
+		public double damage = 3.5;
+
+		@ConfigEntry(comment = "Damage of the grab-and-slam.", min = 0.5, max = 100.0)
+		public double grabDamage = 7.0;
+
+		@ConfigEntry(comment = "Walking speed.", min = 0.1, max = 0.8)
+		public double speed = 0.31;
+
+		@ConfigEntry(comment = "Speed while charging.", min = 0.1, max = 1.0)
+		public double chargeSpeed = 0.37;
+
+		@ConfigEntry(comment = "How far it notices survivors in sight, in blocks.", min = 16.0, max = 128.0)
+		public double followRange = 48.0;
+
+		@ConfigEntry(comment = "Armor.", min = 0.0, max = 30.0)
+		public double armor = 10.0;
+	}
+
+	/** Phase 5: the Asesino ({@code entity.AsesinoEntity}, {@code entity.AsesinoSpawner}). */
+	public static final class Asesino {
+		@ConfigEntry(comment = "Let the Asesino hunt.")
+		public boolean enabled = true;
+
+		@ConfigEntry(comment = "Only at night.")
+		public boolean nightOnly = true;
+
+		@ConfigEntry(comment = "Chance per survivor every 30 seconds in or near a town.", min = 0.0, max = 1.0)
+		public double townSpawnChance = 0.25;
+
+		@ConfigEntry(comment = "Chance per survivor every 30 seconds away from towns.", min = 0.0, max = 1.0)
+		public double wildSpawnChance = 0.02;
+
+		@ConfigEntry(comment = "No second Asesino within this many blocks of a survivor (about one per town).", min = 32, max = 512)
+		public int areaRadius = 160;
+
+		@ConfigEntry(comment = "Most Asesinos in the world at once.", min = 1, max = 20)
+		public int maxAlive = 3;
+
+		@ConfigEntry(comment = "Health (about 40 seconds of fighting with iron gear and an iron sword).", min = 20.0, max = 2000.0)
+		public double health = 260.0;
+
+		@ConfigEntry(comment = "Damage per hit.", min = 1.0, max = 100.0)
+		public double damage = 9.0;
+
+		@ConfigEntry(comment = "Climbing speed as a share of his walking speed.", min = 0.0, max = 1.0)
+		public double climbFactor = 0.3;
+
+		@ConfigEntry(comment = "The Aberrant's lunge: seconds between lunges.", min = 2, max = 60)
+		public int lungeCooldownSeconds = 8;
+
+		@ConfigEntry(comment = "The Aberrant's lunge: damage as a share of his slash damage.", min = 0.0, max = 3.0)
+		public double lungeDamageFactor = 1.0;
+
+		@ConfigEntry(comment = "Speed while roaming and stalking.", min = 0.1, max = 0.6)
+		public double stalkSpeed = 0.26;
+
+		@ConfigEntry(comment = "Speed after 30 seconds of chasing (it rises from the stalking speed).", min = 0.1, max = 0.8)
+		public double chaseSpeedMax = 0.34;
+
+		@ConfigEntry(comment = "About how long he stalks someone before he decides to attack, in minutes (he may strike sooner if they give him a chance).", min = 1.0, max = 30.0)
+		public double stalkMinutes = 10.0;
+
+		@ConfigEntry(comment = "How far he follows and notices survivors, in blocks.", min = 16.0, max = 128.0)
+		public double followRange = 64.0;
+
+		@ConfigEntry(comment = "Knockback resistance, 0 to 1.", min = 0.0, max = 1.0)
+		public double knockbackResistance = 0.9;
+
+		@ConfigEntry(comment = "Armor.", min = 0.0, max = 30.0)
+		public double armor = 6.0;
+
+		@ConfigEntry(comment = "When a survivor is holed up (a roof over them: a building, a structure, underground), he can come in near them, on any floor, somewhere standable they can't see.")
+		public boolean spawnIndoors = true;
+
+		@ConfigEntry(comment = "How far from a holed-up survivor he can come in, in blocks (and up to 10 floors' worth of blocks above or below).", min = 6, max = 48)
+		public int indoorSpawnRadius = 18;
+
+		@ConfigEntry(comment = "He breaks through blocks to reach the survivor he is chasing when there is no way round (also needs the mobGriefing rule).")
+		public boolean digs = true;
+
+		@ConfigEntry(comment = "He only digs when his prey is within this many blocks.", min = 2.0, max = 64.0)
+		public double digRange = 16.0;
+
+		@ConfigEntry(comment = "Ticks of clawing per point of block hardness (glass 0.3, planks and cobblestone 2, stone 1.5, iron blocks 5). At least half a second a block.", min = 1.0, max = 200.0)
+		public double digTicksPerHardness = 30.0;
+
+		@ConfigEntry(comment = "He won't dig blocks harder than this (obsidian is 50 and is never dug anyway).", min = 0.0, max = 49.0)
+		public double digMaxHardness = 10.0;
+
+		@ConfigEntry(comment = "Let him dig through chests, furnaces and other blocks that hold things.")
+		public boolean digContainers = false;
+
+		@ConfigEntry(comment = "Blocks he never digs: ids or #tags, separated by commas. Bedrock, obsidian, reinforced deepslate and the #deadlands:killer_proof tag are always safe.")
+		public String digBlacklist = "minecraft:iron_door,minecraft:iron_bars,#minecraft:beds";
+	}
+
+	/** Mythos, the storm-borne boss ({@code entity.MythosEntity}, {@code world.disaster.MythosTornado}). */
+	public static final class Mythos {
+		@ConfigEntry(comment = "Mythos and the tornado that brings him.")
+		public boolean enabled = true;
+
+		@ConfigEntry(comment = "Health. Tough but winnable: about 75 seconds of fighting with iron gear and an iron sword, plus his sub-agents.", min = 20.0, max = 5000.0)
+		public double health = 360.0;
+
+		@ConfigEntry(comment = "Armor.", min = 0.0, max = 30.0)
+		public double armor = 6.0;
+
+		@ConfigEntry(comment = "Corrupted Slash damage (Minecraft scales it for Easy and Hard).", min = 1.0, max = 100.0)
+		public double damage = 7.0;
+
+		@ConfigEntry(comment = "Walking speed.", min = 0.05, max = 0.6)
+		public double walkSpeed = 0.27;
+
+		@ConfigEntry(comment = "Chase speed: 0.33 is about 4.7 blocks a second, slower than a sprint, so you can always run.", min = 0.05, max = 0.8)
+		public double chaseSpeed = 0.33;
+
+		@ConfigEntry(comment = "Corrupted Slash cooldown, seconds.", min = 0.5, max = 60.0)
+		public double slashCooldown = 3.0;
+
+		@ConfigEntry(comment = "Entanglement cooldown, seconds.", min = 1.0, max = 120.0)
+		public double entangleCooldown = 12.0;
+
+		@ConfigEntry(comment = "Spawn Sub-agents cooldown, seconds.", min = 1.0, max = 120.0)
+		public double summonCooldown = 20.0;
+
+		@ConfigEntry(comment = "Mass Infection cooldown, seconds (from phase 2).", min = 1.0, max = 120.0)
+		public double massInfectionCooldown = 18.0;
+
+		@ConfigEntry(comment = "Rejuvenate cooldown, seconds (phase 2 only).", min = 1.0, max = 300.0)
+		public double rejuvenateCooldown = 40.0;
+
+		@ConfigEntry(comment = "Fragment Blink cooldown, seconds (phase 3).", min = 1.0, max = 120.0)
+		public double blinkCooldown = 10.0;
+
+		@ConfigEntry(comment = "Most sub-agents alive at once.", min = 0, max = 20)
+		public int maxSubAgents = 6;
+
+		@ConfigEntry(comment = "Sub-agent health.", min = 1.0, max = 200.0)
+		public double subAgentHealth = 10.0;
+
+		@ConfigEntry(comment = "Sub-agent damage per bite.", min = 0.5, max = 50.0)
+		public double subAgentDamage = 3.0;
+
+		@ConfigEntry(comment = "Get this many blocks from the tornado for 30 seconds and you've escaped: Mythos leaves and the storm breaks up.", min = 32, max = 512)
+		public int escapeDistance = 96;
+
+		@ConfigEntry(comment = "The night his tornado is certain to come: night 3, the night of day 3 (night 1 is the first, on day 1; it never comes on night 1).", min = 2, max = 100)
+		public int guaranteedNight = 3;
+
+		@ConfigEntry(comment = "Chance it comes on each night after that.", min = 0.0, max = 1.0)
+		public double nightlyChance = 0.15;
+
+		@ConfigEntry(comment = "The tornado tears up loose blocks (glass, leaves, plants, wool, fences...). Also needs the mobGriefing rule.")
+		public boolean tornadoDestroys = true;
+
+		@ConfigEntry(comment = "Play the arrival and defeat cutscenes.")
+		public boolean cutscenes = true;
+	}
+
+	/** Phase 5: disaster weather ({@code world.disaster.DisasterDirector}). */
+	public static final class Disasters {
+		@ConfigEntry(comment = "Allow disasters: twisters, floods, tremors and more, each announced before it starts.")
+		public boolean enabled = true;
+
+		@ConfigEntry(comment = "Average days between disasters.", min = 1, max = 60)
+		public int averageDaysBetween = 4;
+
+		@ConfigEntry(comment = "The first day a disaster can happen.", min = 1, max = 100)
+		public int firstDay = 3;
+
+		@ConfigEntry(comment = "Let disasters change the world: break blocks, place water and snow, start fires. Off keeps the world as it is.")
+		public boolean destructive = false;
+
+		@ConfigEntry(comment = "Twisters that drag and lift anything near them.")
+		public boolean twister = true;
+
+		@ConfigEntry(comment = "Flash floods: torrential rain, low ground runs with water.")
+		public boolean flashFlood = true;
+
+		@ConfigEntry(comment = "Tremors: the ground shakes in waves.")
+		public boolean tremor = true;
+
+		@ConfigEntry(comment = "Skyfall: burning rocks falling around survivors.")
+		public boolean skyfall = true;
+
+		@ConfigEntry(comment = "Whiteouts: freezing snowstorms in cold country.")
+		public boolean whiteout = true;
+
+		@ConfigEntry(comment = "Dust walls: choking dust storms in hot, dry country.")
+		public boolean dustWall = true;
+
+		@ConfigEntry(comment = "Caustic rain that burns anyone outside without a helmet.")
+		public boolean causticRain = true;
+
+		@ConfigEntry(comment = "Static storms: lightning that strikes close and often.")
+		public boolean staticStorm = true;
+
+		@ConfigEntry(comment = "The Green Tornado (uncommon): a green, spore-thick twister that poisons and sickens instead of tearing things up.")
+		public boolean greenTornado = true;
+
+		@ConfigEntry(comment = "How likely the Green Tornado is against the others (twister 9, static storm 12; 3 is uncommon).", min = 0, max = 50)
+		public int greenTornadoWeight = 3;
+
+		@ConfigEntry(comment = "The Green Tornado brings its character with it (not in yet: a placeholder).")
+		public boolean greenTornadoCharacter = true;
 	}
 
 	public static final class WorldEvents {
@@ -229,11 +585,47 @@ public final class DeadlandsConfig {
 
 		@ConfigEntry(comment = "How strongly the camera reacts to scares (0 = not at all).", min = 0.0, max = 1.0, client = true)
 		public double cameraShake = 1.0;
+
+		@ConfigEntry(comment = "How much the hands move in first person: raising a newly drawn item, breathing, trembling when hurt or chased (0 = still).", min = 0.0, max = 1.0, client = true)
+		public double firstPersonMotion = 1.0;
+
+		@ConfigEntry(comment = "Shader compatibility: with a shader pack (Iris) or Sodium, draw the night's darkness and the flashlight beam on the screen, so they work with any pack.", client = true)
+		public boolean shaderCompatibility = true;
+
+		@ConfigEntry(comment = "With the flashlight on in the dark (night outdoors, underground, an unlit room), how black everything outside its beam is, with or without shaders: 1 is pitch black.", min = 0.0, max = 1.0, client = true)
+		public double flashlightDarkness = 0.97;
+
+		@ConfigEntry(comment = "How soft the edge of the flashlight's beam is on screen: 0 a hard edge, 1 a wide fade.", min = 0.0, max = 1.0, client = true)
+		public double flashlightConeSoftness = 0.5;
+
+		@ConfigEntry(comment = "The flashlight really lights the blocks it points at (invisible light blocks that follow the beam), so it works with Sodium and shader packs.")
+		public boolean flashlightLightsBlocks = true;
+
+		@ConfigEntry(comment = "No sleeping while the Aberrant or the Guest is within this many blocks (0 turns it off); a sleeper is woken if one comes this close.", min = 0.0, max = 160.0)
+		public double noSleepRadius = 48.0;
+
+		@ConfigEntry(comment = "No sleeping at night: the night can't be skipped, it has to be survived (a bed still sets your spawn point).")
+		public boolean noSleepAtNight = true;
 	}
 
 	public static final class Audio {
 		@ConfigEntry(comment = "Play DEADLANDS interface sounds.", client = true)
 		public boolean interfaceSounds = true;
+
+		@ConfigEntry(comment = "Layered chase music when the Asesino is near.", client = true)
+		public boolean asesinoMusic = true;
+
+		@ConfigEntry(comment = "The Aberrant's terror radius in blocks: his music's layer 1 within it, layer 2 within half, layer 3 within a quarter, layer 4 while he chases you.", min = 8.0, max = 128.0, client = true)
+		public double aberrantTerrorRadius = 40.0;
+
+		@ConfigEntry(comment = "The Guest's terror radius in blocks: its music's layer 1 within it, layer 2 within half, layer 3 within a quarter, layer 4 while it hunts you.", min = 8.0, max = 128.0, client = true)
+		public double guestTerrorRadius = 32.0;
+
+		@ConfigEntry(comment = "D.O.T.'s terror radius in blocks: his music's layer 1 within it, layer 2 within half, layer 3 within a quarter, layer 4 while he pursues you.", min = 8.0, max = 128.0, client = true)
+		public double dotTerrorRadius = 36.0;
+
+		@ConfigEntry(comment = "Mythos' terror radius, in blocks: his music starts this far off and rises as he comes closer.", min = 8.0, max = 256.0, client = true)
+		public double mythosTerrorRadius = 48.0;
 
 		@ConfigEntry(comment = "Volume of DEADLANDS ambience.", min = 0.0, max = 1.0, client = true)
 		public double ambienceVolume = 1.0;
@@ -263,6 +655,12 @@ public final class DeadlandsConfig {
 	}
 
 	public static final class Interface {
+		@ConfigEntry(comment = "Music in the main menu: a shuffled DEADLANDS track every visit, never the same one twice in a row.", client = true)
+		public boolean menuMusic = true;
+
+		@ConfigEntry(comment = "Main menu music volume (0 mutes it).", min = 0.0, max = 1.0, client = true)
+		public double menuMusicVolume = 0.8;
+
 		@ConfigEntry(comment = "Replace the Minecraft title screen with the DEADLANDS menu.", client = true)
 		public boolean replaceTitleScreen = true;
 
@@ -283,6 +681,9 @@ public final class DeadlandsConfig {
 
 		@ConfigEntry(comment = "Show thirst, stamina, temperature, fatigue and injuries on screen.", client = true)
 		public boolean survivalHud = true;
+
+		@ConfigEntry(comment = "Show the noise meter (how loud you are) and the watching eye (a killer has noticed you) in the top left corner.", client = true)
+		public boolean awarenessHud = true;
 
 		@ConfigEntry(comment = "DEADLANDS health, armour and hunger bars instead of Minecraft's hearts and drumsticks.", client = true)
 		public boolean vitalsHud = true;

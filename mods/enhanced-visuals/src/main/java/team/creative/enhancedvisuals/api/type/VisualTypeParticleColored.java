@@ -1,0 +1,46 @@
+package team.creative.enhancedvisuals.api.type;
+
+import team.creative.creativecore.Side;
+import team.creative.creativecore.common.config.api.CreativeConfig;
+import team.creative.creativecore.common.config.api.CreativeConfig.IntRange;
+import team.creative.creativecore.common.config.premade.DecimalMinMax;
+import team.creative.creativecore.common.util.type.Color;
+
+public class VisualTypeParticleColored extends VisualTypeParticle {
+    @CreativeConfig
+    @IntRange(min = 0, max = 255)
+    public int red;
+    @CreativeConfig
+    @IntRange(min = 0, max = 255)
+    public int green;
+    @CreativeConfig
+    @IntRange(min = 0, max = 255)
+    public int blue;
+    @CreativeConfig
+    @IntRange(min = 0, max = 255)
+    public int alpha;
+    protected Color cached;
+
+    public VisualTypeParticleColored(String name, int animationSpeed, DecimalMinMax scale, Color defaultColor) {
+        super(name, animationSpeed, scale);
+        this.red = defaultColor.getRed();
+        this.green = defaultColor.getGreen();
+        this.blue = defaultColor.getBlue();
+        this.alpha = defaultColor.getAlpha();
+        this.cached = defaultColor;
+    }
+
+    public VisualTypeParticleColored(String name, Color defaultColor) {
+        this(name, 0, new DecimalMinMax(0.2, 1.0), defaultColor);
+    }
+
+    @Override
+    public void configured(Side side) {
+        this.cached = new Color(this.red, this.green, this.blue, this.alpha);
+    }
+
+    @Override
+    public Color getColor() {
+        return this.cached;
+    }
+}

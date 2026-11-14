@@ -112,6 +112,9 @@ public final class NoiseSystem {
 		if (radius <= 0.0) {
 			return;
 		}
+		if (source instanceof net.minecraft.server.level.ServerPlayer survivor) {
+			NoiseMeter.record(survivor, loudness); // the HUD's noise meter
+		}
 		double reach = radius * BEST_HEARING;
 		AABB area = AABB.ofSize(pos, reach * 2.0, Math.min(reach, MAX_VERTICAL_REACH) * 2.0, reach * 2.0);
 		for (InfectedEntity infected : level.getEntitiesOfClass(InfectedEntity.class, area, InfectedEntity::isAlive)) {

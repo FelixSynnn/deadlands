@@ -62,9 +62,15 @@ public final class InfectedSpawner {
 	}
 
 	private static void populateAround(ServerLevel level, ServerPlayer player, List<ServerPlayer> players, DeadlandsConfig.Zombies config) {
+		if (!level.getEntitiesOfClass(com.deadlands.entity.AsesinoEntity.class, player.getBoundingBox().inflate(QUIET_RADIUS),
+			net.minecraft.world.entity.Entity::isAlive).isEmpty()) {
+			return; // the Asesino is near: nothing else comes out (Phase 5)
+		}
 		RandomSource random = level.getRandom();
 		boolean night = level.isDarkOutside();
-		int target = (int) Math.round(InfectedManager.localCap() * (night ? 1.0 : config.daytimePopulation));
+		// 40% fewer than before (zombies.spawnRateFactor); by day, the daytime population indoors and in caves.
+		int nightTarget = (int) Math.round(InfectedManager.localCap() * config.spawnRateFactor);
+		int target = (int) Math.round(nightTarget * (night ? 1.0 : config.daytimePopulation));
 		int near = InfectedManager.countNear(level, player.blockPosition());
 		if (near >= target || InfectedManager.loadedCount(level.getServer()) >= config.globalCap) {
 			return;
@@ -78,8 +84,8 @@ public final class InfectedSpawner {
 				continue;
 			}
 			boolean open = level.canSeeSky(pos);
-			if (!night && open && random.nextFloat() < 0.8F) {
-				continue;
+			if (!night && open && (random.nextFloat() < 0.8F || near >= Math.round(nightTarget * config.daytimeOutdoorCap))) {
+				continue; // by day, very few out in the open (zombies.daytimeOutdoorCap of the night's number)
 			}
 			boolean underground = pos.getY() < level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ()) - 10;
 			TownSite town = TownLookup.nearest(level, pos, TOWN_RADIUS).orElse(null);
@@ -94,6 +100,9 @@ public final class InfectedSpawner {
 			}
 		}
 	}
+
+	/** No infected spawn within this many blocks of a survivor while an Asesino is this close to them. */
+	private static final double QUIET_RADIUS = 96.0;
 
 	private static boolean farFromEveryone(BlockPos pos, List<ServerPlayer> players, double min) {
 		for (ServerPlayer player : players) {

@@ -1,0 +1,20 @@
+{
+  "_说明": "物品规则：给任意物品（原版或模组）指定动作，不用改代码。资源包里放 assets/<命名空间>/spa/items.json，所有包合并，越具体的规则越优先。也读较早版本格式的 assets/smoothplayeranimations/item_animations.json。改完按 F3+T 重载。",
+  "_字段": {
+    "item": "精确 id 'minecraft:netherite_sword'；前缀（以 _ 或 * 结尾）'wizards:wand_'；后缀 '*_spear'；命名空间 'wizards'。精确 > 较长的前缀/后缀 > 命名空间。",
+    "type": "swing（挥击、挖掘、放置；默认）/ hold（持有时）/ use（右键持续使用时；charge 同义）/ idle（主手拿着它站着发呆时：先播 intro 一次，再一直播 animation）。",
+    "animation": "动作名（spa/vanilla 和 spa/bent 里的名字）。留空 = punch。swing 也可以写 kind：punch sword pickaxe axe shovel hoe trident mace spear，跟着那类武器的挥击走。",
+    "enabled": "false = 这个物品的这种动作交还原版（手臂用原版的姿势）。",
+    "both": "hold 专用：两只手拿的物品 both 相同时改播这个双手动作（两手各提一盏灯笼）。"
+  },
+  "rules": [
+    {"item": "immersive_melodies", "type": "hold", "animation": "tool_axe_swing", "enabled": false},
+    {"item": "minecraft:torch", "type": "hold", "animation": "hold_light"},
+    {"item": "minecraft:soul_torch", "type": "hold", "animation": "hold_light"},
+    {"item": "*_spear", "type": "hold", "animation": "hold_spear"},
+    {"item": "minecraft:lantern", "type": "hold", "animation": "hold_lantern", "both": "hold_lantern_both"},
+    {"item": "minecraft:soul_lantern", "type": "hold", "animation": "hold_lantern", "both": "hold_lantern_both"},
+    {"item": "*copper_lantern", "type": "hold", "animation": "hold_lantern", "both": "hold_lantern_both"},
+    {"item": "minecraft:poppy", "type": "idle", "intro": "idle_item_rose_intro", "animation": "idle_item_rose_loop"}
+  ]
+}

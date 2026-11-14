@@ -1,19 +1,57 @@
 {
 	"variants": {
-		"facing=north": {
-			"model": "deadlands:block/bookshelf"
-		},
-		"facing=east": {
-			"model": "deadlands:block/bookshelf",
-			"y": 90
-		},
-		"facing=south": {
-			"model": "deadlands:block/bookshelf",
-			"y": 180
-		},
-		"facing=west": {
-			"model": "deadlands:block/bookshelf",
-			"y": 270
-		}
+		"facing=north": [
+			{
+				"model": "deadlands:block/bookshelf"
+			},
+			{
+				"model": "deadlands:block/bookshelf_looted"
+			},
+			{
+				"model": "deadlands:block/bookshelf_tight"
+			}
+		],
+		"facing=east": [
+			{
+				"model": "deadlands:block/bookshelf",
+				"y": 90
+			},
+			{
+				"model": "deadlands:block/bookshelf_looted",
+				"y": 90
+			},
+			{
+				"model": "deadlands:block/bookshelf_tight",
+				"y": 90
+			}
+		],
+		"facing=south": [
+			{
+				"model": "deadlands:block/bookshelf",
+				"y": 180
+			},
+			{
+				"model": "deadlands:block/bookshelf_looted",
+				"y": 180
+			},
+			{
+				"model": "deadlands:block/bookshelf_tight",
+				"y": 180
+			}
+		],
+		"facing=west": [
+			{
+				"model": "deadlands:block/bookshelf",
+				"y": 270
+			},
+			{
+				"model": "deadlands:block/bookshelf_looted",
+				"y": 270
+			},
+			{
+				"model": "deadlands:block/bookshelf_tight",
+				"y": 270
+			}
+		]
 	}
 }

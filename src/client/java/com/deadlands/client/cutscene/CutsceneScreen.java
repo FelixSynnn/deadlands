@@ -52,6 +52,15 @@ public class CutsceneScreen extends Screen {
 		if (fade > 0.0F) {
 			graphics.fill(0, 0, width, height, DLTheme.withAlpha(0xFF000000, fade));
 		}
+		float[] alpha = new float[1];
+		Component title = CutscenePlayer.title(alpha);
+		if (title != null && alpha[0] > 0.02F) {
+			graphics.pose().pushMatrix();
+			graphics.pose().translate(width / 2.0F, height / 2.0F - 12.0F);
+			graphics.pose().scale(3.0F, 3.0F);
+			graphics.drawCenteredString(font, title, 0, 0, DLTheme.withAlpha(DLTheme.TEXT, alpha[0]));
+			graphics.pose().popMatrix();
+		}
 	}
 
 	@Override

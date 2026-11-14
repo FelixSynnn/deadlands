@@ -1,0 +1,25 @@
+{
+	"kind": "major",
+	"trigger": "event",
+	"weight": 1,
+	"steps": [
+		{
+			"at": 0,
+			"type": "dot_frame",
+			"amount": 5
+		},
+		{
+			"at": 0,
+			"type": "sound",
+			"sound": "deadlands:dot.static_step",
+			"where": "everywhere",
+			"volume": 1.0,
+			"pitch": 1.0
+		},
+		{
+			"at": 0,
+			"type": "jolt",
+			"amount": 0.7
+		}
+	]
+}

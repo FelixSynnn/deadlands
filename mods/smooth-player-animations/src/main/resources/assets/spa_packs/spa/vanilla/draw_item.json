@@ -1,0 +1,35 @@
+{
+  "format_version": "1.8.0",
+  "_说明": "掏出物品：手伸到右边腰后握住，绕到胸前，拿在身前等它溶解完。只有旋转，位移跟着移动层。",
+  "animations": {
+    "draw_item": {
+      "animation_length": 1.3,
+      "bones": {
+        "right_arm": {
+          "rotation": {
+            "0.0": {"vector": [-5.0, 0.0, 0.0], "easing": "linear"},
+            "0.2": {"vector": [25.0, 0.0, 25.0], "easing": "easeInOutSine"},
+            "0.38": {"vector": [113.1, -56.5, -81.5], "easing": "easeInOutSine"},
+            "0.48": {"vector": [111.0, -56.5, -81.5], "easing": "easeInOutSine"},
+            "0.56": {"vector": [30.0, 0.0, 25.0], "easing": "easeInOutSine"},
+            "0.66": {"vector": [-5.0, 0.0, 35.0], "easing": "easeInOutSine"},
+            "0.82": {"vector": [-35.0, 0.0, 0.0], "easing": "easeInOutSine"},
+            "1.3": {"vector": [-40.0, 0.0, 0.0], "easing": "easeInOutSine"}
+          }
+        },
+        "torso": {
+          "rotation": {
+            "0.0": {"vector": [0, 0.0, 0], "easing": "linear"},
+            "0.2": {"vector": [0, 6.0, 0], "easing": "easeInOutSine"},
+            "0.38": {"vector": [0, 10.0, 0], "easing": "easeInOutSine"},
+            "0.48": {"vector": [0, 10.0, 0], "easing": "easeInOutSine"},
+            "0.56": {"vector": [0, 8.0, 0], "easing": "easeInOutSine"},
+            "0.66": {"vector": [0, 4.0, 0], "easing": "easeInOutSine"},
+            "0.82": {"vector": [0, -3.0, 0], "easing": "easeInOutSine"},
+            "1.3": {"vector": [0, 0.0, 0], "easing": "easeInOutSine"}
+          }
+        }
+      }
+    }
+  }
+}

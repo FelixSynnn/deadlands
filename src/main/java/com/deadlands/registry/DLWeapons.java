@@ -23,7 +23,8 @@ public final class DLWeapons {
 	public static final Item CROWBAR = melee("crowbar", 3.0F, -2.2F);
 	public static final Item BASEBALL_BAT = melee("baseball_bat", 2.0F, -2.0F);
 	public static final Item MACHETE = melee("machete", 4.0F, -2.4F);
-	public static final Item FIRE_AXE = melee("fire_axe", 6.0F, -3.0F);
+	/** A weapon and a woodcutter: it mines logs, planks and other wooden blocks like an iron axe, and drops them. */
+	public static final Item FIRE_AXE = DLItems.register("fire_axe", MeleeItem::new, new Item.Properties().axe(ToolMaterial.IRON, 6.0F, -3.0F), DLTab.WEAPONS);
 	// Atmosphere overhaul: knives, a worn-out machete and what people made weapons of.
 	public static final Item SURVIVAL_KNIFE = melee("survival_knife", 2.0F, -1.6F);
 	public static final Item HUNTING_KNIFE = melee("hunting_knife", 2.5F, -1.8F);

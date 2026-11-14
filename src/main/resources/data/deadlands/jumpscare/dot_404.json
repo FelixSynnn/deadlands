@@ -1,0 +1,20 @@
+{
+	"kind": "major",
+	"trigger": "event",
+	"weight": 1,
+	"steps": [
+		{
+			"at": 0,
+			"type": "dot_404",
+			"amount": 40
+		},
+		{
+			"at": 0,
+			"type": "sound",
+			"sound": "deadlands:dot.restore",
+			"where": "everywhere",
+			"volume": 1.0,
+			"pitch": 0.9
+		}
+	]
+}

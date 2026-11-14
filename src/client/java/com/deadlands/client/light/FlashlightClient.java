@@ -15,9 +15,9 @@ import net.minecraft.world.item.ItemStack;
  * <p>Below a tenth of its charge the beam weakens and stutters, a warning before it dies.
  */
 public final class FlashlightClient {
-	private static final float COS_INNER = (float) Math.cos(Math.toRadians(10.0));
-	private static final float COS_OUTER = (float) Math.cos(Math.toRadians(23.0));
-	private static final float RANGE = 26.0F;
+	private static final float COS_INNER = (float) Math.cos(Math.toRadians(20.0));
+	private static final float COS_OUTER = (float) Math.cos(Math.toRadians(42.0));
+	private static final float RANGE = 40.0F;
 	private static final float[] VALUES = new float[4];
 
 	private FlashlightClient() {

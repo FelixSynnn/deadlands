@@ -19,7 +19,9 @@ public enum NpcCharacter {
 	HARLEY("harley", "Harley", NpcRole.DOCTOR, Faction.RESEARCH, 5),
 	ITZBREADLOAF("itzbreadloaf", "Itzbreadloaf", NpcRole.MECHANIC, Faction.SETTLERS, 4),
 	IMLILYLOL("imlilylol", "Imlilylol", NpcRole.TRADER, Faction.DRIFTERS, 4),
-	FELIXSYN("felixsyn", "FelixSyn", NpcRole.GUARD, Faction.SETTLERS, 4);
+	FELIXSYN("felixsyn", "FelixSyn", NpcRole.GUARD, Faction.SETTLERS, 4),
+	/** Phase 5: placed by the story (Harley's questline), never met by chance. Appended: saved worlds keep their order. */
+	ADAM("adam", "Adam", NpcRole.RESEARCHER, Faction.RESEARCH, 4);
 
 	private final String id;
 	private final String displayName;
@@ -33,6 +35,11 @@ public enum NpcCharacter {
 		this.role = role;
 		this.faction = faction;
 		this.storyLines = storyLines;
+	}
+
+	/** Placed only by the story, never by a chance encounter. */
+	public boolean storyOnly() {
+		return this == ADAM || this == FELIXSYN; // FelixSyn: only from the day 10 reunion (story.StoryReunion)
 	}
 
 	public String id() {

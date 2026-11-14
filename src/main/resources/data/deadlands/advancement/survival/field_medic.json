@@ -1,0 +1,33 @@
+{
+	"parent": "deadlands:root",
+	"criteria": {
+		"done": {
+			"trigger": "minecraft:consume_item",
+			"conditions": {
+				"item": {
+					"items": "deadlands:medkit"
+				}
+			}
+		}
+	},
+	"requirements": [
+		[
+			"done"
+		]
+	],
+	"display": {
+		"icon": {
+			"id": "deadlands:medkit"
+		},
+		"title": {
+			"translate": "achievement.deadlands.survival.field_medic.title"
+		},
+		"description": {
+			"translate": "achievement.deadlands.survival.field_medic.description"
+		},
+		"frame": "task",
+		"show_toast": true,
+		"announce_to_chat": false,
+		"hidden": false
+	}
+}

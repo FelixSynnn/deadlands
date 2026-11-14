@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -70,8 +71,24 @@ public final class HorrorDirector {
 		int idle;
 		long graceUntil;
 		int busy;
+		/** Game time the survivor opened a screen (the closed-inventory scare). */
+		long screenSince = -1;
 		final Map<Identifier, Long> recent = new HashMap<>();
 	}
+
+	/** Server-side actions of a scare, due at a game time (fixtures dying one by one, a strobe's toggles). */
+	private record Timed(UUID player, long due, Consumer<ServerPlayer> action) {
+	}
+
+	private static final List<Timed> TIMED = new ArrayList<>();
+	/** The hidden horror achievements, one per Phase 4 jumpscare survived. */
+	private static final Map<String, String> SCARE_ACHIEVEMENTS = Map.of(
+		"ceiling_crawl", "horror/looked_up", "caught_in_the_beam", "horror/in_the_beam", "emergency_strobe", "horror/red_light",
+		"still_water", "horror/still_water", "breath_on_glass", "horror/glass", "closed_inventory", "horror/doorway",
+		"dark_building", "horror/dark_building", "feeding_turn", "horror/interrupted");
+	private static final java.util.Set<String> SERVER_STEPS = java.util.Set.of("slam_door", "fixtures_out", "emergency_strobe");
+	/** A menu kept open this long, then closed, can bring the closed-inventory scare. */
+	private static final long SCREEN_SCARE_TICKS = 80;
 
 	private record Pending(UUID player, long due, Scare.Step step) {
 	}
@@ -82,6 +99,7 @@ public final class HorrorDirector {
 	public static void init() {
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			runPending(server);
+			runTimed(server);
 			if (server.getTickCount() % CHECK_TICKS == 11) {
 				tick(server);
 			}
@@ -92,6 +110,15 @@ public final class HorrorDirector {
 			State state = state(player);
 			if (state.busy == HorrorBusyPayload.STORY && payload.state() != HorrorBusyPayload.STORY) {
 				grace(player, GRACE_TICKS);
+			}
+			long now = player.level().getGameTime();
+			if (payload.state() == HorrorBusyPayload.SCREEN && state.busy != HorrorBusyPayload.SCREEN) {
+				state.screenSince = now;
+			} else if (payload.state() == HorrorBusyPayload.FREE && state.busy == HorrorBusyPayload.SCREEN && state.screenSince >= 0) {
+				if (now - state.screenSince >= SCREEN_SCARE_TICKS) {
+					closedScreen(player, state);
+				}
+				state.screenSince = -1;
 			}
 			state.busy = payload.state();
 		});
@@ -181,7 +208,10 @@ public final class HorrorDirector {
 			if (scare.kind() != kind || (last != null && now - last < NO_REPEAT_TICKS)
 				|| (scare.time() == Scare.Time.NIGHT && !night) || (scare.time() == Scare.Time.DAY && night)
 				|| (scare.place() == Scare.Place.OUTDOORS && !outdoors) || (scare.place() == Scare.Place.INDOORS && outdoors)
-				|| (scare.dark() && !dark) || (scare.flashlight() && !flashlight)) {
+				|| (scare.dark() && !dark) || (scare.flashlight() && !flashlight) || !scare.trigger().equals("director")) {
+				continue;
+			}
+			if (scare.requires().isPresent() && !ScareConditions.met(player, scare.requires().get(), outdoors)) {
 				continue;
 			}
 			if (scare.nearWater()) {
@@ -216,7 +246,7 @@ public final class HorrorDirector {
 		state.recent.put(id, now);
 		List<HorrorScarePayload.Step> steps = new ArrayList<>();
 		for (Scare.Step step : scare.steps()) {
-			if (step.type().equals("slam_door")) {
+			if (SERVER_STEPS.contains(step.type())) {
 				PENDING.add(new Pending(player.getUUID(), now + step.at(), step));
 			} else {
 				steps.add(new HorrorScarePayload.Step(step.at(), step.type(), step.sound().map(Identifier::toString).orElse(""), step.volume(),
@@ -224,6 +254,10 @@ public final class HorrorDirector {
 			}
 		}
 		ServerPlayNetworking.send(player, new HorrorScarePayload(id.toString(), steps));
+		String earned = SCARE_ACHIEVEMENTS.get(id.getPath());
+		if (earned != null) {
+			Achievements.award(player, earned);
+		}
 		if (scare.kind() == Scare.Kind.MAJOR) {
 			int survived = StoryFlags.add(player, "scares_survived", 1);
 			Achievements.award(player, "horror/first_scare");
@@ -252,10 +286,75 @@ public final class HorrorDirector {
 				continue;
 			}
 			it.remove();
-			if (pending.step().type().equals("slam_door")) {
-				slamDoor(player.level(), player.blockPosition());
+			switch (pending.step().type()) {
+				case "slam_door" -> slamDoor(player.level(), player.blockPosition());
+				case "fixtures_out" -> schedule(player, ScareConditions.fixturesOut(player, Math.max(1, Math.round(pending.step().amount()))));
+				case "emergency_strobe" -> schedule(player, ScareConditions.strobe(player, Math.max(1, Math.round(pending.step().amount()))));
+				default -> {
+				}
 			}
 		}
+	}
+
+	private static void schedule(ServerPlayer player, List<Map.Entry<Integer, Consumer<ServerPlayer>>> actions) {
+		long now = player.level().getGameTime();
+		for (Map.Entry<Integer, Consumer<ServerPlayer>> action : actions) {
+			TIMED.add(new Timed(player.getUUID(), now + action.getKey(), action.getValue()));
+		}
+	}
+
+	private static void runTimed(MinecraftServer server) {
+		if (TIMED.isEmpty()) {
+			return;
+		}
+		Iterator<Timed> it = TIMED.iterator();
+		List<Timed> due = new ArrayList<>();
+		while (it.hasNext()) {
+			Timed timed = it.next();
+			ServerPlayer player = server.getPlayerList().getPlayer(timed.player());
+			if (player == null) {
+				it.remove();
+			} else if (player.level().getGameTime() >= timed.due()) {
+				due.add(timed);
+				it.remove();
+			}
+		}
+		for (Timed timed : due) {
+			ServerPlayer player = server.getPlayerList().getPlayer(timed.player());
+			if (player != null) {
+				timed.action().accept(player);
+			}
+		}
+	}
+
+	/**
+	 * Fires an event scare by id if this survivor has not had it within {@code cooldown} ticks and no grace
+	 * period, cutscene or chase is under way. Returns whether it played.
+	 */
+	public static boolean fire(ServerPlayer player, String id, long cooldown) {
+		Identifier key = Identifier.tryParse(id);
+		if (key == null || player.isSpectator() || player.isCreative()) {
+			return false;
+		}
+		java.util.Optional<Scare> scare = DLContent.JUMPSCARES.get(key);
+		State state = state(player);
+		long now = player.level().getGameTime();
+		Long last = state.recent.get(key);
+		if (scare.isEmpty() || (last != null && now - last < cooldown) || now < state.graceUntil || state.busy == HorrorBusyPayload.STORY) {
+			return false;
+		}
+		perform(player, key, scare.get());
+		return true;
+	}
+
+	/** Closed Inventory: after a menu was kept open a while, indoors at night, never in a world's first hour. */
+	private static void closedScreen(ServerPlayer player, State state) {
+		ServerLevel level = player.level();
+		BlockPos pos = player.blockPosition();
+		if (!level.isDarkOutside() || level.canSeeSky(pos) || level.getGameTime() < 72000L || ChaseTracker.chasers(player) > 0) {
+			return;
+		}
+		fire(player, "deadlands:closed_inventory", 48000L);
 	}
 
 	/** The nearest open door within 8 blocks swings shut (it makes its own sound). */
