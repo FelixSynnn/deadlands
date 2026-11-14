@@ -78,6 +78,10 @@ public final class NpcDialogue {
 	public static void init() {
 		ServerPlayNetworking.registerGlobalReceiver(DialogueChoicePayload.TYPE, (payload, context) -> {
 			ServerPlayer player = context.player();
+			if (payload.entityId() == com.deadlands.story.MythosTerminal.ENTITY_ID) {
+				com.deadlands.story.MythosTerminal.choose(player, payload.option()); // the hospital terminal, not a survivor
+				return;
+			}
 			Entity entity = player.level().getEntity(payload.entityId());
 			if (entity instanceof NpcEntity npc && npc.isAlive() && npc.distanceToSqr(player) < 100.0 && !npc.isHostileTo(player)) {
 				choose(player, npc, payload.option());

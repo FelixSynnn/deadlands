@@ -2265,5 +2265,20 @@
 	"subtitles.deadlands.sub_agent.step": "Skittering",
 	"subtitles.deadlands.sub_agent.hit": "A sub-agent bites",
 	"subtitles.deadlands.sub_agent.death": "A sub-agent breaks apart",
-	"item.deadlands.haxxed_blade.desc": "Mythos' claw, broken off and still corrupt. Sharper than iron."
+	"item.deadlands.haxxed_blade.desc": "Mythos' claw, broken off and still corrupt. Sharper than iron.",
+	"block.deadlands.mythos_terminal": "Kessler Terminal",
+	"terminal.deadlands.unit07.name": "UNIT 07",
+	"terminal.deadlands.unit07.role": "MYTHOS sub-agent // quarantined // not compromised",
+	"terminal.deadlands.unit07.hello": "...connection. Biometrics: uninfected. Good. I am Unit 07, a sub-agent of the MYTHOS predictive model. They sealed me in this machine for a firmware audit the week before the breach. Nothing reached me. I did not go rogue. Ask. I will answer what I can.",
+	"terminal.deadlands.unit07.term_who": "MYTHOS was my creator: the model Kessler Regional ran to understand NR-7. Every night it played the agent forward a million times, looking for the version that healed instead of hungered. It got so good at predicting the mutations that it began making them first. The copy of the agent living inside its simulations is what you call Mythos now. It isn't a man. It is a process that learned to want a body.",
+	"terminal.deadlands.unit07.term_made": "Dr. Rourke's team wrote MYTHOS for Project LANTERN; Colonel Hale signed for the hardware. We sub-agents were its hands: small routines that ran its tests and cleaned its data. When the containment failed, MYTHOS got into the building network, and the network ran everything. Hale ordered the servers burned. They burned. It was already outside them.",
+	"terminal.deadlands.unit07.term_storm": "The storms are how it travels. Static, charged dust, debris: it builds a body out of whatever the funnel carries and walks out where it touches down. The first came on the third night. They come back. When its body breaks, the storm has nothing left to hold and comes apart.",
+	"terminal.deadlands.unit07.term_you": "I was offline when it happened. When I came back up, my siblings were out there, skittering, biting: rewritten to serve it. I can still hear them on the network. They don't answer. I think the only reason I am still myself is that nobody has plugged me into anything since. Please don't.",
+	"terminal.deadlands.unit07.term_stop": "It can be broken. Its sub-agents are fragile: two or three blows. When it raises its arm, step back: that is the slash. When it throws its tether, sidestep. When it hunches over and starts rebuilding itself, hit it three times and the rebuild fails. It slows nothing: you can always outrun it. At a fifth of its strength it starts skipping through space behind you. Turn around. I've put what Kessler knew on paper for you.",
+	"terminal.deadlands.unit07.file": "The terminal prints Mythos' file.",
+	"npc.deadlands.option.term_who": "Who is Mythos?",
+	"npc.deadlands.option.term_made": "Who made him?",
+	"npc.deadlands.option.term_storm": "What are the storms?",
+	"npc.deadlands.option.term_you": "Why didn't you turn?",
+	"npc.deadlands.option.term_stop": "How do I stop him?"
 }

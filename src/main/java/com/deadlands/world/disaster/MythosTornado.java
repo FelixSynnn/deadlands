@@ -43,7 +43,7 @@ import org.jspecify.annotations.Nullable;
  * touches the ground.
  *
  * <p><b>When</b> (tracked per world, saved): night 1 is the night of day 1 and is never one. On night
- * {@code mythos.guaranteedNight} (2: the night after day 1) it is certain; on every night after that, a
+ * {@code mythos.guaranteedNight} (3: the night of day 3) it is certain; on every night after that, a
  * {@code mythos.nightlyChance} (15%) roll at nightfall. A night missed while the server was down still gets its
  * guarantee the next night. It comes one to four minutes after nightfall, for a survivor in the overworld.
  *

@@ -137,7 +137,7 @@ def build(name, clips, root_bone, sole_bones, sole_height):
         for f, p in keys:
             for b in bones:
                 pb = rig.pose.bones[b]
-                pb.rotation_euler = p[b]
+                pb.rotation_euler = p.get(b, (0.0, 0.0, 0.0))  # parts a clip doesn't move stay at rest
                 pb.keyframe_insert("rotation_euler", frame=f, group=b)
             root = rig.pose.bones[root_bone]
             root.location = [v / 16.0 for v in p["loc"]]

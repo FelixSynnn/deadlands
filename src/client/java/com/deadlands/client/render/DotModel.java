@@ -70,8 +70,8 @@ public class DotModel extends EntityModel<DotRenderer.State> {
 		RiggedAnimation.Clip prowl = anim.clip("prowl");
 		RiggedAnimation.Clip sprint = anim.clip("sprint");
 		if (move > 0.001F && prowl != null && sprint != null) {
-			anim.sample(prowl, state.walkPhase * prowl.frames(), layer);
-			anim.sample(sprint, state.walkPhase * sprint.frames(), layer2);
+			anim.sample(prowl, state.walkPhase * prowl.length(), layer);
+			anim.sample(sprint, state.walkPhase * sprint.length(), layer2);
 			mix(layer, layer2, state.aggro);
 			mix(base, layer, move);
 		}

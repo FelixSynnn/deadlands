@@ -1,6 +1,7 @@
 package com.deadlands.client.render;
 
 import com.deadlands.entity.AsesinoEntity;
+import java.util.Locale;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
@@ -24,6 +25,10 @@ import net.minecraft.util.Mth;
  * crouched, listening lurk; the pounce crouch and the leaping cut, a slumping stagger when
  * stunned, the shriek (thrown back, arms flung wide, shuddering), the two-handed breach smash, the
  * frenzy's thrashing, the scent's raised and turning head, and the frozen, head-tilted stare.
+ *
+ * <p>All of it he uses is keyed in Blender at 60 fps ({@code tools/assetgen/blender/aberrant_moves.py} and
+ * {@code aberrant_anims.py}, {@code models/entity/aberrant.anim}) and blended in {@link #clipAnim}; the procedural
+ * version below is kept for when that file can't be read, and for the old ability poses he no longer uses.
  */
 public class AsesinoModel extends EntityModel<AsesinoRenderer.State> {
 	private final ModelPart pelvis;
@@ -64,11 +69,81 @@ public class AsesinoModel extends EntityModel<AsesinoRenderer.State> {
 		shinR = legR.getChild("shin_r");
 		legL = pelvis.getChild("leg_l");
 		shinL = legL.getChild("shin_l");
+		clips = new ClipRig(root.createPartLookup(), "pelvis", ANIM);
+	}
+
+	private final ClipRig clips;
+	private static final float STRIDE = Mth.TWO_PI / 0.55F;
+
+	/** The Blender clips: stance (hunched, lurking, searching), the walks blended by speed, climbing, then the action; false without them. */
+	private boolean clipAnim(AsesinoRenderer.State state) {
+		ClipRig rig = clips;
+		AsesinoEntity.Action action = state.action;
+		boolean old = action == AsesinoEntity.Action.SHRIEK || action == AsesinoEntity.Action.BREACH || action == AsesinoEntity.Action.STUN
+			|| action == AsesinoEntity.Action.FRENZY;
+		if (old || rig.anim() == null || !rig.sample("idle", state.ageInTicks, rig.pose)) {
+			return false;
+		}
+		float t = state.ageInTicks;
+		float hunch = state.hunch;
+		float sprint = state.sprint;
+		boolean frozen = action == AsesinoEntity.Action.STARE || action == AsesinoEntity.Action.CROUCH;
+		float move = ClipRig.smooth(Math.min(1.0F, state.walkAnimationSpeed * 1.2F)) * (frozen ? 0.15F : 1.0F);
+		if (hunch > 0.001F && rig.sample("stalk_idle", t, rig.layer)) {
+			ClipRig.mix(rig.pose, rig.layer, hunch);
+		}
+		if (state.mode == AsesinoEntity.Mode.LURK && rig.sample("lurk", t, rig.layer)) {
+			ClipRig.mix(rig.pose, rig.layer, 1.0F - move);
+		}
+		if (move > 0.001F && rig.sampleStride("walk", state.walkAnimationPos, STRIDE, rig.layer)) {
+			if (hunch > 0.001F && rig.sampleStride("stalk", state.walkAnimationPos, STRIDE, rig.layer2)) {
+				ClipRig.mix(rig.layer, rig.layer2, hunch * (1.0F - sprint));
+			}
+			if (sprint > 0.001F && rig.sampleStride("run", state.walkAnimationPos, STRIDE, rig.layer2)) {
+				ClipRig.mix(rig.layer, rig.layer2, sprint);
+			}
+			ClipRig.mix(rig.pose, rig.layer, move);
+		}
+		if (state.mode == AsesinoEntity.Mode.SEARCH && rig.sample("search", t, rig.layer)) {
+			rig.mixMasked(rig.pose, rig.layer, 1.0F - 0.6F * move, 1.0F - move, AsesinoModel::legs);
+		}
+		if (state.climbing && rig.sample("climb", t, rig.layer)) {
+			ClipRig.mix(rig.pose, rig.layer, 1.0F);
+		}
+		if (action != AsesinoEntity.Action.NONE) {
+			String name = action.name().toLowerCase(Locale.ROOT);
+			float a = state.actionAge;
+			if (rig.sample(name, a, rig.layer)) {
+				boolean chained = action == AsesinoEntity.Action.SWING || action == AsesinoEntity.Action.SWING2 || action == AsesinoEntity.Action.LEAP;
+				float w = chained ? 1.0F : ClipRig.smooth(a / (action == AsesinoEntity.Action.DIG ? 5.0F : 2.0F));
+				if (chained) {
+					w *= ClipRig.smooth((rig.length(name) - a) / 2.0F); // a chain's last clip hands back to the walk over its final two ticks
+				}
+				boolean arms = action == AsesinoEntity.Action.WINDUP || action == AsesinoEntity.Action.SWING
+					|| action == AsesinoEntity.Action.WINDUP2 || action == AsesinoEntity.Action.SWING2;
+				rig.mixMasked(rig.pose, rig.layer, w, arms ? w * (1.0F - 0.75F * move) : w, AsesinoModel::legs);
+			}
+		}
+		rig.apply();
+		float yaw = state.yRot * Mth.DEG_TO_RAD;
+		float pitch = state.xRot * Mth.DEG_TO_RAD;
+		neck.yRot += yaw * 0.3F;
+		head.yRot += yaw * 0.7F;
+		head.xRot += pitch * 0.8F;
+		neck.xRot += pitch * 0.2F;
+		return true;
+	}
+
+	private static boolean legs(String bone) {
+		return bone.equals("pelvis") || bone.startsWith("leg_") || bone.startsWith("shin_") || bone.startsWith("coat_");
 	}
 
 	@Override
 	public void setupAnim(AsesinoRenderer.State state) {
 		super.setupAnim(state); // back to the rest pose
+		if (clipAnim(state)) {
+			return;
+		}
 		float t = state.ageInTicks;
 		float speed = Math.min(1.0F, state.walkAnimationSpeed * 1.2F);
 		float phase = state.walkAnimationPos * 0.55F;

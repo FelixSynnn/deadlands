@@ -1,5 +1,8 @@
 package com.deadlands.client.render;
 
+import com.deadlands.Deadlands;
+import com.deadlands.entity.GuestEntity;
+import java.util.Locale;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
@@ -20,6 +23,10 @@ import net.minecraft.util.Mth;
  * jaw wide, shaking); swipes from a half-rear; for the grab it drops low, springs forward with both arms,
  * rears up holding the survivor, and slams them down; staggers after a miss; rears to knock and to rake a
  * wall; feeds with its face down at the ground, jaw working.
+ *
+ * <p>All of this is keyed in Blender at 60 fps ({@code tools/assetgen/blender/guest_anims.py},
+ * {@code models/entity/guest.anim}) and blended here by what the Guest is doing; the procedural version below is kept
+ * for when that file can't be read.
  *
  * <p>The rig: the arms hang straight down at rest (baked by the importer), so arms, legs, spine, neck,
  * jaw and tail all bend with X; Z spreads the limbs.
@@ -51,9 +58,11 @@ public class GuestModel extends EntityModel<GuestRenderer.State> {
 	private final ModelPart legL;
 	private final ModelPart shinL;
 	private final ModelPart[] tail = new ModelPart[13];
+	private final ClipRig clips;
 
 	public GuestModel(ModelPart root) {
 		super(root);
+		clips = new ClipRig(root.createPartLookup(), "pelvis", Deadlands.id("models/entity/guest.anim"));
 		ModelPart base = root.getChild("root");
 		pelvis = base.getChild("pelvis");
 		torso = pelvis.getChild("torso");
@@ -80,6 +89,9 @@ public class GuestModel extends EntityModel<GuestRenderer.State> {
 	@Override
 	public void setupAnim(GuestRenderer.State state) {
 		super.setupAnim(state);
+		if (clipAnim(state)) {
+			return;
+		}
 		float t = state.ageInTicks;
 		float speed = Math.min(1.0F, state.walkAnimationSpeed * 1.4F);
 		float run = state.run;
@@ -107,6 +119,70 @@ public class GuestModel extends EntityModel<GuestRenderer.State> {
 			climbWall(t, state.climb);
 		}
 		action(state, a, t);
+	}
+
+	/** The Blender clips: stance or crouch, the walks blended by speed, swimming and climbing, then the action; false without the file. */
+	private boolean clipAnim(GuestRenderer.State state) {
+		ClipRig rig = clips;
+		if (rig.anim() == null || !rig.sample("idle", state.ageInTicks, rig.pose)) {
+			return false;
+		}
+		float t = state.ageInTicks;
+		float stalk = state.stalk;
+		if (stalk > 0.001F && rig.sample("stalk_idle", t, rig.layer)) {
+			ClipRig.mix(rig.pose, rig.layer, stalk);
+		}
+		float pos = state.walkAnimationPos;
+		float move = ClipRig.smooth(Math.min(1.0F, state.walkAnimationSpeed * 1.4F));
+		float gait = Math.max(move, state.run);
+		if (gait > 0.001F && rig.sampleStride("prowl", pos, PROWL_CYCLE, rig.layer)) {
+			if (stalk > 0.001F && rig.sampleStride("stalk", pos, PROWL_CYCLE, rig.layer2)) {
+				ClipRig.mix(rig.layer, rig.layer2, stalk);
+			}
+			if (state.run > 0.001F && rig.sampleStride("gallop", pos, GALLOP_CYCLE, rig.layer2)) {
+				ClipRig.mix(rig.layer, rig.layer2, state.run);
+			}
+			ClipRig.mix(rig.pose, rig.layer, gait);
+		}
+		if (state.swim > 0.001F && rig.sample("swim", t, rig.layer)) {
+			ClipRig.mix(rig.pose, rig.layer, state.swim);
+		}
+		if (state.climb > 0.001F && rig.sample("climb", t, rig.layer)) {
+			ClipRig.mix(rig.pose, rig.layer, state.climb);
+		}
+		float acting = 0.0F;
+		GuestEntity.Action action = state.action;
+		if (action != GuestEntity.Action.NONE && rig.sample(action.name().toLowerCase(Locale.ROOT), state.actionAge, rig.layer)) {
+			// Chained actions start where the last one ended, so they come in at once; the others ease in over two ticks.
+			boolean chained = action == GuestEntity.Action.SWIPE || action == GuestEntity.Action.GRAB_LUNGE
+				|| action == GuestEntity.Action.GRAB_HOLD || action == GuestEntity.Action.SLAM;
+			acting = chained ? 1.0F : ClipRig.smooth(state.actionAge / 2.0F);
+			// Clips that end a chain end on the stance; over their last three ticks they hand back to the walk under them.
+			boolean leadsOn = action == GuestEntity.Action.SWIPE_WINDUP || action == GuestEntity.Action.GRAB_WINDUP
+				|| action == GuestEntity.Action.GRAB_LUNGE || action == GuestEntity.Action.GRAB_HOLD;
+			if (!leadsOn) {
+				String name = action.name().toLowerCase(Locale.ROOT);
+				acting *= ClipRig.smooth((rig.length(name) - state.actionAge) / 3.0F);
+			}
+			// Swiping, knocking and tearing on the move: the hind end keeps some of its walk.
+			boolean upper = action == GuestEntity.Action.SWIPE_WINDUP || action == GuestEntity.Action.SWIPE
+				|| action == GuestEntity.Action.KNOCK || action == GuestEntity.Action.TEAR;
+			float lower = upper ? acting * (1.0F - 0.5F * gait) : acting;
+			rig.mixMasked(rig.pose, rig.layer, acting, lower, GuestModel::hindEnd);
+		}
+		rig.apply();
+		// Where it looks, on top (less of it while an action holds the head).
+		float look = 1.0F - 0.6F * acting;
+		head.yRot += state.yRot * Mth.DEG_TO_RAD * 0.75F * look;
+		head.xRot += state.xRot * Mth.DEG_TO_RAD * 0.5F * look;
+		return true;
+	}
+
+	private static final float PROWL_CYCLE = Mth.TWO_PI / 0.62F;
+	private static final float GALLOP_CYCLE = Mth.TWO_PI / 0.42F;
+
+	private static boolean hindEnd(String bone) {
+		return bone.equals("pelvis") || bone.startsWith("leg_") || bone.startsWith("shin_") || bone.startsWith("tail_");
 	}
 
 	/** Climbing: reared up against the wall, claws reaching up in turn, hind legs pushing, tail hanging. */

@@ -39,7 +39,7 @@ import net.fabricmc.loader.api.FabricLoader;
  * added, missing or invalid.
  */
 public final class ConfigManager {
-	public static final int CURRENT_VERSION = 4;
+	public static final int CURRENT_VERSION = 5;
 	public static final String FILE_NAME = "deadlands.jsonc";
 
 	private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
@@ -233,6 +233,10 @@ public final class ConfigManager {
 			if (config.dot.aggroSpeed == 0.36) {
 				config.dot.aggroSpeed = 0.37; // about 105% of sprint speed
 			}
+		}
+		// 5: Mythos comes on the night of day 3, not day 2 (old default only).
+		if (from < 5 && config.mythos.guaranteedNight == 2) {
+			config.mythos.guaranteedNight = 3;
 		}
 	}
 

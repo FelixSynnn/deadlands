@@ -484,8 +484,8 @@ public final class DeadlandsConfig {
 		@ConfigEntry(comment = "Get this many blocks from the tornado for 30 seconds and you've escaped: Mythos leaves and the storm breaks up.", min = 32, max = 512)
 		public int escapeDistance = 96;
 
-		@ConfigEntry(comment = "The night his tornado is certain to come (night 1 is the first, on day 1; it never comes then).", min = 2, max = 100)
-		public int guaranteedNight = 2;
+		@ConfigEntry(comment = "The night his tornado is certain to come: night 3, the night of day 3 (night 1 is the first, on day 1; it never comes on night 1).", min = 2, max = 100)
+		public int guaranteedNight = 3;
 
 		@ConfigEntry(comment = "Chance it comes on each night after that.", min = 0.0, max = 1.0)
 		public double nightlyChance = 0.15;

@@ -30,6 +30,10 @@ public final class DLMythos {
 		DLTab.SPAWN_EGGS);
 	public static final Item SUB_AGENT_SPAWN_EGG = DLItems.register("sub_agent_spawn_egg", SpawnEggItem::new,
 		new Item.Properties().spawnEgg(SUB_AGENT), DLTab.SPAWN_EGGS);
+	/** The hospital terminal where Unit 07, the sub-agent that never went rogue, explains Mythos. */
+	public static final net.minecraft.world.level.block.Block TERMINAL = DLBlocks.register("mythos_terminal", com.deadlands.block.TerminalBlock::new,
+		net.minecraft.world.level.block.state.BlockBehaviour.Properties.of().mapColor(net.minecraft.world.level.material.MapColor.COLOR_BLACK)
+			.strength(2.0F, 6.0F).sound(net.minecraft.world.level.block.SoundType.METAL).noOcclusion().lightLevel(state -> 5), DLTab.CUSTOM_BLOCKS);
 	public static final Item HAXXED_BLADE = DLItems.register("haxxed_blade", MeleeItem::new,
 		new Item.Properties().sword(ToolMaterial.IRON, 3.5F, -2.3F).durability(900).fireResistant(), DLTab.WEAPONS);
 

@@ -524,4 +524,5 @@ def build():
     return made
 
 
-result = build()
+if __name__ == "__main__":  # run directly (the Text editor); dot_anims60.py imports the poses from here
+    result = build()

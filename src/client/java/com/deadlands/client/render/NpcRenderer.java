@@ -37,6 +37,8 @@ public class NpcRenderer extends HumanoidMobRenderer<NpcEntity, NpcRenderer.Stat
 		public boolean slim;
 		/** The character's 3D gear texture (Phase 3), or null for none. */
 		public Identifier gear;
+		/** A number of its own, so two survivors don't breathe and glance in step. */
+		public int seed;
 	}
 
 	private record CharacterSkin(Identifier texture, boolean slim) {
@@ -47,9 +49,9 @@ public class NpcRenderer extends HumanoidMobRenderer<NpcEntity, NpcRenderer.Stat
 	private final HumanoidModel<State> slimModel;
 
 	public NpcRenderer(EntityRendererProvider.Context context) {
-		super(context, new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER)), 0.5F);
+		super(context, new NpcModel(context.bakeLayer(ModelLayers.PLAYER)), 0.5F);
 		this.wideModel = getModel();
-		this.slimModel = new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM));
+		this.slimModel = new NpcModel(context.bakeLayer(ModelLayers.PLAYER_SLIM));
 		addLayer(new com.deadlands.client.render.character.CharacterGearLayer(this));
 	}
 
@@ -61,6 +63,7 @@ public class NpcRenderer extends HumanoidMobRenderer<NpcEntity, NpcRenderer.Stat
 	@Override
 	public void extractRenderState(NpcEntity npc, State state, float partialTick) {
 		super.extractRenderState(npc, state, partialTick);
+		state.seed = npc.getId();
 		NpcCharacter character = npc.character();
 		if (character != null) {
 			CharacterSkin skin = characterSkin(character);

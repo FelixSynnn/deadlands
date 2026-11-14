@@ -101,6 +101,7 @@ public final class Deadlands implements ModInitializer {
 		com.deadlands.story.StoryReunion.init();
 		com.deadlands.story.FamilyHouse.init();
 		com.deadlands.story.HarleyRoad.init();
+		com.deadlands.story.MythosTerminal.init();
 		com.deadlands.story.Pinecrest.init();
 		com.deadlands.player.SafeRespawn.init();
 		com.deadlands.item.FlashlightBeam.init();
