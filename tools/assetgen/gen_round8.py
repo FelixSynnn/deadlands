@@ -6,6 +6,7 @@ import dl_data as D
 TEXT = {
     "config.deadlands.ui.menuMusic": "Main menu music",
     "config.deadlands.ui.menuMusicVolume": "Main menu music volume",
+    "config.deadlands.horror.flashlightLightsBlocks": "Flashlight lights up blocks",
 }
 
 

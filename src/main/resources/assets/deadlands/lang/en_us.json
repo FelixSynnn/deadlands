@@ -2109,5 +2109,6 @@
 	"lore.deadlands.subway_staff_memo.title": "Transit Staff Memo, Do Not Post",
 	"lore.deadlands.subway_staff_memo.body": "Staff are reminded NOT to repeat the evacuation announcement after the tunnels are sealed. The recording loops on its own. If a station's power fails, the PA's backup battery will keep it running for some weeks. There is no way to switch it off remotely.",
 	"config.deadlands.ui.menuMusic": "Main menu music",
-	"config.deadlands.ui.menuMusicVolume": "Main menu music volume"
+	"config.deadlands.ui.menuMusicVolume": "Main menu music volume",
+	"config.deadlands.horror.flashlightLightsBlocks": "Flashlight lights up blocks"
 }

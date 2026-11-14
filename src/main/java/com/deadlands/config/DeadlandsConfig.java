@@ -424,6 +424,9 @@ public final class DeadlandsConfig {
 
 		@ConfigEntry(comment = "Shader compatibility: with a shader pack (Iris) or Sodium, draw the night's darkness and the flashlight beam on the screen, so they work with any pack.", client = true)
 		public boolean shaderCompatibility = true;
+
+		@ConfigEntry(comment = "The flashlight really lights the blocks it points at (invisible light blocks that follow the beam), so it works with Sodium and shader packs.")
+		public boolean flashlightLightsBlocks = true;
 	}
 
 	public static final class Audio {
