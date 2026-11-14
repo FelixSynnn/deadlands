@@ -2155,17 +2155,17 @@
 	"weapon.hit_blunt": {
 		"subtitle": "subtitles.deadlands.weapon.hit_blunt",
 		"sounds": [
-			{
-				"name": "deadlands:pixabay/melee_hit_blunt"
-			}
+			"deadlands:weapon/melee/hit_blunt_1",
+			"deadlands:weapon/melee/hit_blunt_2",
+			"deadlands:weapon/melee/hit_blunt_3"
 		]
 	},
 	"weapon.hit_blade": {
 		"subtitle": "subtitles.deadlands.weapon.hit_blade",
 		"sounds": [
-			{
-				"name": "deadlands:pixabay/melee_hit_blade"
-			}
+			"deadlands:weapon/melee/hit_blade_1",
+			"deadlands:weapon/melee/hit_blade_2",
+			"deadlands:weapon/melee/hit_blade_3"
 		]
 	},
 	"music.intro": {

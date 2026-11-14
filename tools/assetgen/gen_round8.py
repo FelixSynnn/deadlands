@@ -7,6 +7,9 @@ TEXT = {
     "config.deadlands.ui.menuMusic": "Main menu music",
     "config.deadlands.ui.menuMusicVolume": "Main menu music volume",
     "config.deadlands.horror.flashlightLightsBlocks": "Flashlight lights up blocks",
+    "config.deadlands.horror.noSleepRadius": "No sleep with a killer this close",
+    "message.deadlands.sleep.killer_near": "You can't sleep. Something is out there.",
+    "message.deadlands.sleep.woken": "You jolt awake. Something is close.",
 }
 
 

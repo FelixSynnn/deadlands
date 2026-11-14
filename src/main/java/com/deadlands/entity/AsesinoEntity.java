@@ -1028,6 +1028,9 @@ public class AsesinoEntity extends Monster {
 	@Override
 	public void tick() {
 		super.tick();
+		if (!level().isClientSide()) {
+			climbing = horizontalCollision && mode != Mode.ROAM; // up walls, fences, cliffs: whatever is between it and them
+		}
 		if (level().isClientSide()) {
 			Mode now = mode();
 			float hunchGoal = switch (now) {
@@ -1078,4 +1081,26 @@ public class AsesinoEntity extends Monster {
 	public boolean canPickUpLoot() {
 		return false;
 	}
+
+	// ---------------------------------------------------------------------------------------- climbing
+
+	/** Climbing like a spider when it presses into a wall while after someone (set on the server each tick). */
+	private boolean climbing;
+
+	@Override
+	protected net.minecraft.world.entity.ai.navigation.PathNavigation createNavigation(net.minecraft.world.level.Level level) {
+		return new net.minecraft.world.entity.ai.navigation.WallClimberNavigation(this, level); // paths go up walls too
+	}
+
+	@Override
+	public boolean onClimbable() {
+		return climbing || super.onClimbable();
+	}
+
+	/** Falls don't hurt it: a long drop off a roof won't stop it. */
+	@Override
+	public boolean isInvulnerableTo(ServerLevel level, net.minecraft.world.damagesource.DamageSource source) {
+		return source.is(net.minecraft.tags.DamageTypeTags.IS_FALL) || super.isInvulnerableTo(level, source);
+	}
+
 }

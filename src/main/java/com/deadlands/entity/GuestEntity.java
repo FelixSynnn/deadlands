@@ -852,6 +852,9 @@ public class GuestEntity extends Monster {
 	@Override
 	public void tick() {
 		super.tick();
+		if (!level().isClientSide()) {
+			climbing = horizontalCollision && mode != Mode.ROAM && mode != Mode.FEED; // up walls, fences, cliffs: whatever is between it and them
+		}
 		if (level().isClientSide()) {
 			float moving = (float) Math.min(1.0, getDeltaMovement().horizontalDistance() / 0.25);
 			runO = run;
@@ -887,4 +890,26 @@ public class GuestEntity extends Monster {
 	static List<GuestEntity> near(ServerLevel level, Vec3 at, double radius) {
 		return level.getEntitiesOfClass(GuestEntity.class, new net.minecraft.world.phys.AABB(at, at).inflate(radius), GuestEntity::isAlive);
 	}
+
+	// ---------------------------------------------------------------------------------------- climbing
+
+	/** Climbing like a spider when it presses into a wall while after someone (set on the server each tick). */
+	private boolean climbing;
+
+	@Override
+	protected net.minecraft.world.entity.ai.navigation.PathNavigation createNavigation(net.minecraft.world.level.Level level) {
+		return new net.minecraft.world.entity.ai.navigation.WallClimberNavigation(this, level); // paths go up walls too
+	}
+
+	@Override
+	public boolean onClimbable() {
+		return climbing || super.onClimbable();
+	}
+
+	/** Falls don't hurt it: a long drop off a roof won't stop it. */
+	@Override
+	public boolean isInvulnerableTo(ServerLevel level, net.minecraft.world.damagesource.DamageSource source) {
+		return source.is(net.minecraft.tags.DamageTypeTags.IS_FALL) || super.isInvulnerableTo(level, source);
+	}
+
 }

@@ -427,6 +427,9 @@ public final class DeadlandsConfig {
 
 		@ConfigEntry(comment = "The flashlight really lights the blocks it points at (invisible light blocks that follow the beam), so it works with Sodium and shader packs.")
 		public boolean flashlightLightsBlocks = true;
+
+		@ConfigEntry(comment = "No sleeping while the Aberrant or the Guest is within this many blocks (0 turns it off); a sleeper is woken if one comes this close.", min = 0.0, max = 160.0)
+		public double noSleepRadius = 48.0;
 	}
 
 	public static final class Audio {

@@ -99,6 +99,7 @@ public final class Deadlands implements ModInitializer {
 		com.deadlands.story.Pinecrest.init();
 		com.deadlands.player.SafeRespawn.init();
 		com.deadlands.item.FlashlightBeam.init();
+		com.deadlands.player.RestlessNights.init();
 		com.deadlands.world.subway.SubwayAmbience.init();
 		com.deadlands.world.disaster.DisasterDirector.init();
 		com.deadlands.entity.AsesinoSpawner.init();

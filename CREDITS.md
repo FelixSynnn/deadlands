@@ -21,8 +21,6 @@ and trimmed for the game (`tools/assetgen/import_pixabay.py`).
 | `caustic_rain` (disaster.caustic_rain) | Heavy Rain Outside the Window | DRAGON-STUDIO | https://pixabay.com/sound-effects/nature-heavy-rain-outside-the-window-515266/ | Pixabay Content License |
 | `caustic_burn` (disaster.caustic_rain.burn) | sizzle | freesound_community | https://pixabay.com/sound-effects/household-sizzle-62476/ | Pixabay Content License |
 | `static_storm` (disaster.static_storm) | Thunder Strike | Universfield | https://pixabay.com/sound-effects/nature-thunder-strike-124463/ | Pixabay Content License |
-| `melee_hit_blunt` (weapon.hit_blunt) | Punch 05 | Universfield | https://pixabay.com/sound-effects/film-special-effects-punch-05-634843/ | Pixabay Content License |
-| `melee_hit_blade` (weapon.hit_blade) | Knife Stab | Universfield | https://pixabay.com/sound-effects/film-special-effects-knife-stab-121084/ | Pixabay Content License |
 | `title_theme` (music.title) | Horror Ambient | leberch | https://pixabay.com/music/horror-scene-horror-ambient-609124/ | Pixabay Content License |
 | `sting_horde` (event.horde_start) | Rising Horror Tension | Universfield | https://pixabay.com/sound-effects/film-special-effects-rising-horror-tension-130803/ | Pixabay Content License |
 | `sting_boss` (event.boss) | Horror Hit | Universfield | https://pixabay.com/sound-effects/horror-horror-hit-443980/ | Pixabay Content License |

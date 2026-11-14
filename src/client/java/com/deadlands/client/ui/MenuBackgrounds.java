@@ -20,8 +20,8 @@ import org.jspecify.annotations.Nullable;
  *
  * <ul>
  *   <li>A new picture every {@link #HOLD_MS} (10 seconds), cross-faded over {@link #FADE_MS}.</li>
- *   <li>Each time the menu opens, the first picture is a random screenshot and the second is always the rat.
- *       After that the rat comes back often, about one change in four, but never twice in a row.</li>
+ *   <li>Each time the menu opens, the first picture is a random screenshot. After that the rat is rare: a
+ *       one-in-five chance at each change, never twice in a row.</li>
  *   <li>A screenshot is never followed by itself.</li>
  *   <li>Each picture covers the screen at its own aspect ratio (cropped, never stretched) and drifts in very
  *       slowly, so the menu feels alive. Only the two pictures on screen are kept in video memory.</li>
@@ -34,7 +34,7 @@ public final class MenuBackgrounds {
 	private static final long FADE_MS = 1_400L;
 	/** After this long without being drawn, the menu counts as opened anew. */
 	private static final long REOPEN_MS = 2_000L;
-	private static final float RAT_CHANCE = 0.26F;
+	private static final float RAT_CHANCE = 0.20F;
 	private static final int ART_W = 1920;
 	private static final int ART_H = 1080;
 
@@ -75,10 +75,8 @@ public final class MenuBackgrounds {
 
 	private static Identifier pick() {
 		List<Identifier> pool = shots();
-		if (ratPresent && shownThisVisit == 1) {
-			return RAT; // the second picture is always the rat
-		}
-		if (ratPresent && shownThisVisit >= 2 && !RAT.equals(current) && RANDOM.nextFloat() < RAT_CHANCE) {
+		// The rat is rare: a one-in-five chance at each change, never the first picture and never twice running.
+		if (ratPresent && shownThisVisit >= 1 && !RAT.equals(current) && RANDOM.nextFloat() < RAT_CHANCE) {
 			return RAT;
 		}
 		if (pool.size() == 1) {
@@ -106,7 +104,7 @@ public final class MenuBackgrounds {
 	public static void render(GuiGraphics graphics, int width, int height) {
 		long now = Util.getMillis();
 		if (now - lastDrawn > REOPEN_MS) {
-			shownThisVisit = 0; // the menu was opened again: a screenshot first, then the rat
+			shownThisVisit = 0; // the menu was opened again: a screenshot first
 			previous = null;
 			current = null;
 		}

@@ -68,12 +68,8 @@ FILES = {
                      "https://cdn.pixabay.com/download/audio/2022/10/30/audio_65a2d39d7c.mp3?filename=universfield-thunder-strike-124463.mp3",
                      1, None, 1, ["disaster.static_storm"]),
     # melee_swing removed: the recording sounds like a voice saying "whoosh"; weapon.swing keeps gen_weapon_sfx's.
-    "melee_hit_blunt": ("Punch 05", "Universfield", "https://pixabay.com/sound-effects/film-special-effects-punch-05-634843/",
-                        "https://cdn.pixabay.com/download/audio/2026/11/10/audio_eb7873bf40.mp3?filename=universfield-punch-05-634843.mp3",
-                        1, 1.5, 0.3, ["weapon.hit_blunt"]),
-    "melee_hit_blade": ("Knife Stab", "Universfield", "https://pixabay.com/sound-effects/film-special-effects-knife-stab-121084/",
-                        "https://cdn.pixabay.com/download/audio/2022/09/27/audio_8f017d5236.mp3?filename=universfield-knife-stab-121084.mp3",
-                        1, 2, 0.3, ["weapon.hit_blade"]),
+    # melee_hit_blunt removed: a film effect with a voice-like "woah"; weapon hits keep gen_weapon_sfx's.
+    # melee_hit_blade removed: a film effect with a voice-like "woah"; weapon hits keep gen_weapon_sfx's.
     "title_theme": ("Horror Ambient", "leberch", "https://pixabay.com/music/horror-scene-horror-ambient-609124/",
                     "https://cdn.pixabay.com/download/audio/2026/09/23/audio_6c2c2f6d52.mp3?filename=leberch-horror-ambient-609124.mp3",
                     2, None, 3, ["music.title"]),
