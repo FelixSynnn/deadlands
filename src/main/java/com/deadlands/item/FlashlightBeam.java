@@ -53,13 +53,13 @@ import org.jspecify.annotations.Nullable;
  * ({@code deadlands_flashlight_lights}), so any left behind by a crash are removed when the world next starts.
  */
 public final class FlashlightBeam {
-	private static final double REACH = 24.0;
+	private static final double REACH = 36.0;
 	private static final int EVERY = 2;
 	/** A light is kept while its target is this close to it (blocks). */
 	private static final double STICK = 2.5;
 	/** Ticks an old light stays after its replacement went in. */
 	private static final int OVERLAP = 8;
-	private static final int HOLDER_LIGHT = 8;
+	private static final int HOLDER_LIGHT = 10;
 
 	/** The lights placed, saved so a crash can't leave any behind. */
 	public static final class State extends SavedData {
@@ -226,7 +226,7 @@ public final class FlashlightBeam {
 	/** Bright close up, dimmer far off, dimmer still on a failing battery; the halfway light is softer. */
 	private static int levelFor(ServerPlayer player, BlockPos pos, float strength, int slot) {
 		double distance = Math.sqrt(pos.distToCenterSqr(player.getEyePosition()));
-		float base = (float) (15.0 - distance * 0.2) - (slot == 2 ? 3.0F : 0.0F);
+		float base = (float) (15.0 - distance * 0.14) - (slot == 2 ? 3.0F : 0.0F);
 		return Mth.clamp(Math.round(base * strength), 5, 15);
 	}
 

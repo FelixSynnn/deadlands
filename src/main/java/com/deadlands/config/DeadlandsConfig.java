@@ -682,6 +682,9 @@ public final class DeadlandsConfig {
 		@ConfigEntry(comment = "Show thirst, stamina, temperature, fatigue and injuries on screen.", client = true)
 		public boolean survivalHud = true;
 
+		@ConfigEntry(comment = "Show the noise meter (how loud you are) and the watching eye (a killer has noticed you) in the top left corner.", client = true)
+		public boolean awarenessHud = true;
+
 		@ConfigEntry(comment = "DEADLANDS health, armour and hunger bars instead of Minecraft's hearts and drumsticks.", client = true)
 		public boolean vitalsHud = true;
 

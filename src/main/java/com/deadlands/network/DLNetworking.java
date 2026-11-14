@@ -35,6 +35,7 @@ public final class DLNetworking {
 		PayloadTypeRegistry.playS2C().register(TownCardPayload.TYPE, TownCardPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(HordeEventPayload.TYPE, HordeEventPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(SurvivalPayload.TYPE, SurvivalPayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(NoisePayload.TYPE, NoisePayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(SkillsPayload.TYPE, SkillsPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(DialoguePayload.TYPE, DialoguePayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(JournalPayload.TYPE, JournalPayload.CODEC);

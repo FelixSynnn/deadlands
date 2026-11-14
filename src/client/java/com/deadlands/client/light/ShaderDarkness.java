@@ -36,8 +36,8 @@ public final class ShaderDarkness {
 	private static final Identifier[] CONES = {Deadlands.id("textures/gui/flashlight_cone_0.png"), Deadlands.id("textures/gui/flashlight_cone_1.png"),
 		Deadlands.id("textures/gui/flashlight_cone_2.png"), Deadlands.id("textures/gui/flashlight_cone_3.png"), Deadlands.id("textures/gui/flashlight_cone_4.png")};
 	private static final int MASK_SIZE = 256;
-	/** The beam's outer half-angle (FlashlightClient's cone). */
-	private static final double CONE_DEGREES = 23.0;
+	/** The beam's outer half-angle (FlashlightClient's cone): wide, so the light fills most of the screen. */
+	private static final double CONE_DEGREES = 42.0;
 	private static long ownLightAt = Long.MIN_VALUE;
 	private static int ownLight;
 	private static Boolean sodium;

@@ -1,11 +1,16 @@
 """The Guest's animations, keyed at 60 fps in Blender on the rig dl_rig.build("Guest", "GuestGeometry.java", "guest.bin",
 "guest/model") makes. It moves like an animal: on all fours, its long arms as front legs.
 
+It stands like a dog: forelegs straight down under the shoulders, the big hands laid flat on the ground, fingers forward
+and splayed out (each hand is a flat plate whose palm faces sideways at rest, so paws() rolls it a quarter turn about the
+arm to lay it down; the roll eases off while a paw curls in the air, which keeps the angles clear of gimbal lock).
+
 Loops (sampled by GuestModel by time or by stride):
   idle 240          the stance, breathing hard (ribs heaving, shoulders spreading), head scanning with a sudden glance,
                     panting, claws kneading the ground, one forepaw lifting and re-planting, weight rolling, tail alive
-  prowl 60          a four-beat walk (left hind, left fore, right hind, right fore), shoulders rolling, spine swaying
-                    against the hips, the head held still like a stalking cat's, the tail swinging with the hips
+  prowl 60          a feral dog's trot: diagonal pairs (the hind paw landing a beat before its fore), each forepaw
+                    peeling off the ground and curling up under the wrist, then reaching out and slapping down flat;
+                    head slung low and swinging, nodding with the forelegs, lip curled, tail held low and stiff
   gallop 36         a bounding gallop: forelegs reach and land, hind legs drive, the spine coils and stretches, a real
                     moment of flight, jaw open, tail streaming
   stalk 72          belly almost on the ground, slow deliberate steps with a pause at each paw, head dead still
@@ -30,12 +35,15 @@ import dl_anim as A
 TAU = math.tau
 PI = math.pi
 TAIL = [f"tail_{i}" for i in range(13)]
-ARM, FOREARM, HAND, LEG, SHIN, PELVIS, TORSO = -1.75, -1.1, -0.4, -1.0, 0.9, 0.75, 0.85
+PELVIS, TORSO, NECK = 0.75, 1.15, -1.4
+ARM, FOREARM, HAND = 0.05 - PELVIS - TORSO, -0.15, -1.47  # foreleg straight down, the paw flat (fingers forward)
+LEG, SHIN = -1.2, 1.22
+ROLL = math.pi / 2
 
-B = {"pelvis": (PELVIS, 0, 0), "torso": (TORSO, 0, 0), "neck": (-1.1, 0, 0), "head": (-0.2, 0, 0), "jaw": (0.12, 0, 0),
+B = {"pelvis": (PELVIS, 0, 0), "torso": (TORSO, 0, 0), "neck": (NECK, 0, 0), "head": (-0.2, 0, 0), "jaw": (0.12, 0, 0),
      "horn_r": (0, 0, 0), "horn_l": (0, 0, 0),
-     "arm_r": (ARM, 0, 0.28), "forearm_r": (FOREARM, 0, 0), "hand_r": (HAND, 0, 0),
-     "arm_l": (ARM, 0, -0.28), "forearm_l": (FOREARM, 0, 0), "hand_l": (HAND, 0, 0),
+     "arm_r": (ARM, 0, 0.12), "forearm_r": (FOREARM, 0, 0), "hand_r": (HAND, 0, 0),
+     "arm_l": (ARM, 0, -0.12), "forearm_l": (FOREARM, 0, 0), "hand_l": (HAND, 0, 0),
      "leg_r": (LEG, 0, 0.1), "shin_r": (SHIN, 0, 0), "leg_l": (LEG, 0, -0.1), "shin_l": (SHIN, 0, 0),
      "tail_0": (-0.5, 0, 0)}
 B.update({b: (-0.015, 0, 0) for b in TAIL[1:]})
@@ -68,14 +76,38 @@ def rear(p, k, lean):
     """Up on the hind legs by k (0 on all fours, 1 upright); lean keeps some forward lean at full height."""
     return toward(p, k, pelvis=(lean * 0.4, None, None), torso=(lean * 0.6, None, None), neck=(-0.3, None, None),
                   leg_r=(-0.35, None, None), leg_l=(-0.35, None, None), shin_r=(0.45, None, None), shin_l=(0.45, None, None),
+                  forearm_r=(-0.6, None, None), forearm_l=(-0.6, None, None), hand_r=(-0.5, None, None), hand_l=(-0.5, None, None),
                   tail_0=(-0.15, None, None))
 
 
 def crouch(p, k):
-    """Sinking toward the ground by k: haunches folded, elbows out and bent, the claws kept flat."""
+    """Sinking toward the ground by k: haunches folded, elbows out and bent, the paws kept flat."""
     return P.add(p, leg_r=(-0.3 * k, 0, 0.04 * k), leg_l=(-0.3 * k, 0, -0.04 * k), shin_r=(0.6 * k, 0, 0), shin_l=(0.6 * k, 0, 0),
-                 arm_r=(0.3 * k, 0, 0.12 * k), arm_l=(0.3 * k, 0, -0.12 * k), forearm_r=(-0.4 * k, 0, 0), forearm_l=(-0.4 * k, 0, 0),
-                 hand_r=(0.1 * k, 0, 0), hand_l=(0.1 * k, 0, 0), neck=(-0.1 * k, 0, 0), head=(0.1 * k, 0, 0))
+                 arm_r=(0.45 * k, 0, 0.12 * k), arm_l=(0.45 * k, 0, -0.12 * k), forearm_r=(-0.75 * k, 0, 0), forearm_l=(-0.75 * k, 0, 0),
+                 hand_r=(0.3 * k, 0, 0), hand_l=(0.3 * k, 0, 0), neck=(-0.1 * k, 0, 0), head=(0.1 * k, 0, 0))
+
+
+def paws(p):
+    """Lays the hands down: each pose holds a hand's bend (x) as if it were a hinge; this rolls the hand a quarter turn
+    about the arm first (out to the side), so a bend of -1.47 is a paw flat on the ground. While a paw curls up (a bend
+    toward 0) the roll eases to under half, so the Euler angles never reach gimbal lock."""
+    for bone, side in (("hand_r", 1.0), ("hand_l", -1.0)):
+        x, y, z = p[bone]
+        r = ROLL * (0.45 + 0.55 * sm((0.1 - x) / 1.2))
+        e = A.rot(("y", side * r), ("x", x))
+        p[bone] = [e[0], e[1] + y, e[2] + z]
+    return p
+
+
+def paw_step(p, side, swing, up, reach=1.0):
+    """A foreleg's step: swing (+ back) from the shoulder; up (0-1) lifts the paw: the elbow folds back hard and the
+    heel of the hand peels up first, the long fingers drooping a little but kept clear of the ground (they are a block
+    long: curled under like a dog's, they would hang below the planted paw). While planted the paw stays flat."""
+    arm = swing - 0.3 * up
+    fore = 1.5 * up * reach
+    P.add(p, **{f"arm_{side}": (arm, 0, 0.03 * up), f"forearm_{side}": (fore, 0, 0),
+                f"hand_{side}": (-arm - fore + 0.25 * up, 0, 0)})
+    return p
 
 
 def tail(p, t, period, amp=1.0, lash=0.0, flick=None):
@@ -142,7 +174,8 @@ def idle(f):
     # Claws kneading the ground; the right forepaw lifts and re-plants at 18-28 ticks.
     P.add(p, hand_r=(0.08 * s(TAU * t / 16), 0, 0), hand_l=(0.08 * s(TAU * t / 16 + 2), 0, 0))
     paw = bump(t, 18, 26, 3)
-    P.add(p, arm_r=(-0.22 * paw, 0, 0.05 * paw), forearm_r=(-0.55 * paw, 0, 0), hand_r=(-0.35 * paw, 0, 0), torso=(0, 0, 0.04 * paw))
+    paw_step(p, "r", -0.12 * paw, 0.75 * paw)
+    P.add(p, torso=(0, 0, 0.04 * paw))
     flick = bump(t, 66, 68, 1) * s(TAU * t / 2.0)
     return tail(p, t, 40, 1.0, flick=flick)
 
@@ -160,33 +193,30 @@ def lift(ph):
     return s(u / 0.3 * PI) if u < 0.3 else 0.0
 
 
-def gait4(ph, amp=1.0, low=0.0):
-    """The four-beat walk at phase ph (radians): lateral sequence, a quarter cycle between paws."""
+def gait4(ph, amp=1.0, low=0.0, tail_low=0.0):
+    """The trot at phase ph (radians): diagonal pairs, right fore with left hind, the hind paw landing a beat first."""
     p = crouch(P.pose(), low)
-    lh, lf, rh, rf = limb(ph), limb(ph + PI / 2), limb(ph + PI), limb(ph + 1.5 * PI)
-    lhl, lfl, rhl, rfl = lift(ph), lift(ph + PI / 2), lift(ph + PI), lift(ph + 1.5 * PI)
-    hi = 1.0 + 0.35 * low  # stalking paws lift higher, placed with care
-    P.add(p, arm_l=(lf * 0.42 * amp, 0.06 * lf, 0), arm_r=(rf * 0.42 * amp, -0.06 * rf, 0),
-          forearm_l=(-lfl * 0.75 * hi, 0, 0), forearm_r=(-rfl * 0.75 * hi, 0, 0),
-          hand_l=(-lf * 0.42 * amp * (1 - lfl) - lfl * 0.55, 0, 0), hand_r=(-rf * 0.42 * amp * (1 - rfl) - rfl * 0.55, 0, 0),
-          leg_l=(lh * 0.4 * amp, 0, 0), leg_r=(rh * 0.4 * amp, 0, 0),
-          shin_l=(lhl * 0.7 * hi, 0, 0), shin_r=(rhl * 0.7 * hi, 0, 0))
-    sway = s(ph)
-    P.add(p, pelvis=(0.03 * s(2 * ph), -0.06 * c(ph), 0.05 * sway), torso=(-0.03 * s(2 * ph + 0.6), 0.07 * c(ph), -0.045 * s(ph + 0.5)))
-    # The head stays put while the body moves under it.
-    P.add(p, neck=(0.04 * s(2 * ph + 0.9), -0.02 * c(ph), -(0.05 * sway - 0.045 * s(ph + 0.5)) * 0.9),
-          head=(-0.03 * s(2 * ph + 0.6), -0.06 * c(ph), 0))
-    p["loc"] = [0.55 * sway, 0, 0]
-    for i, bone in enumerate(TAIL):  # swung by the hips, a beat behind toward the tip
+    hi = 1.0 + 0.3 * low  # stalking paws lift higher, placed with care
+    for side, fp in (("r", ph), ("l", ph + PI)):
+        paw_step(p, side, limb(fp) * 0.4 * amp, lift(fp), hi)
+    for side, hp in (("l", ph - 0.3), ("r", ph + PI - 0.3)):
+        a, l = limb(hp), lift(hp)
+        P.add(p, **{f"leg_{side}": (a * 0.42 * amp - 0.12 * l, 0, 0), f"shin_{side}": (0.85 * l * hi, 0, 0)})
+    P.add(p, pelvis=(0.02 * s(2 * ph), -0.05 * c(ph), 0.04 * s(ph)), torso=(-0.025 * s(2 * ph + 0.5), 0.05 * c(ph), -0.04 * s(ph + 0.4)))
+    # The head slung low, swinging a little side to side, nodding as each forepaw lands; the body moves under it.
+    P.add(p, neck=(0.06 * s(2 * ph - 0.7), 0.06 * s(ph - 0.5), -(0.04 * s(ph) - 0.04 * s(ph + 0.4)) * 0.9),
+          head=(-0.035 * s(2 * ph - 0.7), 0.05 * s(ph - 0.9) - 0.04 * c(ph), 0.03 * s(ph - 1.0)))
+    p["loc"] = [0.3 * s(ph), 0, 0]
+    for i, bone in enumerate(TAIL):  # held low and stiff, swinging with the hips
         tip = i / 12.0
-        P.add(p, **{bone: (0.02 * s(2 * ph - i * 0.4) if i else 0.0, (0.05 + 0.08 * tip) * s(ph - 0.6 - i * 0.35), 0)})
+        P.add(p, **{bone: (-tail_low if i == 0 else 0.015 * s(2 * ph - i * 0.4), (0.035 + 0.05 * tip) * s(ph - 0.6 - i * 0.3), 0)})
     return p
 
 
 def prowl(f):
     ph = TAU * f / 60.0
-    p = gait4(ph)
-    P.add(p, jaw=(0.1 + 0.05 * s(2 * ph), 0, 0))
+    p = gait4(ph, tail_low=0.15)
+    P.add(p, jaw=(0.12 + 0.06 * s(2 * ph), 0, 0), torso=(0.04, 0, 0), neck=(-0.05, 0, 0))  # hackles up, snarling
     return p
 
 
@@ -194,14 +224,12 @@ def gallop(f):
     g = TAU * f / 36.0
     fore, hind, flex, lead = s(g), s(g + 2.2), c(g + 1.1), 0.12
     p = P.pose()
-    P.put(p, arm_r=(ARM - 0.15 - fore * 0.85, 0, 0.2), arm_l=(ARM - 0.15 - s(g + lead) * 0.85, 0, -0.2),
-          forearm_r=(FOREARM + 0.15 - max(0.0, c(g)) * 0.95, 0, 0), forearm_l=(FOREARM + 0.15 - max(0.0, c(g + lead)) * 0.95, 0, 0),
-          hand_r=(HAND - 0.35 * max(0.0, c(g)) + 0.25 * max(0.0, -c(g)), 0, 0),
-          hand_l=(HAND - 0.35 * max(0.0, c(g + lead)) + 0.25 * max(0.0, -c(g + lead)), 0, 0),
-          leg_r=(LEG + 0.1 - hind * 0.95, 0, 0.08), leg_l=(LEG + 0.1 - s(g + 2.2 + lead) * 0.95, 0, -0.08),
+    paw_step(p, "r", -0.1 - fore * 0.8, max(0.0, c(g)))
+    paw_step(p, "l", -0.1 - s(g + lead) * 0.8, max(0.0, c(g + lead)))
+    P.put(p, leg_r=(LEG + 0.1 - hind * 0.95, 0, 0.08), leg_l=(LEG + 0.1 - s(g + 2.2 + lead) * 0.95, 0, -0.08),
           shin_r=(SHIN + max(0.0, c(g + 2.2)) * 0.85, 0, 0), shin_l=(SHIN + max(0.0, c(g + 2.2 + lead)) * 0.85, 0, 0),
           torso=(TORSO + 0.1 + flex * 0.2, 0, 0), pelvis=(PELVIS + 0.05 - flex * 0.14, 0, 0),
-          neck=(-1.2 - flex * 0.1, 0, 0), head=(-0.2 + flex * 0.14, 0, 0), jaw=(0.45 + 0.1 * s(2 * g), 0, 0))
+          neck=(NECK - 0.1 - flex * 0.1, 0, 0), head=(-0.2 + flex * 0.14, 0, 0), jaw=(0.45 + 0.1 * s(2 * g), 0, 0))
     for i, bone in enumerate(TAIL):  # streaming out behind, rippling with each bound
         P.put(p, **{bone: ((-0.6 + 0.08 * flex) if i == 0 else (-0.01 + 0.05 * s(g - 1.0 - i * 0.5)), 0.03 * s(g - i * 0.4), 0)})
     p["loc"] = [0, -2.0 * max(0.0, s(g - 0.2)) ** 3, 0]  # airborne after the hind legs drive
@@ -225,7 +253,7 @@ def stalk_idle(f):
     P.add(p, neck=(-0.2 - 0.02 * b, 0.08 * s(TAU * t / 60), 0), head=(0.25 + 0.02 * b, 0.12 * s(TAU * t / 60 - 0.8), 0),
           torso=(0.03 * b, 0, 0), jaw=(-0.08, 0, 0), tail_0=(-0.12, 0, 0))
     paw = bump(t, 30, 44, 4)  # the left forepaw eases forward and down again
-    P.add(p, arm_l=(-0.18 * paw, 0, 0), forearm_l=(-0.35 * paw, 0, 0), hand_l=(-0.2 * paw, 0, 0))
+    paw_step(p, "l", -0.15 * paw, 0.6 * paw)
     twitch = bump(t, 12, 16, 1) + bump(t, 48, 51, 1)
     return tail(p, t, 30, 0.4, flick=twitch * s(TAU * t / 1.5))
 
@@ -296,7 +324,7 @@ def roar_layer(p, t):
 
 
 ROAR = [(0, stance()),
-        (4, crouched(0.6, head=(0.25, 0, 0), neck=(-1.25, 0, 0), jaw=(0.3, 0, 0), tail_0=(-0.7, 0, 0))),
+        (4, crouched(0.6, head=(0.25, 0, 0), neck=(NECK - 0.15, 0, 0), jaw=(0.3, 0, 0), tail_0=(-0.7, 0, 0))),
         (11, reared(1.05, -0.05, head=(-0.9, 0, 0), jaw=(1.1, 0, 0), arm_r=(-2.55, 0.1, 0.9), arm_l=(-2.55, -0.1, -0.9),
                     forearm_r=(-0.55, 0, 0), forearm_l=(-0.55, 0, 0), hand_r=(-0.7, 0, 0), hand_l=(-0.7, 0, 0))),
         (15, reared(1.0, 0.15, head=(-0.75, 0, 0), jaw=(1.05, 0, 0), arm_r=(-2.4, 0, 0.75), arm_l=(-2.4, 0, -0.75),
@@ -329,8 +357,8 @@ def windup_layer(p, t):
     return tail(p, t, 6, 0.3 + 0.7 * k, lash=0.6 * k)
 
 
-GRAB_G = crouched(1.0, leg_r=(LEG - 0.65, 0, 0.14), leg_l=(LEG - 0.65, 0, -0.14), shin_r=(SHIN + 1.2, 0, 0), shin_l=(SHIN + 1.2, 0, 0),
-                  arm_r=(ARM + 0.3, 0, 0.7), arm_l=(ARM + 0.3, 0, -0.7), neck=(-1.4, 0, 0), head=(-0.05, 0, 0), jaw=(0.9, 0, 0),
+GRAB_G = crouched(1.0, leg_r=(LEG - 0.45, 0, 0.14), leg_l=(LEG - 0.45, 0, -0.14), shin_r=(SHIN + 0.9, 0, 0), shin_l=(SHIN + 0.9, 0, 0),
+                  arm_r=(ARM + 0.45, 0, 0.5), arm_l=(ARM + 0.45, 0, -0.5), neck=(NECK - 0.25, 0, 0), head=(-0.05, 0, 0), jaw=(0.9, 0, 0),
                   tail_0=(-0.1, 0, 0))
 GRAB_G["loc"] = [0, 0, 1.2]  # weight back on the haunches
 GRAB_WINDUP = [(0, stance()), (5, P.mix(stance(), GRAB_G, 0.55)), (20, GRAB_G)]
@@ -386,12 +414,12 @@ def stun_layer(p, t):
 
 
 STUN = [(0, stance()),
-        (2.5, pose(head=(-0.45, 0, 0.1), neck=(-1.3, 0, 0), torso=(0.7, 0, 0), jaw=(0.6, 0, 0), loc=(0, 0, 1.0))),
+        (2.5, pose(head=(-0.45, 0, 0.1), neck=(NECK - 0.2, 0, 0), torso=(TORSO - 0.15, 0, 0), jaw=(0.6, 0, 0), loc=(0, 0, 1.0))),
         (8, pose(arm_r=(ARM + 0.4, 0, 0.32), forearm_r=(FOREARM + 0.6, 0, 0), hand_r=(HAND + 0.3, 0, 0), arm_l=(ARM + 0.2, 0, -0.3),
-                 head=(0.35, 0, 0), neck=(-0.8, 0, 0), jaw=(0.5, 0, 0), tail_0=(-0.75, 0, 0), loc=(0, 0, 0.4))),
-        (14, pose(arm_r=(ARM + 0.3, 0, 0.3), forearm_r=(FOREARM + 0.4, 0, 0), head=(0.3, 0, 0), neck=(-0.85, 0, 0), jaw=(0.5, 0, 0),
+                 head=(0.35, 0, 0), neck=(NECK + 0.3, 0, 0), jaw=(0.5, 0, 0), tail_0=(-0.75, 0, 0), loc=(0, 0, 0.4))),
+        (14, pose(arm_r=(ARM + 0.3, 0, 0.3), forearm_r=(FOREARM + 0.4, 0, 0), head=(0.3, 0, 0), neck=(NECK + 0.25, 0, 0), jaw=(0.5, 0, 0),
                   tail_0=(-0.7, 0, 0))),
-        (22, pose(head=(0.05, 0, 0), neck=(-1.0, 0, 0), jaw=(0.3, 0, 0))),
+        (22, pose(head=(0.05, 0, 0), neck=(NECK + 0.1, 0, 0), jaw=(0.3, 0, 0))),
         (30, stance())]
 
 KNOCK_UP = reared(0.6, 0.4, arm_r=(-2.75, 0, 0.3), forearm_r=(-1.4, 0, 0), hand_r=(-0.6, 0, 0), arm_l=(-1.95, 0, -0.35), jaw=(0.5, 0, 0))
@@ -422,8 +450,8 @@ def feed(f):
     env = sm(t / 5) * (1 - sm((t - 54) / 6))
     p = crouch(P.pose(), 0.5)
     yank = sum(bump(t, a, a + 1.5, 1.0) for a in (9, 23, 36, 47))  # tearing a mouthful away
-    P.put(p, neck=(-0.2 - 0.35 * yank, 0, 0), head=(0.55 + 0.15 * s(0.6 * t) - 0.35 * yank, 0.25 * s(0.35 * t) + 0.25 * yank * s(3 * t), 0.1 * yank),
-          jaw=(0.3 + 0.75 * max(0.0, s(0.95 * t)) - 0.2 * yank, 0, 0), torso=(TORSO + 0.3 - 0.12 * yank, 0, 0),
+    P.put(p, neck=(NECK + 0.9 - 0.35 * yank, 0, 0), head=(0.55 + 0.15 * s(0.6 * t) - 0.35 * yank, 0.25 * s(0.35 * t) + 0.25 * yank * s(3 * t), 0.1 * yank),
+          jaw=(0.3 + 0.75 * max(0.0, s(0.95 * t)) - 0.2 * yank, 0, 0), torso=(TORSO + 0.15 - 0.12 * yank, 0, 0),
           arm_r=(ARM + 0.3 + 0.25 * s(0.45 * t), 0, 0.4), arm_l=(ARM + 0.3 - 0.25 * s(0.45 * t + 1.0), 0, -0.4),
           hand_r=(HAND + 0.25, 0, 0), hand_l=(HAND + 0.25, 0, 0), tail_0=(-0.8, 0, 0))
     p = P.mix(P.pose(), p, env)
@@ -431,7 +459,14 @@ def feed(f):
 
 
 def clips():
-    G = "contact"
+    """Every clip, with its paws laid down (paws())."""
+    out = _clips("contact")
+    for clip in out:
+        clip.gen = (lambda gen: lambda f: paws(gen(f)))(clip.gen)
+    return out
+
+
+def _clips(G):
     return [
         A.Clip("idle", 240, gen=idle, step=3, loop=True, ground=G),
         A.Clip("prowl", 60, gen=prowl, step=2, loop=True, ground=G),

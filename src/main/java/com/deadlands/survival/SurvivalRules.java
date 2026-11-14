@@ -25,10 +25,12 @@ public final class SurvivalRules {
 	public static final float FATIGUE_PER_SECOND = 100.0F / 3000.0F;
 	/** Infection gained per second once infected: 100 in an hour (three days). */
 	public static final float INFECTION_PER_SECOND = 100.0F / 3600.0F;
-	public static final float STAMINA_SPRINT_PER_SECOND = 7.0F;
-	public static final float STAMINA_REGEN_PER_SECOND = 9.0F;
-	public static final float STAMINA_JUMP = 4.0F;
-	public static final float STAMINA_ATTACK = 5.0F;
+	/** Stamina goes 30% further than it used to: sprinting, jumping and swinging cost less, and it comes back faster. */
+	public static final float STAMINA_BOOST = 1.3F;
+	public static final float STAMINA_SPRINT_PER_SECOND = 7.0F / STAMINA_BOOST;
+	public static final float STAMINA_REGEN_PER_SECOND = 9.0F * STAMINA_BOOST;
+	public static final float STAMINA_JUMP = 4.0F / STAMINA_BOOST;
+	public static final float STAMINA_ATTACK = 5.0F / STAMINA_BOOST;
 	/** A winded survivor can sprint again once stamina is back above this. */
 	public static final float WINDED_RECOVERY = 25.0F;
 	public static final int FRACTURE_TICKS = 20 * 60 * 10;

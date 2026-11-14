@@ -25,6 +25,8 @@ public final class ClientNetworking {
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.DialoguePayload.TYPE,
 			(payload, context) -> com.deadlands.client.ui.DialogueScreen.show(payload));
 		ClientPlayNetworking.registerGlobalReceiver(SurvivalPayload.TYPE, (payload, context) -> LocalSurvival.set(payload));
+		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.NoisePayload.TYPE,
+			(payload, context) -> com.deadlands.client.hud.AwarenessHud.setNoise(payload.level()));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.JournalPayload.TYPE, (payload, context) -> ClientState.setJournal(payload));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.EndingChoicePayload.TYPE,
 			(payload, context) -> context.client().setScreen(new com.deadlands.client.ui.EndingScreen.Choice(payload)));

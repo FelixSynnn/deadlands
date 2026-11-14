@@ -127,6 +127,7 @@ public final class DeadlandsClient implements ClientModInitializer {
 			}
 		});
 		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Deadlands.id("survival"), SurvivalHud::render);
+		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Deadlands.id("awareness"), com.deadlands.client.hud.AwarenessHud::render);
 		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Deadlands.id("vehicle"), com.deadlands.client.hud.VehicleHud::render);
 		com.deadlands.client.hud.VitalsHud.register();
 		ClientBridge.install(DeadlandsClient::openJournal);
@@ -209,6 +210,7 @@ public final class DeadlandsClient implements ClientModInitializer {
 			com.deadlands.client.horror.ScarePlayer.reset();
 			com.deadlands.client.mission.ClientMissions.reset();
 			SurvivalHud.reset();
+			com.deadlands.client.hud.AwarenessHud.reset();
 			LocalSurvival.reset();
 			VOICES.reset();
 		});
