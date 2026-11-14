@@ -68,6 +68,16 @@ public final class Cutscenes {
 		}
 	}
 
+	/** Play a cutscene for one survivor whether or not they have seen it (Mythos' arrival and defeat, each fight). */
+	public static boolean replay(ServerPlayer player, String id, Vec3 anchor, float yaw) {
+		if (!ServerPlayNetworking.canSend(player, CutscenePayload.TYPE)) {
+			return false;
+		}
+		ServerPlayNetworking.send(player, new CutscenePayload(id, anchor.x, anchor.y, anchor.z, yaw));
+		com.deadlands.horror.HorrorDirector.grace(player, com.deadlands.horror.HorrorDirector.GRACE_TICKS);
+		return true;
+	}
+
 	/** Whether a survivor has already seen a cutscene. */
 	public static boolean seen(ServerPlayer player, String id) {
 		return player.getAttachedOrCreate(SEEN).contains(id);

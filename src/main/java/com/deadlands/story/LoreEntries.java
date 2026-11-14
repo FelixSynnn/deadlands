@@ -54,6 +54,7 @@ public final class LoreEntries {
 		new LoreEntry("guest_file_2", LoreCategory.JOURNAL, List.of("facility", "office", "utility"), "", 0, "journal"),
 		new LoreEntry("guest_file_3", LoreCategory.GOVERNMENT, List.of("facility", "military", "police"), "", 0, "document"),
 		new LoreEntry("dot_file", LoreCategory.MEDICAL, List.of("facility", "lab", "military", "subway"), "", 0, "document"),
+		new LoreEntry("mythos_file", LoreCategory.RESEARCH, List.of("boss_mythos"), "", 0, "document"),
 		new LoreEntry("subway_paper", LoreCategory.NEWSPAPER, List.of("subway"), "", 0, "newspaper"),
 		new LoreEntry("subway_driver_log", LoreCategory.JOURNAL, List.of("subway"), "", 0, "journal"),
 		new LoreEntry("subway_child_note", LoreCategory.JOURNAL, List.of("subway"), "", 0, "journal"),

@@ -39,7 +39,7 @@ import net.fabricmc.loader.api.FabricLoader;
  * added, missing or invalid.
  */
 public final class ConfigManager {
-	public static final int CURRENT_VERSION = 3;
+	public static final int CURRENT_VERSION = 4;
 	public static final String FILE_NAME = "deadlands.jsonc";
 
 	private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
@@ -212,6 +212,27 @@ public final class ConfigManager {
 		}
 		if (from < 3 && config.dot.aggroSpeed == 0.28) {
 			config.dot.aggroSpeed = 0.36;
+		}
+		// 4: no killer is invulnerable, and each can be killed in 30-60 seconds with iron gear (old defaults only).
+		if (from < 4) {
+			if (config.dot.health == 800.0) {
+				config.dot.health = 300.0;
+			}
+			if (config.dot.damageResistance == 0.75) {
+				config.dot.damageResistance = 0.0;
+			}
+			if (config.dot.damage == 10.0) {
+				config.dot.damage = 8.0;
+			}
+			if (config.guest.health == 300.0) {
+				config.guest.health = 260.0;
+			}
+			if (config.asesino.health == 160.0) {
+				config.asesino.health = 260.0;
+			}
+			if (config.dot.aggroSpeed == 0.36) {
+				config.dot.aggroSpeed = 0.37; // about 105% of sprint speed
+			}
 		}
 	}
 

@@ -172,6 +172,31 @@ public final class DLSounds {
 	public static final Holder.Reference<SoundEvent> DOT_FIELD_END = register("dot.field_end");
 	public static final Holder.Reference<SoundEvent> DOT_HURT = register("dot.hurt");
 	public static final Holder.Reference<SoundEvent> DOT_DEATH = register("dot.death");
+	// Mythos and his sub-agents (tools/assetgen/import_mythos_sfx.py).
+	public static final Holder.Reference<SoundEvent> MYTHOS_IDLE = register("mythos.idle");
+	public static final Holder.Reference<SoundEvent> MYTHOS_STEP = register("mythos.step");
+	public static final Holder.Reference<SoundEvent> MYTHOS_SLASH = register("mythos.slash");
+	public static final Holder.Reference<SoundEvent> MYTHOS_SLASH_HIT = register("mythos.slash_hit");
+	public static final Holder.Reference<SoundEvent> MYTHOS_ENTANGLE = register("mythos.entangle");
+	public static final Holder.Reference<SoundEvent> MYTHOS_ENTANGLE_HIT = register("mythos.entangle_hit");
+	public static final Holder.Reference<SoundEvent> MYTHOS_MASS_INFECTION = register("mythos.mass_infection");
+	public static final Holder.Reference<SoundEvent> MYTHOS_MASS_INFECTION_FAR = register("mythos.mass_infection_far");
+	public static final Holder.Reference<SoundEvent> MYTHOS_PACKET = register("mythos.packet");
+	public static final Holder.Reference<SoundEvent> MYTHOS_PUDDLE = register("mythos.puddle");
+	public static final Holder.Reference<SoundEvent> MYTHOS_REJUVENATE = register("mythos.rejuvenate");
+	public static final Holder.Reference<SoundEvent> MYTHOS_KILL = register("mythos.kill");
+	public static final Holder.Reference<SoundEvent> MYTHOS_SUMMON = register("mythos.summon");
+	public static final Holder.Reference<SoundEvent> MYTHOS_HURT = register("mythos.hurt");
+	public static final Holder.Reference<SoundEvent> MYTHOS_DEATH = register("mythos.death");
+	public static final Holder.Reference<SoundEvent> MYTHOS_BLINK = register("mythos.blink");
+	public static final Holder.Reference<SoundEvent> MYTHOS_PHASE = register("mythos.phase");
+	public static final Holder.Reference<SoundEvent> MYTHOS_TORNADO_WARNING = register("mythos.tornado_warning");
+	public static final Holder.Reference<SoundEvent> SUB_AGENT_IDLE = register("sub_agent.idle");
+	public static final Holder.Reference<SoundEvent> SUB_AGENT_STEP = register("sub_agent.step");
+	public static final Holder.Reference<SoundEvent> SUB_AGENT_HIT = register("sub_agent.hit");
+	public static final Holder.Reference<SoundEvent> SUB_AGENT_DEATH = register("sub_agent.death");
+	public static final List<Holder.Reference<SoundEvent>> MYTHOS_MUSIC = List.of(register("music.mythos.layer1"), register("music.mythos.layer2"),
+		register("music.mythos.layer3"), register("music.mythos.layer4"));
 	public static final List<Holder.Reference<SoundEvent>> DOT_MUSIC = List.of(register("music.dot.layer1"), register("music.dot.layer2"),
 		register("music.dot.layer3"), register("music.dot.layer4"));
 	public static final List<Holder.Reference<SoundEvent>> GUEST_MUSIC = List.of(register("music.guest.layer1"), register("music.guest.layer2"),

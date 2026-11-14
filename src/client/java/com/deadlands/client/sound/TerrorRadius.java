@@ -19,6 +19,7 @@ public final class TerrorRadius {
 	public static final int ABERRANT = 1;
 	public static final int GUEST = 2;
 	public static final int DOT = 3;
+	public static final int MYTHOS = 4;
 	/** Terror above this is out of range. */
 	private static final double OUT = 1.0;
 
@@ -67,11 +68,26 @@ public final class TerrorRadius {
 		return best;
 	}
 
+	/** Mythos' terror for this survivor: -1 while he fights them. */
+	public static double mythos(Minecraft minecraft, LocalPlayer player) {
+		DeadlandsConfig.Audio config = ConfigManager.get().audio;
+		double best = Double.MAX_VALUE;
+		for (com.deadlands.entity.MythosEntity m : minecraft.level.getEntitiesOfClass(com.deadlands.entity.MythosEntity.class,
+			player.getBoundingBox().inflate(192.0), com.deadlands.entity.MythosEntity::isAlive)) {
+			best = Math.min(best, m.preyId() == player.getId() ? -1.0 : m.distanceTo(player) / config.mythosTerrorRadius);
+		}
+		return best;
+	}
+
 	/** Whose music plays for this survivor: the killer with the lowest terror, if any is in range. */
 	public static int winner(Minecraft minecraft, LocalPlayer player) {
 		double a = aberrant(minecraft, player);
 		double g = guest(minecraft, player);
 		double d = dot(minecraft, player);
+		double m = mythos(minecraft, player);
+		if (layer(m) >= 0 && m <= a && m <= g && m <= d) {
+			return MYTHOS; // the boss outranks every killer
+		}
 		if (layer(a) < 0 && layer(g) < 0 && layer(d) < 0) {
 			return NONE;
 		}

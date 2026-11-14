@@ -73,6 +73,8 @@ public final class Deadlands implements ModInitializer {
 		com.deadlands.registry.DLAsesino.init();
 		com.deadlands.registry.DLGuest.init();
 		com.deadlands.registry.DLDot.init();
+		com.deadlands.registry.DLMythos.init();
+		com.deadlands.world.disaster.MythosTornado.init();
 		com.deadlands.registry.DLVehicles.init();
 		com.deadlands.registry.DLStory.init();
 		com.deadlands.registry.DLParticles.init();
@@ -98,6 +100,7 @@ public final class Deadlands implements ModInitializer {
 		com.deadlands.story.StoryIntro.init();
 		com.deadlands.story.StoryReunion.init();
 		com.deadlands.story.FamilyHouse.init();
+		com.deadlands.story.HarleyRoad.init();
 		com.deadlands.story.Pinecrest.init();
 		com.deadlands.player.SafeRespawn.init();
 		com.deadlands.item.FlashlightBeam.init();

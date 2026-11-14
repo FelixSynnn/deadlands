@@ -322,6 +322,52 @@ public class AsesinoModel extends EntityModel<AsesinoRenderer.State> {
 		if (state.climbing) {
 			climb(t);
 		}
+		if (action == AsesinoEntity.Action.DIG) {
+			dig(a);
+		}
+	}
+
+	private static final net.minecraft.resources.Identifier ANIM = com.deadlands.Deadlands.id("models/entity/aberrant.anim");
+	private ModelPart[] rigParts;
+	private int[] rigBones;
+	private RiggedAnimation rigBound;
+	private float[] rigPose = new float[0];
+
+	/**
+	 * Digging through a block: the claw-and-chop loop keyed in Blender ({@code tools/assetgen/blender/aberrant_anims.py},
+	 * exported to {@code models/entity/aberrant.anim}), eased in over a quarter second from whatever he was doing.
+	 */
+	private void dig(float age) {
+		RiggedAnimation anim = RiggedAnimation.get(ANIM);
+		RiggedAnimation.Clip clip = anim == null ? null : anim.clip("dig");
+		if (clip == null) {
+			return;
+		}
+		if (rigBound != anim) {
+			rigBound = anim;
+			rigParts = new ModelPart[] {pelvis, torso, neck, head, armR, forearmR, handR, armL, forearmL, handL, coatFrontR, coatFrontL,
+				coatBack, legR, shinR, legL, shinL};
+			rigBones = new int[rigParts.length];
+			for (int i = 0; i < rigParts.length; i++) {
+				rigBones[i] = anim.bone(AberrantGeometry.BONES[i]);
+			}
+			rigPose = new float[anim.stride];
+		}
+		anim.sample(clip, age, rigPose);
+		float k = Mth.clamp(age / 5.0F, 0.0F, 1.0F);
+		k = k * k * (3.0F - 2.0F * k);
+		for (int i = 0; i < rigParts.length; i++) {
+			int b = rigBones[i];
+			if (b >= 0) {
+				rigParts[i].xRot = Mth.lerp(k, rigParts[i].xRot, rigPose[b * 3]);
+				rigParts[i].yRot = Mth.lerp(k, rigParts[i].yRot, rigPose[b * 3 + 1]);
+				rigParts[i].zRot = Mth.lerp(k, rigParts[i].zRot, rigPose[b * 3 + 2]);
+			}
+		}
+		int o = anim.bones.length * 3;
+		pelvis.x += rigPose[o] * k;
+		pelvis.y += rigPose[o + 1] * k;
+		pelvis.z += rigPose[o + 2] * k;
 	}
 
 	/** Climbing: hand over hand up the wall, slowly, coat hanging, legs pushing; head tipped back to look up. */

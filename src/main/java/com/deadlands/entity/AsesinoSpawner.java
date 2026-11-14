@@ -27,7 +27,8 @@ import net.minecraft.world.phys.Vec3;
  * is off), in the overworld, never on Peaceful. Every half minute each survivor is a chance: a good one
  * in or near a town ({@code townSpawnChance}), a small one elsewhere ({@code wildSpawnChance}). At most
  * one within {@code areaRadius} blocks (about one per town) and {@code maxAlive} in the world. He comes
- * in 32 to 56 blocks away, somewhere safe that no survivor can see.
+ * in 32 to 56 blocks away, somewhere safe that no survivor can see; or, if they are holed up under a roof
+ * ({@code spawnIndoors}), in with them: on any floor, out of their sight.
  */
 public final class AsesinoSpawner {
 	private static final ResourceKey<Structure> TOWN = ResourceKey.create(Registries.STRUCTURE, Deadlands.id("town"));
@@ -69,7 +70,8 @@ public final class AsesinoSpawner {
 			if (level.getRandom().nextDouble() >= chance) {
 				continue;
 			}
-			if (spawn(level, player, level.getRandom())) {
+			if (config.spawnIndoors && holedUp(level, player) && spawnInside(level, player, level.getRandom(), config.indoorSpawnRadius)
+				|| spawn(level, player, level.getRandom())) {
 				alive++;
 			}
 		}
@@ -107,6 +109,41 @@ public final class AsesinoSpawner {
 				return false;
 			}
 			asesino.snapTo(spot.getX() + 0.5, spot.getY(), spot.getZ() + 0.5, random.nextFloat() * 360.0F, 0.0F);
+			level.addFreshEntity(asesino);
+			return true;
+		}
+		return false;
+	}
+
+	/** A roof over them: inside a building or a structure, or underground. */
+	static boolean holedUp(ServerLevel level, ServerPlayer player) {
+		BlockPos head = BlockPos.containing(player.getEyePosition());
+		return !level.canSeeSky(head);
+	}
+
+	/**
+	 * In with them: a standable spot 5 to {@code radius} blocks away and up to 10 blocks above or below (another floor
+	 * of the building, its roof, the cellar), with room for his whole body (never inside a wall), that no survivor can
+	 * see.
+	 */
+	static boolean spawnInside(ServerLevel level, ServerPlayer player, RandomSource random, int radius) {
+		for (int attempt = 0; attempt < 24; attempt++) {
+			double angle = random.nextDouble() * Math.PI * 2.0;
+			double distance = 5.0 + random.nextDouble() * Math.max(1, radius - 5);
+			BlockPos probe = BlockPos.containing(player.getX() + Math.cos(angle) * distance, player.getY() + random.nextInt(21) - 10,
+				player.getZ() + Math.sin(angle) * distance);
+			BlockPos spot = com.deadlands.entity.ai.Stalking.standable(level, probe, 3);
+			if (spot == null || !level.getWorldBorder().isWithinBounds(spot) || seen(level, spot)) {
+				continue;
+			}
+			AsesinoEntity asesino = DLAsesino.ASESINO.create(level, EntitySpawnReason.NATURAL);
+			if (asesino == null) {
+				return false;
+			}
+			asesino.snapTo(spot.getX() + 0.5, spot.getY(), spot.getZ() + 0.5, random.nextFloat() * 360.0F, 0.0F);
+			if (!level.noCollision(asesino) || level.containsAnyLiquid(asesino.getBoundingBox())) {
+				continue;
+			}
 			level.addFreshEntity(asesino);
 			return true;
 		}

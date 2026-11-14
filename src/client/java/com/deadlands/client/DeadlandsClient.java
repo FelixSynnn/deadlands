@@ -63,6 +63,12 @@ public final class DeadlandsClient implements ClientModInitializer {
 		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(com.deadlands.client.render.DotGeometry.LAYER,
 			com.deadlands.client.render.DotGeometry::create);
 		EntityRendererRegistry.register(com.deadlands.registry.DLDot.DOT, com.deadlands.client.render.DotRenderer::new);
+		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(com.deadlands.client.render.MythosGeometry.LAYER,
+			com.deadlands.client.render.MythosGeometry::create);
+		EntityRendererRegistry.register(com.deadlands.registry.DLMythos.MYTHOS, com.deadlands.client.render.MythosRenderer::new);
+		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(com.deadlands.client.render.SubAgentGeometry.LAYER,
+			com.deadlands.client.render.SubAgentGeometry::create);
+		EntityRendererRegistry.register(com.deadlands.registry.DLMythos.SUB_AGENT, com.deadlands.client.render.SubAgentRenderer::new);
 		com.deadlands.client.horror.DotScareOverlay.init();
 		com.deadlands.client.render.vehicle.VehicleRenderer.registerLayers();
 		com.deadlands.client.render.boss.BossRenderer.registerLayers();
@@ -178,6 +184,7 @@ public final class DeadlandsClient implements ClientModInitializer {
 			com.deadlands.client.weather.ClientDisaster.tick(client);
 			com.deadlands.client.sound.GuestMusic.tick(client);
 			com.deadlands.client.sound.DotMusic.tick(client);
+			com.deadlands.client.sound.MythosMusic.tick(client);
 			com.deadlands.client.sound.AsesinoMusic.tick(client);
 			com.deadlands.client.firstperson.FirstPersonMotion.tick(client);
 		});
@@ -197,6 +204,7 @@ public final class DeadlandsClient implements ClientModInitializer {
 			com.deadlands.client.sound.AsesinoMusic.reset();
 			com.deadlands.client.sound.GuestMusic.reset();
 			com.deadlands.client.sound.DotMusic.reset();
+			com.deadlands.client.sound.MythosMusic.reset();
 			com.deadlands.client.sound.VehicleEngineSounds.reset();
 			com.deadlands.client.horror.ScarePlayer.reset();
 			com.deadlands.client.mission.ClientMissions.reset();

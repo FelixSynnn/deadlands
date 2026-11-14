@@ -2998,5 +2998,231 @@
 				"stream": true
 			}
 		]
+	},
+	"mythos.idle": {
+		"subtitle": "subtitles.deadlands.mythos.idle",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/1xbreathingaud"
+			}
+		]
+	},
+	"mythos.step": {
+		"subtitle": "subtitles.deadlands.mythos.step",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/1xnewfootstep1"
+			},
+			{
+				"name": "deadlands:mythos/1xnewfootstep2"
+			},
+			{
+				"name": "deadlands:mythos/1xnewfootstep3"
+			}
+		]
+	},
+	"mythos.slash": {
+		"subtitle": "subtitles.deadlands.mythos.slash",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/1xnewslashaud"
+			}
+		]
+	},
+	"mythos.slash_hit": {
+		"subtitle": "subtitles.deadlands.mythos.slash_hit",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/1xslashhitnew"
+			}
+		]
+	},
+	"mythos.entangle": {
+		"subtitle": "subtitles.deadlands.mythos.entangle",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/1xentanglementflyby"
+			}
+		]
+	},
+	"mythos.entangle_hit": {
+		"subtitle": "subtitles.deadlands.mythos.entangle_hit",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/1xentanglementhitnew"
+			}
+		]
+	},
+	"mythos.mass_infection": {
+		"subtitle": "subtitles.deadlands.mythos.mass_infection",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/1xmassinfectionnewer"
+			}
+		]
+	},
+	"mythos.mass_infection_far": {
+		"subtitle": "subtitles.deadlands.mythos.mass_infection_far",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/1xmassinfectionfarawaynewer"
+			}
+		]
+	},
+	"mythos.packet": {
+		"subtitle": "subtitles.deadlands.mythos.packet",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/1x_mass_infection_projectile2"
+			}
+		]
+	},
+	"mythos.puddle": {
+		"subtitle": "subtitles.deadlands.mythos.puddle",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/mass_infection_without_the_rattling_or_whatever"
+			}
+		]
+	},
+	"mythos.rejuvenate": {
+		"subtitle": "subtitles.deadlands.mythos.rejuvenate",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/1xrejuvenatenewer"
+			}
+		]
+	},
+	"mythos.kill": {
+		"subtitle": "subtitles.deadlands.mythos.kill",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/1xkillnewer"
+			}
+		]
+	},
+	"mythos.summon": {
+		"subtitle": "subtitles.deadlands.mythos.summon",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/1xminionsummonnew"
+			}
+		]
+	},
+	"sub_agent.idle": {
+		"subtitle": "subtitles.deadlands.sub_agent.idle",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/1xminionidlenew"
+			}
+		]
+	},
+	"sub_agent.step": {
+		"subtitle": "subtitles.deadlands.sub_agent.step",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/1xminionfootstep1"
+			},
+			{
+				"name": "deadlands:mythos/1xminionfootstep2"
+			},
+			{
+				"name": "deadlands:mythos/1xminionfootstep3"
+			}
+		]
+	},
+	"sub_agent.hit": {
+		"subtitle": "subtitles.deadlands.sub_agent.hit",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/1xminionhitnew"
+			}
+		]
+	},
+	"mythos.hurt": {
+		"subtitle": "subtitles.deadlands.mythos.hurt",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/1xentanglementhitnew",
+				"pitch": 1.45
+			}
+		]
+	},
+	"mythos.death": {
+		"subtitle": "subtitles.deadlands.mythos.death",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/1xmassinfectionfarawaynewer",
+				"pitch": 0.6
+			}
+		]
+	},
+	"mythos.blink": {
+		"subtitle": "subtitles.deadlands.mythos.blink",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/1xentanglementflyby",
+				"pitch": 1.6
+			}
+		]
+	},
+	"mythos.phase": {
+		"subtitle": "subtitles.deadlands.mythos.phase",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/1xmassinfectionnewer",
+				"pitch": 0.7
+			}
+		]
+	},
+	"mythos.tornado_warning": {
+		"subtitle": "subtitles.deadlands.mythos.tornado_warning",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/1xmassinfectionfarawaynewer",
+				"pitch": 0.5
+			}
+		]
+	},
+	"sub_agent.death": {
+		"subtitle": "subtitles.deadlands.sub_agent.death",
+		"sounds": [
+			{
+				"name": "deadlands:mythos/1xminionhitnew",
+				"pitch": 0.6
+			}
+		]
+	},
+	"music.mythos.layer1": {
+		"sounds": [
+			{
+				"name": "deadlands:mythos/music_layer",
+				"stream": true
+			}
+		]
+	},
+	"music.mythos.layer2": {
+		"sounds": [
+			{
+				"name": "deadlands:mythos/music_layer_2",
+				"stream": true
+			}
+		]
+	},
+	"music.mythos.layer3": {
+		"sounds": [
+			{
+				"name": "deadlands:mythos/music_layer_3",
+				"stream": true
+			}
+		]
+	},
+	"music.mythos.layer4": {
+		"sounds": [
+			{
+				"name": "deadlands:mythos/music_chase",
+				"stream": true
+			}
+		]
 	}
 }

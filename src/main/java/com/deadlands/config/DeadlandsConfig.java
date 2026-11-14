@@ -24,6 +24,7 @@ public final class DeadlandsConfig {
 	public Guest guest = new Guest();
 	public Stealth stealth = new Stealth();
 	public Dot dot = new Dot();
+	public Mythos mythos = new Mythos();
 	public Performance performance = new Performance();
 	public Horror horror = new Horror();
 	public Audio audio = new Audio();
@@ -92,6 +93,15 @@ public final class DeadlandsConfig {
 
 		@ConfigEntry(comment = "Stalkers' climbing speed as a share of their walking speed.", min = 0.0, max = 1.0)
 		public double stalkerClimbFactor = 0.3;
+
+		@ConfigEntry(comment = "Stalker health (about 30 seconds of fighting with iron gear and an iron sword).", min = 4.0, max = 1000.0)
+		public double stalkerHealth = 200.0;
+
+		@ConfigEntry(comment = "Stalker armor.", min = 0.0, max = 30.0)
+		public double stalkerArmor = 4.0;
+
+		@ConfigEntry(comment = "Stalker damage per hit.", min = 0.5, max = 50.0)
+		public double stalkerDamage = 6.0;
 
 		@ConfigEntry(comment = "Share of infected that are Runners.", min = 0.0, max = 1.0)
 		public double runnerShare = 0.15;
@@ -237,16 +247,16 @@ public final class DeadlandsConfig {
 		public int areaRadius = 160;
 
 		@ConfigEntry(comment = "Damage per hit on Normal (Minecraft scales it for Easy and Hard).", min = 1.0, max = 100.0)
-		public double damage = 10.0;
+		public double damage = 8.0;
 
-		@ConfigEntry(comment = "Can't be hurt at all. Off (the default): very high health and heavy damage resistance instead; either way, running and hiding is how you survive him.")
-		public boolean invulnerable = false;
+		@ConfigEntry(comment = "Health. He can be killed: about a minute of fighting with iron gear and an iron sword.", min = 20.0, max = 5000.0)
+		public double health = 300.0;
 
-		@ConfigEntry(comment = "Health (when not invulnerable).", min = 20.0, max = 5000.0)
-		public double health = 800.0;
+		@ConfigEntry(comment = "Armor.", min = 0.0, max = 30.0)
+		public double armor = 10.0;
 
-		@ConfigEntry(comment = "Share of incoming damage he ignores (when not invulnerable).", min = 0.0, max = 0.99)
-		public double damageResistance = 0.75;
+		@ConfigEntry(comment = "Share of incoming damage he ignores, on top of his armor.", min = 0.0, max = 0.9)
+		public double damageResistance = 0.0;
 
 		@ConfigEntry(comment = "Passive (the old D.O.T.): only hitting him, blocking him or staring at him provokes him. Off (the default): a predator, he hunts whoever he sees.")
 		public boolean passive = false;
@@ -254,8 +264,8 @@ public final class DeadlandsConfig {
 		@ConfigEntry(comment = "Prowling speed.", min = 0.05, max = 0.6)
 		public double speed = 0.26;
 
-		@ConfigEntry(comment = "Speed while hunting (the Guest charges at 0.37).", min = 0.05, max = 0.8)
-		public double aggroSpeed = 0.36;
+		@ConfigEntry(comment = "Chase speed. A mob covers about 43 x speed x speed blocks a second: 0.37 is 5.9, about 105% of a sprinting survivor (5.6), so a straight chase is close but you can lose him by breaking his line of sight, hiding or keeping to the dark.", min = 0.05, max = 0.8)
+		public double aggroSpeed = 0.37;
 
 		@ConfigEntry(comment = "Seconds he keeps after you, once provoked, if you stay away and out of sight.", min = 5, max = 600)
 		public int giveUpSeconds = 30;
@@ -324,8 +334,8 @@ public final class DeadlandsConfig {
 		@ConfigEntry(comment = "Let it tear through doors, glass and wooden walls (also needs the mobGriefing rule).")
 		public boolean breaksBlocks = true;
 
-		@ConfigEntry(comment = "Health.", min = 20.0, max = 3000.0)
-		public double health = 300.0;
+		@ConfigEntry(comment = "Health (about 50 seconds of fighting with iron gear and an iron sword).", min = 20.0, max = 3000.0)
+		public double health = 260.0;
 
 		@ConfigEntry(comment = "Claw damage before Minecraft's difficulty scaling: 3.5 kills an unarmoured survivor in 6 hits on Normal.", min = 0.5, max = 100.0)
 		public double damage = 3.5;
@@ -366,8 +376,8 @@ public final class DeadlandsConfig {
 		@ConfigEntry(comment = "Most Asesinos in the world at once.", min = 1, max = 20)
 		public int maxAlive = 3;
 
-		@ConfigEntry(comment = "Health.", min = 20.0, max = 2000.0)
-		public double health = 160.0;
+		@ConfigEntry(comment = "Health (about 40 seconds of fighting with iron gear and an iron sword).", min = 20.0, max = 2000.0)
+		public double health = 260.0;
 
 		@ConfigEntry(comment = "Damage per hit.", min = 1.0, max = 100.0)
 		public double damage = 9.0;
@@ -398,6 +408,93 @@ public final class DeadlandsConfig {
 
 		@ConfigEntry(comment = "Armor.", min = 0.0, max = 30.0)
 		public double armor = 6.0;
+
+		@ConfigEntry(comment = "When a survivor is holed up (a roof over them: a building, a structure, underground), he can come in near them, on any floor, somewhere standable they can't see.")
+		public boolean spawnIndoors = true;
+
+		@ConfigEntry(comment = "How far from a holed-up survivor he can come in, in blocks (and up to 10 floors' worth of blocks above or below).", min = 6, max = 48)
+		public int indoorSpawnRadius = 18;
+
+		@ConfigEntry(comment = "He breaks through blocks to reach the survivor he is chasing when there is no way round (also needs the mobGriefing rule).")
+		public boolean digs = true;
+
+		@ConfigEntry(comment = "He only digs when his prey is within this many blocks.", min = 2.0, max = 64.0)
+		public double digRange = 16.0;
+
+		@ConfigEntry(comment = "Ticks of clawing per point of block hardness (glass 0.3, planks and cobblestone 2, stone 1.5, iron blocks 5). At least half a second a block.", min = 1.0, max = 200.0)
+		public double digTicksPerHardness = 30.0;
+
+		@ConfigEntry(comment = "He won't dig blocks harder than this (obsidian is 50 and is never dug anyway).", min = 0.0, max = 49.0)
+		public double digMaxHardness = 10.0;
+
+		@ConfigEntry(comment = "Let him dig through chests, furnaces and other blocks that hold things.")
+		public boolean digContainers = false;
+
+		@ConfigEntry(comment = "Blocks he never digs: ids or #tags, separated by commas. Bedrock, obsidian, reinforced deepslate and the #deadlands:killer_proof tag are always safe.")
+		public String digBlacklist = "minecraft:iron_door,minecraft:iron_bars,#minecraft:beds";
+	}
+
+	/** Mythos, the storm-borne boss ({@code entity.MythosEntity}, {@code world.disaster.MythosTornado}). */
+	public static final class Mythos {
+		@ConfigEntry(comment = "Mythos and the tornado that brings him.")
+		public boolean enabled = true;
+
+		@ConfigEntry(comment = "Health. Tough but winnable: about 75 seconds of fighting with iron gear and an iron sword, plus his sub-agents.", min = 20.0, max = 5000.0)
+		public double health = 360.0;
+
+		@ConfigEntry(comment = "Armor.", min = 0.0, max = 30.0)
+		public double armor = 6.0;
+
+		@ConfigEntry(comment = "Corrupted Slash damage (Minecraft scales it for Easy and Hard).", min = 1.0, max = 100.0)
+		public double damage = 7.0;
+
+		@ConfigEntry(comment = "Walking speed.", min = 0.05, max = 0.6)
+		public double walkSpeed = 0.27;
+
+		@ConfigEntry(comment = "Chase speed: 0.33 is about 4.7 blocks a second, slower than a sprint, so you can always run.", min = 0.05, max = 0.8)
+		public double chaseSpeed = 0.33;
+
+		@ConfigEntry(comment = "Corrupted Slash cooldown, seconds.", min = 0.5, max = 60.0)
+		public double slashCooldown = 3.0;
+
+		@ConfigEntry(comment = "Entanglement cooldown, seconds.", min = 1.0, max = 120.0)
+		public double entangleCooldown = 12.0;
+
+		@ConfigEntry(comment = "Spawn Sub-agents cooldown, seconds.", min = 1.0, max = 120.0)
+		public double summonCooldown = 20.0;
+
+		@ConfigEntry(comment = "Mass Infection cooldown, seconds (from phase 2).", min = 1.0, max = 120.0)
+		public double massInfectionCooldown = 18.0;
+
+		@ConfigEntry(comment = "Rejuvenate cooldown, seconds (phase 2 only).", min = 1.0, max = 300.0)
+		public double rejuvenateCooldown = 40.0;
+
+		@ConfigEntry(comment = "Fragment Blink cooldown, seconds (phase 3).", min = 1.0, max = 120.0)
+		public double blinkCooldown = 10.0;
+
+		@ConfigEntry(comment = "Most sub-agents alive at once.", min = 0, max = 20)
+		public int maxSubAgents = 6;
+
+		@ConfigEntry(comment = "Sub-agent health.", min = 1.0, max = 200.0)
+		public double subAgentHealth = 10.0;
+
+		@ConfigEntry(comment = "Sub-agent damage per bite.", min = 0.5, max = 50.0)
+		public double subAgentDamage = 3.0;
+
+		@ConfigEntry(comment = "Get this many blocks from the tornado for 30 seconds and you've escaped: Mythos leaves and the storm breaks up.", min = 32, max = 512)
+		public int escapeDistance = 96;
+
+		@ConfigEntry(comment = "The night his tornado is certain to come (night 1 is the first, on day 1; it never comes then).", min = 2, max = 100)
+		public int guaranteedNight = 2;
+
+		@ConfigEntry(comment = "Chance it comes on each night after that.", min = 0.0, max = 1.0)
+		public double nightlyChance = 0.15;
+
+		@ConfigEntry(comment = "The tornado tears up loose blocks (glass, leaves, plants, wool, fences...). Also needs the mobGriefing rule.")
+		public boolean tornadoDestroys = true;
+
+		@ConfigEntry(comment = "Play the arrival and defeat cutscenes.")
+		public boolean cutscenes = true;
 	}
 
 	/** Phase 5: disaster weather ({@code world.disaster.DisasterDirector}). */
@@ -495,6 +592,12 @@ public final class DeadlandsConfig {
 		@ConfigEntry(comment = "Shader compatibility: with a shader pack (Iris) or Sodium, draw the night's darkness and the flashlight beam on the screen, so they work with any pack.", client = true)
 		public boolean shaderCompatibility = true;
 
+		@ConfigEntry(comment = "With the flashlight on in the dark (night outdoors, underground, an unlit room), how black everything outside its beam is, with or without shaders: 1 is pitch black.", min = 0.0, max = 1.0, client = true)
+		public double flashlightDarkness = 0.97;
+
+		@ConfigEntry(comment = "How soft the edge of the flashlight's beam is on screen: 0 a hard edge, 1 a wide fade.", min = 0.0, max = 1.0, client = true)
+		public double flashlightConeSoftness = 0.5;
+
 		@ConfigEntry(comment = "The flashlight really lights the blocks it points at (invisible light blocks that follow the beam), so it works with Sodium and shader packs.")
 		public boolean flashlightLightsBlocks = true;
 
@@ -520,6 +623,9 @@ public final class DeadlandsConfig {
 
 		@ConfigEntry(comment = "D.O.T.'s terror radius in blocks: his music's layer 1 within it, layer 2 within half, layer 3 within a quarter, layer 4 while he pursues you.", min = 8.0, max = 128.0, client = true)
 		public double dotTerrorRadius = 36.0;
+
+		@ConfigEntry(comment = "Mythos' terror radius, in blocks: his music starts this far off and rises as he comes closer.", min = 8.0, max = 256.0, client = true)
+		public double mythosTerrorRadius = 48.0;
 
 		@ConfigEntry(comment = "Volume of DEADLANDS ambience.", min = 0.0, max = 1.0, client = true)
 		public double ambienceVolume = 1.0;

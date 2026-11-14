@@ -49,6 +49,7 @@ public final class StoryIntro {
 		NpcEntity harley = harleyNear(player, 64.0); // her camp may be up to 48 blocks off when the ground nearby is unsafe
 		if (harley != null && story.set(CAMP_BUILT)) {
 			buildCamp(level, harley.blockPosition());
+			HarleyRoad.ensure(level, harley.blockPosition()); // Part 19: a road from her camp to the road network, always
 		}
 		for (ItemStack stack : new ItemStack[] {new ItemStack(DLStory.RADIO), new ItemStack(DLSurvivalItems.BANDAGE, 2),
 			new ItemStack(DLSurvivalItems.WATER_BOTTLE, 2), new ItemStack(DLSurvivalItems.CANNED_BEANS, 2)}) {
@@ -68,6 +69,7 @@ public final class StoryIntro {
 		NpcEntity harley = com.deadlands.npc.NpcSpawns.onFirstArrival(player);
 		if (harley != null && StoryState.get(player.level().getServer()).set(CAMP_BUILT)) {
 			buildCamp(player.level(), harley.blockPosition());
+			HarleyRoad.ensure(player.level(), harley.blockPosition());
 		}
 	}
 

@@ -4,7 +4,10 @@ import com.deadlands.entity.ai.InfectedAttackGoal;
 import com.deadlands.entity.ai.PounceGoal;
 import com.deadlands.entity.ai.StalkGoal;
 import net.minecraft.core.BlockPos;
+import com.deadlands.config.ConfigManager;
+import com.deadlands.config.DeadlandsConfig;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.navigation.WallClimberNavigation;
 import net.minecraft.world.level.Level;
@@ -17,6 +20,14 @@ import net.minecraft.world.level.block.state.BlockState;
 public class StalkerEntity extends InfectedEntity {
 	public StalkerEntity(EntityType<? extends StalkerEntity> type, Level level) {
 		super(type, level);
+		if (!level.isClientSide()) {
+			// A killer, not a common infected: health, armour and damage from the config.
+			DeadlandsConfig.Zombies config = ConfigManager.get().zombies;
+			getAttribute(Attributes.MAX_HEALTH).setBaseValue(config.stalkerHealth);
+			getAttribute(Attributes.ARMOR).setBaseValue(config.stalkerArmor);
+			getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(config.stalkerDamage);
+			setHealth(getMaxHealth());
+		}
 	}
 
 	@Override

@@ -1,0 +1,51 @@
+{
+	"cue": "deadlands:mythos.tornado_warning",
+	"hide_hud": true,
+	"shots": [
+		{
+			"ticks": 45,
+			"from": [
+				0,
+				14,
+				34
+			],
+			"to": [
+				0,
+				10,
+				26
+			],
+			"look": [
+				0,
+				8,
+				0
+			]
+		},
+		{
+			"ticks": 70,
+			"from": [
+				6,
+				3,
+				11
+			],
+			"to": [
+				-3,
+				3.5,
+				8
+			],
+			"look": [
+				0,
+				2.8,
+				0
+			],
+			"look_rise": 0.6
+		}
+	],
+	"lines": [
+		{
+			"from": 10,
+			"to": 60,
+			"key": "cutscene.deadlands.mythos_arrival.0"
+		}
+	],
+	"title": "cutscene.deadlands.mythos_arrival.title"
+}

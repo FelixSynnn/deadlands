@@ -21,7 +21,7 @@ public class MusicManagerMixin {
 		} else if (MusicDirector.ownsMusic()) {
 			ci.cancel();
 		} else if (com.deadlands.client.sound.AsesinoMusic.playing() || com.deadlands.client.sound.GuestMusic.playing()
-			|| com.deadlands.client.sound.DotMusic.playing()) {
+			|| com.deadlands.client.sound.DotMusic.playing() || com.deadlands.client.sound.MythosMusic.playing()) {
 			// The Asesino's chase music: Minecraft's own music steps aside (stopped, then held off).
 			((net.minecraft.client.sounds.MusicManager) (Object) this).stopPlaying();
 			ci.cancel();

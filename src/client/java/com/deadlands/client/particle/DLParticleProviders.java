@@ -28,6 +28,7 @@ public final class DLParticleProviders {
 		registry.register(DLParticles.BLOOD, sprites -> new Provider(sprites, Kind.BLOOD));
 		registry.register(DLParticles.SPORE, sprites -> new Provider(sprites, Kind.SPORE));
 		registry.register(DLParticles.EMBER, sprites -> new Provider(sprites, Kind.EMBER));
+		registry.register(DLParticles.GLITCH, sprites -> new Provider(sprites, Kind.GLITCH));
 	}
 
 	enum Kind {
@@ -36,7 +37,8 @@ public final class DLParticleProviders {
 		DUST(0.0F, 34, 0.7F, 0.62F, 0.54F, 0.40F),
 		BLOOD(0.9F, 22, 0.6F, 0.42F, 0.05F, 0.04F),
 		SPORE(-0.015F, 70, 0.5F, 0.45F, 0.52F, 0.24F),
-		EMBER(-0.03F, 18, 0.45F, 1.0F, 0.55F, 0.18F);
+		EMBER(-0.03F, 18, 0.45F, 1.0F, 0.55F, 0.18F),
+		GLITCH(-0.01F, 16, 0.55F, 0.95F, 0.35F, 0.85F);
 
 		final float gravity;
 		final int lifetime;
