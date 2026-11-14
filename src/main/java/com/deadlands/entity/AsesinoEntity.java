@@ -81,7 +81,7 @@ public class AsesinoEntity extends Monster {
 
 	/** What his body is doing, for the animations (append only; the old ability poses stay so indices hold). */
 	public enum Action {
-		NONE, WINDUP, SWING, CROUCH, LEAP, STUN, SHRIEK, BREACH, FRENZY, SCENT, STARE, WINDUP2, SWING2
+		NONE, WINDUP, SWING, CROUCH, LEAP, STUN, SHRIEK, BREACH, FRENZY, SCENT, STARE, WINDUP2, SWING2, DIG // append only
 	}
 
 	private static final EntityDataAccessor<Integer> DATA_PREY = SynchedEntityData.defineId(AsesinoEntity.class, EntityDataSerializers.INT);
@@ -139,6 +139,11 @@ public class AsesinoEntity extends Monster {
 	/** Ticks until the next sound behind the survivor he is stalking (a step, a breath). */
 	private int creepIn = 600;
 	private int actionLeft;
+	/** Digging: the block he is clawing through, how long he has been at it, and how long it takes. */
+	private @Nullable BlockPos digPos;
+	private int digTicks;
+	private int digNeeded;
+	private int blockedTicks;
 	// Sound.
 	private long voiceUntil;
 	private long chaseCueAt = -CHASE_CUE_GAP;
@@ -330,6 +335,9 @@ public class AsesinoEntity extends Monster {
 	private void setMode(Mode next) {
 		if (mode == next) {
 			return;
+		}
+		if (next != Mode.CHASE && level() instanceof ServerLevel server) {
+			stopDigging(server);
 		}
 		mode = next;
 		modeTicks = 0;
@@ -717,6 +725,11 @@ public class AsesinoEntity extends Monster {
 		if (melee(level, target, distance)) {
 			return;
 		}
+		// No way round: he claws and hacks his way through, as long as the block is one he may break.
+		Path route = getNavigation().getPath();
+		if (dig(level, target, distance, route == null || route.canReach() || distance < 3.0)) {
+			return;
+		}
 		// Stuck (no way to them, or getting nowhere), or left far behind: he comes back near them, out of sight.
 		if (unstuck.tick(this, target, 60) || distance > 40.0 && catchUpCooldown == 0) {
 			catchUpCooldown = 300;
@@ -742,6 +755,155 @@ public class AsesinoEntity extends Monster {
 				getNavigation().moveTo(aim.x, aim.y, aim.z, 1.0);
 			}
 		}
+	}
+
+	/**
+	 * Digging: walled off from his prey (no path, or walking into a wall) for a second, he picks the first solid block
+	 * between them, at body height along the line to them (so upward through a ceiling too), and claws at it for a time
+	 * set by its hardness ({@code asesino.digTicksPerHardness}), the crack showing as he goes. Never bedrock, obsidian,
+	 * reinforced deepslate, the {@code deadlands:killer_proof} tag, the {@code asesino.digBlacklist}, containers (unless
+	 * {@code asesino.digContainers}) or anything harder than {@code asesino.digMaxHardness}; never without mobGriefing.
+	 * Returns true while it holds him.
+	 */
+	private boolean dig(ServerLevel level, Player target, double distance, boolean reachable) {
+		DeadlandsConfig.Asesino config = ConfigManager.get().asesino;
+		boolean allowed = config.digs && level.getGameRules().get(net.minecraft.world.level.gamerules.GameRules.MOB_GRIEFING);
+		if (digPos != null) {
+			BlockState state = level.getBlockState(digPos);
+			if (!allowed || distance > config.digRange * 1.5 || !diggable(level, digPos, state)
+				|| distanceToSqr(Vec3.atCenterOf(digPos)) > 4.5 * 4.5) {
+				stopDigging(level);
+				return false;
+			}
+			getNavigation().stop();
+			getLookControl().setLookAt(Vec3.atCenterOf(digPos));
+			digTicks++;
+			level.destroyBlockProgress(getId(), digPos, Math.min(9, digTicks * 10 / Math.max(1, digNeeded)));
+			if (digTicks % 6 == 0) {
+				net.minecraft.world.level.block.SoundType sound = state.getSoundType();
+				level.playSound(null, digPos, sound.getHitSound(), SoundSource.HOSTILE, sound.getVolume() + 0.6F, sound.getPitch() * 0.8F);
+				level.sendParticles(new net.minecraft.core.particles.BlockParticleOption(net.minecraft.core.particles.ParticleTypes.BLOCK, state),
+					digPos.getX() + 0.5, digPos.getY() + 0.5, digPos.getZ() + 0.5, 6, 0.3, 0.3, 0.3, 0.05);
+				if (digTicks % 18 == 0) {
+					level.playSound(null, getX(), getY(), getZ(), DLSounds.ASESINO_SWING.value(), SoundSource.HOSTILE, 1.0F, 0.8F);
+				}
+			}
+			if (digTicks >= digNeeded) {
+				BlockPos done = digPos;
+				stopDigging(level);
+				level.destroyBlock(done, true, this);
+				blockedTicks = 20; // straight on to the next block if there is one
+			}
+			return true;
+		}
+		if (!allowed || distance > config.digRange) {
+			blockedTicks = 0;
+			return false;
+		}
+		boolean walled = !reachable || horizontalCollision && getNavigation().isInProgress();
+		blockedTicks = walled ? blockedTicks + 1 : 0;
+		if (blockedTicks < 20) {
+			return false;
+		}
+		BlockPos next = obstacle(level, target);
+		if (next == null) {
+			return false;
+		}
+		BlockState state = level.getBlockState(next);
+		digPos = next;
+		digTicks = 0;
+		digNeeded = Math.max(10, Math.round(state.getDestroySpeed(level, next) * (float) config.digTicksPerHardness));
+		blockedTicks = 0;
+		act(Action.DIG, digNeeded + 6);
+		return true;
+	}
+
+	private void stopDigging(ServerLevel level) {
+		if (digPos != null) {
+			level.destroyBlockProgress(getId(), digPos, -1);
+			digPos = null;
+			if (action() == Action.DIG) {
+				act(Action.NONE, 0);
+			}
+		}
+	}
+
+	/** The first solid block in his way along the line to the prey, at body height; null if none, or if it is one he can't dig. */
+	private @Nullable BlockPos obstacle(ServerLevel level, Player target) {
+		Vec3 from = position().add(0.0, 0.5, 0.0);
+		Vec3 line = target.position().add(0.0, 0.5, 0.0).subtract(from);
+		double length = line.length();
+		if (length < 0.6) {
+			return null;
+		}
+		Vec3 dir = line.scale(1.0 / length);
+		BlockPos under = blockPosition().below();
+		for (double s = 0.6; s <= Math.min(3.0, length); s += 0.4) {
+			Vec3 p = from.add(dir.scale(s));
+			for (int up = 0; up < 3; up++) {
+				BlockPos pos = BlockPos.containing(p.x, p.y - 0.5 + up, p.z);
+				if (pos.equals(under)) {
+					continue;
+				}
+				BlockState state = level.getBlockState(pos);
+				if (state.getCollisionShape(level, pos).isEmpty()) {
+					continue;
+				}
+				return diggable(level, pos, state) ? pos : null;
+			}
+		}
+		return null;
+	}
+
+	private static String blacklistSource = "";
+	private static java.util.Set<String> blacklistIds = java.util.Set.of();
+	private static java.util.List<net.minecraft.tags.TagKey<net.minecraft.world.level.block.Block>> blacklistTags = java.util.List.of();
+
+	/** Whether he may break this block (see {@link #dig}). */
+	static boolean diggable(ServerLevel level, BlockPos pos, BlockState state) {
+		if (state.isAir() || state.getCollisionShape(level, pos).isEmpty()) {
+			return false;
+		}
+		DeadlandsConfig.Asesino config = ConfigManager.get().asesino;
+		float hardness = state.getDestroySpeed(level, pos);
+		if (hardness < 0.0F || hardness > config.digMaxHardness || state.is(com.deadlands.registry.DLTags.KILLER_PROOF)
+			|| state.is(net.minecraft.world.level.block.Blocks.BEDROCK) || state.is(net.minecraft.world.level.block.Blocks.OBSIDIAN)
+			|| state.is(net.minecraft.world.level.block.Blocks.CRYING_OBSIDIAN) || state.is(net.minecraft.world.level.block.Blocks.REINFORCED_DEEPSLATE)) {
+			return false;
+		}
+		if (!config.digContainers && state.hasBlockEntity()) {
+			return false;
+		}
+		if (!config.digBlacklist.equals(blacklistSource)) {
+			java.util.Set<String> ids = new java.util.HashSet<>();
+			java.util.List<net.minecraft.tags.TagKey<net.minecraft.world.level.block.Block>> tags = new ArrayList<>();
+			for (String entry : config.digBlacklist.split(",")) {
+				String e = entry.trim();
+				if (e.startsWith("#")) {
+					Identifier id = Identifier.tryParse(e.substring(1));
+					if (id != null) {
+						tags.add(net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.BLOCK, id));
+					}
+				} else if (!e.isEmpty()) {
+					Identifier id = Identifier.tryParse(e);
+					if (id != null) {
+						ids.add(id.toString());
+					}
+				}
+			}
+			blacklistIds = java.util.Set.copyOf(ids);
+			blacklistTags = java.util.List.copyOf(tags);
+			blacklistSource = config.digBlacklist;
+		}
+		if (blacklistIds.contains(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString())) {
+			return false;
+		}
+		for (net.minecraft.tags.TagKey<net.minecraft.world.level.block.Block> tag : blacklistTags) {
+			if (state.is(tag)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/** The slash: a half-second wind-up (the raised arm and the swing sound are the warning), alternating overhead and backhand. */
@@ -1072,6 +1234,14 @@ public class AsesinoEntity extends Monster {
 	@Override
 	public boolean removeWhenFarAway(double distance) {
 		return false;
+	}
+
+	@Override
+	public void remove(RemovalReason reason) {
+		if (level() instanceof ServerLevel server) {
+			stopDigging(server); // no crack left hanging on a block
+		}
+		super.remove(reason);
 	}
 
 	@Override

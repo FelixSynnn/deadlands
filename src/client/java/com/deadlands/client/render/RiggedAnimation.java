@@ -14,14 +14,14 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * Keyframed animations made in Blender for a boxless rig (the file {@code tools/assetgen/blender/dot_export.py}
- * writes): per clip, one pose per game tick, each pose every bone's xRot/yRot/zRot followed by the pelvis offset in
+ * and {@code dl_export.py} write): per clip, one pose per sample (one a tick, or three at 60 fps), each pose every bone's xRot/yRot/zRot followed by the pelvis offset in
  * pixels. {@link #sample} interpolates between ticks so motion stays smooth at any frame rate.
  */
 public final class RiggedAnimation {
-	public record Clip(String name, boolean loop, boolean fullBody, boolean stepped, int frames, float[] data) {
+	public record Clip(String name, boolean loop, boolean fullBody, boolean stepped, int frames, float[] data, float rate) {
 		/** How long the clip plays, in ticks. */
 		public float length() {
-			return loop ? frames : frames - 1;
+			return (loop ? frames : frames - 1) / rate;
 		}
 	}
 
@@ -70,6 +70,7 @@ public final class RiggedAnimation {
 
 	/** Writes the clip's pose at {@code time} ticks into {@code out}: wrapped if it loops, held at the ends if not. */
 	public void sample(Clip clip, float time, float[] out) {
+		time *= clip.rate(); // ticks to samples (3 a tick for clips keyed at 60 fps)
 		int n = clip.frames();
 		float t;
 		int a;
@@ -100,8 +101,13 @@ public final class RiggedAnimation {
 			DataInputStream in = new DataInputStream(new BufferedInputStream(raw))) {
 			byte[] magic = new byte[8];
 			in.readFully(magic);
-			if (!new String(magic, 0, 7, StandardCharsets.US_ASCII).equals("DLANIM1")) {
+			String kind = new String(magic, 0, 7, StandardCharsets.US_ASCII);
+			if (!kind.equals("DLANIM1") && !kind.equals("DLANIM2")) {
 				throw new IOException("not DEADLANDS animations");
+			}
+			float rate = kind.equals("DLANIM2") ? in.readFloat() : 1.0F; // samples per tick
+			if (!(rate > 0.0F)) {
+				throw new IOException("bad sample rate " + rate);
 			}
 			String[] bones = new String[in.readInt()];
 			for (int i = 0; i < bones.length; i++) {
@@ -121,7 +127,7 @@ public final class RiggedAnimation {
 				for (int i = 0; i < data.length; i++) {
 					data[i] = in.readFloat();
 				}
-				clips.put(name, new Clip(name, (flags & 1) != 0, (flags & 2) != 0, (flags & 4) != 0, frames, data));
+				clips.put(name, new Clip(name, (flags & 1) != 0, (flags & 2) != 0, (flags & 4) != 0, frames, data, rate));
 			}
 			return new RiggedAnimation(bones, Map.copyOf(clips));
 		}

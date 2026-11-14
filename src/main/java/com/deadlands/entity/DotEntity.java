@@ -66,7 +66,7 @@ import org.jspecify.annotations.Nullable;
  *
  * <p><b>Unstoppable</b>: no knockback, no slowing or other harmful effects, no stuns, freezing, fire or fall damage;
  * walks through doors, fences, panes and leaves (breaking them); won't be put in a boat or a minecart; swims hard; and
- * if he is stuck he is somewhere else, near them, out of sight. Either invulnerable ({@code dot.invulnerable}) or, by
+ * if he is stuck he is somewhere else, near them, out of sight. Killable, by
  * default, very high health with heavy damage resistance. Running and hiding is how you live.
  *
  * <p>He walks at night only, and leaves at dawn.
@@ -176,7 +176,7 @@ public class DotEntity extends Monster {
 			.add(Attributes.MOVEMENT_SPEED, config.speed)
 			.add(Attributes.FOLLOW_RANGE, 48.0)
 			.add(Attributes.KNOCKBACK_RESISTANCE, 1.0)
-			.add(Attributes.ARMOR, 10.0)
+			.add(Attributes.ARMOR, config.armor)
 			.add(Attributes.STEP_HEIGHT, 1.25);
 	}
 
@@ -185,6 +185,7 @@ public class DotEntity extends Monster {
 		getAttribute(Attributes.MAX_HEALTH).setBaseValue(config.health);
 		getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(config.damage);
 		getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(config.speed);
+		getAttribute(Attributes.ARMOR).setBaseValue(config.armor);
 		setHealth(getMaxHealth());
 	}
 
@@ -528,7 +529,7 @@ public class DotEntity extends Monster {
 			}
 		}
 		if ((tickCount + getId()) % 5 == 0 || getNavigation().isDone()) {
-			getNavigation().moveTo(target, distance > 6.0 ? 1.2 : 1.0); // a run when he's far, closing in when near
+			getNavigation().moveTo(target, 1.0); // his chase speed (dot.aggroSpeed), no burst on top: about 105% of a sprint
 		}
 	}
 
@@ -726,12 +727,6 @@ public class DotEntity extends Monster {
 	@Override
 	public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
 		DeadlandsConfig.Dot config = ConfigManager.get().dot;
-		if (config.invulnerable && !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
-			if (source.getEntity() instanceof Player player && huntable(player) && mode != Mode.PROVOKED) {
-				provoke(level, player);
-			}
-			return false;
-		}
 		float taken = source.is(DamageTypeTags.BYPASSES_INVULNERABILITY) ? amount : amount * (float) (1.0 - config.damageResistance);
 		boolean hurt = super.hurtServer(level, source, taken);
 		if (hurt) {
