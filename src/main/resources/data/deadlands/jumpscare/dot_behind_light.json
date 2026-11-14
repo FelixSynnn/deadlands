@@ -1,0 +1,31 @@
+{
+	"kind": "major",
+	"trigger": "event",
+	"weight": 1,
+	"steps": [
+		{
+			"at": 0,
+			"type": "beam_off",
+			"amount": 22
+		},
+		{
+			"at": 0,
+			"type": "silence",
+			"amount": 22
+		},
+		{
+			"at": 22,
+			"type": "sound",
+			"sound": "deadlands:dot.grasp_windup",
+			"where": "ahead",
+			"volume": 1.2,
+			"pitch": 1.0,
+			"distance": 3
+		},
+		{
+			"at": 22,
+			"type": "jolt",
+			"amount": 0.5
+		}
+	]
+}

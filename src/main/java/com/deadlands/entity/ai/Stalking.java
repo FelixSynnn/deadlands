@@ -159,6 +159,18 @@ public final class Stalking {
 		mob.setDeltaMovement(v.x + push.x, Math.min(0.25, v.y + up), v.z + push.z);
 	}
 
+	/**
+	 * Climbing slowly: while on a wall, upward speed is held to {@code factor} of the mob's walking speed (per tick,
+	 * taken as its movement speed), instead of a spider's quick scuttle.
+	 */
+	public static void climbSlowly(Mob mob, double factor) {
+		Vec3 v = mob.getDeltaMovement();
+		double up = Math.max(0.02, factor * mob.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED));
+		if (v.y > up) {
+			mob.setDeltaMovement(v.x * 0.5, up, v.z * 0.5);
+		}
+	}
+
 	/** A sound a few blocks behind the prey, out of their view: heard only by them, as if right there. */
 	public static void soundBehind(ServerLevel level, Player target, SoundEvent sound, float volume, float pitch, double distance) {
 		Vec3 back = target.getViewVector(1.0F).multiply(-1.0, 0.0, -1.0);

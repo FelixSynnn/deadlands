@@ -22,6 +22,8 @@ public class AsesinoRenderer extends MobRenderer<AsesinoEntity, AsesinoRenderer.
 		public float actionAge;
 		public float hunch;
 		public float sprint;
+		/** On a wall, climbing. */
+		public boolean climbing;
 	}
 
 	public AsesinoRenderer(EntityRendererProvider.Context context) {
@@ -43,6 +45,7 @@ public class AsesinoRenderer extends MobRenderer<AsesinoEntity, AsesinoRenderer.
 		state.actionAge = asesino.actionAge(partialTick);
 		state.hunch = asesino.hunch(partialTick);
 		state.sprint = asesino.sprint(partialTick);
+		state.climbing = asesino.climbing();
 	}
 
 	@Override

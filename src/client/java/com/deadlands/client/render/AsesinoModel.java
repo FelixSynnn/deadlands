@@ -319,6 +319,27 @@ public class AsesinoModel extends EntityModel<AsesinoRenderer.State> {
 			case NONE -> {
 			}
 		}
+		if (state.climbing) {
+			climb(t);
+		}
+	}
+
+	/** Climbing: hand over hand up the wall, slowly, coat hanging, legs pushing; head tipped back to look up. */
+	private void climb(float t) {
+		float p = t * 0.2F;
+		torso.xRot = -0.1F;
+		armR.xRot = -2.7F + 0.35F * Mth.sin(p);
+		armL.xRot = -2.7F - 0.35F * Mth.sin(p);
+		armR.zRot = 0.2F;
+		armL.zRot = -0.2F;
+		forearmR.xRot = -0.3F - 0.3F * Math.max(0.0F, Mth.cos(p));
+		forearmL.xRot = -0.3F - 0.3F * Math.max(0.0F, -Mth.cos(p));
+		legR.xRot = -0.6F - 0.45F * Mth.sin(p);
+		legL.xRot = -0.6F + 0.45F * Mth.sin(p);
+		shinR.xRot = 0.8F + 0.3F * Mth.sin(p);
+		shinL.xRot = 0.8F - 0.3F * Mth.sin(p);
+		head.xRot = -0.5F;
+		coatBack.xRot = 0.05F;
 	}
 
 	/**

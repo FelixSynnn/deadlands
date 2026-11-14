@@ -1059,3 +1059,38 @@ The owner's report: the flashlight does nothing even with Lamb's Dynamic Lights,
   - Its data comes from the server when the journal opens (`StoryRequestPayload` and `StoryPayload`).
   - `/deadlands story`, `/deadlands cinematics` and `/deadlands watch` do the same from chat.
 - **Still to do for step 6:** chapter select (replaying a chapter) and the endings screen.
+
+### D.O.T., slow climbing, more towns, Guest gait (2026-11-13)
+
+- **D.O.T. (Deceased On Transfer), Patient-4 of LANTERN** (`entity/DotEntity.java`, `DotSpawner.java`, `registry/DLDot.java`, `client/render/Dot*.java`):
+  - **Model and texture** (`import_dot.py`): the owner's model, 16 parts on a 10-bone rig.
+    - The texture is painted by 3D position: a navy-to-poison-green gradient, glitch scanlines, armour circuit traces, leg flame outlines, cloak veins.
+    - A glow layer covers the halo, chest lens, slit eyes, hands, flames, blade edges and cloak tips.
+    - Palette: navy `#101C3C`, deep navy `#0A1126`, teal `#103036`, poison `#0D3A22`, cloak `#0B2614`, cloak tip `#1B5A2E`, steel `#1A2230`, void `#04060A`, crown `#D9F2E3`, glow `#3DFF6E`, white glow `#ECFFF4`.
+  - **Spawning:** at night only, 4% a minute per survivor, at most one within 160 blocks.
+    - Inside the `dot_haunts` structures: subway stations, the research facility, Site Calder, the school, the power station, the treatment plant.
+    - Or standing in the road ahead in towns.
+    - He leaves at dawn.
+  - **Provoked by:** being hit, someone standing within ~2 blocks in front of him, being stared at for 2 seconds, or the `dot.alwaysProvokes` names (default `itzbreadloaf`) on sight.
+  - **Gives up** after 30 seconds of the survivor being away and out of sight; twice as long for those names.
+  - **Damage:** 10 on Normal.
+  - **Abilities:** Static Step (12 s), Restore Point (60 s), Error Grasp (18 s), Corruption Field (25 s).
+  - **Unstoppable:**
+    - immune to knockback, harmful effects, freezing, fire, falls, drowning and suffocation;
+    - breaks through doors, fences, gates, trapdoors, panes, bars and leaves (with mobGriefing on);
+    - never rides boats or minecarts, wades through water, and teleports near you when stuck.
+    - Defaults to 800 health with 75% damage resistance; `dot.invulnerable` switches to fully invulnerable.
+  - **Music:** his own terror radius (36 blocks) and four layers.
+  - **Sounds:** the owner's files, mapped by name. Hurt and death have no file of their own, so they use pitched stand-ins.
+  - **Jumpscares** (`DotScareOverlay`, event scares `dot_*`):
+    - Wrong Frame (10 min cooldown) and Behind the Light (8 min);
+    - Road Ghost (once per 3 nights);
+    - 404 Death (over the death screen).
+    - Switch: `dot.jumpscares`. They follow Photosensitivity, the reduce-flashes option.
+  - **Lore:** `dot_file`, the Patient-4 record.
+- **Slow climbing for every killer:** the Aberrant, the Guest, D.O.T. and the Stalker climb at 30% of their walking speed (`climbFactor` for each). The Aberrant, Guest and D.O.T. have new climb poses; the Stalker keeps its own.
+- **Towns ×1.5** (`world.townFrequency`, `mixin/RandomSpreadStructurePlacementMixin`): spacing 34 → 28 chunks and separation 14 → 11 for newly generated chunks.
+- **Animation:**
+  - **D.O.T.:** idle, walk, provoked walk, slash, grasp wind-up and hold, Static Step, Restore, Field, climb, Loom (the jumpscare), plus seeded unnatural twitches.
+  - **Guest:** a four-beat lateral-sequence walk with a swing and a stance phase per paw. Claws stay flat while planted; weight shifts side to side, the hips dip, the spine counter-rotates and the head stays level. Stalking, climbing and swimming now blend in and out instead of snapping.
+- **Verified:** build success, 57/57 tests. Offline renders of D.O.T.'s texture, glow and poses. Not playtested.

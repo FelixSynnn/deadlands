@@ -165,6 +165,7 @@ public class GuestEntity extends Monster {
 	@Override
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
+		builder.define(DATA_CLIMBING, false);
 		builder.define(DATA_MODE, 0);
 		builder.define(DATA_ACTION, 0);
 		builder.define(DATA_PREY, -1);
@@ -209,6 +210,26 @@ public class GuestEntity extends Monster {
 
 	public float run(float partialTick) {
 		return Mth.lerp(partialTick, runO, run);
+	}
+
+	/** Client: eased blends (previous and current tick) into stalking, climbing and swimming, so nothing snaps. */
+	private float stalkBlend;
+	private float stalkBlendO;
+	private float climbBlend;
+	private float climbBlendO;
+	private float swimBlend;
+	private float swimBlendO;
+
+	public float stalkBlend(float partialTick) {
+		return Mth.lerp(partialTick, stalkBlendO, stalkBlend);
+	}
+
+	public float climbBlend(float partialTick) {
+		return Mth.lerp(partialTick, climbBlendO, climbBlend);
+	}
+
+	public float swimBlend(float partialTick) {
+		return Mth.lerp(partialTick, swimBlendO, swimBlend);
 	}
 
 	private void act(Action action, int ticks) {
@@ -853,12 +874,24 @@ public class GuestEntity extends Monster {
 	public void tick() {
 		super.tick();
 		if (!level().isClientSide()) {
-			climbing = horizontalCollision && mode != Mode.ROAM && mode != Mode.FEED; // up walls, fences, cliffs: whatever is between it and them
+			boolean climb = horizontalCollision && mode != Mode.ROAM && mode != Mode.FEED; // up walls, fences, cliffs
+			if (climb != entityData.get(DATA_CLIMBING)) {
+				entityData.set(DATA_CLIMBING, climb);
+			}
+			if (climb) {
+				com.deadlands.entity.ai.Stalking.climbSlowly(this, ConfigManager.get().guest.climbFactor); // slowly: 30% of a walk
+			}
 		}
 		if (level().isClientSide()) {
 			float moving = (float) Math.min(1.0, getDeltaMovement().horizontalDistance() / 0.25);
 			runO = run;
 			run = Mth.approach(run, charging() || mode() == Mode.HUNT && moving > 0.6F ? moving : 0.0F, 0.08F);
+			stalkBlendO = stalkBlend;
+			climbBlendO = climbBlend;
+			swimBlendO = swimBlend;
+			stalkBlend = Mth.approach(stalkBlend, mode() == Mode.STALK ? 1.0F : 0.0F, 0.05F);
+			climbBlend = Mth.approach(climbBlend, climbing() ? 1.0F : 0.0F, 0.12F);
+			swimBlend = Mth.approach(swimBlend, isInWater() ? 1.0F : 0.0F, 0.08F);
 			return;
 		}
 		double speed = getDeltaMovement().horizontalDistance();
@@ -893,8 +926,12 @@ public class GuestEntity extends Monster {
 
 	// ---------------------------------------------------------------------------------------- climbing
 
-	/** Climbing like a spider when it presses into a wall while after someone (set on the server each tick). */
-	private boolean climbing;
+	/** Climbing when it presses into a wall while after someone (set on the server each tick, synced for the animation). */
+	private static final EntityDataAccessor<Boolean> DATA_CLIMBING = SynchedEntityData.defineId(GuestEntity.class, EntityDataSerializers.BOOLEAN);
+
+	public boolean climbing() {
+		return entityData.get(DATA_CLIMBING);
+	}
 
 	@Override
 	protected net.minecraft.world.entity.ai.navigation.PathNavigation createNavigation(net.minecraft.world.level.Level level) {
@@ -903,7 +940,7 @@ public class GuestEntity extends Monster {
 
 	@Override
 	public boolean onClimbable() {
-		return climbing || super.onClimbable();
+		return entityData.get(DATA_CLIMBING) || super.onClimbable();
 	}
 
 	/** Falls don't hurt it: a long drop off a roof won't stop it. */

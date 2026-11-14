@@ -195,6 +195,7 @@ public class AsesinoEntity extends Monster {
 	@Override
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
+		builder.define(DATA_CLIMBING, false);
 		builder.define(DATA_PREY, -1);
 		builder.define(DATA_MODE, 0);
 		builder.define(DATA_ACTION, 0);
@@ -1029,7 +1030,13 @@ public class AsesinoEntity extends Monster {
 	public void tick() {
 		super.tick();
 		if (!level().isClientSide()) {
-			climbing = horizontalCollision && mode != Mode.ROAM; // up walls, fences, cliffs: whatever is between it and them
+			boolean climb = horizontalCollision && mode != Mode.ROAM; // up walls, fences, cliffs: whatever is between him and them
+			if (climb != entityData.get(DATA_CLIMBING)) {
+				entityData.set(DATA_CLIMBING, climb);
+			}
+			if (climb) {
+				com.deadlands.entity.ai.Stalking.climbSlowly(this, ConfigManager.get().asesino.climbFactor); // slowly: 30% of a walk
+			}
 		}
 		if (level().isClientSide()) {
 			Mode now = mode();
@@ -1084,8 +1091,12 @@ public class AsesinoEntity extends Monster {
 
 	// ---------------------------------------------------------------------------------------- climbing
 
-	/** Climbing like a spider when it presses into a wall while after someone (set on the server each tick). */
-	private boolean climbing;
+	/** Climbing when it presses into a wall while after someone (set on the server each tick, synced for the animation). */
+	private static final EntityDataAccessor<Boolean> DATA_CLIMBING = SynchedEntityData.defineId(AsesinoEntity.class, EntityDataSerializers.BOOLEAN);
+
+	public boolean climbing() {
+		return entityData.get(DATA_CLIMBING);
+	}
 
 	@Override
 	protected net.minecraft.world.entity.ai.navigation.PathNavigation createNavigation(net.minecraft.world.level.Level level) {
@@ -1094,7 +1105,7 @@ public class AsesinoEntity extends Monster {
 
 	@Override
 	public boolean onClimbable() {
-		return climbing || super.onClimbable();
+		return entityData.get(DATA_CLIMBING) || super.onClimbable();
 	}
 
 	/** Falls don't hurt it: a long drop off a roof won't stop it. */

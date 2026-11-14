@@ -66,7 +66,8 @@ public final class ScarePlayer {
 
 	public static void onScare(HorrorScarePayload payload) {
 		Minecraft minecraft = Minecraft.getInstance();
-		if (minecraft.screen != null || CutscenePlayer.active() || minecraft.player == null) {
+		boolean overDeath = payload.id().endsWith("dot_404"); // D.O.T.'s 404 plays over the death screen
+		if (!overDeath && (minecraft.screen != null || CutscenePlayer.active()) || minecraft.player == null) {
 			return;
 		}
 		for (HorrorScarePayload.Step step : payload.steps()) {
@@ -131,6 +132,7 @@ public final class ScarePlayer {
 			case "beam_off" -> beamOffUntil = Math.max(beamOffUntil, now + Math.round(step.amount()));
 			case "apparition" -> Apparition.show(minecraft, step.where(), step.distance(), Math.round(step.amount()));
 			case "apparition_hide" -> Apparition.hide(minecraft);
+			case "dot_frame", "dot_tear", "dot_404" -> DotScareOverlay.start(step.type(), Math.round(step.amount()));
 			case "blink" -> {
 				blinkLength = Math.max(1, Math.round(step.amount()));
 				blinkUntil = now + blinkLength;

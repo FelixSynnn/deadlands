@@ -3,6 +3,7 @@ package com.deadlands.client.sound;
 import com.deadlands.config.ConfigManager;
 import com.deadlands.config.DeadlandsConfig;
 import com.deadlands.entity.AsesinoEntity;
+import com.deadlands.entity.DotEntity;
 import com.deadlands.entity.GuestEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -17,6 +18,7 @@ public final class TerrorRadius {
 	public static final int NONE = 0;
 	public static final int ABERRANT = 1;
 	public static final int GUEST = 2;
+	public static final int DOT = 3;
 	/** Terror above this is out of range. */
 	private static final double OUT = 1.0;
 
@@ -55,12 +57,26 @@ public final class TerrorRadius {
 		return best;
 	}
 
+	/** D.O.T.'s terror for this survivor: -1 while he pursues them. */
+	public static double dot(Minecraft minecraft, LocalPlayer player) {
+		DeadlandsConfig.Audio config = ConfigManager.get().audio;
+		double best = Double.MAX_VALUE;
+		for (DotEntity d : minecraft.level.getEntitiesOfClass(DotEntity.class, player.getBoundingBox().inflate(160.0), DotEntity::isAlive)) {
+			best = Math.min(best, d.preyId() == player.getId() ? -1.0 : d.distanceTo(player) / config.dotTerrorRadius);
+		}
+		return best;
+	}
+
 	/** Whose music plays for this survivor: the killer with the lowest terror, if any is in range. */
 	public static int winner(Minecraft minecraft, LocalPlayer player) {
 		double a = aberrant(minecraft, player);
 		double g = guest(minecraft, player);
-		if (layer(a) < 0 && layer(g) < 0) {
+		double d = dot(minecraft, player);
+		if (layer(a) < 0 && layer(g) < 0 && layer(d) < 0) {
 			return NONE;
+		}
+		if (d <= a && d <= g) {
+			return DOT;
 		}
 		return g <= a ? GUEST : ABERRANT;
 	}

@@ -2849,5 +2849,154 @@
 				"attenuation_distance": 32
 			}
 		]
+	},
+	"dot.idle": {
+		"subtitle": "subtitles.deadlands.dot.idle",
+		"sounds": [
+			{
+				"name": "deadlands:dot/llidlenew"
+			}
+		]
+	},
+	"dot.step": {
+		"subtitle": "subtitles.deadlands.dot.step",
+		"sounds": [
+			{
+				"name": "deadlands:dot/llfootstep1new"
+			},
+			{
+				"name": "deadlands:dot/llfootstep2new"
+			}
+		]
+	},
+	"dot.swing": {
+		"subtitle": "subtitles.deadlands.dot.swing",
+		"sounds": [
+			{
+				"name": "deadlands:dot/llm1new"
+			}
+		]
+	},
+	"dot.kill": {
+		"subtitle": "subtitles.deadlands.dot.kill",
+		"sounds": [
+			{
+				"name": "deadlands:dot/llkill"
+			}
+		]
+	},
+	"dot.provoked": {
+		"subtitle": "subtitles.deadlands.dot.provoked",
+		"sounds": [
+			{
+				"name": "deadlands:dot/llunstoppablenew"
+			}
+		]
+	},
+	"dot.static_step": {
+		"subtitle": "subtitles.deadlands.dot.static_step",
+		"sounds": [
+			{
+				"name": "deadlands:dot/ll404errornew"
+			}
+		]
+	},
+	"dot.restore": {
+		"subtitle": "subtitles.deadlands.dot.restore",
+		"sounds": [
+			{
+				"name": "deadlands:dot/ll404errorerrornew"
+			}
+		]
+	},
+	"dot.grasp_windup": {
+		"subtitle": "subtitles.deadlands.dot.grasp_windup",
+		"sounds": [
+			{
+				"name": "deadlands:dot/lldfanew"
+			}
+		]
+	},
+	"dot.grasp": {
+		"subtitle": "subtitles.deadlands.dot.grasp",
+		"sounds": [
+			{
+				"name": "deadlands:dot/lldfnew"
+			}
+		]
+	},
+	"dot.field_start": {
+		"subtitle": "subtitles.deadlands.dot.field_start",
+		"sounds": [
+			{
+				"name": "deadlands:dot/llcestartnew"
+			}
+		]
+	},
+	"dot.field_loop": {
+		"subtitle": "subtitles.deadlands.dot.field_loop",
+		"sounds": [
+			{
+				"name": "deadlands:dot/llcesummonnew"
+			}
+		]
+	},
+	"dot.field_end": {
+		"subtitle": "subtitles.deadlands.dot.field_end",
+		"sounds": [
+			{
+				"name": "deadlands:dot/llcedesummonnew"
+			}
+		]
+	},
+	"dot.hurt": {
+		"subtitle": "subtitles.deadlands.dot.hurt",
+		"sounds": [
+			{
+				"name": "deadlands:dot/ll404errornew",
+				"pitch": 1.5
+			}
+		]
+	},
+	"dot.death": {
+		"subtitle": "subtitles.deadlands.dot.death",
+		"sounds": [
+			{
+				"name": "deadlands:dot/llcedesummonnew",
+				"pitch": 0.6
+			}
+		]
+	},
+	"music.dot.layer1": {
+		"sounds": [
+			{
+				"name": "deadlands:dot/ll_layer1",
+				"stream": true
+			}
+		]
+	},
+	"music.dot.layer2": {
+		"sounds": [
+			{
+				"name": "deadlands:dot/ll_layer2",
+				"stream": true
+			}
+		]
+	},
+	"music.dot.layer3": {
+		"sounds": [
+			{
+				"name": "deadlands:dot/ll_layer3",
+				"stream": true
+			}
+		]
+	},
+	"music.dot.layer4": {
+		"sounds": [
+			{
+				"name": "deadlands:dot/llchase",
+				"stream": true
+			}
+		]
 	}
 }

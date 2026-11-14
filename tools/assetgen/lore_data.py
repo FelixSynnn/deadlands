@@ -206,6 +206,14 @@ L("guest_file_3", "government", ["facility", "military", "police"], "Incident No
   "Maintenance worker Mercer evacuated with minor injuries. Refused treatment until someone found his dog. The dog was bitten by an "
   "escaped subject during the breach and ran. Witnesses say she was not limping any more. She was standing up on her back legs.")
 
+# D.O.T., Patient-4 (2026-11-13; entity/DotEntity): Deceased On Transfer.
+L("dot_file", "medical", ["facility", "lab", "military", "subway"], "LANTERN Trial, Cohort II, Subject 4",
+  "Kessler Regional, Wing D. He signed the consent form with his left hand; the right one hadn't worked since the convoy. LANTERN "
+  "promised he'd walk again. By week three he did. By week six he stopped sleeping. By week nine every injury the staff gave him, "
+  "testing, closed before the instrument left the skin, and the cameras began to drop frames whenever he moved. Kessler ordered him "
+  "moved to Site Calder and the forms stamped DECEASED ON TRANSFER. The truck arrived with its doors still locked from the outside "
+  "and nobody in it. He doesn't hunt like the others. He walks. Most nights he doesn't even look at you. Don't give him a reason.")
+
 # The subway (world/subway): found in train luggage, ticket booths and hideouts.
 L("subway_paper", "newspaper", ["subway"], "The Morning Line, Final Edition",
   "TRAINS RUN TO THE LAST. The transit authority says services north will continue \"for as long as there are drivers\". "

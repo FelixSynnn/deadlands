@@ -1,0 +1,12 @@
+{
+	"kind": "major",
+	"trigger": "event",
+	"weight": 1,
+	"steps": [
+		{
+			"at": 0,
+			"type": "flicker",
+			"amount": 40
+		}
+	]
+}

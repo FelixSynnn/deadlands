@@ -23,6 +23,7 @@ public final class DeadlandsConfig {
 	public Asesino asesino = new Asesino();
 	public Guest guest = new Guest();
 	public Stealth stealth = new Stealth();
+	public Dot dot = new Dot();
 	public Performance performance = new Performance();
 	public Horror horror = new Horror();
 	public Audio audio = new Audio();
@@ -68,6 +69,9 @@ public final class DeadlandsConfig {
 
 		@ConfigEntry(comment = "Abandoned vehicles on and beside the roads.")
 		public boolean abandonedVehicles = true;
+
+		@ConfigEntry(comment = "How common towns are (1 = the old spacing of 34 chunks; 1.5 = about one and a half times as many). Read when a world loads; affects newly generated chunks.", min = 0.5, max = 3.0)
+		public double townFrequency = 1.5;
 	}
 
 	public static final class Zombies {
@@ -85,6 +89,9 @@ public final class DeadlandsConfig {
 
 		@ConfigEntry(comment = "Farthest distance in blocks an infected may spawn from a player.", min = 16, max = 256)
 		public int spawnDistanceMax = 96;
+
+		@ConfigEntry(comment = "Stalkers' climbing speed as a share of their walking speed.", min = 0.0, max = 1.0)
+		public double stalkerClimbFactor = 0.3;
 
 		@ConfigEntry(comment = "Share of infected that are Runners.", min = 0.0, max = 1.0)
 		public double runnerShare = 0.15;
@@ -212,6 +219,60 @@ public final class DeadlandsConfig {
 	}
 
 	/** Phase 5: the Guest ({@code entity.GuestEntity}, {@code entity.GuestSpawner}). */
+	/** D.O.T. (Deceased On Transfer), Patient-4 ({@code entity.DotEntity}). */
+	public static final class Dot {
+		@ConfigEntry(comment = "D.O.T., Patient-4: a rare night walker in big structures and on town roads. Passive until provoked.")
+		public boolean enabled = true;
+
+		@ConfigEntry(comment = "Chance each minute at night, per survivor, that he comes (when none is near).", min = 0.0, max = 1.0)
+		public double spawnChance = 0.04;
+
+		@ConfigEntry(comment = "Spawn him inside big structures (subway stations, the research facility, Site Calder, the school, the power station, the treatment plant).")
+		public boolean inStructures = true;
+
+		@ConfigEntry(comment = "Spawn him standing in the road in towns, in your way.")
+		public boolean onTownRoads = true;
+
+		@ConfigEntry(comment = "At most one within this many blocks.", min = 32, max = 512)
+		public int areaRadius = 160;
+
+		@ConfigEntry(comment = "Damage per hit on Normal (Minecraft scales it for Easy and Hard).", min = 1.0, max = 100.0)
+		public double damage = 10.0;
+
+		@ConfigEntry(comment = "Can't be hurt at all. Off (the default): very high health and heavy damage resistance instead; either way, running and hiding is how you survive him.")
+		public boolean invulnerable = false;
+
+		@ConfigEntry(comment = "Health (when not invulnerable).", min = 20.0, max = 5000.0)
+		public double health = 800.0;
+
+		@ConfigEntry(comment = "Share of incoming damage he ignores (when not invulnerable).", min = 0.0, max = 0.99)
+		public double damageResistance = 0.75;
+
+		@ConfigEntry(comment = "Walking speed (he walks; he never runs).", min = 0.05, max = 0.6)
+		public double speed = 0.2;
+
+		@ConfigEntry(comment = "Speed while provoked.", min = 0.05, max = 0.8)
+		public double aggroSpeed = 0.28;
+
+		@ConfigEntry(comment = "Seconds he keeps after you, once provoked, if you stay away and out of sight.", min = 5, max = 600)
+		public int giveUpSeconds = 30;
+
+		@ConfigEntry(comment = "Player names that always provoke him on sight, and that he hunts twice as long (comma-separated).")
+		public String alwaysProvokes = "itzbreadloaf";
+
+		@ConfigEntry(comment = "Seconds of looking straight at him that provoke him.", min = 0.5, max = 20.0)
+		public double stareSeconds = 2.0;
+
+		@ConfigEntry(comment = "He walks through doors, fences, glass panes and leaves, breaking them (needs mobGriefing).")
+		public boolean pushesThrough = true;
+
+		@ConfigEntry(comment = "Climbing speed as a share of his walking speed.", min = 0.0, max = 1.0)
+		public double climbFactor = 0.3;
+
+		@ConfigEntry(comment = "His jumpscares (Wrong Frame, Behind the Light, Road Ghost, 404 Death). They respect the Photosensitivity setting.")
+		public boolean jumpscares = true;
+	}
+
 	public static final class Stealth {
 		@ConfigEntry(comment = "Hiding in the dark: hostile DEADLANDS creatures see less far where it is dark, and lose survivors who stay out of sight in the dark.")
 		public boolean enabled = true;
@@ -236,6 +297,9 @@ public final class DeadlandsConfig {
 	}
 
 	public static final class Guest {
+		@ConfigEntry(comment = "Climbing speed as a share of its walking speed.", min = 0.0, max = 1.0)
+		public double climbFactor = 0.3;
+
 		@ConfigEntry(comment = "Minutes after nightfall before the Guest can come (it never appears the moment night falls).", min = 0.0, max = 8.0)
 		public double nightDelayMinutes = 3.0;
 
@@ -304,6 +368,9 @@ public final class DeadlandsConfig {
 
 		@ConfigEntry(comment = "Damage per hit.", min = 1.0, max = 100.0)
 		public double damage = 9.0;
+
+		@ConfigEntry(comment = "Climbing speed as a share of his walking speed.", min = 0.0, max = 1.0)
+		public double climbFactor = 0.3;
 
 		@ConfigEntry(comment = "The Aberrant's lunge: seconds between lunges.", min = 2, max = 60)
 		public int lungeCooldownSeconds = 8;
@@ -447,6 +514,9 @@ public final class DeadlandsConfig {
 
 		@ConfigEntry(comment = "The Guest's terror radius in blocks: its music's layer 1 within it, layer 2 within half, layer 3 within a quarter, layer 4 while it hunts you.", min = 8.0, max = 128.0, client = true)
 		public double guestTerrorRadius = 32.0;
+
+		@ConfigEntry(comment = "D.O.T.'s terror radius in blocks: his music's layer 1 within it, layer 2 within half, layer 3 within a quarter, layer 4 while he pursues you.", min = 8.0, max = 128.0, client = true)
+		public double dotTerrorRadius = 36.0;
 
 		@ConfigEntry(comment = "Volume of DEADLANDS ambience.", min = 0.0, max = 1.0, client = true)
 		public double ambienceVolume = 1.0;

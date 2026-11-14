@@ -9,7 +9,8 @@
 		"PortalShapeMixin",
 		"EnderEyeItemMixin",
 		"EntityPortalMixin",
-		"ServerAdvancementManagerMixin"
+		"ServerAdvancementManagerMixin",
+		"RandomSpreadStructurePlacementMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

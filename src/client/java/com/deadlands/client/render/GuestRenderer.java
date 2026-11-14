@@ -20,9 +20,15 @@ public class GuestRenderer extends MobRenderer<GuestEntity, GuestRenderer.State,
 		public GuestEntity.Mode mode = GuestEntity.Mode.ROAM;
 		/** In water: it swims like a dog, head up. */
 		public boolean swimming;
+		/** On a wall, climbing. */
+		public boolean climbing;
 		public GuestEntity.Action action = GuestEntity.Action.NONE;
 		public float actionAge;
 		public float run;
+		/** Eased 0-1 blends into stalking, climbing and swimming. */
+		public float stalk;
+		public float climb;
+		public float swim;
 	}
 
 	public GuestRenderer(EntityRendererProvider.Context context) {
@@ -39,10 +45,14 @@ public class GuestRenderer extends MobRenderer<GuestEntity, GuestRenderer.State,
 	public void extractRenderState(GuestEntity guest, State state, float partialTick) {
 		super.extractRenderState(guest, state, partialTick);
 		state.swimming = guest.isInWater();
+		state.climbing = guest.climbing();
 		state.mode = guest.mode();
 		state.action = guest.action();
 		state.actionAge = guest.actionAge(partialTick);
 		state.run = guest.run(partialTick);
+		state.stalk = guest.stalkBlend(partialTick);
+		state.climb = guest.climbBlend(partialTick);
+		state.swim = guest.swimBlend(partialTick);
 	}
 
 	@Override

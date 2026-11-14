@@ -61,6 +61,8 @@ import gen_round6
 import gen_lily1
 import gen_felix1
 import gen_round8
+import import_dot
+import import_dot_sfx
 import gen_subway
 import gen_subway_audio
 import import_menu_backgrounds
@@ -133,6 +135,8 @@ GROUPS = {
     "aberrant": import_aberrant.build,  # Phase 5: the Aberrant's imported fan-made model (Sketchfab, credited), rigged for his animations
     "guest": import_guest.build,  # Phase 5: the Guest's imported model (Fourteen, CC-BY-4.0), simplified, rigged, recoloured
     "guest_sfx": import_guest_sfx.build,  # Phase 5: the Guest's sounds and music (the owner's pack), egg, text, credits
+    "dot": import_dot.build,  # D.O.T. (Patient-4): the owner's model, rigged, with its painted texture and glow layer
+    "dot_sfx": import_dot_sfx.build,  # D.O.T.: the owner's sounds and music, egg, text, jumpscares, haunts
     "asesino": import_asesino.build,  # Phase 5: the Asesino's skin, eyes, egg, sounds and music (the owner's files)
     "round6": gen_round6.build,  # Phase 5: hiding in the dark, terror radii, the lunge, the Green Tornado, safe respawn, spawn settings (after pixabay)
     "realism": dl_realism.build,  # last: the finishing pass over block and item textures (originals in texture-backup/)

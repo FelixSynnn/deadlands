@@ -157,6 +157,23 @@ public final class DLSounds {
 	public static final Holder.Reference<SoundEvent> GUEST_TEAR = register("guest.tear");
 	public static final Holder.Reference<SoundEvent> GUEST_HURT = register("guest.hurt");
 	public static final Holder.Reference<SoundEvent> GUEST_DEATH = register("guest.death");
+	// D.O.T. (the owner's sounds; tools/assetgen/import_dot_sfx.py)
+	public static final Holder.Reference<SoundEvent> DOT_IDLE = register("dot.idle");
+	public static final Holder.Reference<SoundEvent> DOT_STEP = register("dot.step");
+	public static final Holder.Reference<SoundEvent> DOT_SWING = register("dot.swing");
+	public static final Holder.Reference<SoundEvent> DOT_KILL = register("dot.kill");
+	public static final Holder.Reference<SoundEvent> DOT_PROVOKED = register("dot.provoked");
+	public static final Holder.Reference<SoundEvent> DOT_STATIC_STEP = register("dot.static_step");
+	public static final Holder.Reference<SoundEvent> DOT_RESTORE = register("dot.restore");
+	public static final Holder.Reference<SoundEvent> DOT_GRASP_WINDUP = register("dot.grasp_windup");
+	public static final Holder.Reference<SoundEvent> DOT_GRASP = register("dot.grasp");
+	public static final Holder.Reference<SoundEvent> DOT_FIELD_START = register("dot.field_start");
+	public static final Holder.Reference<SoundEvent> DOT_FIELD_LOOP = register("dot.field_loop");
+	public static final Holder.Reference<SoundEvent> DOT_FIELD_END = register("dot.field_end");
+	public static final Holder.Reference<SoundEvent> DOT_HURT = register("dot.hurt");
+	public static final Holder.Reference<SoundEvent> DOT_DEATH = register("dot.death");
+	public static final List<Holder.Reference<SoundEvent>> DOT_MUSIC = List.of(register("music.dot.layer1"), register("music.dot.layer2"),
+		register("music.dot.layer3"), register("music.dot.layer4"));
 	public static final List<Holder.Reference<SoundEvent>> GUEST_MUSIC = List.of(register("music.guest.layer1"), register("music.guest.layer2"),
 		register("music.guest.layer3"), register("music.guest.layer4"));
 	public static final List<Holder.Reference<SoundEvent>> ASESINO_MUSIC = List.of(register("music.asesino.layer1"), register("music.asesino.layer2"),

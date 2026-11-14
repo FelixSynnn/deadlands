@@ -40,6 +40,9 @@ public class StalkerEntity extends InfectedEntity {
 		super.tick();
 		if (!level().isClientSide()) {
 			setFlag(FLAG_CLIMBING, horizontalCollision);
+			if (horizontalCollision) {
+				com.deadlands.entity.ai.Stalking.climbSlowly(this, com.deadlands.config.ConfigManager.get().zombies.stalkerClimbFactor);
+			}
 		}
 	}
 
