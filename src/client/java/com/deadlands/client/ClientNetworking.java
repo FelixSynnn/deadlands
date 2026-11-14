@@ -28,6 +28,8 @@ public final class ClientNetworking {
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.JournalPayload.TYPE, (payload, context) -> ClientState.setJournal(payload));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.EndingChoicePayload.TYPE,
 			(payload, context) -> context.client().setScreen(new com.deadlands.client.ui.EndingScreen.Choice(payload)));
+		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.StoryPayload.TYPE,
+			(payload, context) -> com.deadlands.client.ui.JournalScreen.story(payload));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.EndingPayload.TYPE,
 			(payload, context) -> context.client().setScreen(new com.deadlands.client.ui.EndingScreen(payload)));
 		ClientPlayNetworking.registerGlobalReceiver(com.deadlands.network.BossEventPayload.TYPE,

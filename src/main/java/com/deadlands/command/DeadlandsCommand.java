@@ -58,6 +58,16 @@ public final class DeadlandsCommand {
 		dispatcher.register(Commands.literal("deadlands")
 			.then(Commands.literal("status").executes(ctx -> status(ctx.getSource())))
 			.then(Commands.literal("chronicle").executes(ctx -> chronicle(ctx.getSource())))
+			.then(Commands.literal("story").executes(ctx -> com.deadlands.story.StoryArchive.story(ctx.getSource().getPlayerOrException())))
+			.then(Commands.literal("cinematics").executes(ctx -> com.deadlands.story.StoryArchive.cinematics(ctx.getSource().getPlayerOrException())))
+			.then(Commands.literal("watch").then(Commands.argument("cutscene", StringArgumentType.word())
+				.executes(ctx -> {
+					if (com.deadlands.story.StoryArchive.watch(ctx.getSource().getPlayerOrException(), StringArgumentType.getString(ctx, "cutscene"))) {
+						return 1;
+					}
+					ctx.getSource().sendFailure(Component.translatable("story.deadlands.cinematics.not_seen"));
+					return 0;
+				})))
 			.then(Commands.literal("choose").then(Commands.argument("option", StringArgumentType.word())
 				.executes(ctx -> choose(ctx.getSource(), StringArgumentType.getString(ctx, "option")))))
 			.then(Commands.literal("config")

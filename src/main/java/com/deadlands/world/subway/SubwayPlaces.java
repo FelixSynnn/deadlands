@@ -17,7 +17,6 @@ import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
-import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jspecify.annotations.Nullable;
 
@@ -61,7 +60,7 @@ public final class SubwayPlaces {
 			return null;
 		}
 		StructurePiece first = start.getPieces().getFirst();
-		if (!(first instanceof PoolElementStructurePiece piece)) {
+		if (!(first instanceof SubwayStructure.Piece piece)) {
 			return null;
 		}
 		int which = random.nextInt(SPOTS.size());
@@ -71,12 +70,12 @@ public final class SubwayPlaces {
 		return spot;
 	}
 
-	private static BlockPos toWorld(PoolElementStructurePiece piece, BlockPos local) {
-		return StructureTemplate.transform(local, Mirror.NONE, piece.getRotation(), BlockPos.ZERO).offset(piece.getPosition());
+	private static BlockPos toWorld(SubwayStructure.Piece piece, BlockPos local) {
+		return StructureTemplate.transform(local, Mirror.NONE, piece.rotation(), BlockPos.ZERO).offset(piece.origin());
 	}
 
 	/** His things around the spot (template coordinates, turned with the station). */
-	private static void dress(ServerLevel level, PoolElementStructurePiece piece, int which) {
+	private static void dress(ServerLevel level, SubwayStructure.Piece piece, int which) {
 		switch (which) {
 			case 0 -> { // the maintenance room: his lab
 				put(level, piece, 26, 2, 27, block("desk"));
@@ -102,7 +101,7 @@ public final class SubwayPlaces {
 		}
 	}
 
-	private static void papers(ServerLevel level, PoolElementStructurePiece piece, int[][] at) {
+	private static void papers(ServerLevel level, SubwayStructure.Piece piece, int[][] at) {
 		BlockState papers = block("scattered_papers");
 		for (int[] xz : at) {
 			put(level, piece, xz[0], 2, xz[1], papers);
@@ -114,11 +113,11 @@ public final class SubwayPlaces {
 		return block == Blocks.AIR ? Blocks.AIR.defaultBlockState() : block.defaultBlockState();
 	}
 
-	private static void put(ServerLevel level, PoolElementStructurePiece piece, int x, int y, int z, BlockState state) {
+	private static void put(ServerLevel level, SubwayStructure.Piece piece, int x, int y, int z, BlockState state) {
 		BlockPos pos = toWorld(piece, new BlockPos(x, y, z));
 		if (level.getBlockState(pos).isAir() && !state.isAir()) {
 			level.setBlock(pos, state.hasProperty(net.minecraft.world.level.block.HorizontalDirectionalBlock.FACING)
-				? state.rotate(piece.getRotation()) : state, 2);
+				? state.rotate(piece.rotation()) : state, 2);
 		}
 	}
 }

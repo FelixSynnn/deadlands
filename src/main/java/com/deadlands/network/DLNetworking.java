@@ -47,6 +47,8 @@ public final class DLNetworking {
 		PayloadTypeRegistry.playS2C().register(LocationPayload.TYPE, LocationPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(CutscenePayload.TYPE, CutscenePayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(EndingChosenPayload.TYPE, EndingChosenPayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(StoryPayload.TYPE, StoryPayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(StoryRequestPayload.TYPE, StoryRequestPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(IntroPayload.TYPE, IntroPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(RadioPayload.TYPE, RadioPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(IntroDonePayload.TYPE, IntroDonePayload.CODEC);

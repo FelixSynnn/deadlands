@@ -1030,3 +1030,32 @@ The owner's report: the flashlight does nothing even with Lamb's Dynamic Lights,
   - The stations are separate. Their tunnels end in collapses, not a world-spanning network.
   - No subway maps on the walls, and no abandoned vehicles at the entrances.
 - **Verified:** build success, 57/57 tests, worldgen files load, every template block exists, offline floor plans checked. Not generated or played in a world.
+
+### beta.9 (2026-11-13) and Phase 5 step 6 begun
+
+- **Flashlight** (`item/FlashlightBeam.java`):
+  - Light blocks follow the beam ten times a second, in the nearest free space within 2 blocks of where it lands.
+  - A light stays put within 2.5 blocks, and the old one overlaps the new for 8 ticks.
+  - A level-8 light goes with the holder, and a halfway light on long throws.
+- **No sleep near killers** (`player/RestlessNights.java`): beds refuse you with the Aberrant or the Guest within 48 blocks (`horror.noSleepRadius`). Sleepers are woken if one comes that close.
+- **Climbing killers:** both use spider-style wall climbing and wall-climber pathing while after someone, and are immune to fall damage.
+- **Weapon hits** use the synthesized impacts. **The rat** is a 20% chance per change.
+- **Published as 1.1.0-beta.9.** The jar was verified by downloading it back from the release.
+- **Phase 5 step 6, started** (`story/StoryArchive.java`, not yet published):
+  - `/deadlands story` lists every chapter (four main, plus Imlilylol's and FelixSyn's first) as done, under way or not yet, and the ending reached.
+  - `/deadlands cinematics` is the Cinematic Archive: the nine cutscenes in story order, the seen ones with a [Watch] button (`/deadlands watch <id>`). Replays play around you, facing your way.
+  - Still to do for step 6: chapter select (replaying a chapter), a journal page for both lists, and the endings screen work.
+
+### beta.10 (2026-11-13): buried subways, no sleeping at night, the journal's Story page
+
+- **Subways only underground** (`world/subway/SubwayStructure.java`, new structure type `deadlands:subway`): replaces the jigsaw placement, which sampled one corner and left stations sticking out of hillsides and mountains.
+  - The ground is sampled over the whole turned footprint, and a station is built only where it's level to within 5 blocks and above sea level.
+  - The halls are now 16 blocks below the surface, with 8–10 blocks of earth above.
+  - The street kiosk sits on the ground where it stands, and its stairs climb from the ticket hall to the surface.
+- **No sleeping at night** (`horror.noSleepAtNight`): beds refuse you at night ("You'll have to make it to morning"), but still set your spawn point. The rule that a killer within 48 blocks keeps you awake still applies.
+- **Phase 5 step 6, the journal's Story tab:** a sixth bookmark.
+  - Left page: each chapter (done, under way, not yet) and the ending reached.
+  - Right page: the Cinematic Archive. Click a seen cutscene to watch it again.
+  - Its data comes from the server when the journal opens (`StoryRequestPayload` and `StoryPayload`).
+  - `/deadlands story`, `/deadlands cinematics` and `/deadlands watch` do the same from chat.
+- **Still to do for step 6:** chapter select (replaying a chapter) and the endings screen.

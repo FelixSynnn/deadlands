@@ -76,6 +76,7 @@ public final class Deadlands implements ModInitializer {
 		com.deadlands.registry.DLStory.init();
 		com.deadlands.registry.DLParticles.init();
 		com.deadlands.registry.DLEvents.init();
+		com.deadlands.world.subway.SubwayStructure.register(); // before the worldgen data loads
 		DLWorldgen.init();
 		DLCreativeTabs.init();
 
@@ -100,6 +101,7 @@ public final class Deadlands implements ModInitializer {
 		com.deadlands.player.SafeRespawn.init();
 		com.deadlands.item.FlashlightBeam.init();
 		com.deadlands.player.RestlessNights.init();
+		com.deadlands.story.StoryArchive.init();
 		com.deadlands.world.subway.SubwayAmbience.init();
 		com.deadlands.world.disaster.DisasterDirector.init();
 		com.deadlands.entity.AsesinoSpawner.init();

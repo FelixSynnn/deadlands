@@ -27,7 +27,7 @@ from gen_towns import item, key, loot_table
 
 NS = D.NS
 OUT = D.DATA / NS / "structure" / "subway"
-D_DEPTH = 12          # the surface is at template y = 12
+D_DEPTH = 16          # the surface is at template y = 16 (SubwayStructure.DEPTH): halls well underground
 SX, SY, SZ = 96, D_DEPTH + 6, 30
 HALL = (16, 63)
 WALL = ["dirty_concrete", "stained_concrete", "cracked_concrete", "stained_concrete"]
@@ -86,7 +86,7 @@ def kiosk(b: Station) -> None:
     """The street entrance: a concrete kiosk at the surface over stairs that go down eastward to the ticket hall."""
     g = D_DEPTH
     # The stairwell: x 4-15, z 22-24; floor rises one per block westward from y = 2 (x = 15) to y = 12 (x = 5).
-    for x in range(4, 17):
+    for x in range(0, 17):
         floor = min(g, 2 + max(0, 15 - x))
         for z in range(21, 26):
             for y in range(max(0, floor - 2), min(SY, floor + 5)):
@@ -361,11 +361,10 @@ VARIANTS = [
 def worldgen() -> None:
     D.data_json("tags/worldgen/biome/has_structure/subway_station.json", {"replace": False, "values": ["#deadlands:is_deadlands"]})
     D.data_json("tags/worldgen/structure/subway.json", {"replace": False, "values": [f"{NS}:subway_station"]})
+    # Placed by world/subway/SubwayStructure: only on level ground, fully underground, the entrance on the surface.
     D.data_json("worldgen/structure/subway_station.json", {
-        "type": "minecraft:jigsaw", "biomes": f"#{NS}:has_structure/subway_station", "step": "underground_structures",
-        "terrain_adaptation": "none", "spawn_overrides": {}, "start_pool": f"{NS}:subway/station", "size": 1,
-        "start_height": {"absolute": -D_DEPTH}, "project_start_to_heightmap": "WORLD_SURFACE_WG",
-        "max_distance_from_center": 116, "use_expansion_hack": False})
+        "type": f"{NS}:subway", "biomes": f"#{NS}:has_structure/subway_station", "step": "underground_structures",
+        "terrain_adaptation": "none", "spawn_overrides": {}})
     D.data_json("worldgen/template_pool/subway/station.json", {
         "fallback": "minecraft:empty",
         "elements": [{"weight": 1, "element": {"element_type": "minecraft:single_pool_element", "location": f"{NS}:subway/{name}",

@@ -430,6 +430,9 @@ public final class DeadlandsConfig {
 
 		@ConfigEntry(comment = "No sleeping while the Aberrant or the Guest is within this many blocks (0 turns it off); a sleeper is woken if one comes this close.", min = 0.0, max = 160.0)
 		public double noSleepRadius = 48.0;
+
+		@ConfigEntry(comment = "No sleeping at night: the night can't be skipped, it has to be survived (a bed still sets your spawn point).")
+		public boolean noSleepAtNight = true;
 	}
 
 	public static final class Audio {
