@@ -77,7 +77,7 @@ public class DotEntity extends Monster {
 	}
 
 	public enum Action {
-		NONE, SWING, GRASP_WINDUP, GRASP, STATIC_STEP, RESTORE, FIELD, TWITCH, LOOM // append only
+		NONE, SWING, GRASP_WINDUP, GRASP, STATIC_STEP, RESTORE, FIELD, TWITCH, LOOM, SWING2, THRUST, SCREAM, YELL, POUNCE_CROUCH, POUNCE // append only
 	}
 
 	private static final EntityDataAccessor<Integer> DATA_MODE = SynchedEntityData.defineId(DotEntity.class, EntityDataSerializers.INT);
@@ -90,6 +90,15 @@ public class DotEntity extends Monster {
 	private int lostTicks;
 	private int actionLeft;
 	private int swingCooldown;
+	/** Which cut comes next: 0 the overhead slash, 1 the backhand, 2 the thrust. */
+	private int combo;
+	/** The scream when he spots someone (he stops for it), the yells while he runs, the pounce. */
+	private int screamLeft;
+	private int yellIn = 160;
+	private int pounceCooldown = 100;
+	private int pounceWindup;
+	private int pounceTicks;
+	private boolean pounceHit;
 	private int windup;
 	private int staticCooldown = 120;
 	private int restoreCooldown;
@@ -127,6 +136,14 @@ public class DotEntity extends Monster {
 
 	public float climb(float partialTick) {
 		return Mth.lerp(partialTick, climbO, climb);
+	}
+
+	/** Client: how far through a stride he is (0 right foot down, 0.5 left), shared by the prowl and the sprint. */
+	private float walkPhase;
+	private float walkPhaseO;
+
+	public float walkPhase(float partialTick) {
+		return Mth.lerp(partialTick, walkPhaseO, walkPhase);
 	}
 
 	private record Snapshot(Vec3 pos, float health) {
@@ -327,6 +344,7 @@ public class DotEntity extends Monster {
 	private void tickTimers() {
 		swingCooldown = Math.max(0, swingCooldown - 1);
 		staticCooldown = Math.max(0, staticCooldown - 1);
+		pounceCooldown = Math.max(0, pounceCooldown - 1);
 		restoreCooldown = Math.max(0, restoreCooldown - 1);
 		graspCooldown = Math.max(0, graspCooldown - 1);
 		fieldCooldown = Math.max(0, fieldCooldown - 1);
@@ -346,6 +364,9 @@ public class DotEntity extends Monster {
 			}
 			if (alwaysProvokes(player) && sees(player)) {
 				return player;
+			}
+			if (!ConfigManager.get().dot.passive && sees(player)) {
+				return player; // a predator: seen is hunted
 			}
 			Vec3 to = player.position().subtract(position()).multiply(1.0, 0.0, 1.0);
 			if (to.length() < 2.2 && to.normalize().dot(forward) > 0.55) {
@@ -371,6 +392,14 @@ public class DotEntity extends Monster {
 		stares.clear();
 		getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(ConfigManager.get().dot.aggroSpeed);
 		voice(level, DLSounds.DOT_PROVOKED.value(), 2.0F, 1.0F, 100);
+		// He screams, like the infected do but worse: rearing up, beak to the sky, and they freeze for a moment.
+		screamLeft = 34;
+		act(Action.SCREAM, 34);
+		level.playSound(null, getX(), getY(), getZ(), DLSounds.INFECTED_SCREAMER_SCREAM.value(), SoundSource.HOSTILE, 2.6F, 0.62F);
+		level.playSound(null, getX(), getY(), getZ(), DLSounds.INFECTED_BRUTE_ROAR.value(), SoundSource.HOSTILE, 2.0F, 0.7F);
+		if (distanceTo(player) < 24.0) {
+			player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 25, 3, true, false));
+		}
 	}
 
 	private void calm() {
@@ -419,8 +448,27 @@ public class DotEntity extends Monster {
 			return;
 		}
 		getLookControl().setLookAt(target, 30.0F, 30.0F);
+		if (screamLeft > 0) {
+			screamLeft--;
+			getNavigation().stop();
+			return; // the scream holds him a moment
+		}
 		if (scares(level, target, distance)) {
 			return;
+		}
+		if (pounce(level, target, distance, seen)) {
+			return;
+		}
+		// Yells as he runs: short, ragged, like the infected calling to each other.
+		if (--yellIn <= 0) {
+			yellIn = 120 + random.nextInt(140);
+			act(Action.YELL, 14);
+			SoundEvent yell = switch (random.nextInt(3)) {
+				case 0 -> DLSounds.INFECTED_RUNNER_ALERT.value();
+				case 1 -> DLSounds.INFECTED_BRUTE_ROAR.value();
+				default -> DLSounds.INFECTED_SCREAMER_SCREAM.value();
+			};
+			level.playSound(null, getX(), getY(), getZ(), yell, SoundSource.HOSTILE, 1.8F, 0.65F + random.nextFloat() * 0.15F);
 		}
 		if (graspWindup > 0) {
 			getNavigation().stop();
@@ -438,7 +486,6 @@ public class DotEntity extends Monster {
 		if (windup > 0) {
 			getNavigation().stop();
 			if (--windup == 0) {
-				act(Action.SWING, 10);
 				swing(net.minecraft.world.InteractionHand.MAIN_HAND);
 				if (distanceTo(target) < 3.4 && hasLineOfSight(target)) {
 					strike(level, target);
@@ -453,9 +500,11 @@ public class DotEntity extends Monster {
 			level.playSound(null, getX(), getY(), getZ(), DLSounds.DOT_GRASP_WINDUP.value(), SoundSource.HOSTILE, 1.4F, 1.0F);
 			return;
 		}
-		if (swingCooldown == 0 && distance < 2.8) {
+		if (swingCooldown == 0 && distance < 3.2) {
 			windup = 8;
-			act(Action.SWING, 18);
+			// He uses the blade three ways, in turn: an overhead slash, a backhand cut, a thrust.
+			act(combo == 0 ? Action.SWING : combo == 1 ? Action.SWING2 : Action.THRUST, 18);
+			combo = (combo + 1) % 3;
 			level.playSound(null, getX(), getY(), getZ(), DLSounds.DOT_SWING.value(), SoundSource.HOSTILE, 1.2F, 1.0F);
 			return;
 		}
@@ -479,8 +528,48 @@ public class DotEntity extends Monster {
 			}
 		}
 		if ((tickCount + getId()) % 5 == 0 || getNavigation().isDone()) {
-			getNavigation().moveTo(target, 1.0);
+			getNavigation().moveTo(target, distance > 6.0 ? 1.2 : 1.0); // a run when he's far, closing in when near
 		}
+	}
+
+	/**
+	 * The pounce: from 4 to 8 blocks, in sight, he drops low (half a second), then springs at them, claws first. A
+	 * sidestep makes him miss and stumble. 8 seconds between pounces.
+	 */
+	private boolean pounce(ServerLevel level, Player target, double distance, boolean seen) {
+		if (pounceTicks > 0) {
+			pounceTicks--;
+			if (!pounceHit && distanceTo(target) < 2.2) {
+				pounceHit = true;
+				strike(level, target);
+			}
+			if (pounceTicks == 0 && !pounceHit) {
+				swingCooldown = Math.max(swingCooldown, 20); // a stumble after a miss
+			}
+			return true;
+		}
+		if (pounceWindup > 0) {
+			getNavigation().stop();
+			getLookControl().setLookAt(target, 40.0F, 40.0F);
+			if (--pounceWindup == 0) {
+				act(Action.POUNCE, 14);
+				Vec3 dir = target.position().subtract(position()).multiply(1.0, 0.0, 1.0).normalize();
+				setDeltaMovement(dir.x * 1.25, 0.42, dir.z * 1.25);
+				hurtMarked = true;
+				pounceTicks = 12;
+				pounceHit = false;
+				pounceCooldown = 160;
+				level.playSound(null, getX(), getY(), getZ(), DLSounds.INFECTED_RUNNER_ALERT.value(), SoundSource.HOSTILE, 1.8F, 0.6F);
+			}
+			return true;
+		}
+		if (pounceCooldown == 0 && seen && onGround() && distance > 4.0 && distance < 8.0 && random.nextInt(6) == 0) {
+			pounceWindup = 10;
+			act(Action.POUNCE_CROUCH, 10);
+			getNavigation().stop();
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -794,6 +883,13 @@ public class DotEntity extends Monster {
 			climbO = climb;
 			aggro = Mth.approach(aggro, mode() == Mode.PROVOKED ? 1.0F : 0.0F, 0.04F);
 			climb = Mth.approach(climb, climbing() ? 1.0F : 0.0F, 0.12F);
+			// A stride takes 16.5 units of walk animation prowling, 10.1 sprinting (longer, faster strides).
+			walkPhaseO = walkPhase;
+			walkPhase += walkAnimation.speed() / Mth.lerp(aggro, 16.5F, 10.1F);
+			if (walkPhase > 64.0F) {
+				walkPhase -= 64.0F;
+				walkPhaseO -= 64.0F;
+			}
 			return;
 		}
 		boolean climb = horizontalCollision && mode == Mode.PROVOKED;

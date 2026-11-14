@@ -15,8 +15,8 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
  */
 public final class DotGeometry {
 	public static final ModelLayerLocation LAYER = new ModelLayerLocation(Deadlands.id("dot"), "main");
-	public static final String[] BONES = {"pelvis", "torso", "head", "arm_r", "arm_l", "blade", "leg_r", "leg_l", "cloak_r", "cloak_l"};
-	public static final String[] PARENTS = {"root", "pelvis", "torso", "torso", "torso", "arm_l", "pelvis", "pelvis", "torso", "torso"};
+	public static final String[] BONES = {"pelvis", "skirt", "spine", "chest", "neck", "head", "hat", "arm_r", "forearm_r", "hand_r", "arm_l", "forearm_l", "hand_l", "leg_r", "foot_r", "leg_l", "foot_l", "cloth"};
+	public static final String[] PARENTS = {"root", "pelvis", "pelvis", "spine", "chest", "neck", "head", "chest", "arm_r", "forearm_r", "chest", "arm_l", "forearm_l", "pelvis", "leg_r", "pelvis", "leg_l", "pelvis"};
 
 	private DotGeometry() {
 	}
@@ -24,16 +24,24 @@ public final class DotGeometry {
 	public static LayerDefinition create() {
 		MeshDefinition mesh = new MeshDefinition();
 		PartDefinition root = mesh.getRoot().addOrReplaceChild("root", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
-		PartDefinition pelvis = root.addOrReplaceChild("pelvis", CubeListBuilder.create(), PartPose.offset(0.000F, -12.507F, 0.000F));
-		PartDefinition torso = pelvis.addOrReplaceChild("torso", CubeListBuilder.create(), PartPose.offset(0.000F, 0.000F, 0.000F));
-		PartDefinition head = torso.addOrReplaceChild("head", CubeListBuilder.create(), PartPose.offset(0.000F, -12.402F, 0.000F));
-		PartDefinition arm_r = torso.addOrReplaceChild("arm_r", CubeListBuilder.create(), PartPose.offset(-9.301F, -11.471F, 0.000F));
-		PartDefinition arm_l = torso.addOrReplaceChild("arm_l", CubeListBuilder.create(), PartPose.offset(9.301F, -11.471F, 0.000F));
-		PartDefinition blade = arm_l.addOrReplaceChild("blade", CubeListBuilder.create(), PartPose.offset(11.161F, 5.891F, 0.000F));
-		PartDefinition leg_r = pelvis.addOrReplaceChild("leg_r", CubeListBuilder.create(), PartPose.offset(-3.100F, 0.000F, 0.000F));
-		PartDefinition leg_l = pelvis.addOrReplaceChild("leg_l", CubeListBuilder.create(), PartPose.offset(3.100F, 0.000F, 0.000F));
-		PartDefinition cloak_r = torso.addOrReplaceChild("cloak_r", CubeListBuilder.create(), PartPose.offset(-2.480F, -11.161F, 3.100F));
-		PartDefinition cloak_l = torso.addOrReplaceChild("cloak_l", CubeListBuilder.create(), PartPose.offset(2.480F, -11.161F, 3.100F));
+		PartDefinition pelvis = root.addOrReplaceChild("pelvis", CubeListBuilder.create(), PartPose.offset(0.000F, -21.117F, -0.774F));
+		PartDefinition skirt = pelvis.addOrReplaceChild("skirt", CubeListBuilder.create(), PartPose.offset(0.000F, 0.000F, 0.000F));
+		PartDefinition spine = pelvis.addOrReplaceChild("spine", CubeListBuilder.create(), PartPose.offset(-0.000F, -1.649F, 0.234F));
+		PartDefinition chest = spine.addOrReplaceChild("chest", CubeListBuilder.create(), PartPose.offset(-0.000F, -4.414F, -0.115F));
+		PartDefinition neck = chest.addOrReplaceChild("neck", CubeListBuilder.create(), PartPose.offset(0.000F, -3.790F, 0.190F));
+		PartDefinition head = neck.addOrReplaceChild("head", CubeListBuilder.create(), PartPose.offset(0.000F, -1.380F, -0.258F));
+		PartDefinition hat = head.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.offset(0.000F, -1.996F, -0.247F));
+		PartDefinition arm_r = chest.addOrReplaceChild("arm_r", CubeListBuilder.create(), PartPose.offset(-4.132F, -1.797F, 0.929F));
+		PartDefinition forearm_r = arm_r.addOrReplaceChild("forearm_r", CubeListBuilder.create(), PartPose.offset(-2.101F, 4.011F, -0.000F));
+		PartDefinition hand_r = forearm_r.addOrReplaceChild("hand_r", CubeListBuilder.create(), PartPose.offset(-2.507F, 3.700F, 0.000F));
+		PartDefinition arm_l = chest.addOrReplaceChild("arm_l", CubeListBuilder.create(), PartPose.offset(4.132F, -1.797F, 0.929F));
+		PartDefinition forearm_l = arm_l.addOrReplaceChild("forearm_l", CubeListBuilder.create(), PartPose.offset(2.101F, 4.011F, 0.000F));
+		PartDefinition hand_l = forearm_l.addOrReplaceChild("hand_l", CubeListBuilder.create(), PartPose.offset(2.507F, 3.700F, 0.000F));
+		PartDefinition leg_r = pelvis.addOrReplaceChild("leg_r", CubeListBuilder.create(), PartPose.offset(-3.617F, 11.070F, 0.774F));
+		PartDefinition foot_r = leg_r.addOrReplaceChild("foot_r", CubeListBuilder.create(), PartPose.offset(-0.399F, 7.635F, 1.408F));
+		PartDefinition leg_l = pelvis.addOrReplaceChild("leg_l", CubeListBuilder.create(), PartPose.offset(3.617F, 11.070F, 0.774F));
+		PartDefinition foot_l = leg_l.addOrReplaceChild("foot_l", CubeListBuilder.create(), PartPose.offset(0.399F, 7.635F, 1.408F));
+		PartDefinition cloth = pelvis.addOrReplaceChild("cloth", CubeListBuilder.create(), PartPose.offset(3.318F, -6.346F, -1.294F));
 		return LayerDefinition.create(mesh, 16, 16);
 	}
 }

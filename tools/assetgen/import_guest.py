@@ -232,7 +232,7 @@ def build() -> None:
         encoded = n.encode("utf-8")
         out.write(struct.pack(">h", len(encoded)))
         out.write(encoded)
-        out.write(struct.pack(">?", True))
+        out.write(struct.pack(">?", False))  # no glow (the owner: the Guest and D.O.T. don't glow in the dark)
     out.write(struct.pack(">i", len(groups)))
     count = 0
     for (bone, name), rows in groups.items():

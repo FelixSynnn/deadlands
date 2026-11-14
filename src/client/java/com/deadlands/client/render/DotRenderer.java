@@ -9,12 +9,13 @@ import net.minecraft.resources.Identifier;
 
 /**
  * D.O.T., Patient-4: the owner's model with its DEADLANDS texture (tools/assetgen/import_dot.py), drawn by
- * {@link RiggedMesh.Layer} on its rig ({@link DotGeometry}) and posed by {@link DotModel}. The glowing parts
- * (halo, chest lens, hands, leg flames, cloak tips) are full bright, so he shows in the dark.
+ * {@link RiggedMesh.Layer} on its rig ({@link DotGeometry}) and posed by {@link DotModel} with the animations made in
+ * Blender ({@code tools/assetgen/blender}). Nothing on him glows: in
+ * the dark he is a shape you can barely see.
  */
 public class DotRenderer extends MobRenderer<DotEntity, DotRenderer.State, DotModel> {
 	private static final Identifier MESH = Deadlands.id("models/entity/dot.bin");
-	private static final Identifier TEXTURE = Deadlands.id("textures/entity/dot/model/torso1mtl.png");
+	private static final Identifier TEXTURE = Deadlands.id("textures/entity/dot/model/m_plaguedoctor_body.png");
 
 	public static class State extends LivingEntityRenderState {
 		public DotEntity.Mode mode = DotEntity.Mode.WALK;
@@ -24,6 +25,8 @@ public class DotRenderer extends MobRenderer<DotEntity, DotRenderer.State, DotMo
 		public float aggro;
 		/** 0 on the ground, 1 on a wall. */
 		public float climb;
+		/** Through his stride: 0 right foot down, 0.5 left (the prowl and the sprint share it). */
+		public float walkPhase;
 		/** A number of his own, so his twitches don't line up with another's. */
 		public int seed;
 	}
@@ -47,6 +50,7 @@ public class DotRenderer extends MobRenderer<DotEntity, DotRenderer.State, DotMo
 		state.aggro = dot.aggro(partialTick);
 		state.climb = dot.climb(partialTick);
 		state.seed = dot.getId();
+		state.walkPhase = dot.walkPhase(partialTick);
 	}
 
 	@Override

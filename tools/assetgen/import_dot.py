@@ -1,23 +1,22 @@
-"""D.O.T. (Deceased On Transfer), Patient-4: the owner's model, rigged and given an original texture.
+"""D.O.T. (Deceased On Transfer), Patient-4: his body, from the owner's plague doctor model, in D.O.T.'s own colours.
 
-Source: ~/Downloads/Sounds + Models For DOT/D.O.T.glb (skipped when missing, keeping what the mod has). The model
-is built of separate parts (head, torso, arms, legs, helmet, crown, armour, shoulder plates, leggings, a blade and
-two cloak wings), so each part goes to one bone of a simple humanoid rig (pelvis, torso, head, arms, legs, the two
-cloak halves, the blade in the left hand). No triangles are dropped.
+Source: ~/Downloads/plague_doctor.glb (skipped when missing, keeping what the mod has). The model is skinned to a full
+rig; each triangle goes to the bone of its heaviest joint, mapped onto a simpler predator rig (pelvis, coat-skirt,
+spine, chest, neck, head, hat, arms in three parts, legs and feet, and the belt cloths). The display extras are left
+out: the outline shell, the pedestal, the candle flames, the gun and the potion. It is simplified to about
+{TARGET} triangles.
 
-The texture is painted here, not copied: every texel's colour is worked out from where it sits on the body (the
-source's grey texture only adds its sculpted detail). The broad colour direction follows the owner's reference:
-deep navy above, sliding to a dark poisoned green toward the hems and the cloak, with neon-green light. The details
-are DEADLANDS' own: glitch scanlines, circuit traces etched on the armour, flame outlines licking up the legs, veins
-in the cloak, and a white square halo. Glowing parts go to a separate emissive layer.
+The texture is D.O.T.'s, not the model's: every texel is painted by where it sits on the body, in D.O.T.'s palette
+(deep navy above, a dark poisoned green toward the hems; teal circuit traces on the torso; sick-green hands and flame
+outlines on the boots; a pale band round the hat), with the model's own texture adding only its sculpted detail. Nothing
+glows: the glow layer is gone (no emissive maps; the materials are written with no glow).
 
-Writes models/entity/dot.bin, textures/entity/dot/model/*.png (+ _glow.png) and DotGeometry.java.
+Writes models/entity/dot.bin, textures/entity/dot/model/*.png and DotGeometry.java.
 """
 from __future__ import annotations
 
 import io
 import struct
-import zlib
 from pathlib import Path
 
 import numpy as np
@@ -25,45 +24,79 @@ from PIL import Image
 
 import dl_glb
 import dl_noise as N
+from import_guest import simplify
 
-SOURCE = Path.home() / "Downloads" / "Sounds + Models For DOT" / "D.O.T.glb"
+SOURCE = Path.home() / "Downloads" / "plague_doctor.glb"
+TARGET = 12000
 HEIGHT_PX = 44.0
-TEX = 256
+TEX = 512
 JAVA = N.ROOT / "src" / "client" / "java" / "com" / "deadlands" / "client" / "render" / "DotGeometry.java"
+SKIP_MATERIALS = {"M_Outline", "M_PlagueDoctor_Gun", "M_Potion", "defaultMat1", "M_Pedestal", "M_Flame"}
 
-# The palette (hex): reported in the progress doc.
-NAVY = "#101C3C"
-NAVY_DEEP = "#0A1126"
-TEAL = "#103036"
-POISON = "#0D3A22"
-CLOAK = "#0B2614"
-CLOAK_TIP = "#1B5A2E"
-STEEL = "#1A2230"
-VOID = "#04060A"
-CROWN = "#D9F2E3"
-GLOW = "#3DFF6E"
-GLOW_WHITE = "#ECFFF4"
-PALETTE = {"navy": NAVY, "navy_deep": NAVY_DEEP, "teal": TEAL, "poison": POISON, "cloak": CLOAK, "cloak_tip": CLOAK_TIP,
-           "steel": STEEL, "void": VOID, "crown": CROWN, "glow": GLOW, "glow_white": GLOW_WHITE}
+# The palette (hex), as before.
+NAVY, NAVY_DEEP, TEAL, POISON = "#101C3C", "#0A1126", "#103036", "#0D3A22"
+CLOAK, CLOAK_TIP, STEEL, VOID = "#0B2614", "#1B5A2E", "#1A2230", "#04060A"
+BAND, SICK = "#8FA899", "#2E8F4A"
 
-# bone, parent, pivot in source units (y up, x toward his back, z toward his left; studs)
+# bone, parent, the joint whose bind position is its pivot
 RIG = [
-    ("pelvis", "root", (0.0, -1.0, 0.0)),
-    ("torso", "pelvis", (0.0, -1.0, 0.0)),
-    ("head", "torso", (0.0, 1.0, 0.0)),
-    ("arm_r", "torso", (0.0, 0.85, -1.5)),
-    ("arm_l", "torso", (0.0, 0.85, 1.5)),
-    ("blade", "arm_l", (0.0, -0.1, 3.3)),
-    ("leg_r", "pelvis", (0.0, -1.0, -0.5)),
-    ("leg_l", "pelvis", (0.0, -1.0, 0.5)),
-    ("cloak_r", "torso", (0.5, 0.8, -0.4)),
-    ("cloak_l", "torso", (0.5, 0.8, 0.4)),
+    ("pelvis", "root", "J_SpineBase_05"),
+    ("skirt", "pelvis", "J_SpineBase_05"),
+    ("spine", "pelvis", "J_Spine01_06"),
+    ("chest", "spine", "J_Spine02_07"),
+    ("neck", "chest", "joint1_075"),
+    ("head", "neck", "J_Spine04_076"),
+    ("hat", "head", "J_Spine05_Hat_077"),
+    ("arm_r", "chest", "J_Shoulder_Right_037"),
+    ("forearm_r", "arm_r", "J_Elbow_Right_038"),
+    ("hand_r", "forearm_r", "J_Wrist_Right_039"),
+    ("arm_l", "chest", "J_Shoulder_Left_010"),
+    ("forearm_l", "arm_l", "J_Elbow_Left_011"),
+    ("hand_l", "forearm_l", "J_Wrist_Left_012"),
+    ("leg_r", "pelvis", "J_Leg_Right_1_0122"),
+    ("foot_r", "leg_r", "J_Leg_Right_2_0123"),
+    ("leg_l", "pelvis", "J_Leg_Left_1_0115"),
+    ("foot_l", "leg_l", "J_Leg_Left_2_0116"),
+    ("cloth", "pelvis", "Cloth_Hang02_01_0103"),
 ]
 BONES = [b for b, _, _ in RIG]
-PART_BONE = {"torso1": "torso", "armor1": "torso", "head1": "head", "helmet1": "head", "crown1": "head",
-             "arml1": "arm_l", "armorl1": "arm_l", "armr1": "arm_r", "armorr1": "arm_r", "legl1": "leg_l",
-             "leggingsl1": "leg_l", "legr1": "leg_r", "leggingsr1": "leg_r", "wingl1": "cloak_l", "wingr1": "cloak_r",
-             "sword1": "blade"}
+
+
+def bone_for(joint: str) -> str:
+    n = joint
+    for side, s in (("Left", "l"), ("Right", "r")):
+        if f"_{side}" in n:
+            if any(k in n for k in ("Thumb", "Index", "Middle", "Ring", "Tiny", "Wrist", "Hand", "Bottle")):
+                return f"hand_{s}"
+            if "Elbow" in n:
+                return f"forearm_{s}"
+            if "Shoulder" in n:
+                return f"arm_{s}"
+            if "Clavicle" in n:
+                return "chest"
+            if "Leg" in n and n.split(f"_{side}_")[1].startswith("1"):
+                return f"leg_{s}"
+            if "Leg" in n or "Buckle" in n:
+                return f"foot_{s}"
+    if "Gun" in n or "Shell" in n:
+        return "hand_r"
+    if "Hat" in n or "Feather" in n:
+        return "hat"
+    if "Spine04" in n:
+        return "head"
+    if n.startswith("joint1_"):
+        return "neck"
+    if "joint11" in n:
+        return "foot_l" if n.endswith("19") else "foot_r"
+    if "Cloth_Hang" in n:
+        return "cloth"
+    if "Skirt" in n:
+        return "skirt"
+    if "Spine02" in n or "Spine03" in n or any(k in n for k in ("Bag", "Rosemary", "Holster")):
+        return "chest"
+    if "Spine01" in n:
+        return "spine"
+    return "pelvis"
 
 
 def rgb(h: str) -> np.ndarray:
@@ -77,181 +110,189 @@ def mix(a, b, t):
 
 
 def hash3(p: np.ndarray, salt: int) -> np.ndarray:
-    """A repeatable 0-1 value per 3D cell."""
     q = np.floor(p).astype(np.int64)
     h = (q[..., 0] * 73856093) ^ (q[..., 1] * 19349663) ^ (q[..., 2] * 83492791) ^ (salt * 2654435761)
     h = (h ^ (h >> 13)) * 1274126177
     return ((h ^ (h >> 16)) & 0xFFFF) / 65535.0
 
 
-def paint(part: str, p: np.ndarray, n: np.ndarray, detail: np.ndarray):
-    """Colour (RGB) and glow (RGB, strength 0-1) for texels at source positions p with normals n."""
-    x, y, z = p[..., 0] * 100.0, p[..., 1] * 100.0, p[..., 2] * 100.0  # back to studs
-    front = n[..., 0] < -0.45
-    height = np.clip((y + 3.0) / 6.0, 0.0, 1.0)            # 0 at his feet, 1 at the crown
-    # The gradient: navy high, poison green low.
-    base = mix(rgb(POISON), rgb(NAVY), height ** 0.8)
-    glow = np.zeros(p.shape[:-1] + (3,))
-    strength = np.zeros(p.shape[:-1])
+def part_of(mesh_name: str) -> str:
+    n = mesh_name.lower()
+    for key, part in (("mask", "mask"), ("tophat", "hat"), ("feather", "feather"), ("coat", "cloak"), ("skirt", "cloak"),
+                      ("neckpiece", "cloak"), ("glove", "hands"), ("boot", "boots"), ("torso", "torso"), ("arms", "torso"),
+                      ("belt", "leather"), ("bag", "leather"), ("strap", "leather"), ("rosemary", "leather"), ("cord", "leather")):
+        if key in n:
+            return part
+    return "torso"
 
-    def light(mask, colour, s):
-        nonlocal strength
-        glow[mask] = rgb(colour)
-        strength = np.where(mask, np.maximum(strength, s), strength)
 
-    base = base * np.ones(p.shape[:-1] + (1,))
-    if part in ("torso1", "armor1"):
-        base = mix(rgb(NAVY_DEEP), rgb(TEAL), np.clip((1.0 - height) * 1.4, 0, 1))
-        # Circuit traces etched in the plates.
-        cx, cy, cz = np.abs(np.modf(z * 5.0)[0]), np.abs(np.modf(y * 5.0)[0]), np.abs(np.modf(x * 5.0)[0])
-        gate = hash3(np.stack([z * 5.0, y * 5.0, x * 5.0], -1), 3) > 0.45
-        trace = ((cx < 0.06) | (cy < 0.06) | (cz < 0.06)) & gate
-        base = np.where(trace[..., None], mix(base, rgb(TEAL) * 1.8, 0.55), base)
-        # A white ring on his chest, a lens that never shuts.
-        r = np.sqrt((y - 0.35) ** 2 + z ** 2)
-        light(front & (r > 0.22) & (r < 0.34), GLOW_WHITE, 1.0)
-        light(front & (r < 0.1), GLOW, 0.8)
-        light((y < -0.95) & (np.abs(np.modf(z * 3.0)[0]) < 0.12), GLOW, 0.7)   # the hem, in dashes
-    elif part in ("head1", "helmet1"):
-        base = mix(rgb(NAVY_DEEP), rgb(NAVY), detail * 0.4)
-        inside = (front & (np.abs(z) < 0.5) & (y > 1.05) & (y < 2.0))
-        base = np.where(inside[..., None], rgb(VOID), base)      # no face: a hood with nothing in it
-        light(front & (np.abs(np.abs(z) - 0.25) < 0.08) & (np.abs(y - 1.58) < 0.06), GLOW, 1.0)   # two slits
-        light((y < 0.95) & (np.abs(np.modf(x * 4.0 + z * 4.0)[0]) < 0.25), GLOW, 0.6)            # the hood's rim
-    elif part == "crown1":
-        base = rgb(CROWN) * np.ones_like(p)
-        light(np.ones(p.shape[:-1], bool), GLOW_WHITE, 0.95)
-    elif part in ("arml1", "armr1", "armorl1", "armorr1"):
-        base = mix(rgb(NAVY), rgb(TEAL), np.clip(-y * 0.5 + 0.3, 0, 1))
-        hand = y < -0.5
-        light(hand, GLOW, np.clip((-0.5 - y) * 2.0, 0.5, 1.0))   # the hands burn green
-        if part.startswith("armor"):
-            light(np.abs(z) > 2.3, GLOW, 0.75)                        # the shoulder plates' outer edges
-    elif part in ("legl1", "legr1", "leggingsl1", "leggingsr1"):
-        base = mix(rgb(NAVY_DEEP), rgb(NAVY), 0.5 + 0.2 * np.sin(z * 9.0))
-        # Flames licking up from the boots: outlines only.
-        top = -2.35 + 0.42 * np.abs(np.sin(z * 7.0 + x * 5.0)) + 0.18 * np.sin(z * 19.0)
-        light(np.abs(y - top) < 0.045, GLOW, 1.0)
-        base = np.where((y < top)[..., None], mix(base, rgb(POISON), 0.6), base)
-        light(y < -2.92, GLOW, 0.8)                                   # the soles
-    elif part == "sword1":
-        base = mix(rgb(STEEL), rgb(NAVY), detail * 0.5)
-        light(np.abs(y) > 0.27, GLOW, 1.0)                            # the edges
-        light(np.abs(np.modf(x * 1.5)[0]) < 0.04, GLOW, 0.5)          # notches of light along it
-    elif part in ("wingl1", "wingr1"):
-        reach = np.clip((x - 0.5) / 3.2, 0, 1) * 0.6 + np.clip((y + 0.7) / 4.8, 0, 1) * 0.4
-        base = mix(rgb(CLOAK), rgb(CLOAK_TIP), reach ** 1.5)
-        vein = np.abs(np.sin(y * 6.0 + x * 2.0) * np.cos(z * 3.0)) < 0.06
-        light(vein & (reach > 0.3), GLOW, 0.55)
-        light(reach > 0.88, GLOW, 1.0)                                # the torn tips
-    # Glitch scanlines: thin bands of brighter and darker colour, as if he were never quite here.
-    band = hash3(np.stack([np.zeros_like(y), y * 18.0, np.zeros_like(y)], -1), 11)
+def paint(part: str, p: np.ndarray, n: np.ndarray, detail: np.ndarray) -> np.ndarray:
+    """D.O.T.'s colours at source positions p (model units: y up, 0 at his feet, about 88 at the hat's crown)."""
+    x, y, z = p[..., 0], p[..., 1], p[..., 2]
+    height = np.clip(y / 88.0, 0.0, 1.0)
+    base = mix(rgb(POISON), rgb(NAVY), height ** 0.8) * np.ones(p.shape[:-1] + (1,))
+    if part == "mask":
+        base = mix(rgb(VOID), rgb(NAVY_DEEP), np.clip((79.0 - y) / 9.0, 0, 1)) * np.ones_like(p)
+        base = np.where((z > 9.0)[..., None], mix(base, rgb(VOID), 0.6), base)            # the long front, darkest
+    elif part == "hat":
+        base = rgb(NAVY_DEEP) * np.ones_like(p)
+        base = np.where((np.abs(y - 78.6) < 0.9)[..., None], rgb(BAND), base)              # a pale band
+    elif part == "feather":
+        base = mix(rgb(CLOAK), rgb(CLOAK_TIP), np.clip((y - 88.0) / 10.0, 0, 1))
+    elif part == "cloak":
+        hem = np.clip((60.0 - y) / 45.0, 0, 1)
+        base = mix(rgb(CLOAK), rgb(CLOAK_TIP), hem ** 1.4)
+        vein = np.abs(np.sin(y * 0.55 + x * 0.2) * np.cos(z * 0.3)) < 0.05
+        base = np.where(vein[..., None], mix(base, rgb(CLOAK_TIP), 0.7), base)
+    elif part == "torso":
+        base = mix(rgb(NAVY_DEEP), rgb(TEAL), np.clip((62.0 - y) / 20.0, 0, 1))
+        cx, cy = np.abs(np.modf(x * 0.5)[0]), np.abs(np.modf(y * 0.5)[0])
+        gate = hash3(np.stack([x * 0.5, y * 0.5, z * 0.5], -1), 3) > 0.45
+        trace = ((cx < 0.06) | (cy < 0.06)) & gate
+        base = np.where(trace[..., None], mix(base, rgb(TEAL) * 1.8, 0.5), base)
+    elif part == "hands":
+        base = mix(rgb(TEAL), rgb(SICK), np.clip((48.0 - y) / 12.0, 0, 1))                 # sick green toward the claws
+    elif part == "boots":
+        base = mix(rgb(NAVY_DEEP), rgb(NAVY), 0.5 + 0.2 * np.sin(x * 0.9))
+        top = 9.0 + 4.0 * np.abs(np.sin(x * 0.7 + z * 0.5)) + 1.6 * np.sin(x * 1.9)
+        base = np.where((np.abs(y - top) < 0.45)[..., None], rgb(SICK), base)               # flame outlines
+        base = np.where((y < top)[..., None] & ~(np.abs(y - top) < 0.45)[..., None], mix(base, rgb(POISON), 0.55), base)
+    elif part == "leather":
+        base = mix(rgb(STEEL), rgb(VOID), 0.3) * np.ones_like(p)
+    band = hash3(np.stack([np.zeros_like(y), y * 1.8, np.zeros_like(y)], -1), 11)        # glitch scanlines
     base = base * (1.0 + 0.10 * (band - 0.5))[..., None]
     base = base * (0.72 + 0.56 * detail[..., None])
-    return np.clip(base, 0, 255), glow, strength
+    return np.clip(base, 0, 255)
 
 
-def bake(j, binary, prims_by_material):
-    """Rasterise every triangle into its material's texture, painting by 3D position."""
+def bake(name, items, source_image):
     tex_dir = Path(N.asset("textures/entity/dot/model/x.png")).parent
     tex_dir.mkdir(parents=True, exist_ok=True)
-    for name, (mat, items) in prims_by_material.items():
-        part = name.replace("mtl", "")
-        pbr = mat.get("pbrMetallicRoughness", {})
-        src = dl_glb.image(j, binary, pbr["baseColorTexture"]["index"]) if "baseColorTexture" in pbr else Image.new("RGB", (4, 4), (160, 160, 160))
-        src = np.asarray(src.convert("L").resize((TEX, TEX), Image.LANCZOS), dtype=np.float64) / 255.0
-        src = (src - src.mean()) / max(src.std(), 1e-3) * 0.18 + 0.5       # its sculpt detail, centred
-        colour = np.zeros((TEX, TEX, 3))
-        glow = np.zeros((TEX, TEX, 4))
-        filled = np.zeros((TEX, TEX), bool)
-        for pos, nor, uv, tris in items:
-            for t in tris:
-                a, b, c = uv[t] * TEX
-                x0, x1 = int(max(0, np.floor(min(a[0], b[0], c[0])) - 1)), int(min(TEX - 1, np.ceil(max(a[0], b[0], c[0])) + 1))
-                y0, y1 = int(max(0, np.floor(min(a[1], b[1], c[1])) - 1)), int(min(TEX - 1, np.ceil(max(a[1], b[1], c[1])) + 1))
-                if x1 < x0 or y1 < y0:
-                    continue
-                gx, gy = np.meshgrid(np.arange(x0, x1 + 1) + 0.5, np.arange(y0, y1 + 1) + 0.5)
-                d = (b[1] - c[1]) * (a[0] - c[0]) + (c[0] - b[0]) * (a[1] - c[1])
-                if abs(d) < 1e-9:
-                    continue
-                w0 = ((b[1] - c[1]) * (gx - c[0]) + (c[0] - b[0]) * (gy - c[1])) / d
-                w1 = ((c[1] - a[1]) * (gx - c[0]) + (a[0] - c[0]) * (gy - c[1])) / d
-                w2 = 1.0 - w0 - w1
-                inside = (w0 >= -0.08) & (w1 >= -0.08) & (w2 >= -0.08)   # a little bleed past the edges
-                if not inside.any():
-                    continue
-                w = np.stack([w0, w1, w2], -1)[inside]
-                pts = w @ pos[t]
-                nrm = w @ nor[t]
-                ys, xs = (gy[inside] - 0.5).astype(int), (gx[inside] - 0.5).astype(int)
-                col, gl, s = paint(part, pts, nrm, src[ys, xs])
-                colour[ys, xs] = col
-                glow[ys, xs, :3] = gl
-                glow[ys, xs, 3] = s * 255.0
-                filled[ys, xs] = True
-        colour[~filled] = rgb(NAVY_DEEP)
-        alpha = np.full((TEX, TEX, 1), 255.0)
-        Image.fromarray(np.concatenate([colour, alpha], -1).astype(np.uint8), "RGBA").save(tex_dir / f"{name}.png")
-        Image.fromarray(np.clip(glow, 0, 255).astype(np.uint8), "RGBA").save(tex_dir / f"{name}_glow.png")
+    src = np.asarray(source_image.convert("L").resize((TEX, TEX), Image.LANCZOS), dtype=np.float64) / 255.0
+    src = (src - src.mean()) / max(src.std(), 1e-3) * 0.18 + 0.5
+    colour = np.zeros((TEX, TEX, 3))
+    filled = np.zeros((TEX, TEX), bool)
+    for part, pos, nor, uv, tris in items:
+        for t in tris:
+            a, b, c = uv[t] * TEX
+            x0, x1 = int(max(0, np.floor(min(a[0], b[0], c[0])) - 1)), int(min(TEX - 1, np.ceil(max(a[0], b[0], c[0])) + 1))
+            y0, y1 = int(max(0, np.floor(min(a[1], b[1], c[1])) - 1)), int(min(TEX - 1, np.ceil(max(a[1], b[1], c[1])) + 1))
+            if x1 < x0 or y1 < y0:
+                continue
+            gx, gy = np.meshgrid(np.arange(x0, x1 + 1) + 0.5, np.arange(y0, y1 + 1) + 0.5)
+            d = (b[1] - c[1]) * (a[0] - c[0]) + (c[0] - b[0]) * (a[1] - c[1])
+            if abs(d) < 1e-9:
+                continue
+            w0 = ((b[1] - c[1]) * (gx - c[0]) + (c[0] - b[0]) * (gy - c[1])) / d
+            w1 = ((c[1] - a[1]) * (gx - c[0]) + (a[0] - c[0]) * (gy - c[1])) / d
+            w2 = 1.0 - w0 - w1
+            inside = (w0 >= -0.08) & (w1 >= -0.08) & (w2 >= -0.08)
+            if not inside.any():
+                continue
+            w = np.stack([w0, w1, w2], -1)[inside]
+            ys, xs = (gy[inside] - 0.5).astype(int), (gx[inside] - 0.5).astype(int)
+            colour[ys, xs] = paint(part, w @ pos[t], w @ nor[t], src[ys, xs])
+            filled[ys, xs] = True
+    colour[~filled] = rgb(NAVY_DEEP)
+    alpha = np.full((TEX, TEX, 1), 255.0)
+    Image.fromarray(np.concatenate([colour, alpha], -1).astype(np.uint8), "RGBA").save(tex_dir / f"{name}.png")
 
 
 def build() -> None:
     if not SOURCE.exists():
         print(f"  dot: {SOURCE.name} not found; kept what the mod has")
         return
-    j, binary, prims = dl_glb.primitives(SOURCE)
+    j, binary = dl_glb.load(SOURCE)
+    skin = j["skins"][0]
+    joint_names = [j["nodes"][n]["name"] for n in skin["joints"]]
+    ibm = dl_glb.accessor(j, binary, skin["inverseBindMatrices"]).reshape(-1, 4, 4).transpose(0, 2, 1)
+    bind = {name: np.linalg.inv(ibm[k])[:3, 3] for k, name in enumerate(joint_names)}
+    joint_bone = [BONES.index(bone_for(n)) for n in joint_names]
+
+    prims = []
+    for node in j["nodes"]:
+        if "mesh" not in node or node.get("name", "").startswith("Posetest7"):
+            continue
+        for pr in j["meshes"][node["mesh"]]["primitives"]:
+            mat = j["materials"][pr.get("material", 0)]
+            at = pr["attributes"]
+            if mat["name"] in SKIP_MATERIALS or "JOINTS_0" not in at:
+                continue
+            pos = dl_glb.accessor(j, binary, at["POSITION"])
+            nor = dl_glb.accessor(j, binary, at["NORMAL"])
+            uv = dl_glb.accessor(j, binary, at["TEXCOORD_0"])
+            tris = dl_glb.accessor(j, binary, pr["indices"]).astype(np.int64).reshape(-1, 3)
+            joints = dl_glb.accessor(j, binary, at["JOINTS_0"]).astype(np.int64)
+            weights = dl_glb.accessor(j, binary, at["WEIGHTS_0"])
+            vbone = np.array([joint_bone[joints[i, np.argmax(weights[i])]] for i in range(len(pos))])
+            prims.append((j["meshes"][node["mesh"]].get("name", ""), mat, pos, nor, uv, tris, vbone))
     allp = np.concatenate([p[2] for p in prims])
     y0, y1 = allp[:, 1].min(), allp[:, 1].max()
     scale = HEIGHT_PX / (y1 - y0)
 
     def to_model(p):
-        # Source: y up, x toward his back, z toward his left. Model space: y down, front is -Z, his right is -X.
+        # Source: y up, facing +Z, his left at +X. Model space: y down, facing -Z, his right at -X.
         out = np.empty_like(p, dtype=np.float64)
-        out[..., 0] = p[..., 2] * scale
+        out[..., 0] = p[..., 0] * scale
         out[..., 1] = 24.0 - (p[..., 1] - y0) * scale
-        out[..., 2] = p[..., 0] * scale
+        out[..., 2] = -p[..., 2] * scale
         return out
 
     pivots = {"root": np.array([0.0, 24.0, 0.0])}
-    for bone, _, at in RIG:
-        pivots[bone] = to_model(np.array(at) * 0.01)
+    for bone, _, joint in RIG:
+        pivots[bone] = to_model(bind[joint][None])[0]
 
-    by_material = {}
+    # The textures, painted.
+    by_material: dict[str, list] = {}
+    sources = {}
+    for name, mat, pos, nor, uv, tris, vbone in prims:
+        key = mat["name"].lower()
+        by_material.setdefault(key, []).append((part_of(name), pos, nor, uv, tris))
+        if key not in sources:
+            pbr = mat.get("pbrMetallicRoughness", {})
+            sources[key] = dl_glb.image(j, binary, pbr["baseColorTexture"]["index"]) if "baseColorTexture" in pbr else Image.new("RGB", (4, 4), (150, 150, 150))
+    for key, items in by_material.items():
+        bake(key, items, sources[key])
+
+    # Simplify to about TARGET triangles.
+    cell = 0.2
+    for _ in range(30):
+        if sum(len(simplify(p[2], p[4], p[5], cell)[2]) for p in prims) <= TARGET:
+            break
+        cell *= 1.15
+    names = list(by_material)
     groups: dict[tuple[str, str], list[np.ndarray]] = {}
-    for node, mat, pos, nor, uv, tris in prims:
-        name = mat["name"].lower()
-        part = name.replace("mtl", "")
-        bone = PART_BONE[part]
-        by_material.setdefault(name, (mat, []))[1].append((pos, nor, uv, tris))
-        mp = to_model(pos)
-        for t in tris:
-            p3 = mp[t]
+    total = sum(len(p[5]) for p in prims)
+    for name, mat, pos, nor, uv, tris, vbone in prims:
+        key = mat["name"].lower()
+        mpos, muv, mtris = simplify(pos, uv, tris, cell)
+        korig = np.concatenate([np.floor(pos / cell).astype(np.int64), np.floor(uv * 24).astype(np.int64)], axis=1)
+        _, first = np.unique(korig, axis=0, return_index=True)
+        mbone = vbone[first]
+        for t in mtris:
+            bone = BONES[np.bincount(mbone[t], minlength=len(BONES)).argmax()]
+            p3 = to_model(mpos[t])
             nrm = np.cross(p3[1] - p3[0], p3[2] - p3[0])
             ln = np.linalg.norm(nrm)
             nrm = nrm / ln if ln > 0 else np.array([0.0, -1.0, 0.0])
-            rows = np.concatenate([p3 - pivots[bone], uv[t], np.repeat(nrm[None], 3, 0)], axis=1)
-            groups.setdefault((bone, name), []).append(rows)
-    bake(j, binary, by_material)
+            groups.setdefault((bone, key), []).append(np.concatenate([p3 - pivots[bone], muv[t], np.repeat(nrm[None], 3, 0)], axis=1))
 
-    names = list(by_material)
     out = io.BytesIO()
     out.write(b"DLMESH1\0")
     out.write(struct.pack(">i", len(names)))
     for n in names:
-        encoded = n.encode("utf-8")
-        out.write(struct.pack(">h", len(encoded)))
-        out.write(encoded)
-        out.write(struct.pack(">?", True))
+        e = n.encode("utf-8")
+        out.write(struct.pack(">h", len(e)))
+        out.write(e)
+        out.write(struct.pack(">?", False))   # nothing glows
     out.write(struct.pack(">i", len(groups)))
     count = 0
-    for (bone, name), rows in groups.items():
+    for (bone, key), rows in groups.items():
         data = np.stack(rows).reshape(-1, 8).astype(">f4")
-        out.write(struct.pack(">hhi", BONES.index(bone), names.index(name), len(rows)))
+        out.write(struct.pack(">hhi", BONES.index(bone), names.index(key), len(rows)))
         out.write(data.tobytes())
         count += len(rows)
     mesh = Path(N.asset("models/entity/dot.bin"))
-    mesh.parent.mkdir(parents=True, exist_ok=True)
     mesh.write_bytes(out.getvalue())
 
     lines = ["package com.deadlands.client.render;", "",
@@ -281,7 +322,7 @@ def build() -> None:
                      f"PartPose.offset({rel[0]:.3f}F, {rel[1]:.3f}F, {rel[2]:.3f}F));")
     lines += ["\t\treturn LayerDefinition.create(mesh, 16, 16);", "\t}", "}", ""]
     JAVA.write_text("\n".join(lines), encoding="utf-8")
-    print(f"  dot: {count} triangles, {len(groups)} groups, {len(names)} materials, scale {scale:.2f} px per stud")
+    print(f"  dot: {total} triangles simplified to {count} (cell {cell:.2f}), {len(groups)} groups, {len(names)} materials")
 
 
 if __name__ == "__main__":

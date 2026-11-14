@@ -39,7 +39,7 @@ import net.fabricmc.loader.api.FabricLoader;
  * added, missing or invalid.
  */
 public final class ConfigManager {
-	public static final int CURRENT_VERSION = 2;
+	public static final int CURRENT_VERSION = 3;
 	public static final String FILE_NAME = "deadlands.jsonc";
 
 	private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
@@ -205,6 +205,13 @@ public final class ConfigManager {
 		int from = version != null && version.isJsonPrimitive() ? version.getAsInt() : 0;
 		if (from < 2 && config.asesino.damage == 13.0) {
 			config.asesino.damage = 9.0;
+		}
+		// D.O.T. became a fast predator (the old walking speeds were the defaults before version 3).
+		if (from < 3 && config.dot.speed == 0.2) {
+			config.dot.speed = 0.26;
+		}
+		if (from < 3 && config.dot.aggroSpeed == 0.28) {
+			config.dot.aggroSpeed = 0.36;
 		}
 	}
 

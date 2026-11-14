@@ -248,11 +248,14 @@ public final class DeadlandsConfig {
 		@ConfigEntry(comment = "Share of incoming damage he ignores (when not invulnerable).", min = 0.0, max = 0.99)
 		public double damageResistance = 0.75;
 
-		@ConfigEntry(comment = "Walking speed (he walks; he never runs).", min = 0.05, max = 0.6)
-		public double speed = 0.2;
+		@ConfigEntry(comment = "Passive (the old D.O.T.): only hitting him, blocking him or staring at him provokes him. Off (the default): a predator, he hunts whoever he sees.")
+		public boolean passive = false;
 
-		@ConfigEntry(comment = "Speed while provoked.", min = 0.05, max = 0.8)
-		public double aggroSpeed = 0.28;
+		@ConfigEntry(comment = "Prowling speed.", min = 0.05, max = 0.6)
+		public double speed = 0.26;
+
+		@ConfigEntry(comment = "Speed while hunting (the Guest charges at 0.37).", min = 0.05, max = 0.8)
+		public double aggroSpeed = 0.36;
 
 		@ConfigEntry(comment = "Seconds he keeps after you, once provoked, if you stay away and out of sight.", min = 5, max = 600)
 		public int giveUpSeconds = 30;
