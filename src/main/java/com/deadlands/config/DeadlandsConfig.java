@@ -95,8 +95,8 @@ public final class DeadlandsConfig {
 		@ConfigEntry(comment = "Stalkers' climbing speed as a share of their walking speed.", min = 0.0, max = 1.0)
 		public double stalkerClimbFactor = 0.3;
 
-		@ConfigEntry(comment = "Stalker health (about 30 seconds of fighting with iron gear and an iron sword).", min = 4.0, max = 1000.0)
-		public double stalkerHealth = 200.0;
+		@ConfigEntry(comment = "Stalker health: 400 is 20 rows of hearts (about a minute of fighting with iron gear and an iron sword).", min = 4.0, max = 1000.0)
+		public double stalkerHealth = 400.0;
 
 		@ConfigEntry(comment = "Stalker armor.", min = 0.0, max = 30.0)
 		public double stalkerArmor = 4.0;

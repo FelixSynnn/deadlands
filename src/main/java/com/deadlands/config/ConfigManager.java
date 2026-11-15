@@ -39,7 +39,7 @@ import net.fabricmc.loader.api.FabricLoader;
  * added, missing or invalid.
  */
 public final class ConfigManager {
-	public static final int CURRENT_VERSION = 6;
+	public static final int CURRENT_VERSION = 7;
 	public static final String FILE_NAME = "deadlands.jsonc";
 
 	private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
@@ -249,6 +249,10 @@ public final class ConfigManager {
 			if (config.guest.campMinutes == 5.0) {
 				config.guest.campMinutes = 3.0;
 			}
+		}
+		// 7: the Stalker has 20 rows of hearts (old default only).
+		if (from < 7 && config.zombies.stalkerHealth == 200.0) {
+			config.zombies.stalkerHealth = 400.0;
 		}
 	}
 
