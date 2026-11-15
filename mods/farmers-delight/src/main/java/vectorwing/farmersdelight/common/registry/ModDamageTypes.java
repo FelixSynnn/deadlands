@@ -1,0 +1,25 @@
+package vectorwing.farmersdelight.common.registry;
+
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.damagesource.DamageEffects;
+import net.minecraft.world.damagesource.DamageScaling;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.level.Level;
+
+public class ModDamageTypes {
+    public static final ResourceKey<DamageType> STOVE_BURN = ResourceKey.create(
+        Registries.DAMAGE_TYPE, Identifier.fromNamespaceAndPath("farmersdelight", "stove_burn")
+    );
+
+    public static DamageSource getSimpleDamageSource(Level level, ResourceKey<DamageType> type) {
+        return new DamageSource(level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(type));
+    }
+
+    public static void bootstrapDamageTypes(BootstrapContext<DamageType> context) {
+        context.register(STOVE_BURN, new DamageType("farmersdelight.stove", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1F, DamageEffects.BURNING));
+    }
+}

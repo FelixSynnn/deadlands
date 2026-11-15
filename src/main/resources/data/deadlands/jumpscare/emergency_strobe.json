@@ -1,0 +1,85 @@
+{
+	"kind": "major",
+	"place": "indoors",
+	"requires": "emergency_light",
+	"weight": 12,
+	"steps": [
+		{
+			"at": 0,
+			"type": "silence",
+			"amount": 120
+		},
+		{
+			"at": 0,
+			"type": "emergency_strobe",
+			"amount": 60
+		},
+		{
+			"at": 10,
+			"type": "blink",
+			"amount": 4
+		},
+		{
+			"at": 11,
+			"type": "apparition",
+			"amount": 80,
+			"where": "ahead",
+			"distance": 7.0
+		},
+		{
+			"at": 22,
+			"type": "blink",
+			"amount": 4
+		},
+		{
+			"at": 23,
+			"type": "apparition",
+			"amount": 80,
+			"where": "ahead",
+			"distance": 5.0
+		},
+		{
+			"at": 34,
+			"type": "blink",
+			"amount": 4
+		},
+		{
+			"at": 35,
+			"type": "apparition",
+			"amount": 80,
+			"where": "ahead",
+			"distance": 3.0
+		},
+		{
+			"at": 46,
+			"type": "blink",
+			"amount": 4
+		},
+		{
+			"at": 47,
+			"type": "apparition",
+			"amount": 80,
+			"where": "ahead",
+			"distance": 1.4
+		},
+		{
+			"at": 50,
+			"type": "sound",
+			"sound": "deadlands:horror.stalker_chant",
+			"where": "everywhere",
+			"volume": 1.0,
+			"pitch": 1.0,
+			"distance": 0.0
+		},
+		{
+			"at": 50,
+			"type": "jolt",
+			"amount": 0.9
+		},
+		{
+			"at": 56,
+			"type": "apparition_hide",
+			"amount": 0.0
+		}
+	]
+}

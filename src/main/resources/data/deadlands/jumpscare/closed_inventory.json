@@ -1,0 +1,28 @@
+{
+	"kind": "major",
+	"trigger": "event",
+	"place": "indoors",
+	"steps": [
+		{
+			"at": 0,
+			"type": "silence",
+			"amount": 100
+		},
+		{
+			"at": 0,
+			"type": "apparition",
+			"amount": 120,
+			"where": "doorway"
+		},
+		{
+			"at": 45,
+			"type": "flicker",
+			"amount": 14
+		},
+		{
+			"at": 55,
+			"type": "apparition_hide",
+			"amount": 0.0
+		}
+	]
+}

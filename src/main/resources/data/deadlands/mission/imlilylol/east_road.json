@@ -1,0 +1,24 @@
+{
+	"title": "mission.deadlands.imlilylol.east_road",
+	"description": "mission.deadlands.imlilylol.east_road.description",
+	"requires": [
+		"lily_pumps_done"
+	],
+	"objectives": [
+		{
+			"id": "scout",
+			"type": "visit",
+			"text": "mission.deadlands.imlilylol.east_road.scout",
+			"target": "deadlands:evacuation_camp"
+		},
+		{
+			"id": "tell",
+			"type": "flag",
+			"text": "mission.deadlands.imlilylol.east_road.tell",
+			"flag": "lily_east_road_told"
+		}
+	],
+	"reward_items": [],
+	"reward_flags": [],
+	"lore": []
+}

@@ -41,7 +41,10 @@ public class JournalScreen extends Screen {
 	private static final int TAB_X = 368;
 	private static final int TAB_W = 32;
 	private static final int TAB_H = 22;
-	private static final int[] TAB_Y = {30, 56, 134, 82, 108};
+	private static final int[] TAB_Y = {30, 56, 134, 82, 108, 160};
+	private static final int STORY_ROW = 14;
+	/** The story so far, from the server ({@code StoryPayload}); null until it arrives. */
+	private static com.deadlands.network.@org.jspecify.annotations.Nullable StoryPayload story;
 	private static int archiveCategory;
 	private int archiveScroll;
 	private static final int LEFT_X = 30;
@@ -56,7 +59,9 @@ public class JournalScreen extends Screen {
 		SETTINGS(DLTheme.ICON_SETTINGS, "journal.deadlands.tab.settings", 0xFF4E6070),
 		// Last in the enum so the settings tab keeps index 2; drawn third, above settings.
 		TASKS(DLTheme.ICON_TASKS, "journal.deadlands.tab.tasks", 0xFF7A5A32),
-		ARCHIVE(DLTheme.ICON_ARCHIVE, "journal.deadlands.tab.archive", 0xFF3E5A44);
+		ARCHIVE(DLTheme.ICON_ARCHIVE, "journal.deadlands.tab.archive", 0xFF3E5A44),
+		// Phase 5 step 6: the story so far and the Cinematic Archive (drawn below settings).
+		STORY(DLTheme.ICON_TASKS, "journal.deadlands.tab.story", 0xFF5A3A5E);
 
 		final Identifier icon;
 		final String key;
@@ -87,6 +92,14 @@ public class JournalScreen extends Screen {
 		bookX = (width - (BOOK_W + 24) * scale) / 2.0F;
 		bookY = (height - BOOK_H * scale) / 2.0F;
 		ClientNetworking.requestStatus();
+		if (net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.canSend(com.deadlands.network.StoryRequestPayload.TYPE)) {
+			net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.send(com.deadlands.network.StoryRequestPayload.INSTANCE);
+		}
+	}
+
+	/** The story so far arrived (ClientNetworking). */
+	public static void story(com.deadlands.network.StoryPayload payload) {
+		story = payload;
 	}
 
 	@Override
@@ -114,6 +127,9 @@ public class JournalScreen extends Screen {
 		float bx = (float) ((event.x() - bookX) / scale);
 		float by = (float) ((event.y() - bookY) / scale);
 		if (tab == Tab.ARCHIVE && archiveClick(bx, by)) {
+			return true;
+		}
+		if (tab == Tab.STORY && storyClick(bx, by)) {
 			return true;
 		}
 		for (Tab candidate : Tab.values()) {
@@ -181,6 +197,7 @@ public class JournalScreen extends Screen {
 			case THREATS -> renderThreats(graphics, status);
 			case TASKS -> renderTasks(graphics);
 			case ARCHIVE -> renderArchive(graphics, bx, by);
+			case STORY -> renderStory(graphics, bx, by);
 			default -> {
 			}
 		}
@@ -474,6 +491,72 @@ public class JournalScreen extends Screen {
 			ly += 10;
 		}
 		pose.popMatrix();
+	}
+
+	// ------------------------------------------------------------------------------------ story
+
+	/** Left: the chapters and where each stands, and the ending. Right: the Cinematic Archive, seen ones to watch again. */
+	private void renderStory(GuiGraphics g, float mx, float my) {
+		header(g, Component.translatable("story.deadlands.archive.header"), LEFT_X, PAGE_TOP);
+		header(g, Component.translatable("story.deadlands.cinematics.header"), RIGHT_X, PAGE_TOP);
+		if (story == null) {
+			paragraph(g, Component.translatable("journal.deadlands.no_status"), LEFT_X, PAGE_TOP + 20, DLTheme.INK_SOFT);
+			return;
+		}
+		int y = PAGE_TOP + 18;
+		for (String entry : story.chapters()) {
+			String[] kv = entry.split("=", 2);
+			String status = kv.length > 1 ? kv[1] : "locked";
+			int colour = status.equals("done") ? 0xFF2E5A2A : status.equals("active") ? DLTheme.INK_RED : DLTheme.INK_SOFT;
+			y = paragraph(g, Component.translatable("story.deadlands.chapter." + kv[0]), LEFT_X, y, status.equals("locked") ? DLTheme.INK_SOFT : DLTheme.INK);
+			Component state = Component.translatable("story.deadlands.status." + status);
+			g.drawString(font, state, LEFT_X + PAGE_W - font.width(state), y, colour, false);
+			y += 13;
+		}
+		y += 4;
+		paragraph(g, story.ending().isEmpty() ? Component.translatable("story.deadlands.archive.no_ending")
+			: Component.translatable("story.deadlands.archive.ending", Component.translatable("ending.deadlands.name." + story.ending())), LEFT_X, y, DLTheme.INK_RED);
+		int cy = PAGE_TOP + 18;
+		int seen = 0;
+		for (String entry : story.cinematics()) {
+			String[] kv = entry.split("=", 2);
+			boolean watched = kv.length > 1 && kv[1].equals("seen");
+			if (watched) {
+				seen++;
+				boolean hot = mx >= RIGHT_X && mx < RIGHT_X + PAGE_W && my >= cy - 2 && my < cy + STORY_ROW - 2;
+				if (hot) {
+					g.fill(RIGHT_X - 2, cy - 2, RIGHT_X + PAGE_W, cy + STORY_ROW - 3, DLTheme.withAlpha(DLTheme.INK_RED, 0.12F));
+				}
+				g.drawString(font, Component.translatable("cinematic.deadlands." + kv[0]), RIGHT_X, cy, DLTheme.INK, false);
+				Component watch = Component.translatable("story.deadlands.cinematics.watch");
+				g.drawString(font, watch, RIGHT_X + PAGE_W - font.width(watch), cy, hot ? DLTheme.INK_RED : DLTheme.INK_SOFT, false);
+			} else {
+				g.drawString(font, Component.translatable("story.deadlands.cinematics.unseen"), RIGHT_X, cy, DLTheme.withAlpha(DLTheme.INK_SOFT, 0.6F), false);
+			}
+			cy += STORY_ROW;
+		}
+		paragraph(g, Component.translatable("story.deadlands.cinematics.count", seen, story.cinematics().size()), RIGHT_X, cy + 6, DLTheme.INK_SOFT);
+	}
+
+	/** A click on a seen cinematic: close the journal and watch it ({@code /deadlands watch}). */
+	private boolean storyClick(float mx, float my) {
+		if (story == null || mx < RIGHT_X || mx >= RIGHT_X + PAGE_W) {
+			return false;
+		}
+		int cy = PAGE_TOP + 18;
+		for (String entry : story.cinematics()) {
+			String[] kv = entry.split("=", 2);
+			if (my >= cy - 2 && my < cy + STORY_ROW - 2) {
+				if (kv.length > 1 && kv[1].equals("seen") && minecraft != null && minecraft.player != null) {
+					onClose();
+					minecraft.player.connection.sendCommand("deadlands watch " + kv[0]);
+					return true;
+				}
+				return false;
+			}
+			cy += STORY_ROW;
+		}
+		return false;
 	}
 
 	// ------------------------------------------------------------------------------------ helpers

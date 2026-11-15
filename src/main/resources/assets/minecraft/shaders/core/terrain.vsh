@@ -19,6 +19,9 @@ out vec4 vertexColor;
 out vec2 texCoord0;
 out vec3 dlViewPos;
 out vec4 dlBaseColor;
+out vec3 dlWorldPos;
+out float dlSkyExposure;
+out float dlUp;
 
 vec4 minecraft_sample_lightmap(sampler2D lightMap, ivec2 uv) {
     return texture(lightMap, clamp((uv / 256.0) + 0.5 / 16.0, vec2(0.5 / 16.0), vec2(15.5 / 16.0)));
@@ -30,6 +33,9 @@ void main() {
     gl_Position = ProjMat * viewPos;
     dlViewPos = viewPos.xyz;
     dlBaseColor = Color;
+    dlWorldPos = Position + vec3(ChunkPosition);
+    dlSkyExposure = clamp((float(UV2.y) / 16.0 - 12.0) / 3.0, 0.0, 1.0); // open sky only: sky light 12 to 15
+    dlUp = Normal.y;
 
     sphericalVertexDistance = fog_spherical_distance(pos);
     cylindricalVertexDistance = fog_cylindrical_distance(pos);

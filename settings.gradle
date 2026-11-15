@@ -10,3 +10,10 @@ pluginManagement {
 }
 
 rootProject.name = 'deadlands'
+
+// Third-party and companion mods, each its own Fabric mod with its own licence (see mods/*/LICENSE),
+// built here and bundled inside the DEADLANDS jar (jar-in-jar, root build.gradle).
+include 'mods:smooth-player-animations'
+include 'mods:farmers-delight'
+include 'mods:sound-physics-remastered'
+include 'mods:enhanced-visuals'

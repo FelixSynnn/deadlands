@@ -1,0 +1,21 @@
+{
+	"kind": "major",
+	"trigger": "event",
+	"weight": 1,
+	"steps": [
+		{
+			"at": 0,
+			"type": "dot_tear",
+			"amount": 30
+		},
+		{
+			"at": 0,
+			"type": "sound",
+			"sound": "deadlands:dot.idle",
+			"where": "ahead",
+			"volume": 0.9,
+			"pitch": 0.8,
+			"distance": 30
+		}
+	]
+}

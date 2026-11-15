@@ -46,9 +46,10 @@ public final class StoryIntro {
 	public static void begin(ServerPlayer player) {
 		ServerLevel level = player.level();
 		StoryState story = StoryState.get(level.getServer());
-		NpcEntity harley = harleyNear(player, 32.0);
+		NpcEntity harley = harleyNear(player, 64.0); // her camp may be up to 48 blocks off when the ground nearby is unsafe
 		if (harley != null && story.set(CAMP_BUILT)) {
 			buildCamp(level, harley.blockPosition());
+			HarleyRoad.ensure(level, harley.blockPosition()); // Part 19: a road from her camp to the road network, always
 		}
 		for (ItemStack stack : new ItemStack[] {new ItemStack(DLStory.RADIO), new ItemStack(DLSurvivalItems.BANDAGE, 2),
 			new ItemStack(DLSurvivalItems.WATER_BOTTLE, 2), new ItemStack(DLSurvivalItems.CANNED_BEANS, 2)}) {
@@ -63,8 +64,34 @@ public final class StoryIntro {
 		}
 	}
 
-	/** The introduction is over (watched or skipped): Harley speaks, if she is near. */
+	/** A world whose Harley never came (the old spawn bug): place her now and build her camp. */
+	public static void repairHarley(ServerPlayer player) {
+		NpcEntity harley = com.deadlands.npc.NpcSpawns.onFirstArrival(player);
+		if (harley != null && StoryState.get(player.level().getServer()).set(CAMP_BUILT)) {
+			buildCamp(player.level(), harley.blockPosition());
+			HarleyRoad.ensure(player.level(), harley.blockPosition());
+		}
+	}
+
+	/** The introduction is over (watched or skipped): the survivor chooses who they are (Phase 6), then Harley speaks. */
 	public static void done(ServerPlayer player) {
+		if (com.deadlands.player.SurvivorCharacter.of(player) == null && com.deadlands.player.SurvivorCharacter.openSelect(player, true)) {
+			return; // Harley speaks when they have chosen (or put it off)
+		}
+		harleySpeaks(player);
+	}
+
+	/** Harley speaks, if she is near. If a survivor is Harley (Phase 6), that survivor's own opening or a pointer to her. */
+	public static void harleySpeaks(ServerPlayer player) {
+		if (com.deadlands.player.SurvivorCharacter.of(player) == com.deadlands.npc.NpcCharacter.HARLEY) {
+			HarleyRole.begin(player);
+			return;
+		}
+		ServerPlayer playedBy = HarleyRole.player(player.level().getServer());
+		if (playedBy != null) {
+			HarleyRole.pointTo(player, playedBy);
+			return;
+		}
 		NpcEntity harley = harleyNear(player, 64.0);
 		if (harley != null) {
 			harley.getLookControl().setLookAt(player);

@@ -25,6 +25,10 @@
 		"deadlands:advanced_nest",
 		"deadlands:workbench",
 		"deadlands:rotting_planks",
-		"deadlands:faded_planks"
+		"deadlands:faded_planks",
+		"deadlands:faded_wallpaper",
+		"deadlands:striped_wallpaper",
+		"deadlands:wood_paneling",
+		"deadlands:stained_carpet"
 	]
 }

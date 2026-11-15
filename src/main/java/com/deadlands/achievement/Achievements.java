@@ -52,7 +52,27 @@ public final class Achievements {
 		}
 	}
 
+	/**
+	 * On joining: the (invisible) root is granted, so Minecraft sends every achievement under it instead
+	 * of only the earned ones, and the client learns which hidden ones exist (shown as \"???\").
+	 */
+	private static void onJoin(ServerPlayer player) {
+		award(player, "root");
+		java.util.List<String> secrets = new java.util.ArrayList<>();
+		for (AdvancementHolder holder : player.level().getServer().getAdvancements().getAllAdvancements()) {
+			if (holder.id().getNamespace().equals(Deadlands.MOD_ID)
+				&& holder.value().display().map(net.minecraft.advancements.DisplayInfo::isHidden).orElse(false)) {
+				secrets.add(holder.id().getPath());
+			}
+		}
+		if (net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.canSend(player, com.deadlands.network.AchievementSecretsPayload.TYPE)) {
+			net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.send(player, new com.deadlands.network.AchievementSecretsPayload(secrets));
+		}
+	}
+
 	public static void init() {
+		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
+			server.execute(() -> onJoin(handler.getPlayer())));
 		DayChangeCallback.EVENT.register((server, previousDay, newDay, skippedDays) -> {
 			if (newDay >= 2) {
 				awardAll(server, "survival/first_dawn");

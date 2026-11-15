@@ -1,0 +1,13 @@
+{
+	"match": {
+		"items": "deadlands:flashlight",
+		"components": {
+			"deadlands:flashlight_on": true
+		}
+	},
+	"luminance": {
+		"type": "value",
+		"value": 15
+	},
+	"water_sensitive": false
+}

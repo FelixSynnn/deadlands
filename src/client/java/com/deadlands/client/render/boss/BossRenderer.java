@@ -40,9 +40,12 @@ public class BossRenderer extends MobRenderer<BossEntity, BossRenderer.State, Bo
 		private final @Nullable ModelPart jaw;
 		private final @Nullable ModelPart[] extras = new ModelPart[6];
 		private final @Nullable ModelPart[] tendrils = new ModelPart[4];
+		/** The boss's clips keyed in Blender ({@code tools/assetgen/blender/boss_anims.py}); the procedural poses below are the fallback. */
+		private final com.deadlands.client.render.ClipRig clips;
 
-		public Model(ModelPart root) {
+		public Model(ModelPart root, BossKind kind) {
 			super(root);
+			clips = new com.deadlands.client.render.ClipRig(root.createPartLookup(), "root", Deadlands.id("models/entity/boss_" + kind.id() + ".anim"));
 			ModelPart base = root.getChild("root");
 			body = find(base, "body");
 			head = body == null ? null : find(body, "head");
@@ -67,6 +70,9 @@ public class BossRenderer extends MobRenderer<BossEntity, BossRenderer.State, Bo
 		@Override
 		public void setupAnim(State state) {
 			super.setupAnim(state);
+			if (clips.anim() != null && clipAnim(state)) {
+				return;
+			}
 			float walk = state.walkAnimationPos;
 			float speed = Math.min(1.0F, state.walkAnimationSpeed);
 			float age = state.ageInTicks;
@@ -106,6 +112,57 @@ public class BossRenderer extends MobRenderer<BossEntity, BossRenderer.State, Bo
 				jaw.xRot = 0.15F + Mth.sin(age * 0.2F) * 0.05F;
 			}
 			attack(state);
+		}
+
+		private static @Nullable String clipFor(byte attack) {
+			return switch (attack) {
+				case BossEntity.SWING -> "swing";
+				case BossEntity.SLAM -> "slam";
+				case BossEntity.THROW -> "throw";
+				case BossEntity.HOOK -> "hook";
+				case BossEntity.BASH -> "bash";
+				case BossEntity.CALL -> "call";
+				case BossEntity.LEAP -> "leap";
+				case BossEntity.SPIT -> "spit";
+				case BossEntity.BLINK -> "blink";
+				case BossEntity.SUMMON -> "summon";
+				case BossEntity.ROAR -> "roar";
+				case BossEntity.POUND -> "pound";
+				default -> null;
+			};
+		}
+
+		/**
+		 * The Blender clips: idle into the walk by speed (stride by the walk animation's position), the attack played by
+		 * its progress over the top (a swing on the move leaves the legs walking), then where it looks.
+		 */
+		private boolean clipAnim(State state) {
+			com.deadlands.client.render.ClipRig r = clips;
+			if (!r.sample("idle", state.ageInTicks, r.pose)) {
+				return false;
+			}
+			float move = com.deadlands.client.render.ClipRig.smooth(Math.min(1.0F, state.walkAnimationSpeed * 1.4F));
+			if (move > 0.001F && r.sampleStride("walk", state.walkAnimationPos, 14.0F, r.layer)) {
+				com.deadlands.client.render.ClipRig.mix(r.pose, r.layer, move);
+			}
+			String clip = clipFor(state.attack);
+			float held = 0.0F;
+			if (clip != null && r.has(clip)) {
+				float p = state.attackProgress;
+				float w = Math.min(com.deadlands.client.render.ClipRig.smooth(p / 0.08F), com.deadlands.client.render.ClipRig.smooth((1.0F - p) / 0.1F));
+				if (r.sample(clip, p * r.length(clip), r.layer2)) {
+					boolean upper = state.attack == BossEntity.SWING;
+					r.mixMasked(r.pose, r.layer2, w, upper ? w * (1.0F - move) : w, bone -> bone.startsWith("leg") || bone.equals("root"));
+					held = w;
+				}
+			}
+			r.apply();
+			if (head != null) {
+				float look = 1.0F - 0.7F * held;
+				head.yRot += state.yRot * Mth.DEG_TO_RAD * 0.8F * look;
+				head.xRot += state.xRot * Mth.DEG_TO_RAD * 0.6F * look;
+			}
+			return true;
 		}
 
 		/** Wind-up over the first part of the attack, the blow after it, recovery to the end. */
@@ -209,7 +266,7 @@ public class BossRenderer extends MobRenderer<BossEntity, BossRenderer.State, Bo
 	private final Identifier texture;
 
 	public BossRenderer(EntityRendererProvider.Context context, BossKind kind) {
-		super(context, new Model(context.bakeLayer(layer(kind))), kind == BossKind.ABOMINATION ? 1.6F : 0.8F);
+		super(context, new Model(context.bakeLayer(layer(kind)), kind), kind == BossKind.ABOMINATION ? 1.6F : 0.8F);
 		this.texture = Deadlands.id("textures/entity/boss/" + kind.id() + ".png");
 	}
 

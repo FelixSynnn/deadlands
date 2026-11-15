@@ -1,0 +1,26 @@
+{
+	"title": "mission.deadlands.harley.static",
+	"description": "mission.deadlands.harley.static.description",
+	"giver": "harley",
+	"objectives": [
+		{
+			"id": "parts",
+			"type": "have_item",
+			"text": "mission.deadlands.harley.static.parts",
+			"target": "deadlands:radio_parts",
+			"count": 2
+		},
+		{
+			"id": "fuse",
+			"type": "have_item",
+			"text": "mission.deadlands.harley.static.fuse",
+			"target": "deadlands:fuse",
+			"count": 1
+		}
+	],
+	"reward_items": [],
+	"reward_flags": [
+		"harley_receiver_fixed"
+	],
+	"lore": []
+}

@@ -1,0 +1,51 @@
+{
+	"kind": "major",
+	"time": "night",
+	"requires": "window",
+	"weight": 12,
+	"steps": [
+		{
+			"at": 0,
+			"type": "silence",
+			"amount": 120
+		},
+		{
+			"at": 15,
+			"type": "sound",
+			"sound": "deadlands:horror.breath",
+			"where": "ahead",
+			"volume": 0.8,
+			"pitch": 1.0,
+			"distance": 2.0
+		},
+		{
+			"at": 45,
+			"type": "sound",
+			"sound": "deadlands:horror.breath",
+			"where": "ahead",
+			"volume": 0.9,
+			"pitch": 1.0,
+			"distance": 2.0
+		},
+		{
+			"at": 70,
+			"type": "apparition",
+			"amount": 14,
+			"where": "window"
+		},
+		{
+			"at": 84,
+			"type": "sound",
+			"sound": "minecraft:entity.zombie.attack_wooden_door",
+			"where": "ahead",
+			"volume": 0.9,
+			"pitch": 1.0,
+			"distance": 2.0
+		},
+		{
+			"at": 84,
+			"type": "jolt",
+			"amount": 0.6
+		}
+	]
+}

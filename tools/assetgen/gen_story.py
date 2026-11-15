@@ -13,7 +13,7 @@ import lore_data
 
 NS = D.NS
 JAVA = N.ROOT / "src" / "main" / "java" / "com" / "deadlands" / "story" / "LoreEntries.java"
-CATEGORY_NAMES = {"research": "Harley's Research", "character": "Character Journals", "military": "Military Reports", "medical": "Medical Records",
+CATEGORY_NAMES = {"research": "Lab Research", "character": "Character Journals", "military": "Military Reports", "medical": "Medical Records",
                   "government": "Government Documents", "newspaper": "Newspapers", "radio": "Radio Transcripts", "missing": "Missing Persons",
                   "journal": "Personal Journals"}
 

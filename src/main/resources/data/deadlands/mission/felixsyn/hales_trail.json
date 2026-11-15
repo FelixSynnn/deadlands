@@ -1,0 +1,21 @@
+{
+	"title": "mission.deadlands.felixsyn.hales_trail",
+	"description": "mission.deadlands.felixsyn.hales_trail.description",
+	"requires": [
+		"felix_supplies_done"
+	],
+	"objectives": [
+		{
+			"id": "files",
+			"type": "have_item",
+			"text": "mission.deadlands.felixsyn.hales_trail.files",
+			"target": "deadlands:military_research",
+			"count": 1
+		}
+	],
+	"reward_items": [],
+	"reward_flags": [
+		"felixsyn_chapter_one"
+	],
+	"lore": []
+}

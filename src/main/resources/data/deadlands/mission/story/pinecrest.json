@@ -1,0 +1,26 @@
+{
+	"title": "mission.deadlands.story.pinecrest",
+	"description": "mission.deadlands.story.pinecrest.description",
+	"requires": [
+		"chapter_three_house"
+	],
+	"objectives": [
+		{
+			"id": "reach",
+			"type": "flag",
+			"text": "mission.deadlands.story.pinecrest.reach",
+			"flag": "pinecrest_reached"
+		},
+		{
+			"id": "choose",
+			"type": "flag",
+			"text": "mission.deadlands.story.pinecrest.choose",
+			"flag": "pinecrest_choice_made"
+		}
+	],
+	"reward_items": [],
+	"reward_flags": [
+		"chapter_four_pinecrest"
+	],
+	"lore": []
+}

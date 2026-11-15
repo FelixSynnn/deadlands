@@ -17,6 +17,8 @@ public final class DLParticles {
 	public static final SimpleParticleType BLOOD = register("blood");
 	public static final SimpleParticleType SPORE = register("spore");
 	public static final SimpleParticleType EMBER = register("ember");
+	/** Mythos' corruption: pixel blocks breaking up, magenta and violet. */
+	public static final SimpleParticleType GLITCH = register("glitch");
 
 	private DLParticles() {
 	}

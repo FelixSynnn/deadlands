@@ -164,4 +164,10 @@ public class InfectedRenderer extends MobRenderer<InfectedEntity, InfectedRender
 	protected boolean isShaking(InfectedRenderState state) {
 		return super.isShaking(state) || state.swelling;
 	}
+
+	/** The ceiling apparition of a Phase 4 jumpscare hangs upside down (no name tag needed). */
+	@Override
+	public boolean isEntityUpsideDown(InfectedEntity entity) {
+		return com.deadlands.client.horror.Apparition.upsideDown(entity) || super.isEntityUpsideDown(entity);
+	}
 }

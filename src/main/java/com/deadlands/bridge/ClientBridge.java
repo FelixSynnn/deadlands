@@ -79,6 +79,10 @@ public final class ClientBridge {
 	/** Client effects common code can ask for. */
 	public interface EffectsHandler {
 		void recoil(float degrees);
+
+		/** A firearm is being reloaded for {@code ticks} (the gun dips out of view and back). */
+		default void reload(int ticks) {
+		}
 	}
 
 	private static volatile EffectsHandler effects = degrees -> {
@@ -91,6 +95,10 @@ public final class ClientBridge {
 	/** Kick the local player's view up by about {@code degrees} (a firearm's recoil). */
 	public static void recoil(float degrees) {
 		effects.recoil(degrees);
+	}
+
+	public static void reload(int ticks) {
+		effects.reload(ticks);
 	}
 
 	public static void infectedTick(InfectedEntity entity) {

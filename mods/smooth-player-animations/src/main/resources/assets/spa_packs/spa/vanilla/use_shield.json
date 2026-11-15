@@ -1,0 +1,16 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"use_shield": {
+			"loop": true,
+			"bones": {
+				"right_arm": {
+					"rotation": {
+						"vector": [-45.7567, -46.1379, 22.81171]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

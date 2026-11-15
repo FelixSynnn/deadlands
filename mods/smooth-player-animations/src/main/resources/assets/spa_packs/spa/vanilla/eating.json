@@ -1,0 +1,19 @@
+{
+  "format_version": "1.8.0",
+  "_说明": "吃东西（原版模型，CEM 开）：拿食物的手抬到嘴前，食物挡在嘴上；每 0.2 秒（原版咀嚼声的间隔）往下一点再送回嘴边。只动这只手，视线俯仰由动作的 aim 跟上。",
+  "animations": {
+    "eating": {
+      "loop": true,
+      "animation_length": 0.2,
+      "bones": {
+        "right_arm": {
+          "rotation": {
+            "0.0": {"vector": [-95, -36, 0], "easing": "linear"},
+            "0.1": {"vector": [-87, -33, 3], "easing": "easeInOutSine"},
+            "0.2": {"vector": [-95, -36, 0], "easing": "easeInOutSine"}
+          }
+        }
+      }
+    }
+  }
+}

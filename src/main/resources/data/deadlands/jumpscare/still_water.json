@@ -1,0 +1,91 @@
+{
+	"kind": "major",
+	"time": "night",
+	"place": "outdoors",
+	"requires": "heavy_rain",
+	"weight": 14,
+	"steps": [
+		{
+			"at": 0,
+			"type": "silence",
+			"amount": 200
+		},
+		{
+			"at": 30,
+			"type": "sound",
+			"sound": "minecraft:block.mud.step",
+			"where": "around",
+			"volume": 1.0,
+			"pitch": 1.0,
+			"distance": 4.0
+		},
+		{
+			"at": 42,
+			"type": "sound",
+			"sound": "minecraft:block.mud.step",
+			"where": "around",
+			"volume": 1.0,
+			"pitch": 1.0,
+			"distance": 4.0
+		},
+		{
+			"at": 54,
+			"type": "sound",
+			"sound": "minecraft:block.mud.step",
+			"where": "around",
+			"volume": 1.0,
+			"pitch": 1.0,
+			"distance": 4.0
+		},
+		{
+			"at": 66,
+			"type": "sound",
+			"sound": "minecraft:block.mud.step",
+			"where": "around",
+			"volume": 1.0,
+			"pitch": 1.0,
+			"distance": 4.0
+		},
+		{
+			"at": 78,
+			"type": "sound",
+			"sound": "minecraft:block.mud.step",
+			"where": "around",
+			"volume": 1.0,
+			"pitch": 1.0,
+			"distance": 4.0
+		},
+		{
+			"at": 90,
+			"type": "sound",
+			"sound": "minecraft:block.mud.step",
+			"where": "around",
+			"volume": 1.0,
+			"pitch": 1.0,
+			"distance": 4.0
+		},
+		{
+			"at": 104,
+			"type": "sound",
+			"sound": "minecraft:block.mud.step",
+			"where": "behind",
+			"volume": 1.0,
+			"pitch": 1.0,
+			"distance": 1.5
+		},
+		{
+			"at": 164,
+			"type": "sound",
+			"sound": "deadlands:infected.walker.ambient",
+			"where": "ear",
+			"volume": 1.0,
+			"pitch": 1.0,
+			"distance": 0.0
+		},
+		{
+			"at": 164,
+			"type": "jolt",
+			"amount": 0.7
+		}
+	]
+}

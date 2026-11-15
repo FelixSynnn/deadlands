@@ -1,0 +1,124 @@
+{
+	"cue": "deadlands:event.reunion",
+	"hide_hud": true,
+	"shots": [
+		{
+			"ticks": 120,
+			"from": [
+				-14,
+				3,
+				18
+			],
+			"to": [
+				-6,
+				2.2,
+				14
+			],
+			"look": [
+				0,
+				2,
+				5.5
+			]
+		},
+		{
+			"ticks": 100,
+			"from": [
+				3,
+				2,
+				10
+			],
+			"to": [
+				1.5,
+				2.2,
+				8
+			],
+			"look": [
+				0,
+				2.4,
+				5.5
+			]
+		},
+		{
+			"ticks": 120,
+			"from": [
+				7,
+				2.4,
+				2
+			],
+			"to": [
+				7,
+				2.4,
+				-2
+			],
+			"look": [
+				0,
+				1.4,
+				0
+			]
+		},
+		{
+			"ticks": 100,
+			"from": [
+				0,
+				9,
+				-12
+			],
+			"to": [
+				0,
+				12,
+				-16
+			],
+			"look": [
+				0,
+				1,
+				0
+			]
+		},
+		{
+			"ticks": 80,
+			"from": [
+				0,
+				14,
+				4
+			],
+			"to": [
+				0,
+				18,
+				20
+			],
+			"look": [
+				0,
+				8,
+				60
+			],
+			"look_rise": 6.0
+		}
+	],
+	"lines": [
+		{
+			"from": 20,
+			"to": 110,
+			"key": "cutscene.deadlands.family_house.0"
+		},
+		{
+			"from": 120,
+			"to": 210,
+			"key": "cutscene.deadlands.family_house.1"
+		},
+		{
+			"from": 210,
+			"to": 310,
+			"key": "cutscene.deadlands.family_house.2"
+		},
+		{
+			"from": 310,
+			"to": 400,
+			"key": "cutscene.deadlands.family_house.3"
+		},
+		{
+			"from": 400,
+			"to": 510,
+			"key": "cutscene.deadlands.family_house.4"
+		}
+	]
+}

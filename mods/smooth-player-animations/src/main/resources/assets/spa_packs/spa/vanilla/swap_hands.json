@@ -1,0 +1,29 @@
+{
+  "format_version": "1.8.0",
+  "_说明": "按 F 换手时双臂收向胸口再放回。只有旋转，位移跟着移动层。",
+  "animations": {
+    "swap_hands": {
+      "animation_length": 0.35,
+      "bones": {
+        "right_arm": {
+          "rotation": {
+            "0.0": {"vector": [0, 0, 0], "easing": "linear"},
+            "0.0875": {"vector": [-6.08, -3.24, -15.39], "easing": "easeOutSine"},
+            "0.175": {"vector": [-8.59, -4.58, -21.77], "easing": "easeOutSine"},
+            "0.2625": {"vector": [-6.08, -3.24, -15.39], "easing": "easeInSine"},
+            "0.35": {"vector": [0, 0, 0], "easing": "easeInSine"}
+          }
+        },
+        "left_arm": {
+          "rotation": {
+            "0.0": {"vector": [0, 0, 0], "easing": "linear"},
+            "0.0875": {"vector": [-6.08, 3.24, 15.39], "easing": "easeOutSine"},
+            "0.175": {"vector": [-8.59, 4.58, 21.77], "easing": "easeOutSine"},
+            "0.2625": {"vector": [-6.08, 3.24, 15.39], "easing": "easeInSine"},
+            "0.35": {"vector": [0, 0, 0], "easing": "easeInSine"}
+          }
+        }
+      }
+    }
+  }
+}

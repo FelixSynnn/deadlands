@@ -1,0 +1,19 @@
+{
+  "format_version": "1.8.0",
+  "_说明": "喝东西（原版模型，CEM 开）：瓶子送到嘴边、手比吃东西抬得高一点（瓶底朝上），随着喝慢慢往上仰一点再回来，每 0.4 秒一口。只动这只手，视线俯仰由动作的 aim 跟上。",
+  "animations": {
+    "drinking": {
+      "loop": true,
+      "animation_length": 0.4,
+      "bones": {
+        "right_arm": {
+          "rotation": {
+            "0.0": {"vector": [-110, -27, -4], "easing": "linear"},
+            "0.2": {"vector": [-115, -28, -6], "easing": "easeInOutSine"},
+            "0.4": {"vector": [-110, -27, -4], "easing": "easeInOutSine"}
+          }
+        }
+      }
+    }
+  }
+}

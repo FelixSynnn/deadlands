@@ -538,3 +538,7 @@ Survival mode, a new world, *Survival > difficulty* SURVIVOR.
     character is near: the player list shows only the player; the character's nametag still reads
     FelixSyn with the supplied skin; the player is unchanged. Repeat with the player joining first.
 
+## Dev server with the bundled mods (2026-11-12)
+
+The build now has subprojects under `mods/`. Start the DEADLANDS dev server with `.\dev.ps1 :runServer`
+(the leading colon picks the root project); a plain `runServer` also starts a server in every subproject.

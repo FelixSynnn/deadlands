@@ -211,6 +211,7 @@ public final class Quests {
 			case ITZBREADLOAF -> itzbreadloaf(player, story);
 			case IMLILYLOL -> imlilylol(player, npc, story);
 			case FELIXSYN -> felixsyn(player, story);
+			case ADAM -> Component.translatable("npc.deadlands.character.adam.talk"); // his part runs through HarleyQuest
 		};
 	}
 
@@ -304,6 +305,9 @@ public final class Quests {
 
 	private static Component imlilylol(ServerPlayer player, NpcEntity npc, StoryState story) {
 		if (story.has(StoryState.LILY_DONE)) {
+			if (ImlilylolCampaign.talked(player.level().getServer(), player)) {
+				return Component.translatable("quest.deadlands.imlilylol.campaign"); // her chapter one speaks for itself in chat
+			}
 			return Component.translatable("quest.deadlands.imlilylol.after");
 		}
 		if (story.towers().isEmpty()) {
@@ -325,6 +329,9 @@ public final class Quests {
 
 	private static Component felixsyn(ServerPlayer player, StoryState story) {
 		if (story.has(StoryState.FELIX_DONE)) {
+			if (FelixsynCampaign.talked(player.level().getServer(), player)) {
+				return Component.translatable("quest.deadlands.felixsyn.campaign"); // his chapter one speaks for itself in chat
+			}
 			return Component.translatable("quest.deadlands.felixsyn.after");
 		}
 		String orders = DLStory.idOf(DLStory.EVACUATION_ORDERS);

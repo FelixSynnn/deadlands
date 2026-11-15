@@ -1,0 +1,178 @@
+{
+	"hide_hud": true,
+	"shots": [
+		{
+			"ticks": 120,
+			"from": [
+				0,
+				2.4,
+				-2
+			],
+			"to": [
+				0,
+				2.0,
+				0
+			],
+			"look": [
+				0,
+				1.4,
+				10
+			]
+		},
+		{
+			"ticks": 120,
+			"from": [
+				-6,
+				1.8,
+				6
+			],
+			"to": [
+				-4,
+				1.7,
+				7
+			],
+			"look": [
+				0,
+				1.6,
+				6
+			]
+		},
+		{
+			"ticks": 180,
+			"from": [
+				2.4,
+				1.7,
+				3
+			],
+			"to": [
+				2.0,
+				1.65,
+				3.6
+			],
+			"look": [
+				-0.4,
+				1.6,
+				6
+			]
+		},
+		{
+			"ticks": 160,
+			"from": [
+				-2.4,
+				1.7,
+				9
+			],
+			"to": [
+				-2.0,
+				1.65,
+				8.4
+			],
+			"look": [
+				0.4,
+				1.6,
+				6
+			]
+		},
+		{
+			"ticks": 120,
+			"from": [
+				0,
+				1.8,
+				1.5
+			],
+			"to": [
+				0,
+				2.4,
+				0.5
+			],
+			"look": [
+				0,
+				1.5,
+				6
+			]
+		}
+	],
+	"lines": [
+		{
+			"from": 60,
+			"to": 130,
+			"key": "cutscene.deadlands.reunion.0"
+		},
+		{
+			"from": 130,
+			"to": 180,
+			"key": "cutscene.deadlands.reunion.1"
+		},
+		{
+			"from": 190,
+			"to": 290,
+			"key": "cutscene.deadlands.reunion.2"
+		},
+		{
+			"from": 290,
+			"to": 400,
+			"key": "cutscene.deadlands.reunion.3"
+		},
+		{
+			"from": 410,
+			"to": 460,
+			"key": "cutscene.deadlands.reunion.4"
+		},
+		{
+			"from": 460,
+			"to": 540,
+			"key": "cutscene.deadlands.reunion.5"
+		},
+		{
+			"from": 550,
+			"to": 670,
+			"key": "cutscene.deadlands.reunion.6"
+		}
+	],
+	"actors": [
+		{
+			"who": "harley",
+			"start": 0,
+			"end": 700,
+			"from": [
+				6,
+				0,
+				14
+			],
+			"to": [
+				0.6,
+				0,
+				6
+			],
+			"face": [
+				-0.6,
+				0,
+				6
+			],
+			"move_start": 0,
+			"move_end": 220
+		},
+		{
+			"who": "felixsyn",
+			"start": 0,
+			"end": 700,
+			"from": [
+				-7,
+				0,
+				15
+			],
+			"to": [
+				-0.6,
+				0,
+				6
+			],
+			"face": [
+				0.6,
+				0,
+				6
+			],
+			"move_start": 0,
+			"move_end": 220
+		}
+	]
+}

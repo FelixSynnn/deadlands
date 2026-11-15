@@ -23,6 +23,9 @@ import net.minecraft.world.level.saveddata.SavedDataType;
  *   <li><b>Strong wind</b> comes with storms or on its own: louder wind, drifting debris.</li>
  *   <li><b>Dust storms</b> in dry country (the client shows dust only where the land is dry, and
  *       wind elsewhere): brown haze and blowing grit.</li>
+ *   <li><b>Heavy rain</b> (Phase 3): a downpour that starts Minecraft's rain if it is not already
+ *       raining; on the client it pulls the fog in to about forty blocks, splashes the ground and
+ *       drums louder on roofs. Plain rain and thunderstorms thin the view too (client fog).</li>
  * </ul>
  *
  * Every half day the server decides what comes next, weighted by {@code weather.fogFrequency},
@@ -32,7 +35,7 @@ import net.minecraft.world.level.saveddata.SavedDataType;
  */
 public final class WeatherDirector {
 	public enum Kind {
-		CLEAR, FOG, WIND, DUST;
+		CLEAR, FOG, WIND, DUST, HEAVY_RAIN; // append only: the saved state stores the index
 
 		public static Kind byIndex(int index) {
 			Kind[] kinds = values();
@@ -111,6 +114,7 @@ public final class WeatherDirector {
 		double fog = 0.18 * config.fogFrequency * (morning ? 2.0 : 1.0);
 		double wind = 0.14 * config.stormFrequency * (level.isRaining() ? 2.5 : 1.0);
 		double dust = config.dustStorms ? 0.08 * config.stormFrequency : 0.0;
+		double heavy = (level.isRaining() ? 0.3 : 0.05) * config.stormFrequency;
 		double roll = random.nextDouble();
 		if (roll < fog) {
 			state.kind = Kind.FOG;
@@ -118,11 +122,16 @@ public final class WeatherDirector {
 			state.kind = Kind.WIND;
 		} else if (roll < fog + wind + dust) {
 			state.kind = Kind.DUST;
+		} else if (roll < fog + wind + dust + heavy) {
+			state.kind = Kind.HEAVY_RAIN;
 		} else {
 			state.kind = Kind.CLEAR;
 		}
 		state.strength = state.kind == Kind.CLEAR ? 0.0F : 0.5F + random.nextFloat() * 0.5F;
 		state.until = now + DECIDE_TICKS / 2 + random.nextInt(DECIDE_TICKS);
+		if (state.kind == Kind.HEAVY_RAIN && !level.isRaining()) {
+			level.setWeatherParameters(0, (int) (state.until - now), true, false);
+		}
 		// Storm frequency 0 keeps the sky clear; above 1, rain starts sooner.
 		if (config.stormFrequency <= 0.0) {
 			level.setWeatherParameters(DECIDE_TICKS * 2, 0, false, false);
@@ -150,6 +159,9 @@ public final class WeatherDirector {
 		state.kind = kind;
 		state.strength = kind == Kind.CLEAR ? 0.0F : 1.0F;
 		state.until = server.overworld().getGameTime() + Math.max(200, ticks);
+		if (kind == Kind.HEAVY_RAIN) {
+			server.overworld().setWeatherParameters(0, Math.max(200, ticks), true, server.overworld().isThundering());
+		}
 		state.setDirty();
 		broadcast(server);
 	}

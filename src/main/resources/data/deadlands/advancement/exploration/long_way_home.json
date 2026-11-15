@@ -1,0 +1,212 @@
+{
+	"parent": "deadlands:root",
+	"criteria": {
+		"dead_forest": {
+			"trigger": "minecraft:location",
+			"conditions": {
+				"player": [
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"location": {
+								"biomes": "deadlands:dead_forest"
+							}
+						}
+					}
+				]
+			}
+		},
+		"overgrown_suburbs": {
+			"trigger": "minecraft:location",
+			"conditions": {
+				"player": [
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"location": {
+								"biomes": "deadlands:overgrown_suburbs"
+							}
+						}
+					}
+				]
+			}
+		},
+		"abandoned_farmland": {
+			"trigger": "minecraft:location",
+			"conditions": {
+				"player": [
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"location": {
+								"biomes": "deadlands:abandoned_farmland"
+							}
+						}
+					}
+				]
+			}
+		},
+		"rural_countryside": {
+			"trigger": "minecraft:location",
+			"conditions": {
+				"player": [
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"location": {
+								"biomes": "deadlands:rural_countryside"
+							}
+						}
+					}
+				]
+			}
+		},
+		"burned_forest": {
+			"trigger": "minecraft:location",
+			"conditions": {
+				"player": [
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"location": {
+								"biomes": "deadlands:burned_forest"
+							}
+						}
+					}
+				]
+			}
+		},
+		"dead_pine_valley": {
+			"trigger": "minecraft:location",
+			"conditions": {
+				"player": [
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"location": {
+								"biomes": "deadlands:dead_pine_valley"
+							}
+						}
+					}
+				]
+			}
+		},
+		"dry_wasteland": {
+			"trigger": "minecraft:location",
+			"conditions": {
+				"player": [
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"location": {
+								"biomes": "deadlands:dry_wasteland"
+							}
+						}
+					}
+				]
+			}
+		},
+		"flooded_marsh": {
+			"trigger": "minecraft:location",
+			"conditions": {
+				"player": [
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"location": {
+								"biomes": "deadlands:flooded_marsh"
+							}
+						}
+					}
+				]
+			}
+		},
+		"frozen_outskirts": {
+			"trigger": "minecraft:location",
+			"conditions": {
+				"player": [
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"location": {
+								"biomes": "deadlands:frozen_outskirts"
+							}
+						}
+					}
+				]
+			}
+		},
+		"industrial_wasteland": {
+			"trigger": "minecraft:location",
+			"conditions": {
+				"player": [
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"location": {
+								"biomes": "deadlands:industrial_wasteland"
+							}
+						}
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"dead_forest"
+		],
+		[
+			"overgrown_suburbs"
+		],
+		[
+			"abandoned_farmland"
+		],
+		[
+			"rural_countryside"
+		],
+		[
+			"burned_forest"
+		],
+		[
+			"dead_pine_valley"
+		],
+		[
+			"dry_wasteland"
+		],
+		[
+			"flooded_marsh"
+		],
+		[
+			"frozen_outskirts"
+		],
+		[
+			"industrial_wasteland"
+		]
+	],
+	"display": {
+		"icon": {
+			"id": "minecraft:compass"
+		},
+		"title": {
+			"translate": "achievement.deadlands.exploration.long_way_home.title"
+		},
+		"description": {
+			"translate": "achievement.deadlands.exploration.long_way_home.description"
+		},
+		"frame": "challenge",
+		"show_toast": true,
+		"announce_to_chat": false,
+		"hidden": false
+	}
+}

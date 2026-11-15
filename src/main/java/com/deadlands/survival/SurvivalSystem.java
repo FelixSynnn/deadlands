@@ -248,8 +248,9 @@ public final class SurvivalSystem {
 
 		if (data.bleeding() > 0) {
 			boolean heavy = data.bleeding() > 1;
-			if (second % (heavy ? 3 : 8) == 0) {
-				SurvivalDamage.hurt(player, SurvivalDamage.BLEEDING, 1.0F);
+			if (second % (heavy ? 3 : 8) == 0 && player.getHealth() > 1.0F) {
+				// Bleeding never kills: it stops hurting at half a heart (it can still leave you there).
+				SurvivalDamage.hurt(player, SurvivalDamage.BLEEDING, Math.min(1.0F, player.getHealth() - 1.0F));
 			}
 			if (heavy && random.nextFloat() < 0.01F) {
 				data.setBleeding(1); // it slows
@@ -349,7 +350,7 @@ public final class SurvivalSystem {
 			if (SurvivalRules.infection()) {
 				if (data.infected()) {
 					data.addInfection(1.5F); // every further bite makes it worse
-				} else if (random.nextFloat() < 0.10F * chance) {
+				} else if (random.nextFloat() < (float) com.deadlands.config.ConfigManager.get().survival.infectionChancePerHit * chance) {
 					data.addInfection(4.0F);
 					tell(player, "message.deadlands.survival.infected");
 				}

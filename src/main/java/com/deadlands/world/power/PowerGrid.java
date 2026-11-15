@@ -39,12 +39,16 @@ public final class PowerGrid {
 			double dz = town.centerZ() - generator.getZ();
 			if (dx * dx + dz * dz <= REACH * REACH && data.powerTown(town.key())) {
 				gained++;
+				com.deadlands.horror.DarkBuildings.arm(level, town); // one building stays dark (Phase 4 jumpscare)
 				String name = TownIdentity.of(level.getSeed(), town).name();
 				data.addChronicle(new ChronicleEntry(WorldClock.currentDay(level.getServer()), "chronicle.deadlands.power_restored",
 					List.of(player.getName().getString(), name)), ConfigManager.get().general.chronicleLength);
 			}
 		}
 		if (gained > 0) {
+			if (player instanceof net.minecraft.server.level.ServerPlayer restorer) {
+				com.deadlands.achievement.Achievements.award(restorer, "exploration/lights_on");
+			}
 			if (player instanceof net.minecraft.server.level.ServerPlayer survivor) {
 				com.deadlands.npc.Reputation.change(survivor, com.deadlands.npc.Faction.SETTLERS, com.deadlands.npc.Reputation.POWER_RESTORED);
 			}

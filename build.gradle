@@ -10,6 +10,7 @@ base {
 }
 
 repositories {
+	maven { url = 'https://api.modrinth.com/maven' } // CreativeCore, bundled for EnhancedVisuals
 	// Loom adds the Minecraft, Fabric and library repositories automatically.
 	// Only add repositories here when depending on other mods.
 }
@@ -57,6 +58,13 @@ dependencies {
 	mappings loom.officialMojangMappings()
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	// Bundled mods (jar-in-jar): each stays a separate Fabric mod with its own packages and licence.
+	include project(":mods:smooth-player-animations")
+	include project(":mods:farmers-delight")
+	include project(":mods:sound-physics-remastered")
+	include project(":mods:enhanced-visuals")
+	include "maven.modrinth:creativecore:2.14.11" // EnhancedVisuals needs it (LGPL-3.0, by CreativeMD)
 }
 
 processResources {

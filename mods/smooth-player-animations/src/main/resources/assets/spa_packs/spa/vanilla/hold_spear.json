@@ -1,0 +1,40 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"hold_spear": {
+			"loop": true,
+			"bones": {
+				"head": {
+					"position": {
+						"vector": [0, 0, -0.3]
+					}
+				},
+				"right_arm": {
+					"rotation": {
+						"vector": [17.5, 0, 0]
+					},
+					"position": {
+						"vector": [0, 0, 0.2]
+					}
+				},
+				"right_item": {
+					"rotation": {
+						"vector": [-44.2789, -14.6055, 13.8146]
+					},
+					"position": {
+						"vector": [2.05211, 3.80909, -4.15688]
+					}
+				},
+				"left_arm": {
+					"rotation": {
+						"vector": [-31.3316, 21.7522, 31.3313]
+					},
+					"position": {
+						"vector": [0, 0, -1.8]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

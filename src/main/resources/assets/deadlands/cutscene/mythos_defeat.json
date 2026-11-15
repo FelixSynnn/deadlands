@@ -1,0 +1,50 @@
+{
+	"cue": "deadlands:mythos.death",
+	"hide_hud": true,
+	"shots": [
+		{
+			"ticks": 60,
+			"from": [
+				-7,
+				3,
+				7
+			],
+			"to": [
+				7,
+				2.5,
+				7
+			],
+			"look": [
+				0,
+				1.2,
+				0
+			]
+		},
+		{
+			"ticks": 30,
+			"from": [
+				0,
+				9,
+				12
+			],
+			"to": [
+				0,
+				12,
+				16
+			],
+			"look": [
+				0,
+				1,
+				0
+			]
+		}
+	],
+	"lines": [
+		{
+			"from": 20,
+			"to": 85,
+			"key": "cutscene.deadlands.mythos_defeat.0"
+		}
+	],
+	"title": "cutscene.deadlands.mythos_defeat.title"
+}

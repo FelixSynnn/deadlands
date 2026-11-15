@@ -1,0 +1,21 @@
+{
+  "_comment": "How the cape moves (both the bent model and the CEM side). A resource pack's assets/spa_packs/spa/cape.json replaces any of these keys. Sizes in pixels, angles in degrees, gravity in blocks per second squared. The cape is a chain of segments down its middle, simulated every frame from the player's own moves and turns and the chest's animated motion, the full width across, lying on the body as it is drawn. drag/lift: air resistance along and across the cape; max_bend: how far one segment may bend from the one above (stiffness); max_lift: how far up from hanging the cape may ever turn (falling, it streams up no further); sway: the furthest the bottom may ever swing sideways (it is drawn back softly well before); damping: how fast (per second) its swing against the body dies down besides the air (0: the air alone); stiffness: 0 to 1, how much a bend at one place sharper than around it is spread out (a kink dies, a long curve stays soft); smoothing: how long (seconds) the drawn hem takes to follow the simulated one's turns (a slap or a kick comes out smooth); steps_per_second: simulation steps (a multiple of 20).",
+  "width": 10,
+  "height": 16,
+  "thickness": 1,
+  "segments": 16,
+  "gravity": 24,
+  "drag": 1,
+  "lift": 2.2,
+  "iterations": 6,
+  "max_bend": 20,
+  "max_lift": 95,
+  "sway": 6,
+  "damping": 0,
+  "stiffness": 1,
+  "smoothing": 0.06,
+  "steps_per_second": 120,
+  "water_gravity": 0.3,
+  "water_drag": 4,
+  "collide": true
+}

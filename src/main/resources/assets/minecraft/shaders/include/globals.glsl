@@ -10,4 +10,6 @@ layout(std140) uniform Globals {
     int UseRgss;
     // DEADLANDS: flashlight strength, cos inner half-angle, cos outer half-angle, range (blocks).
     vec4 DeadlandsFlashlight;
+    // DEADLANDS: x = how wet the world is after rain (0 to 1); y, z, w unused.
+    vec4 DeadlandsWeather;
 };

@@ -93,6 +93,8 @@ public class InfectedEntity extends Monster {
 	public static final int FLAG_SPRINTING = 16;
 	/** It has a living target: clients switch its voice to pursuit and the music to danger. */
 	public static final int FLAG_HUNTING = 32;
+	/** Feeding over a kill, still and head bowed (Phase 4, {@code ai/FeedGoal}). */
+	public static final int FLAG_FEEDING = 64;
 
 	/** Physique: five builds (width) and five heights, packed into the low 8 bits. */
 	private static final float[] BUILDS = {0.90F, 0.95F, 1.0F, 1.06F, 1.12F};
@@ -125,6 +127,8 @@ public class InfectedEntity extends Monster {
 	private long investigateUntil;
 	private double investigateSpeed = 1.0;
 	private @Nullable Vec3 lastKnownTargetPos;
+	/** AI steps the target has been out of sight while in the dark ({@link com.deadlands.entity.ai.Stealth}). */
+	private int unseenTicks;
 	private long lastKnownTargetTime;
 	private long lastAlertTime;
 	private long busySince;
@@ -140,6 +144,11 @@ public class InfectedEntity extends Monster {
 		super(type, level);
 		this.xpReward = kind().xp();
 		this.getNavigation().setCanOpenDoors(true);
+		if (this.getNavigation() instanceof net.minecraft.world.entity.ai.navigation.GroundPathNavigation ground) {
+			ground.setCanFloat(true);
+		}
+		// Swims: floats at the surface and paths through water rather than around it or sinking.
+		setPathfindingMalus(net.minecraft.world.level.pathfinder.PathType.WATER, 2.0F);
 	}
 
 	public static AttributeSupplier.Builder createAttributes(InfectedKind kind) {
@@ -174,6 +183,7 @@ public class InfectedEntity extends Monster {
 		this.goalSelector.addGoal(7, new SeekShelterGoal(this));
 		this.goalSelector.addGoal(8, new MigrateGoal(this));
 		this.goalSelector.addGoal(8, new FollowPackGoal(this));
+		this.goalSelector.addGoal(8, new com.deadlands.entity.ai.FeedGoal(this));
 		this.goalSelector.addGoal(9, new InfectedRoamGoal(this));
 		this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 10.0F));
 		this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
@@ -571,6 +581,15 @@ public class InfectedEntity extends Monster {
 		if (target != null && target.isAlive() && getSensing().hasLineOfSight(target)) {
 			lastKnownTargetPos = target.position();
 			lastKnownTargetTime = now;
+			unseenTicks = 0;
+		} else if (target != null && com.deadlands.entity.ai.Stealth.inDarkness(target)) {
+			// Out of sight in the dark: after a few seconds the chase is lost, and it searches where they were.
+			if (++unseenTicks >= com.deadlands.entity.ai.Stealth.loseTicks() / Math.max(1, aiInterval)) {
+				unseenTicks = 0;
+				setTarget(null);
+			}
+		} else {
+			unseenTicks = 0;
 		}
 		if (target != null || investigatePos != null) {
 			busySince = now;

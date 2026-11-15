@@ -14,6 +14,9 @@ public final class DLTags {
 	/** Blocks that count as part of a nest (biomass and nest cores). */
 	public static final TagKey<Block> NEST_MATERIAL = block("nest_material");
 
+	/** Blocks no killer ever breaks: bedrock, obsidian, reinforced deepslate, portals, command and structure blocks. */
+	public static final TagKey<Block> KILLER_PROOF = block("killer_proof");
+
 	/** Paved ground: vehicles reach their full speed on it. */
 	public static final TagKey<Block> ROAD_SURFACE = block("road_surface");
 

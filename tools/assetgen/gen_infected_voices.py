@@ -213,6 +213,8 @@ def prune_unreferenced(dry_run: bool = False) -> int:
     removed = 0
     for file in OUT.rglob("*.ogg"):
         rel = file.relative_to(OUT).with_suffix("").as_posix()
+        if rel.startswith(("infected/sfx/", "infected/stalker_sfx/")):
+            continue  # import_zombie_sfx.py's files: that later group points the infected's events at them
         if rel not in referenced:
             if dry_run:
                 print("    unreferenced:", rel)

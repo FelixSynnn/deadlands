@@ -1,0 +1,26 @@
+{
+	"title": "mission.deadlands.story.adams_lab",
+	"description": "mission.deadlands.story.adams_lab.description",
+	"requires": [
+		"chapter_one_case_delivered"
+	],
+	"objectives": [
+		{
+			"id": "visit",
+			"type": "visit",
+			"text": "mission.deadlands.story.adams_lab.visit",
+			"target": "deadlands:research_facility"
+		},
+		{
+			"id": "return",
+			"type": "flag",
+			"text": "mission.deadlands.story.adams_lab.return",
+			"flag": "adam_notebook_returned"
+		}
+	],
+	"reward_items": [],
+	"reward_flags": [
+		"chapter_two_notebook"
+	],
+	"lore": []
+}

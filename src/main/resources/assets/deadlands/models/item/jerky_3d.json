@@ -1,0 +1,360 @@
+{
+	"textures": {
+		"skin": "deadlands:item/model/jerky",
+		"particle": "deadlands:item/jerky"
+	},
+	"elements": [
+		{
+			"from": [
+				3.0,
+				3.0,
+				7.3
+			],
+			"to": [
+				13.0,
+				12.0,
+				8.7
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						0.125,
+						0.125,
+						5.125,
+						4.625
+					],
+					"texture": "#skin"
+				},
+				"south": {
+					"uv": [
+						5.375,
+						0.125,
+						10.375,
+						4.625
+					],
+					"texture": "#skin"
+				},
+				"east": {
+					"uv": [
+						10.625,
+						0.125,
+						11.3125,
+						4.625
+					],
+					"texture": "#skin"
+				},
+				"west": {
+					"uv": [
+						11.5625,
+						0.125,
+						12.25,
+						4.625
+					],
+					"texture": "#skin"
+				},
+				"up": {
+					"uv": [
+						0.125,
+						7.125,
+						5.125,
+						7.8125
+					],
+					"texture": "#skin"
+				},
+				"down": {
+					"uv": [
+						5.375,
+						7.125,
+						10.375,
+						7.8125
+					],
+					"texture": "#skin"
+				}
+			},
+			"rotation": {
+				"origin": [
+					8.0,
+					7.5,
+					8.0
+				],
+				"axis": "z",
+				"angle": -28
+			}
+		},
+		{
+			"from": [
+				3.0,
+				11.2,
+				7.25
+			],
+			"to": [
+				13.0,
+				12.0,
+				8.75
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						10.625,
+						7.125,
+						15.625,
+						7.5
+					],
+					"texture": "#skin"
+				},
+				"south": {
+					"uv": [
+						0.125,
+						8.0625,
+						5.125,
+						8.4375
+					],
+					"texture": "#skin"
+				},
+				"east": {
+					"uv": [
+						5.375,
+						8.0625,
+						6.125,
+						8.4375
+					],
+					"texture": "#skin"
+				},
+				"west": {
+					"uv": [
+						6.375,
+						8.0625,
+						7.125,
+						8.4375
+					],
+					"texture": "#skin"
+				},
+				"up": {
+					"uv": [
+						3.5,
+						4.875,
+						8.5,
+						5.625
+					],
+					"texture": "#skin"
+				},
+				"down": {
+					"uv": [
+						8.75,
+						4.875,
+						13.75,
+						5.625
+					],
+					"texture": "#skin"
+				}
+			},
+			"rotation": {
+				"origin": [
+					8.0,
+					7.5,
+					8.0
+				],
+				"axis": "z",
+				"angle": -28
+			}
+		},
+		{
+			"from": [
+				5.0,
+				5.0,
+				8.7
+			],
+			"to": [
+				10.0,
+				9.0,
+				8.75
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						12.5,
+						0.125,
+						15.0,
+						2.125
+					],
+					"texture": "#skin"
+				},
+				"south": {
+					"uv": [
+						0.125,
+						4.875,
+						2.625,
+						6.875
+					],
+					"texture": "#skin"
+				},
+				"east": {
+					"uv": [
+						2.875,
+						4.875,
+						2.9375,
+						6.875
+					],
+					"texture": "#skin"
+				},
+				"west": {
+					"uv": [
+						3.1875,
+						4.875,
+						3.25,
+						6.875
+					],
+					"texture": "#skin"
+				},
+				"up": {
+					"uv": [
+						7.375,
+						8.0625,
+						9.875,
+						8.125
+					],
+					"texture": "#skin"
+				},
+				"down": {
+					"uv": [
+						10.125,
+						8.0625,
+						12.625,
+						8.125
+					],
+					"texture": "#skin"
+				}
+			},
+			"rotation": {
+				"origin": [
+					8.0,
+					7.5,
+					8.0
+				],
+				"axis": "z",
+				"angle": -28
+			}
+		}
+	],
+	"display": {
+		"ground": {
+			"rotation": [
+				0,
+				0,
+				0
+			],
+			"translation": [
+				0,
+				2,
+				0
+			],
+			"scale": [
+				0.5,
+				0.5,
+				0.5
+			]
+		},
+		"head": {
+			"rotation": [
+				0,
+				180,
+				0
+			],
+			"translation": [
+				0,
+				13,
+				7
+			],
+			"scale": [
+				1,
+				1,
+				1
+			]
+		},
+		"fixed": {
+			"rotation": [
+				0,
+				180,
+				0
+			],
+			"translation": [
+				0,
+				0,
+				0
+			],
+			"scale": [
+				1,
+				1,
+				1
+			]
+		},
+		"thirdperson_righthand": {
+			"rotation": [
+				0,
+				0,
+				0
+			],
+			"translation": [
+				0,
+				3,
+				1
+			],
+			"scale": [
+				0.55,
+				0.55,
+				0.55
+			]
+		},
+		"firstperson_righthand": {
+			"rotation": [
+				0,
+				-90,
+				25
+			],
+			"translation": [
+				1.13,
+				3.2,
+				1.13
+			],
+			"scale": [
+				0.68,
+				0.68,
+				0.68
+			]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [
+				0,
+				0,
+				0
+			],
+			"translation": [
+				0,
+				3,
+				1
+			],
+			"scale": [
+				0.55,
+				0.55,
+				0.55
+			]
+		},
+		"firstperson_lefthand": {
+			"rotation": [
+				0,
+				-90,
+				25
+			],
+			"translation": [
+				1.13,
+				3.2,
+				1.13
+			],
+			"scale": [
+				0.68,
+				0.68,
+				0.68
+			]
+		}
+	}
+}

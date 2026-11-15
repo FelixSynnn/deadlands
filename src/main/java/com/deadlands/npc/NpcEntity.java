@@ -196,6 +196,21 @@ public class NpcEntity extends PathfinderMob implements Merchant {
 		return Math.floorMod(entityData.get(DATA_SKIN), SKINS_PER_ROLE);
 	}
 
+	/** Harley while a survivor plays her (story.HarleyRole): hidden and untouchable. */
+	public boolean steppedOut() {
+		return isInvisible() && character() == NpcCharacter.HARLEY;
+	}
+
+	@Override
+	public boolean isPickable() {
+		return !steppedOut() && super.isPickable();
+	}
+
+	@Override
+	public boolean isPushable() {
+		return !steppedOut() && super.isPushable();
+	}
+
 	public @Nullable NpcCharacter character() {
 		String id = entityData.get(DATA_CHARACTER);
 		return id.isEmpty() ? null : NpcCharacter.byId(id);
@@ -225,6 +240,17 @@ public class NpcEntity extends PathfinderMob implements Merchant {
 		this.lossChecked = true;
 		stock();
 		applyRoutine(true);
+	}
+
+	/**
+	 * A cutscene stand-in (client only, never saved): looks like {@code character}, with no name tag,
+	 * stock or routine. See {@code client.cutscene.CutsceneActors}.
+	 */
+	public void actAs(NpcCharacter character) {
+		entityData.set(DATA_ROLE, character.role().ordinal());
+		entityData.set(DATA_FACTION, character.faction().ordinal());
+		entityData.set(DATA_CHARACTER, character.id());
+		this.lossChecked = true;
 	}
 
 	/** A wanderer who moves on when nobody has been near for a while. */
@@ -418,7 +444,7 @@ public class NpcEntity extends PathfinderMob implements Merchant {
 
 	@Override
 	protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-		if (hand != InteractionHand.MAIN_HAND || !isAlive()) {
+		if (hand != InteractionHand.MAIN_HAND || !isAlive() || steppedOut()) {
 			return InteractionResult.PASS;
 		}
 		if (player instanceof ServerPlayer survivor) {

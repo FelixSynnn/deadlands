@@ -1032,6 +1032,163 @@ def worldgen(templates: dict[str, list[str]]) -> None:
         "minecraft:desert"]})
 
 
+# ----------------------------------------------------------------------------- light fixtures (Phase 3)
+# Shops, offices, civic buildings, clinics and works get a ceiling grid of fluorescent lights (about a
+# third of them faulty, so they flicker) and battery emergency lights on their walls; churches,
+# apartment blocks and motels only the emergency lights. Homes, barns, sheds and the western town
+# have no electric lighting: flashlight territory. Every fixture goes into an empty ceiling or wall
+# spot, after the building is finished, so nothing already built moves. Fluorescents are placed dark:
+# in a town they light only once its power is restored (FluorescentLightBlock), while the emergency
+# lights pulse until then (EmergencyLightBlock), so a dead town stays dark and a restored one glows.
+FLUORESCENT_PLANS = ("corner_store", "grocery", "pharmacy", "hardware_store", "diner", "police_station", "town_hall", "library",
+                     "clinic", "auto_garage", "warehouse", "factory", "office_block", "department_store", "bank", "courthouse",
+                     "fire_station", "emergency_room")
+EMERGENCY_ONLY_PLANS = ("church", "apartment_block", "motel")
+NOT_A_WALL = ("table", "chair", "counter", "shelf", "bed", "couch", "desk", "stove", "sink", "toilet", "bookshelf", "whiteboard",
+              "crate", "cabinet", "locker", "container", "glass", "bars", "door", "rubble", "blood", "stain", "marks", "pane",
+              "fence", "slab", "stairs", "cobweb", "sign", "barrel", "chest", "light", "ladder", "trapdoor", "carpet", "bench")
+
+
+def light_fixtures(name: str, b: Building) -> tuple[int, int]:
+    """Adds fixtures to a finished building; returns (fluorescents, emergency lights)."""
+    fluorescent = name.startswith(FLUORESCENT_PLANS)
+    if not fluorescent and not name.startswith(EMERGENCY_ONLY_PLANS):
+        return 0, 0
+    blocks = b.blocks
+
+    def kind(p):
+        entry = blocks.get(p)
+        return entry[0] if entry else None
+
+    def air(p):
+        return kind(p) == "minecraft:air"
+
+    def ceiling(p):
+        k = kind(p)
+        return k is not None and k not in ("minecraft:air", "minecraft:cobweb")
+
+    def wall(p):
+        k = kind(p)
+        return k is not None and k != "minecraft:air" and not any(word in k for word in NOT_A_WALL)
+
+    # Spots just under a ceiling with at least two clear blocks below (never above tall furniture).
+    spots = sorted(p for p in blocks if air(p) and p[1] >= 3 and ceiling((p[0], p[1] + 1, p[2]))
+                   and air((p[0], p[1] - 1, p[2])) and air((p[0], p[1] - 2, p[2])))
+    sx, _, sz = b.size
+    placed_f = 0
+    if fluorescent and spots:
+        # Rows on a 4-block grid centred in each floor's ceiling, as real fixtures are hung.
+        limit = max(1, min(10, sx * sz // 30))
+        grid = []
+        spot_set = set(spots)
+        for y in sorted({p[1] for p in spots}):
+            xs = [p[0] for p in spots if p[1] == y]
+            zs = [p[2] for p in spots if p[1] == y]
+            x0 = min(xs) + 1 + ((max(xs) - min(xs) - 2) % 4) // 2
+            z0 = min(zs) + 1 + ((max(zs) - min(zs) - 2) % 4) // 2
+            grid += [(x, y, z) for z in range(z0, max(zs), 4) for x in range(x0, max(xs), 4) if (x, y, z) in spot_set]
+        for x, y, z in grid:
+            if placed_f >= limit:
+                break
+            if not all(air((x + dx, y, z + dz)) for dx in (-1, 0, 1) for dz in (-1, 0, 1)):
+                continue  # open ceiling only, not against a wall or in a doorway
+            run_x = sum(1 for d in range(1, 7) if air((x + d, y, z))) + sum(1 for d in range(1, 7) if air((x - d, y, z)))
+            run_z = sum(1 for d in range(1, 7) if air((x, y, z + d))) + sum(1 for d in range(1, 7) if air((x, y, z - d)))
+            b.put(x, y, z, "fluorescent_light", axis="x" if run_x >= run_z else "z", faulty=b.chance(0.35), lit=False)
+            placed_f += 1
+    # Emergency lights: on an inner wall, just under the ceiling, one per floor (two on a big floor).
+    placed_e = 0
+    sides = ((1, 0, "west"), (-1, 0, "east"), (0, 1, "north"), (0, -1, "south"))  # wall offset -> facing away from it
+    floors: dict[int, list] = {}
+    for x, y, z in spots:
+        for dx, dz, facing in sides:
+            if wall((x + dx, y, z + dz)) and air((x - dx, y, z - dz)) and kind((x + dx, y + 1, z + dz)) is not None:
+                floors.setdefault(y, []).append((x, y, z, facing))
+                break
+    for y in sorted(floors):
+        options = floors[y]
+        want = 2 if len(options) > 40 and sx * sz > 150 else 1
+        chosen: list[tuple[int, int, int]] = []
+        for i in b.r.permutation(len(options)):
+            x, y2, z, facing = options[int(i)]
+            if len(chosen) >= want:
+                break
+            if not air((x, y2, z)) or any(abs(c[0] - x) < 6 and abs(c[2] - z) < 6 for c in chosen):
+                continue
+            b.put(x, y2, z, "emergency_light", facing=facing, lit=True, pulse=True)
+            chosen.append((x, y2, z))
+            placed_e += 1
+    return placed_f, placed_e
+
+
+# ----------------------------------------------------------------------------- interior finishes (Phase 3)
+# Homes, farmhouses, apartments, motels and offices get finished interiors (gen_interiors.py): each
+# building picks a wall finish for its interior walls (faded or striped wallpaper, wood panelling,
+# or bare), kitchens (floor within reach of a stove, sink or counter) get linoleum, and the other
+# rooms carpet or the original boards, so no two houses look alike inside. Only interior wall faces
+# and floors under a roof change; outer walls, furniture and loot stay as they were.
+FINISH_PLANS = ("cottage", "suburban", "two_story", "trailer", "farmhouse", "apartment_block", "motel", "office_block", "wooden_house")
+WALL_FINISHES = ("faded_wallpaper", "striped_wallpaper", "wood_paneling", None)
+FLOOR_FINISHES = ("stained_carpet", "stained_carpet", None)
+KITCHEN = ("stove", "sink", "counter")
+
+
+def interior_finish(name: str, b: Building) -> tuple[int, int]:
+    """Re-finishes interior walls and floors; returns (wall blocks, floor blocks) changed."""
+    if not name.startswith(FINISH_PLANS):
+        return 0, 0
+    blocks = b.blocks
+    wall_finish = b.pick(list(WALL_FINISHES))
+    floor_finish = "linoleum_tiles" if name.startswith("office_block") else b.pick(list(FLOOR_FINISHES))
+
+    def kind(p):
+        entry = blocks.get(p)
+        return entry[0] if entry else None
+
+    cache: dict = {}
+
+    def indoor(p):
+        """Air inside the building: a roof within six blocks above and walls on all four sides (air under
+        the eaves outside has a roof but nothing beyond it)."""
+        if p in cache:
+            return cache[p]
+        result = kind(p) == "minecraft:air" and any(kind((p[0], p[1] + k, p[2])) not in (None, "minecraft:air") for k in range(1, 7))
+        if result:
+            for dx, dz in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                k = 1
+                while kind((p[0] + dx * k, p[1], p[2] + dz * k)) == "minecraft:air":
+                    k += 1
+                if kind((p[0] + dx * k, p[1], p[2] + dz * k)) is None:
+                    result = False
+                    break
+        cache[p] = result
+        return result
+
+    def plain(p):
+        k = kind(p)
+        return k is not None and k != "minecraft:air" and ":" not in k.replace(f"{NS}:", "") and not any(w in k for w in NOT_A_WALL) \
+            and not blocks[p][1] and blocks[p][2] is None
+
+    kitchens = [p for p, v in blocks.items() if any(w in v[0] for w in KITCHEN)]
+    walls = floors = 0
+    for p in sorted(blocks):
+        x, y, z = p
+        if wall_finish and plain(p) and y >= 1:
+            # An interior wall: indoor air on both sides along one axis.
+            if (indoor((x - 1, y, z)) and indoor((x + 1, y, z))) or (indoor((x, y, z - 1)) and indoor((x, y, z + 1))):
+                b.put(x, y, z, wall_finish)
+                walls += 1
+                continue
+        # A floor: a room above it and no room below (an upper storey's floor is the ceiling of the room under it).
+        if plain(p) and indoor((x, y + 1, z)) and not indoor((x, y - 1, z)) and kind(p).endswith(("boarded_planks", "concrete")):
+            near_kitchen = any(abs(k[0] - x) <= 2 and abs(k[2] - z) <= 2 and 0 <= k[1] - y <= 2 for k in kitchens)
+            finish = "linoleum_tiles" if near_kitchen else floor_finish
+            if finish:
+                b.put(x, y, z, finish)
+                floors += 1
+    return walls, floors
+
+
 def build() -> None:
     if STRUCTURES.exists():
         for old in STRUCTURES.glob("*.nbt"):
@@ -1043,6 +1200,8 @@ def build() -> None:
         for name, building in buildings:
             sx, sy, sz = building.size
             assert sx <= MAX_FRONT and sz <= MAX_DEPTH, (name, building.size)
+            interior_finish(name, building)
+            light_fixtures(name, building)
             building.write(STRUCTURES / f"{name}.nbt")
             templates[category].append(f"{NS}:town/{name}")
             count += 1

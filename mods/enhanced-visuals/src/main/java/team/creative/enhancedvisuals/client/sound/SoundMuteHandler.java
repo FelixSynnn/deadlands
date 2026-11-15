@@ -1,0 +1,82 @@
+package team.creative.enhancedvisuals.client.sound;
+
+import java.util.ConcurrentModificationException;
+import java.util.Map;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.client.sounds.SoundEngine;
+import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.client.sounds.ChannelAccess.ChannelHandle;
+import team.creative.creativecore.common.config.premade.curve.DecimalCurve;
+import team.creative.enhancedvisuals.common.handler.VisualHandlers;
+import team.creative.enhancedvisuals.mixin.SoundEngineAccessor;
+import team.creative.enhancedvisuals.mixin.SoundManagerAccessor;
+
+public class SoundMuteHandler {
+    public static boolean isMuting = false;
+    public static SoundEngine engine;
+    public static SoundManager manager;
+    public static DecimalCurve muteGraph;
+    public static int timeTick = 0;
+
+    public static void tick() {
+        if (isMuting) {
+            double factor = muteGraph.valueAt(timeTick);
+            if (factor <= 0.0) {
+                endMuting();
+            } else {
+                setMuteVolume((float)(1.0 - factor));
+                timeTick++;
+            }
+        }
+    }
+
+    public static float getClampedVolume(float volume) {
+        return volume * (isMuting ? (float)(1.0 - muteGraph.valueAt(timeTick)) : 1.0F);
+    }
+
+    public static Map<SoundInstance, ChannelHandle> getSounds() {
+        return ((SoundEngineAccessor)engine).getInstanceToChannel();
+    }
+
+    public static void setMuteVolume(float muteVolume) {
+        if (isMuting) {
+            try {
+                getSounds().forEach((soundinstance, channelHandler) -> {
+                    if (!soundinstance.getIdentifier().equals(VisualHandlers.EXPLOSION.beepSound)) {
+                        float f = ((SoundEngineAccessor)engine).invokeCalculateVolume(soundinstance);
+                        channelHandler.execute(channel -> channel.setVolume(f * muteVolume));
+                    }
+                });
+            } catch (ConcurrentModificationException var2) {
+            }
+        }
+    }
+
+    public static boolean startMuting(DecimalCurve muteGraph) {
+        if (engine == null) {
+            manager = Minecraft.getInstance().getSoundManager();
+            engine = ((SoundManagerAccessor)manager).getSoundEngine();
+        }
+
+        if (isMuting && SoundMuteHandler.muteGraph.valueAt(timeTick) > muteGraph.valueAt(0.0)) {
+            SoundMuteHandler.muteGraph = muteGraph;
+            timeTick = 0;
+            tick();
+            return true;
+        } else if (!isMuting) {
+            SoundMuteHandler.muteGraph = muteGraph;
+            timeTick = 0;
+            isMuting = true;
+            tick();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static void endMuting() {
+        setMuteVolume(1.0F);
+        isMuting = false;
+    }
+}

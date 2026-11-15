@@ -58,6 +58,20 @@ public final class TitleBackdrop {
 	 * @param mouseNY mouse y relative to screen centre, -1..1
 	 */
 	public static void render(GuiGraphics graphics, int width, int height, float mouseNX, float mouseNY, boolean grain) {
+		// The painted street is retired: the menu shows the shader screenshots (MenuBackgrounds).
+		MenuBackgrounds.render(graphics, width, height);
+		// Keep the menu readable over any picture: darker toward the edges and the bottom.
+		graphics.fillGradient(0, height / 3, width, height, 0x00000000, 0xA0000000);
+		graphics.fill(0, 0, width, height, 0x30000000);
+		graphics.blit(RenderPipelines.GUI_TEXTURED, VIGNETTE, 0, 0, 0.0F, 0.0F, width, height, 512, 288, 512, 288);
+		if (grain) {
+			grain(graphics, width, height);
+		}
+	}
+
+	/** The retired painted street (kept for reference; not drawn). */
+	@SuppressWarnings("unused")
+	private static void renderStreet(GuiGraphics graphics, int width, int height, float mouseNX, float mouseNY, boolean grain) {
 		float t = (Util.getMillis() % 3_600_000L) / 1000.0F;
 		float cover = Math.max(width / (float) ART_W, height / (float) ART_H) * 1.05F;
 		float artW = ART_W * cover;
@@ -167,6 +181,7 @@ public final class TitleBackdrop {
 
 	/** Free the large backdrop textures (about 50 MB of video memory) once a world is joined. */
 	public static void releaseTextures() {
+		MenuBackgrounds.release();
 		TextureManager textures = Minecraft.getInstance().getTextureManager();
 		for (Identifier id : ALL) {
 			textures.release(id);

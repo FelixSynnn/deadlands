@@ -1,0 +1,160 @@
+package vectorwing.farmersdelight.common.block.entity;
+
+import java.util.function.BooleanSupplier;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import vectorwing.farmersdelight.common.block.BasketBlock;
+import vectorwing.farmersdelight.common.block.entity.inventory.BasketInvWrapper;
+import vectorwing.farmersdelight.common.registry.ModBlockEntityTypes;
+import vectorwing.farmersdelight.common.utility.TextUtils;
+
+public class BasketBlockEntity extends RandomizableContainerBlockEntity implements Basket {
+    private NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
+    private int transferCooldown = -1;
+
+    public BasketBlockEntity(BlockPos pos, BlockState state) {
+        super(ModBlockEntityTypes.BASKET.get(), pos, state);
+    }
+
+    public static void init() {
+        ItemStorage.SIDED.registerForBlockEntity((be, context) -> new BasketInvWrapper(be), ModBlockEntityTypes.BASKET.get());
+    }
+
+    @Override
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        if (!this.tryLoadLootTable(input)) {
+            ContainerHelper.loadAllItems(input, this.items);
+        }
+
+        this.transferCooldown = input.getIntOr("TransferCooldown", -1);
+    }
+
+    @Override
+    public void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        if (!this.trySaveLootTable(output)) {
+            ContainerHelper.saveAllItems(output, this.items);
+        }
+
+        output.putInt("TransferCooldown", this.transferCooldown);
+    }
+
+    @Override
+    public int getContainerSize() {
+        return this.items.size();
+    }
+
+    @Override
+    public ItemStack removeItem(int index, int count) {
+        this.unpackLootTable(null);
+        return ContainerHelper.removeItem(this.getItems(), index, count);
+    }
+
+    @Override
+    public void setItem(int index, ItemStack stack) {
+        this.unpackLootTable(null);
+        this.getItems().set(index, stack);
+        if (stack.getCount() > this.getMaxStackSize()) {
+            stack.setCount(this.getMaxStackSize());
+        }
+    }
+
+    @Override
+    protected Component getDefaultName() {
+        return TextUtils.container("basket");
+    }
+
+    @Override
+    protected NonNullList<ItemStack> getItems() {
+        return this.items;
+    }
+
+    @Override
+    protected void setItems(NonNullList<ItemStack> itemsIn) {
+        this.items = itemsIn;
+    }
+
+    @Override
+    protected AbstractContainerMenu createMenu(int id, Inventory player) {
+        return ChestMenu.threeRows(id, player, this);
+    }
+
+    @Override
+    public void setCooldown(int ticks) {
+        this.transferCooldown = ticks;
+    }
+
+    @Override
+    public boolean isOnCooldown() {
+        return this.transferCooldown > 0;
+    }
+
+    @Override
+    public boolean isOnCustomCooldown() {
+        return this.transferCooldown > 8;
+    }
+
+    @Override
+    public void tryTransfer(BooleanSupplier transfer) {
+        if (this.level != null && !this.level.isClientSide() && !this.isOnCooldown() && this.getBlockState().getValue(BlockStateProperties.ENABLED)) {
+            boolean flag = false;
+            if (!this.isFull()) {
+                flag = transfer.getAsBoolean();
+            }
+
+            if (flag) {
+                this.setCooldown(8);
+                this.setChanged();
+            }
+        }
+    }
+
+    protected boolean isFull() {
+        for (ItemStack itemstack : this.items) {
+            if (itemstack.isEmpty() || itemstack.getCount() != itemstack.getMaxStackSize()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public double getLevelX() {
+        return this.worldPosition.getX() + 0.5;
+    }
+
+    @Override
+    public double getLevelY() {
+        return this.worldPosition.getY() + 0.5;
+    }
+
+    @Override
+    public double getLevelZ() {
+        return this.worldPosition.getZ() + 0.5;
+    }
+
+    public static void pushItemsTick(Level level, BlockPos pos, BlockState state, BasketBlockEntity blockEntity) {
+        blockEntity.transferCooldown--;
+        if (!blockEntity.isOnCooldown()) {
+            blockEntity.setCooldown(0);
+            int facing = state.getValue(BasketBlock.FACING).get3DDataValue();
+            blockEntity.tryTransfer(() -> blockEntity.collectItems(level, facing));
+        }
+    }
+}

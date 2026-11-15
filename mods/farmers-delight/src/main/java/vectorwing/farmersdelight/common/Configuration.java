@@ -1,0 +1,192 @@
+package vectorwing.farmersdelight.common;
+
+import com.google.common.collect.ImmutableList;
+import java.util.List;
+import java.util.function.Supplier;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
+import vectorwing.farmersdelight.refabricated.mlconfigs.ConfigBuilder;
+import vectorwing.farmersdelight.refabricated.mlconfigs.ConfigType;
+import vectorwing.farmersdelight.refabricated.mlconfigs.ModConfigHolder;
+
+public class Configuration {
+    public static final ModConfigHolder COMMON_CONFIG;
+    public static final ModConfigHolder CLIENT_CONFIG;
+    public static final String CATEGORY_SETTINGS = "settings";
+    public static final Supplier<Boolean> FARMERS_BUY_FD_CROPS;
+    public static final Supplier<Boolean> WANDERING_TRADER_SELLS_FD_ITEMS;
+    public static final Supplier<Boolean> ENABLE_ROPE_REELING;
+    public static final Supplier<List<String>> CANVAS_SIGN_DARK_BACKGROUND_LIST;
+    public static final String CATEGORY_FARMING = "farming";
+    public static final Supplier<Double> RICH_SOIL_BOOST_CHANCE;
+    public static final Supplier<Boolean> ENABLE_TOMATO_VINE_CLIMBING_TAGGED_ROPES;
+    public static final Supplier<String> DEFAULT_TOMATO_VINE_ROPE;
+    public static final String CATEGORY_CRAFTING = "crafting";
+    public static final Supplier<Boolean> ENABLE_COOKING_POT_RECIPE_BOOK;
+    public static final Supplier<Boolean> ENABLE_VANILLA_CROP_CRATES;
+    public static final Supplier<Double> CUTTING_BOARD_FORTUNE_BONUS;
+    public static final String CATEGORY_OVERRIDES = "overrides";
+    public static final Supplier<Boolean> ENABLE_VANILLA_SOUP_EXTRA_EFFECTS;
+    public static final Supplier<Boolean> ENABLE_RABBIT_STEW_BUFF;
+    public static final Supplier<Boolean> ENABLE_PUMPKIN_PIE_SNEAK_TO_PLACE;
+    public static final Supplier<Boolean> ENABLE_DISPENSER_TOOLS_CUTTING_BOARD;
+    public static final String CATEGORY_OVERRIDES_STACK_SIZE = "stack_size";
+    public static final Supplier<Boolean> ENABLE_STACKABLE_SOUP_ITEMS;
+    public static final Supplier<List<String>> SOUP_ITEM_LIST;
+    public static final String CATEGORY_WORLD = "world";
+    public static final Supplier<Boolean> GENERATE_FD_CHEST_LOOT;
+    public static final Supplier<Boolean> GENERATE_VILLAGE_COMPOST_HEAPS;
+    public static final Supplier<Boolean> GENERATE_VILLAGE_FARM_FD_CROPS;
+    public static final String CATEGORY_DEBUG = "debug";
+    public static final Supplier<Boolean> ENABLE_TOMATO_ROPE_PERMANENCE;
+    public static final String CATEGORY_CLIENT = "client";
+    public static final Supplier<Boolean> ENABLE_NOURISHMENT_HUNGER_OVERLAY;
+    public static final Supplier<Boolean> ENABLE_COMFORT_HEALTH_OVERLAY;
+    public static final Supplier<Boolean> ENABLE_FOOD_EFFECT_TOOLTIP;
+    @Deprecated(forRemoval = true)
+    public static Supplier<Boolean> ENABLE_RECIPE_BOOK_COOKING_POT;
+    @Deprecated(forRemoval = true)
+    public static Supplier<Boolean> VANILLA_SOUP_EXTRA_EFFECTS;
+    @Deprecated(forRemoval = true)
+    public static Supplier<Boolean> RABBIT_STEW_BUFF;
+    @Deprecated(forRemoval = true)
+    public static Supplier<Boolean> DISPENSER_TOOLS_CUTTING_BOARD;
+    @Deprecated(forRemoval = true)
+    public static Supplier<Boolean> NOURISHMENT_HUNGER_OVERLAY;
+    @Deprecated(forRemoval = true)
+    public static Supplier<Boolean> COMFORT_HEALTH_OVERLAY;
+    @Deprecated(forRemoval = true)
+    public static Supplier<Boolean> FOOD_EFFECT_TOOLTIP;
+
+    public static void touch() {
+    }
+
+    static {
+        ConfigBuilder COMMON_BUILDER = ConfigBuilder.create("farmersdelight", ConfigType.COMMON);
+        COMMON_BUILDER.push("settings");
+        ENABLE_ROPE_REELING = COMMON_BUILDER.comment(
+                "If enabled, players will be able to reel back rope, bottom to top, when sneak-using with an empty hand on them."
+            )
+            .define("enableRopeReeling", true);
+        CANVAS_SIGN_DARK_BACKGROUND_LIST = COMMON_BUILDER.comment(
+                "A list of dye colors that, when used as the background color of a Canvas Sign, should default to white text when placed.Dyes: [\"white\", \"orange\", \"magenta\", \"light_blue\", \"yellow\", \"lime\", \"pink\", \"gray\", \"light_gray\", \"cyan\", \"purple\", \"blue\", \"brown\", \"green\", \"red\", \"black\"]"
+            )
+            .define("canvasSignDarkBackgroundList", ImmutableList.of("gray", "purple", "blue", "brown", "green", "red", "black"));
+        COMMON_BUILDER.pop();
+        COMMON_BUILDER.push("farming");
+        RICH_SOIL_BOOST_CHANCE = COMMON_BUILDER.comment(
+                "The chance (in decimal percentage) of Rich Soil providing a bone meal boost to a crop planted on it. Set to 0.0 to disable."
+            )
+            .define("richSoilBoostChance", 0.2, 0.0, 1.0);
+        ENABLE_TOMATO_VINE_CLIMBING_TAGGED_ROPES = COMMON_BUILDER.comment(
+                "If enabled, tomato crops will be able to climb any rope tagged as farmersdelight:ropes. If disabled, this will be restricted to this mod's rope only."
+            )
+            .comment("Beware: this will convert these blocks into the block specified in defaultTomatoVineRope.")
+            .define("enableTomatoVineClimbingTaggedRopes", true);
+        DEFAULT_TOMATO_VINE_ROPE = COMMON_BUILDER.comment("Which rope should Tomato Vines leave behind when broken?")
+            .define("defaultTomatoVineRope", "farmersdelight:rope");
+        COMMON_BUILDER.pop();
+        COMMON_BUILDER.push("crafting");
+        ENABLE_COOKING_POT_RECIPE_BOOK = COMMON_BUILDER.comment(
+                "If enabled, the Cooking Pot will provide a Recipe Book on its interface, similar to the one on Crafting Tables and Furnaces."
+            )
+            .define("enableCookingPotRecipeBook", true);
+        ENABLE_VANILLA_CROP_CRATES = COMMON_BUILDER.comment(
+                "If enabled, storage crates (3x3) for vanilla crops (similar to Quark and Thermal Cultivation) will become craftable."
+            )
+            .define("enableVanillaCropCrates", true);
+        CUTTING_BOARD_FORTUNE_BONUS = COMMON_BUILDER.comment(
+                "How much (in decimal percentage) should each level of Fortune increase the odds of obtaining rare results on the Cutting Board? Set to 0.0 to disable."
+            )
+            .define("cuttingBoardFortuneBonus", 0.1, 0.0, 1.0);
+        FARMERS_BUY_FD_CROPS = COMMON_BUILDER.comment("If enabled, Novice and Apprentice Farmer villagers will have a chance to buy crops from this mod.")
+            .define("farmersBuyFDCrops", true);
+        WANDERING_TRADER_SELLS_FD_ITEMS = COMMON_BUILDER.comment(
+                "If enabled, the Wandering Trader will have a chance to sell seeds and plantables from this mod."
+            )
+            .define("wanderingTraderSellsFDItems", true);
+        COMMON_BUILDER.pop();
+        COMMON_BUILDER.push("overrides");
+        ENABLE_VANILLA_SOUP_EXTRA_EFFECTS = COMMON_BUILDER.comment(
+                "If enabled, soups and stews from Minecraft will grant Nourishment when eaten, similar to meals from this mod."
+            )
+            .define("enableVanillaSoupExtraEffects", true);
+        ENABLE_RABBIT_STEW_BUFF = COMMON_BUILDER.comment("If enabled, Rabbit Stew will be given improved food stats, to match its crafting cost.")
+            .define("enableRabbitStewBuff", true);
+        ENABLE_PUMPKIN_PIE_SNEAK_TO_PLACE = COMMON_BUILDER.comment("If enabled, Pumpkin Pie will require the user to sneak to place it down as a block.")
+            .define("enablePumpkinPieSneakToPlace", false);
+        ENABLE_DISPENSER_TOOLS_CUTTING_BOARD = COMMON_BUILDER.comment(
+                "If enabled, the Dispenser will be able to operate a Cutting Board in front of itself, using stored items as cutting tools."
+            )
+            .define("enableCuttingBoardDispenserBehavior", true);
+        COMMON_BUILDER.push("stack_size");
+        ENABLE_STACKABLE_SOUP_ITEMS = COMMON_BUILDER.comment(
+                "If enabled, any BowlFoodItem in the following list will become stackable to 16, much like Farmer's Delight's meals."
+            )
+            .define("enableStackableSoupItems", true);
+        SOUP_ITEM_LIST = COMMON_BUILDER.comment(
+                "List of targeted food items. They must extend the BowlFoodItem class in code to be affected. Defaults to vanilla soups and stews."
+            )
+            .define("soupItemList", ImmutableList.of("minecraft:mushroom_stew", "minecraft:beetroot_soup", "minecraft:rabbit_stew"));
+        COMMON_BUILDER.pop();
+        COMMON_BUILDER.pop();
+        COMMON_BUILDER.push("world");
+        GENERATE_FD_CHEST_LOOT = COMMON_BUILDER.comment(
+                "If enabled, new loot pools will be added to chest loot across the game, containing items from this mod (ropes, crops, tools etc)."
+            )
+            .define("generateFDChestLoot", true);
+        GENERATE_VILLAGE_COMPOST_HEAPS = COMMON_BUILDER.comment(
+                "If enabled, Compost Heaps (structures containing Organic Compost piles) will sometimes generate across Villages."
+            )
+            .define("generateVillageCompostHeaps", true);
+        GENERATE_VILLAGE_FARM_FD_CROPS = COMMON_BUILDER.comment(
+                "If enabled, crops from Farmer's Delight will sometimes replace standard crops in village farm plots."
+            )
+            .define("generateFDCropsOnVillageFarms", true);
+        COMMON_BUILDER.pop();
+        COMMON_BUILDER.push("debug");
+        ENABLE_TOMATO_ROPE_PERMANENCE = COMMON_BUILDER.comment(
+                "Tomato crops hanging on rope will force-place a Rope block when broken. Due to technical limitations, this affects things such as commands, making them fail to 'setblock' at first."
+            )
+            .comment(
+                "Disable this if this block is preventing you from editing a region in creative or with commands. For normal gameplay, I recommend leaving this enabled."
+            )
+            .define("enableTomatoRopePermanence", true);
+        COMMON_BUILDER.pop();
+        COMMON_BUILDER.pop();
+        COMMON_CONFIG = COMMON_BUILDER.build();
+        COMMON_CONFIG.forceLoad();
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            ConfigBuilder CLIENT_BUILDER = ConfigBuilder.create("farmersdelight", ConfigType.CLIENT);
+            CLIENT_BUILDER.comment("Client settings").push("client");
+            ENABLE_NOURISHMENT_HUNGER_OVERLAY = CLIENT_BUILDER.comment(
+                    "If enabled, a gilded overlay will be shown over the food meter when the player has the Nourishment effect."
+                )
+                .define("enableNourishmentHungerOverlay", true);
+            ENABLE_COMFORT_HEALTH_OVERLAY = CLIENT_BUILDER.comment(
+                    "If enabled, a scrolling overlay will be shown over the health meter when the player has the Comfort effect."
+                )
+                .define("enableComfortHealthOverlay", true);
+            ENABLE_FOOD_EFFECT_TOOLTIP = CLIENT_BUILDER.comment(
+                    "If enabled, food items will display tooltips showing which effects they grant when eaten, if any. Applies to foods from both Minecraft and this mod."
+                )
+                .define("enableFoodEffectTooltip", true);
+            CLIENT_BUILDER.pop();
+            CLIENT_CONFIG = CLIENT_BUILDER.build();
+            CLIENT_CONFIG.forceLoad();
+        } else {
+            ENABLE_NOURISHMENT_HUNGER_OVERLAY = () -> true;
+            ENABLE_COMFORT_HEALTH_OVERLAY = () -> true;
+            ENABLE_FOOD_EFFECT_TOOLTIP = () -> true;
+            CLIENT_CONFIG = null;
+        }
+
+        ENABLE_RECIPE_BOOK_COOKING_POT = ENABLE_COOKING_POT_RECIPE_BOOK;
+        VANILLA_SOUP_EXTRA_EFFECTS = ENABLE_VANILLA_SOUP_EXTRA_EFFECTS;
+        RABBIT_STEW_BUFF = ENABLE_RABBIT_STEW_BUFF;
+        DISPENSER_TOOLS_CUTTING_BOARD = ENABLE_DISPENSER_TOOLS_CUTTING_BOARD;
+        NOURISHMENT_HUNGER_OVERLAY = ENABLE_NOURISHMENT_HUNGER_OVERLAY;
+        COMFORT_HEALTH_OVERLAY = ENABLE_COMFORT_HEALTH_OVERLAY;
+        FOOD_EFFECT_TOOLTIP = ENABLE_FOOD_EFFECT_TOOLTIP;
+    }
+}

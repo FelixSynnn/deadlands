@@ -117,8 +117,9 @@ L("felix_notes_2", "character", ["military", "evacuation"], "FelixSyn's Field No
   "put her rifle down. Then I put mine down. We walked out through the east gate before they could lock it.",
   "felix_notes", 2)
 L("felix_notes_3", "character", ["camp", "military"], "FelixSyn's Field Notes: The Doctor",
-  "We found a doctor with a case full of samples. She says the army knew. She says Hale knew. I believe her, because I was there "
-  "when he read the orders and he did not look surprised.",
+  "We found a lab tech who walked out of Kessler with nothing but her badge. She says the army knew. She says Hale knew. I believe "
+  "her, because I was there when he read the orders and he did not look surprised. I asked her about a Dr. Harley. She said Harley "
+  "got out. That is all she knew. It is more than I had yesterday.",
   "felix_notes", 3)
 L("felix_notes_4", "character", ["military", "camp", "evacuation"], "FelixSyn's Field Notes: If I See Him Again",
   "If Hale is still out there, dead or alive, I owe him a conversation. If he is dead and walking, I owe him rest. Either way I want "
@@ -132,6 +133,103 @@ L("trail_imlilylol", "character", ["trail"], "A Letter Left at a Camp",
   "her friends: I have news, and I would rather give it to your face. - Lily")
 L("trail_felixsyn", "character", ["trail"], "Words Scratched Inside a Checkpoint Booth",
   "F.S. moving to %1$s. %2$s, %3$s blocks. Holding there. Do not follow if you are army.")
+
+# =============================================================================================== Adam (Phase 5)
+L("adam_research_1", "research", ["lab", "facility", "office"], "Adam's Lab Notes: Sample Stability Log",
+  "Cold chain for the NR-7 trial batches. Batches one to six degrade within ninety days at four degrees. Batch seven was drawn before "
+  "the agent was modified for the trial and holds at minus eighty. If anyone ever needs to know what NR-7 was before they changed it, "
+  "batch seven is the answer.",
+  "adam_research", 1)
+L("adam_research_2", "research", ["lab", "facility"], "Adam's Lab Notes: The Modification",
+  "Rourke wants faster regeneration for the trial. Faster means fewer brakes. I put my objection in writing, twice. Both memos came "
+  "back with a colonel's initials on them and nothing else.",
+  "adam_research", 2)
+L("adam_research_3", "research", ["lab", "facility", "office"], "Adam's Lab Notes: Comparison",
+  "Ran the trial agent against batch seven under the scope. Batch seven repairs and stops. The trial agent repairs and keeps going. "
+  "Whatever turns a person into one of them lives in the difference between those two slides.",
+  "adam_research", 3)
+L("adam_research_4", "research", ["facility", "lab"], "Adam's Lab Notes: Sealed",
+  "Sealed batch seven in a transport case and put it in Harley's freezer, not mine. Mine is on the log they check. Hers is not. "
+  "If I'm wrong about all this, I wasted an afternoon. If I'm right, someone will need it.",
+  "adam_research", 4)
+L("adam_tape_1", "radio", ["lab", "facility", "office"], "Recording: Adam, Voice Memo 1",
+  "[Tape hiss] It's me. The phones are down at the lab, so I'm recording this in case the post still works. I'm fine. I'm coming "
+  "home. Keep the doors locked and don't open them for anyone in uniform. I love you. All three of you.",
+  "adam_tape", 1)
+L("adam_tape_2", "radio", ["house", "camp", "office"], "Recording: Adam, Voice Memo 2",
+  "[Tape hiss] Day nine, I think. I keep recording these. It helps to talk to you even if you can't hear it. The roads north are "
+  "blocked. I'll find another way. I always find another way home. Don't give up on me.",
+  "adam_tape", 2)
+L("adam_tape_3", "radio", ["camp", "lab"], "Recording: Adam, Voice Memo 3",
+  "[Tape hiss] Someone told me a group got out of town before the bridge went. A woman and two kids. Could be anyone. Could be you. "
+  "I'm choosing to believe it's you.",
+  "adam_tape", 3)
+L("adam_photo", "journal", ["office", "lab", "facility"], "Photograph: A Family on a Pier",
+  "A creased photograph from a lab coat pocket. A man in glasses, a woman laughing at something off camera, two children squinting "
+  "into the sun. On the back, in pen: Summer. Home by seven, I promise.")
+
+# =============================================================================================== the trail of hope (Phase 5 step 3)
+L("trail_hope_register", "military", ["military", "evacuation", "police"], "Checkpoint Register, North Road",
+  "Page 14 of a soaked register. Name, number in party, destination. Halfway down, in a careful hand: one adult, two children, "
+  "destination Pinecrest. Someone has added in pencil beside it: father not with them, still at the lab?")
+L("trail_hope_radio", "radio", ["utility", "camp", "military"], "Recording: Night Traffic, 91.2",
+  "[Static] ...convoy from the north road reached the reservoir. Forty-one people. Women, kids, two dogs. If you're out there "
+  "looking for someone, Pinecrest is taking names. Say it again: Pinecrest is taking names. [Static]")
+L("trail_hope_drawing", "journal", ["house", "school", "camp"], "Photograph: A Child's Drawing",
+  "A crayon drawing, folded small. A house with every window yellow, three stick figures in a car, a fourth by the door. Under "
+  "the fourth one, in big wobbly letters: DAD WILL FIND US.")
+L("adam_family_letter", "journal", ["story"], "A Letter on the Kitchen Table",
+  "Adam. If you're reading this, you came home. We waited four days. The soldiers say the north road is still open, so we're "
+  "going to the reservoir camp at Pinecrest. The kids made me promise to leave the porch light on. There's no power, but I left "
+  "it switched on anyway. We are all right. We are together. Home by seven, remember? We're holding you to it. All my love.")
+
+# =============================================================================================== the Asesino (Phase 5)
+# The Aberrant (Story Canon 2026-11-12): a Kessler scientist whose cure was wrong, and who gave it to his sick daughter.
+L("asesino_file_1", "research", ["lab", "facility", "office"], "Cure Notes, Batch Twelve",
+  "Batch twelve reverses NR-7 in the cultures. Sixty hours and not one cell has turned. Rourke says it is nowhere near ready for "
+  "people. Rourke goes home to an empty flat. I go home to Mia coughing through the wall, and I count the coughs, and there are more every week.")
+L("asesino_file_2", "journal", ["house", "lab"], "A Letter Never Sent",
+  "Mia, you were so brave about the needle. You said it felt like a bee. I told you it would make the tired go away, and I believed "
+  "it. I need you to know that I believed it. I am sorry I was wrong. I am sorry I was not a better scientist. I am sorry.")
+L("asesino_file_3", "medical", ["facility", "lab", "medical"], "Ward C, Bed Four",
+  "Patient: Mia Reyes, age 8. Unauthorised compound given by her father, Dr. T. Reyes. She did not wake. Dr. Reyes stayed at the bedside "
+  "all night, holding her hand, and would not speak to staff. By the evening he was gone from the ward, along with the rest of batch twelve.")
+
+# The Guest (Story Canon 2026-11-12): a Kessler worker's old dog, sick with cancer, bitten during the outbreak.
+L("guest_file_1", "medical", ["house", "medical", "store"], "Vet Appointment Card",
+  "Patient: Biscuit (dog, nine years). Owner: D. Mercer, maintenance, Kessler Regional. Bone cancer in the left foreleg; the owner "
+  "declined amputation. Pain relief only. We talked about what comes next. He asked for a little more time with her.")
+L("guest_file_2", "journal", ["facility", "office", "utility"], "Maintenance Log, Night Shift",
+  "Brought Biscuit in again. Security pretends not to see her under my desk. She can't manage the stairs any more, so I carry her. "
+  "Alarms going on and off in Wing D since six. If they send us home early we're going to the lake. She always liked the lake.")
+L("guest_file_3", "government", ["facility", "military", "police"], "Incident Note, Loading Bay",
+  "Maintenance worker Mercer evacuated with minor injuries. Refused treatment until someone found his dog. The dog was bitten by an "
+  "escaped subject during the breach and ran. Witnesses say she was not limping any more. She was standing up on her back legs.")
+
+# D.O.T., Patient-4 (2026-11-13; entity/DotEntity): Deceased On Transfer.
+L("dot_file", "medical", ["facility", "lab", "military", "subway"], "LANTERN Trial, Cohort II, Subject 4",
+  "Kessler Regional, Wing D. He signed the consent form with his left hand; the right one hadn't worked since the convoy. LANTERN "
+  "promised he'd walk again. By week three he did. By week six he stopped sleeping. By week nine every injury the staff gave him, "
+  "testing, closed before the instrument left the skin, and the cameras began to drop frames whenever he moved. Kessler ordered him "
+  "moved to Site Calder and the forms stamped DECEASED ON TRANSFER. The truck arrived with its doors still locked from the outside "
+  "and nobody in it. He doesn't hunt like the others. He walks. Most nights he doesn't even look at you. Don't give him a reason.")
+
+# The subway (world/subway): found in train luggage, ticket booths and hideouts.
+L("subway_paper", "newspaper", ["subway"], "The Morning Line, Final Edition",
+  "TRAINS RUN TO THE LAST. The transit authority says services north will continue \"for as long as there are drivers\". "
+  "Queues at Central reached the street by six. Officials ask passengers not to bring pets, livestock, or anyone who is unwell.")
+L("subway_driver_log", "journal", ["subway"], "Driver's Log, Line 2",
+  "Last run. Forty on a car built for twenty. Someone in car two was coughing and they made her get off at Mercer Street. "
+  "She stood on the platform and watched us go. The tunnel lights went out behind us one by one. I didn't stop. I'm sorry.")
+L("subway_child_note", "journal", ["subway"], "A Note in Crayon",
+  "MUM I WAITED BY THE TICKET MACHINE LIKE YOU SAID. THE MAN ON THE SPEAKER SAID YOUR NAME WRONG. "
+  "I AM GOING WITH THE LADY WITH THE RED BAG. SHE SAYS YOU WILL FIND US AT THE CAMP. I LEFT YOU MY TORCH.")
+L("subway_hideout_rules", "journal", ["subway"], "Rules, Pinned Up in a Back Room",
+  "1. No light past the barricade. 2. Nobody comes in bitten. Nobody. 3. Water is shared. 4. If the PA comes on, "
+  "stay quiet: it brings them down the stairs. 5. Day 31: Marcus didn't come back. 6. We're leaving tonight. Take what you need.")
+L("subway_staff_memo", "government", ["subway"], "Transit Staff Memo, Do Not Post",
+  "Staff are reminded NOT to repeat the evacuation announcement after the tunnels are sealed. The recording loops on its own. "
+  "If a station's power fails, the PA's backup battery will keep it running for some weeks. There is no way to switch it off remotely.")
 
 # =============================================================================================== military
 L("mil_lantern_brief", "military", ["military", "lab", "facility"], "Project LANTERN: Briefing",

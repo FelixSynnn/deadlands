@@ -121,6 +121,49 @@ public class TownBuildingPiece extends TemplateStructurePiece {
 		settleContainers(level, pos, box, minX, maxX, minZ, maxZ);
 		infest(level, pos, box, minX, maxX, minZ, maxZ);
 		populate(level, pos, box, minX, maxX, minZ, maxZ);
+		terminal(level, pos, box, minX, maxX, minZ, maxZ);
+	}
+
+	/**
+	 * Every clinic, emergency room, pharmacy and hospital has a Kessler terminal left running, on the ground floor toward
+	 * a corner (the first free floor spot spiralling out from a point a third of the way across), facing the room. Unit
+	 * 07 lives in it ({@code story.MythosTerminal}). Decided from the building alone, so every chunk agrees.
+	 */
+	private void terminal(WorldGenLevel level, BlockPos.MutableBlockPos pos, BoundingBox box, int minX, int maxX, int minZ, int maxZ) {
+		if (!(templateName.contains("clinic") || templateName.contains("emergency") || templateName.contains("pharmacy")
+			|| templateName.contains("hospital"))) {
+			return;
+		}
+		int y = box.minY() + 1;
+		int cx = (box.minX() + box.maxX()) / 2;
+		int cz = (box.minZ() + box.maxZ()) / 2;
+		int sx = box.minX() + (box.maxX() - box.minX()) / 3;
+		int sz = box.minZ() + (box.maxZ() - box.minZ()) / 3;
+		for (int radius = 0; radius <= 5; radius++) {
+			for (int dx = -radius; dx <= radius; dx++) {
+				for (int dz = -radius; dz <= radius; dz++) {
+					if (Math.max(Math.abs(dx), Math.abs(dz)) != radius) {
+						continue;
+					}
+					int x = sx + dx;
+					int z = sz + dz;
+					pos.set(x, y, z);
+					boolean free = level.getBlockState(pos).isAir() && level.getBlockState(pos.above()).isAir()
+						&& level.getBlockState(pos.below()).isFaceSturdy(level, pos.below(), net.minecraft.core.Direction.UP);
+					if (!free) {
+						continue;
+					}
+					if (x >= minX && x <= maxX && z >= minZ && z <= maxZ) {
+						net.minecraft.core.Direction facing = Math.abs(cx - x) > Math.abs(cz - z)
+							? (cx > x ? net.minecraft.core.Direction.EAST : net.minecraft.core.Direction.WEST)
+							: (cz > z ? net.minecraft.core.Direction.SOUTH : net.minecraft.core.Direction.NORTH);
+						level.setBlock(pos, com.deadlands.registry.DLMythos.TERMINAL.defaultBlockState()
+							.setValue(com.deadlands.block.TerminalBlock.FACING, facing), Block.UPDATE_CLIENTS);
+					}
+					return; // decided even when another chunk holds the spot
+				}
+			}
+		}
 	}
 
 	/**

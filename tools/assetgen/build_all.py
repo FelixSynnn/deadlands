@@ -46,6 +46,34 @@ import gen_world
 import gen_immersion
 import import_sfx
 import gen_framework
+import gen_models3d
+import gen_equipment3d
+import gen_decor3d
+import gen_character3d
+import gen_interiors
+import import_zombie_sfx
+import gen_gameplay
+import gen_weapon_sfx
+import gen_story5
+import gen_cinematics
+import gen_story_ch4
+import gen_round6
+import gen_lily1
+import gen_felix1
+import gen_round8
+import import_dot
+import import_dot_sfx
+import gen_subway
+import gen_subway_audio
+import import_menu_backgrounds
+import import_pixabay
+import import_asesino
+import gen_asesino_model
+import import_aberrant
+import import_guest
+import import_guest_sfx
+import import_pixabay_creatures
+import gen_visuals
 import dl_realism
 import gen_variants
 
@@ -83,6 +111,34 @@ GROUPS = {
     "immersion": gen_immersion.build,  # horror Phase 1: vanilla structures off, vanilla ambience silenced, music placeholders, flashlight
     "sfx": import_sfx.build,  # after immersion: the chosen third-party horror sounds and music (skipped if the source folder is missing)
     "framework": gen_framework.build,  # horror Phase 2: scares, mission givers, achievements, cutscenes as data, the campaign dimension
+    "zombie_sfx": import_zombie_sfx.build,  # Phase 4: the owner's zombie and stalker sounds for the infected (after infected_voices; skipped if the files are missing)
+    "models3d": gen_models3d.build,  # horror Phase 3: 3D models for every weapon and the flashlight (replaces the flashlight's box model)
+    "equipment3d": gen_equipment3d.build,  # horror Phase 3: 3D models for equipment, food, medicine, ammunition
+    "decor3d": gen_decor3d.build,  # horror Phase 3: detailed furniture and roadside models (after gen_decor), random desk/shelf/counter versions
+    "character3d": gen_character3d.build,  # horror Phase 3: 3D gear for the characters (Java geometry + texture)
+    "interiors": gen_interiors.build,  # horror Phase 3: wallpapers, panelling, carpet, linoleum (before realism finishes them)
+    "visuals": gen_visuals.build,  # horror Phase 3: light fixtures (models, states, loot, names), weather text
+    "weapon_sfx": gen_weapon_sfx.build,  # Phase 4: melee swing and impact sounds (synthesised)
+    "gameplay": gen_gameplay.build,
+    "story5": gen_story5.build,  # Phase 5: chapter one (Harley's questline, Adam, the sample case)  # Phase 4: gameplay settings text
+    "cinematics": gen_cinematics.build,  # Phase 5: the intro cutscene, the day 10 reunion, weather disasters text
+    "story_ch4": gen_story_ch4.build,  # Phase 5: chapter four (Pinecrest: the mission, the arrival cutscene, its text)
+    "lily1": gen_lily1.build,  # Phase 5 step 5: Imlilylol's campaign, chapter one (Open Road)
+    "felix1": gen_felix1.build,  # Phase 5 step 5: FelixSyn's campaign, chapter one (The East Gate)
+    "subway": gen_subway.build,  # Phase 5: the abandoned subway stations (templates, worldgen, loot)
+    "subway_audio": gen_subway_audio.build,  # Phase 5: the subway PA announcements (Windows speech + ffmpeg)
+    "menu_backgrounds": import_menu_backgrounds.build,  # the main menu's background pool (the owner's screenshots)
+    "round8": gen_round8.build,  # the menu music settings text
+    "pixabay": import_pixabay.build,  # Phase 5: real recordings from Pixabay (after every sound generator; see CREDITS.md)
+    "pixabay_creatures": import_pixabay_creatures.build,  # Phase 5: real recordings for every infected, boss and nest sound (after pixabay: appends to CREDITS.md)
+    "asesino_model": gen_asesino_model.build,  # Phase 5: the Asesino's own rig (Java) and texture
+    "aberrant": import_aberrant.build,  # Phase 5: the Aberrant's imported fan-made model (Sketchfab, credited), rigged for his animations
+    "guest": import_guest.build,  # Phase 5: the Guest's imported model (Fourteen, CC-BY-4.0), simplified, rigged, recoloured
+    "guest_sfx": import_guest_sfx.build,  # Phase 5: the Guest's sounds and music (the owner's pack), egg, text, credits
+    "dot": import_dot.build,  # D.O.T. (Patient-4): the owner's model, rigged, with its painted texture and glow layer
+    "dot_sfx": import_dot_sfx.build,  # D.O.T.: the owner's sounds and music, egg, text, jumpscares, haunts
+    "asesino": import_asesino.build,  # Phase 5: the Asesino's skin, eyes, egg, sounds and music (the owner's files)
+    "round6": gen_round6.build,  # Phase 5: hiding in the dark, terror radii, the lunge, the Green Tornado, safe respawn, spawn settings (after pixabay)
     "realism": dl_realism.build,  # last: the finishing pass over block and item textures (originals in texture-backup/)
     "variants": gen_variants.build,  # after realism: per-position variants blended from the finished textures
 }

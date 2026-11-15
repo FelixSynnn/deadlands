@@ -21,6 +21,10 @@ public final class DLKeyMappings {
 	public static final KeyMapping HEADLIGHTS = KeyBindingHelper.registerKeyBinding(
 		new KeyMapping("key.deadlands.headlights", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, CATEGORY));
 
+	/** Phase 4: turn the held weapon or flashlight over in the hand. */
+	public static final KeyMapping INSPECT = KeyBindingHelper.registerKeyBinding(
+		new KeyMapping("key.deadlands.inspect", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_I, CATEGORY));
+
 	private DLKeyMappings() {
 	}
 

@@ -1,0 +1,32 @@
+{
+	"variants": {
+		"axis=x,faulty=false,lit=false": {
+			"model": "deadlands:block/fluorescent_light_off"
+		},
+		"axis=x,faulty=false,lit=true": {
+			"model": "deadlands:block/fluorescent_light"
+		},
+		"axis=x,faulty=true,lit=false": {
+			"model": "deadlands:block/fluorescent_light_off"
+		},
+		"axis=x,faulty=true,lit=true": {
+			"model": "deadlands:block/fluorescent_light"
+		},
+		"axis=z,faulty=false,lit=false": {
+			"model": "deadlands:block/fluorescent_light_off",
+			"y": 90
+		},
+		"axis=z,faulty=false,lit=true": {
+			"model": "deadlands:block/fluorescent_light",
+			"y": 90
+		},
+		"axis=z,faulty=true,lit=false": {
+			"model": "deadlands:block/fluorescent_light_off",
+			"y": 90
+		},
+		"axis=z,faulty=true,lit=true": {
+			"model": "deadlands:block/fluorescent_light",
+			"y": 90
+		}
+	}
+}

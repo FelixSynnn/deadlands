@@ -1,0 +1,20 @@
+{
+	"title": "mission.deadlands.story.the_case",
+	"description": "mission.deadlands.story.the_case.description",
+	"requires": [
+		"harley_gave_case"
+	],
+	"objectives": [
+		{
+			"id": "deliver",
+			"type": "flag",
+			"text": "mission.deadlands.story.the_case.deliver",
+			"flag": "adam_saw_case"
+		}
+	],
+	"reward_items": [],
+	"reward_flags": [
+		"chapter_one_case_delivered"
+	],
+	"lore": []
+}

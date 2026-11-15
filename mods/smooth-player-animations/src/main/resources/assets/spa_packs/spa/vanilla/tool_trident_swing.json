@@ -1,0 +1,36 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"tool_trident_swing": {
+			"loop": true,
+			"animation_length": 0.3333,
+			"bones": {
+				"right_arm": {
+					"rotation": {
+						"0.0": {
+							"vector": [2.5, 0, 10]
+						},
+						"0.125": {
+							"vector": [-71.2763, -9.15818, 5.62442]
+						},
+						"0.2083": {
+							"vector": [-48.60782, -18.05776, -8.74472]
+						},
+						"0.3333": {
+							"vector": [2.5, 0, 10]
+						}
+					},
+					"position": {
+						"0.0": {
+							"vector": [0, 0, -0.3]
+						},
+						"0.3333": {
+							"vector": [0, 0, -0.3]
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

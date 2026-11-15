@@ -1,0 +1,11 @@
+{
+	"replace": false,
+	"values": [
+		"deadlands:subway_station",
+		"deadlands:research_facility",
+		"deadlands:site_calder",
+		"deadlands:school",
+		"deadlands:power_station",
+		"deadlands:treatment_plant"
+	]
+}

@@ -1,0 +1,70 @@
+package vectorwing.farmersdelight.common.block;
+
+import com.mojang.serialization.MapCodec;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import vectorwing.farmersdelight.common.block.entity.StoveBlockEntity;
+import vectorwing.farmersdelight.common.registry.ModBlockEntityTypes;
+import vectorwing.farmersdelight.common.registry.ModSounds;
+
+public class StoveBlock extends AbstractStoveBlock {
+    public static final MapCodec<StoveBlock> CODEC = simpleCodec(StoveBlock::new);
+
+    @Override
+    public MapCodec<StoveBlock> codec() {
+        return CODEC;
+    }
+
+    public StoveBlock(Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new StoveBlockEntity(pos, state);
+    }
+
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        return state.getValue(LIT) ? createTickerHelper(blockEntityType, ModBlockEntityTypes.STOVE.get(), (l, blockPos, blockState, blockEntity) -> {
+            if (l instanceof ServerLevel serverLevel) {
+                StoveBlockEntity.serverTick(serverLevel, blockPos, blockState, blockEntity);
+            }
+
+            StoveBlockEntity.particleTick(l, blockPos, blockState, blockEntity);
+        }) : createStoveTicker(blockEntityType, ModBlockEntityTypes.STOVE.get());
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (state.getValue(LIT)) {
+            double x = pos.getX() + 0.5;
+            double y = pos.getY();
+            double z = pos.getZ() + 0.5;
+            if (random.nextInt(10) == 0) {
+                level.playLocalSound(x, y, z, ModSounds.BLOCK_STOVE_CRACKLE.get(), SoundSource.BLOCKS, 1.0F, 1.0F, false);
+            }
+
+            Direction direction = state.getValue(HorizontalDirectionalBlock.FACING);
+            Axis direction$axis = direction.getAxis();
+            double horizontalOffset = random.nextDouble() * 0.6 - 0.3;
+            double xOffset = direction$axis == Axis.X ? direction.getStepX() * 0.52 : horizontalOffset;
+            double yOffset = random.nextDouble() * 6.0 / 16.0;
+            double zOffset = direction$axis == Axis.Z ? direction.getStepZ() * 0.52 : horizontalOffset;
+            level.addParticle(ParticleTypes.SMOKE, x + xOffset, y + yOffset, z + zOffset, 0.0, 0.0, 0.0);
+            level.addParticle(ParticleTypes.FLAME, x + xOffset, y + yOffset, z + zOffset, 0.0, 0.0, 0.0);
+        }
+    }
+}

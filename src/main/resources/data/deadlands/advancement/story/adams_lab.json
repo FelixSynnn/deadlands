@@ -1,0 +1,28 @@
+{
+	"parent": "deadlands:root",
+	"criteria": {
+		"done": {
+			"trigger": "minecraft:impossible"
+		}
+	},
+	"requirements": [
+		[
+			"done"
+		]
+	],
+	"display": {
+		"icon": {
+			"id": "deadlands:adam_field_notebook"
+		},
+		"title": {
+			"translate": "achievement.deadlands.story.adams_lab.title"
+		},
+		"description": {
+			"translate": "achievement.deadlands.story.adams_lab.description"
+		},
+		"frame": "goal",
+		"show_toast": true,
+		"announce_to_chat": false,
+		"hidden": true
+	}
+}

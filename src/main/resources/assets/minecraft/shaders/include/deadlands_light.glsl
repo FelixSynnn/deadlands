@@ -16,7 +16,7 @@ vec3 deadlands_extra_light(vec3 viewPos) {
         vec3 dir = viewPos / dist;
         float cone = smoothstep(DeadlandsFlashlight.z, DeadlandsFlashlight.y, -dir.z);
         float range = DeadlandsFlashlight.w;
-        float falloff = (1.0 - smoothstep(range * 0.35, range, dist)) / (1.0 + 0.006 * dist * dist);
+        float falloff = (1.0 - smoothstep(range * 0.5, range, dist)) / (1.0 + 0.003 * dist * dist);
         light += vec3(1.0, 0.95, 0.84) * (strength * cone * falloff * 0.95);
     }
     return light;

@@ -1,0 +1,34 @@
+{
+	"title": "mission.deadlands.harley.cold_chain",
+	"description": "mission.deadlands.harley.cold_chain.description",
+	"giver": "harley",
+	"requires": [
+		"harley_receiver_fixed"
+	],
+	"objectives": [
+		{
+			"id": "battery",
+			"type": "have_item",
+			"text": "mission.deadlands.harley.cold_chain.battery",
+			"target": "deadlands:car_battery",
+			"count": 1
+		},
+		{
+			"id": "tablets",
+			"type": "have_item",
+			"text": "mission.deadlands.harley.cold_chain.tablets",
+			"target": "deadlands:purification_tablet",
+			"count": 2
+		}
+	],
+	"reward_items": [
+		{
+			"item": "deadlands:sealed_sample_case",
+			"count": 1
+		}
+	],
+	"reward_flags": [
+		"harley_gave_case"
+	],
+	"lore": []
+}

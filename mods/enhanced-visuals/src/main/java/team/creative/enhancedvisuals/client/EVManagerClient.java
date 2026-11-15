@@ -1,0 +1,288 @@
+package team.creative.enhancedvisuals.client;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
+import team.creative.creativecore.common.config.premade.IntMinMax;
+import team.creative.creativecore.common.config.premade.curve.Curve;
+import team.creative.creativecore.common.config.premade.curve.DecimalCurve;
+import team.creative.creativecore.common.util.type.Color;
+import team.creative.creativecore.common.util.type.map.HashMapList;
+import team.creative.enhancedvisuals.EVManager;
+import team.creative.enhancedvisuals.EnhancedVisuals;
+import team.creative.enhancedvisuals.api.Particle;
+import team.creative.enhancedvisuals.api.Visual;
+import team.creative.enhancedvisuals.api.VisualCategory;
+import team.creative.enhancedvisuals.api.VisualHandler;
+import team.creative.enhancedvisuals.api.type.VisualType;
+import team.creative.enhancedvisuals.client.sound.PositionedSound;
+import team.creative.enhancedvisuals.client.sound.SoundMuteHandler;
+import team.creative.enhancedvisuals.client.sound.TickedSound;
+import team.creative.enhancedvisuals.client.type.VisualTypeClient;
+import team.creative.enhancedvisuals.common.event.EVEvents;
+import team.creative.enhancedvisuals.common.visual.VisualRegistry;
+
+public class EVManagerClient implements EVManager {
+    private final Random random = new Random();
+    private HashMapList<VisualCategory, Visual> visuals = new HashMapList<>();
+    private List<TickedSound> playing = new ArrayList<>();
+
+    public void respawn() {
+        this.clearEverything();
+    }
+
+    public void clientTick() {
+        if (EVClient.shouldTick()) {
+            Player player = Minecraft.getInstance().player;
+            this.onTick(player);
+        }
+
+        SoundMuteHandler.tick();
+    }
+
+    @Override
+    public Random random() {
+        return this.random;
+    }
+
+    public void onTick(@Nullable Player player) {
+        boolean areEyesInWater = player != null && EVEvents.areEyesInWater(player);
+        synchronized (this.visuals) {
+            Iterator<Visual> iterator = this.visuals.iterator();
+
+            while (iterator.hasNext()) {
+                Visual visual = iterator.next();
+                int factor = 1;
+                if (areEyesInWater && visual.isAffectedByWater()) {
+                    factor = EnhancedVisuals.CONFIG.waterSubstractFactor;
+                }
+
+                for (int i = 0; i < factor; i++) {
+                    if (!visual.tick()) {
+                        visual.removeFromDisplay();
+                        iterator.remove();
+                        break;
+                    }
+                }
+            }
+
+            for (VisualHandler handler : VisualRegistry.handlers()) {
+                if (handler.isEnabled(player)) {
+                    handler.tick(player);
+                }
+            }
+        }
+
+        if (player != null && !player.isAlive()) {
+            this.clearEverything();
+        }
+
+        if (!this.playing.isEmpty()) {
+            this.playing.removeIf(x -> x.isStopped());
+        }
+    }
+
+    @Override
+    public void playSound(Identifier identifier) {
+        this.playSound(identifier, null, 1.0F);
+    }
+
+    @Override
+    public void playSound(Identifier identifier, BlockPos pos) {
+        this.playSound(identifier, pos, 1.0F);
+    }
+
+    @Override
+    public void playSound(Identifier identifier, float volume) {
+        this.playSound(identifier, null, volume);
+    }
+
+    @Override
+    public void playSound(Identifier identifier, BlockPos pos, float volume) {
+        if (EVClient.shouldRender()) {
+            if (pos != null) {
+                Minecraft.getInstance().getSoundManager().play(new PositionedSound(identifier, SoundSource.MASTER, volume, 1.0F, pos));
+            } else {
+                Minecraft.getInstance().getSoundManager().play(new PositionedSound(identifier, SoundSource.MASTER, volume, 1.0F));
+            }
+        }
+    }
+
+    @Override
+    public void playSoundFadeOut(Identifier identifier, BlockPos pos, DecimalCurve volume) {
+        if (EVClient.shouldRender()) {
+            this.playTicking(identifier, pos, volume);
+        }
+    }
+
+    @Override
+    public Collection<Visual> visuals(VisualCategory category) {
+        return this.visuals.get(category);
+    }
+
+    @Override
+    public void clearEverything() {
+        synchronized (this.visuals) {
+            this.visuals.removeKey(VisualCategory.particle);
+        }
+
+        if (!this.playing.isEmpty()) {
+            for (TickedSound sound : this.playing) {
+                sound.stop();
+            }
+
+            this.playing.clear();
+            SoundMuteHandler.endMuting();
+        }
+    }
+
+    @Override
+    public void add(Visual visual) {
+        if (!visual.type.disabled) {
+            visual.addToDisplay();
+            this.visuals.add(visual.getCategory(), visual);
+        }
+    }
+
+    @Override
+    public boolean remove(Visual visual) {
+        if (this.visuals.removeValue(visual.getCategory(), visual)) {
+            visual.removeFromDisplay();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void playTicking(Identifier identifier, BlockPos pos, DecimalCurve volume) {
+        TickedSound sound;
+        if (pos != null) {
+            sound = new TickedSound(identifier, SoundSource.MASTER, 1.0F, pos, volume);
+        } else {
+            sound = new TickedSound(identifier, SoundSource.MASTER, 1.0F, volume);
+        }
+
+        this.playing.add(sound);
+        Minecraft.getInstance().getSoundManager().play(sound);
+    }
+
+    @Override
+    public Visual addVisualFadeOut(VisualType vt, VisualHandler handler, IntMinMax time) {
+        return this.addVisualFadeOut(vt, handler, new DecimalCurve(0.0, 1.0, time.next(this.random), 0.0));
+    }
+
+    @Override
+    public Visual addVisualFadeOut(VisualType vt, VisualHandler handler, int time) {
+        return this.addVisualFadeOut(vt, handler, new DecimalCurve(0.0, 1.0, time, 0.0));
+    }
+
+    @Override
+    public Visual addVisualFadeOut(VisualType vt, VisualHandler handler, Curve curve) {
+        VisualTypeClient ct = EVClient.get(vt);
+        Visual v = new Visual(vt, handler, curve, ct.getVariantAmount() > 1 ? this.random.nextInt(ct.getVariantAmount()) : 0);
+        this.add(v);
+        return v;
+    }
+
+    @Override
+    public void addParticlesFadeOut(VisualType vt, VisualHandler handler, int count, IntMinMax time, boolean rotate) {
+        this.addParticlesFadeOut(vt, handler, count, new DecimalCurve(0.0, 1.0, time.next(this.random), 0.0), rotate, null);
+    }
+
+    @Override
+    public void addParticlesFadeOut(VisualType vt, VisualHandler handler, int count, IntMinMax time, boolean rotate, @Nullable Color color) {
+        this.addParticlesFadeOut(vt, handler, count, new DecimalCurve(0.0, 1.0, time.next(this.random), 0.0), rotate, color);
+    }
+
+    @Override
+    public void addParticlesFadeOut(VisualType vt, VisualHandler handler, int count, int time, boolean rotate) {
+        this.addParticlesFadeOut(vt, handler, count, new DecimalCurve(0.0, 1.0, time, 0.0), rotate, null);
+    }
+
+    @Override
+    public void addParticlesFadeOut(VisualType vt, VisualHandler handler, int count, Curve curve, boolean rotate, @Nullable Color color) {
+        if (!vt.disabled) {
+            VisualTypeClient ct = EVClient.get(vt);
+            Minecraft mc = Minecraft.getInstance();
+
+            for (int i = 0; i < count; i++) {
+                int screenWidth = mc.getWindow().getWidth();
+                int screenHeight = mc.getWindow().getHeight();
+                int width = ct.getWidth(screenWidth, screenHeight);
+                int height = ct.getHeight(screenWidth, screenHeight);
+                if (vt.scaleVariants()) {
+                    double scale = vt.randomScale(this.random);
+                    width = (int)(width * scale);
+                    height = (int)(height * scale);
+                }
+
+                Particle particle = new Particle(
+                    vt,
+                    handler,
+                    curve,
+                    this.generateOffset(this.random, screenWidth, width),
+                    this.generateOffset(this.random, screenHeight, height),
+                    width,
+                    height,
+                    vt.canRotate() && rotate ? this.random.nextFloat() * 360.0F : 0.0F,
+                    this.random.nextInt(ct.getVariantAmount())
+                );
+                if (color != null) {
+                    particle.color = color;
+                }
+
+                this.add(particle);
+            }
+        }
+    }
+
+    @Override
+    public Particle addParticle(VisualType vt, VisualHandler handler, boolean rotate, @Nullable Color color) {
+        Minecraft mc = Minecraft.getInstance();
+        int screenWidth = mc.getWindow().getWidth();
+        int screenHeight = mc.getWindow().getHeight();
+        VisualTypeClient ct = EVClient.get(vt);
+        int width = ct.getWidth(screenWidth, screenHeight);
+        int height = ct.getHeight(screenWidth, screenHeight);
+        if (vt.scaleVariants()) {
+            double scale = vt.randomScale(this.random);
+            width = (int)(width * scale);
+            height = (int)(height * scale);
+        }
+
+        Particle particle = new Particle(
+            vt,
+            handler,
+            this.generateOffset(this.random, screenWidth, width),
+            this.generateOffset(this.random, screenHeight, height),
+            width,
+            height,
+            vt.canRotate() && rotate ? this.random.nextFloat() * 360.0F : 0.0F,
+            this.random.nextInt(ct.getVariantAmount())
+        );
+        particle.setOpacityInternal(1.0F);
+        if (color != null) {
+            particle.color = color;
+        }
+
+        this.add(particle);
+        return particle;
+    }
+
+    @Override
+    public int generateOffset(Random rand, int dimensionLength, int spacingBuffer) {
+        int half = dimensionLength / 2;
+        float multiplier = (float)(1.0 - Math.pow(rand.nextDouble(), 2.0));
+        float textureCenterPosition = rand.nextInt(2) == 0 ? half + half * multiplier : half - half * multiplier;
+        return (int)(textureCenterPosition - spacingBuffer / 2.0F);
+    }
+}
