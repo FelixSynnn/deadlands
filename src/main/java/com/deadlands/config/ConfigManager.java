@@ -39,7 +39,7 @@ import net.fabricmc.loader.api.FabricLoader;
  * added, missing or invalid.
  */
 public final class ConfigManager {
-	public static final int CURRENT_VERSION = 5;
+	public static final int CURRENT_VERSION = 6;
 	public static final String FILE_NAME = "deadlands.jsonc";
 
 	private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
@@ -237,6 +237,18 @@ public final class ConfigManager {
 		// 5: Mythos comes on the night of day 3, not day 2 (old default only).
 		if (from < 5 && config.mythos.guaranteedNight == 2) {
 			config.mythos.guaranteedNight = 3;
+		}
+		// 6: the Guest comes more often (old defaults only).
+		if (from < 6) {
+			if (config.guest.spawnChance == 0.12) {
+				config.guest.spawnChance = 0.25;
+			}
+			if (config.guest.nightDelayMinutes == 3.0) {
+				config.guest.nightDelayMinutes = 1.5;
+			}
+			if (config.guest.campMinutes == 5.0) {
+				config.guest.campMinutes = 3.0;
+			}
 		}
 	}
 

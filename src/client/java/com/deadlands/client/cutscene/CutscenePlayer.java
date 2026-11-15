@@ -114,6 +114,7 @@ public final class CutscenePlayer {
 		}
 		Script next = script(id, facing);
 		script = next;
+		playing = id;
 		anchor = at;
 		yaw = bearingFrame ? 0.0F : facing;
 		ticks = 0;
@@ -129,6 +130,14 @@ public final class CutscenePlayer {
 		if (next.ambience() != null) {
 			minecraft.getSoundManager().play(SimpleSoundInstance.forUI(next.ambience(), 1.0F, 0.6F));
 		}
+	}
+
+	/** The id of the scene playing. */
+	private static String playing = "";
+
+	/** Only the opening can be skipped; every other scene plays to the end. */
+	public static boolean skippable() {
+		return "opening".equals(playing);
 	}
 
 	/** True while {@link #start} swaps one overlay for another (the old one closing is not an ending). */

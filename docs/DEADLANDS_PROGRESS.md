@@ -1094,3 +1094,41 @@ The owner's report: the flashlight does nothing even with Lamb's Dynamic Lights,
   - **D.O.T.:** idle, walk, provoked walk, slash, grasp wind-up and hold, Static Step, Restore, Field, climb, Loom (the jumpscare), plus seeded unnatural twitches.
   - **Guest:** a four-beat lateral-sequence walk with a swing and a stance phase per paw. Claws stay flat while planted; weight shifts side to side, the hips dip, the spine counter-rotates and the head stays level. Stalking, climbing and swimming now blend in and out instead of snapping.
 - **Verified:** build success, 57/57 tests. Offline renders of D.O.T.'s texture, glow and poses. Not playtested.
+
+## Phase 6: Multiplayer (started 2026-11-14)
+
+### Step 1: character choice
+
+- **Character select screen** (`client/ui/CharacterSelectScreen.java`): shown when the opening ends, before Harley speaks, and on joining for anyone past the opening who never chose.
+  - Four tall cards (Itzbreadloaf, Imlilylol, FelixSyn, Harley) rise in turn under a typed "WHO ARE YOU?": each character standing in their own skin (breathing, in a pool of warm light), their name, what they were (the driver, the drifter, the deserter, the doctor) and a line about them.
+  - Hover lifts a card; click picks it ("Go on as ..."); double-click or Enter confirms; arrow keys move. A character someone else already is shows dimmed and stamped TAKEN with their name, live.
+  - "Decide later" closes it (Harley still speaks); `/deadlands character` picks later. Esc doesn't close it by accident.
+  - The layout fits the screen height (cards size to the space between the title and the buttons).
+- **Who you are** (`player/SurvivorCharacter.java`): `/deadlands character <itzbreadloaf|imlilylol|felixsyn|none>`; `/deadlands character` alone says who you are.
+  - One of each: no two survivors online can be the same character. A taken one is refused, naming who has it.
+  - Saved with the player, kept through death and reconnecting. If someone took it while you were away, you come back as nobody and are told.
+- **Everyone sees it:** the picks of everyone online are sent to all players (`CharactersPayload`) on join, leave and choice. Each player is drawn in their character's skin (`AbstractClientPlayerMixin`), the same skin as the story NPC, or the file in `config/deadlands/skins/<id>.png`. Their own cape and elytra stay.
+- **Verified:** compiles. Not built with tests, not played.
+
+### Next in Phase 6
+
+- Character gear on players (Itzbreadloaf's backpack and the rest).
+- Shared progression and story state for the party; synchronized cutscenes; disconnect handling mid-chapter.
+- Seeing teammates' flashlight beams.
+
+### Step 2 (2026-11-14): Harley is playable, killers unstick, cutscenes play out, keep inventory, /back
+
+- **The group of four:** Harley (the doctor) is the fourth card on the select screen, beside Itzbreadloaf, Imlilylol and FelixSyn.
+- **A player who is Harley** (`story/HarleyRole.java`):
+  - The camp's Harley NPC steps out (hidden, silent, untouchable) while a Harley player is online, and comes back when no one plays her.
+  - Her opening ends with her own thoughts instead of meeting herself; the story counts her as met (its day clock starts) and her questline begins.
+  - Other survivors hand in her missions by right-clicking the Harley player (same as talking to the NPC: hand-ins, next mission, Imlilylol's word).
+  - Her own deliveries complete by themselves when she carries what's needed; her next mission starts when it's due.
+  - Anyone else finishing their opening is told which player is Harley.
+- **Killers unstick** (`Stalking.Unstick`, config section `killers`), for the Aberrant, the Guest, D.O.T. and the Stalker:
+  - Trying to move but staying within a block of one spot for 10 to 15 seconds (random each time): it hops 3 to 6 blocks away, toward its prey.
+  - No way to the survivor it is after for a minute: it appears right beside them, on their side of any wall.
+- **Cutscenes can't be skipped** except the opening (the typed intro and the camera over Harley's camp). The "any key skips" hint shows only there.
+- **Keep inventory** (`survival.keepInventory`): the game rule is switched on when the server starts.
+- **`/back`** (`player/DeathReturn.java`, `survival.backCommand`): one trip to where you last died, to a safe floor beside it. Saved through death and logging out; forgotten once used.
+- **Verified:** compiles. Not built with tests, not played.

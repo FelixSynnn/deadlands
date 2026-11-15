@@ -9,7 +9,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 
-/** What is drawn over a cutscene: letterbox bars, the subtitle, the fade, and a hint that any key skips. */
+/** What is drawn over a cutscene: letterbox bars, the subtitle and the fade. Only the opening can be skipped (any key); every other scene plays out. */
 public class CutsceneScreen extends Screen {
 	public CutsceneScreen() {
 		super(Component.translatable("cutscene.deadlands.title"));
@@ -22,13 +22,17 @@ public class CutsceneScreen extends Screen {
 
 	@Override
 	public boolean keyPressed(KeyEvent event) {
-		CutscenePlayer.stop();
+		if (CutscenePlayer.skippable()) {
+			CutscenePlayer.stop();
+		}
 		return true;
 	}
 
 	@Override
 	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-		CutscenePlayer.stop();
+		if (CutscenePlayer.skippable()) {
+			CutscenePlayer.stop();
+		}
 		return true;
 	}
 
@@ -46,8 +50,10 @@ public class CutsceneScreen extends Screen {
 				y += 11;
 			}
 		}
-		Component skip = Component.translatable("intro.deadlands.skip");
-		graphics.drawString(font, skip, width - font.width(skip) - 8, height - bar / 2 - 4, DLTheme.TEXT_FAINT);
+		if (CutscenePlayer.skippable()) {
+			Component skip = Component.translatable("intro.deadlands.skip");
+			graphics.drawString(font, skip, width - font.width(skip) - 8, height - bar / 2 - 4, DLTheme.TEXT_FAINT);
+		}
 		float fade = CutscenePlayer.fade(partialTick);
 		if (fade > 0.0F) {
 			graphics.fill(0, 0, width, height, DLTheme.withAlpha(0xFF000000, fade));

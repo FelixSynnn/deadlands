@@ -196,6 +196,21 @@ public class NpcEntity extends PathfinderMob implements Merchant {
 		return Math.floorMod(entityData.get(DATA_SKIN), SKINS_PER_ROLE);
 	}
 
+	/** Harley while a survivor plays her (story.HarleyRole): hidden and untouchable. */
+	public boolean steppedOut() {
+		return isInvisible() && character() == NpcCharacter.HARLEY;
+	}
+
+	@Override
+	public boolean isPickable() {
+		return !steppedOut() && super.isPickable();
+	}
+
+	@Override
+	public boolean isPushable() {
+		return !steppedOut() && super.isPushable();
+	}
+
 	public @Nullable NpcCharacter character() {
 		String id = entityData.get(DATA_CHARACTER);
 		return id.isEmpty() ? null : NpcCharacter.byId(id);
@@ -429,7 +444,7 @@ public class NpcEntity extends PathfinderMob implements Merchant {
 
 	@Override
 	protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-		if (hand != InteractionHand.MAIN_HAND || !isAlive()) {
+		if (hand != InteractionHand.MAIN_HAND || !isAlive() || steppedOut()) {
 			return InteractionResult.PASS;
 		}
 		if (player instanceof ServerPlayer survivor) {

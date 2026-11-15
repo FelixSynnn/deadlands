@@ -73,8 +73,25 @@ public final class StoryIntro {
 		}
 	}
 
-	/** The introduction is over (watched or skipped): Harley speaks, if she is near. */
+	/** The introduction is over (watched or skipped): the survivor chooses who they are (Phase 6), then Harley speaks. */
 	public static void done(ServerPlayer player) {
+		if (com.deadlands.player.SurvivorCharacter.of(player) == null && com.deadlands.player.SurvivorCharacter.openSelect(player, true)) {
+			return; // Harley speaks when they have chosen (or put it off)
+		}
+		harleySpeaks(player);
+	}
+
+	/** Harley speaks, if she is near. If a survivor is Harley (Phase 6), that survivor's own opening or a pointer to her. */
+	public static void harleySpeaks(ServerPlayer player) {
+		if (com.deadlands.player.SurvivorCharacter.of(player) == com.deadlands.npc.NpcCharacter.HARLEY) {
+			HarleyRole.begin(player);
+			return;
+		}
+		ServerPlayer playedBy = HarleyRole.player(player.level().getServer());
+		if (playedBy != null) {
+			HarleyRole.pointTo(player, playedBy);
+			return;
+		}
 		NpcEntity harley = harleyNear(player, 64.0);
 		if (harley != null) {
 			harley.getLookControl().setLookAt(player);

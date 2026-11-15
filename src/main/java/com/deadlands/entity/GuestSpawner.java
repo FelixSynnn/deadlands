@@ -26,7 +26,7 @@ import net.minecraft.world.phys.Vec3;
  * Brings the Guest (the {@code guest} config section): at night, in the overworld, never on Peaceful.
  * Every 30 seconds each survivor is a chance ({@code spawnChance}); one who has sheltered in the same
  * spot for {@code campMinutes} is a certainty. At most {@code maxAlive} in the world, never while the
- * Aberrant or another Guest is within 96 blocks of them. It arrives 30 to 50 blocks off, out of sight,
+ * Aberrant or another Guest is within 96 blocks of them. It arrives 56 to 80 blocks off, out of sight,
  * and comes straight for them. Also tells nearby Guests when an infected dies (they feed).
  */
 public final class GuestSpawner {

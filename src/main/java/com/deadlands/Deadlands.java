@@ -86,6 +86,8 @@ public final class Deadlands implements ModInitializer {
 		DLNetworking.init();
 		WorldClock.init();
 		SurvivorTracker.init();
+		com.deadlands.player.SurvivorCharacter.init();
+		com.deadlands.story.HarleyRole.init();
 		TownTracker.init();
 		InfectedSystems.init();
 		Skills.init();
@@ -104,6 +106,7 @@ public final class Deadlands implements ModInitializer {
 		com.deadlands.story.MythosTerminal.init();
 		com.deadlands.story.Pinecrest.init();
 		com.deadlands.player.SafeRespawn.init();
+		com.deadlands.player.DeathReturn.init();
 		com.deadlands.item.FlashlightBeam.init();
 		com.deadlands.player.RestlessNights.init();
 		com.deadlands.story.StoryArchive.init();

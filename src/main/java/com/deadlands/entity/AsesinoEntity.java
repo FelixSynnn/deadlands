@@ -270,6 +270,9 @@ public class AsesinoEntity extends Monster {
 
 	// ======================================================================================== the mind
 
+	/** Never stuck for long (Stalking.Unstick). */
+	private final com.deadlands.entity.ai.Stalking.Unstick unstick = new com.deadlands.entity.ai.Stalking.Unstick();
+
 	@Override
 	protected void customServerAiStep(ServerLevel level) {
 		super.customServerAiStep(level);
@@ -289,6 +292,7 @@ public class AsesinoEntity extends Monster {
 		if (mode != Mode.ROAM && target == null) {
 			setMode(Mode.ROAM);
 		}
+		unstick.tick(this, level, mode == Mode.CHASE || mode == Mode.STALK || mode == Mode.SEARCH ? target : null, 2.6);
 		switch (mode) {
 			case ROAM -> roam(level);
 			case STALK -> stalk(level, target);

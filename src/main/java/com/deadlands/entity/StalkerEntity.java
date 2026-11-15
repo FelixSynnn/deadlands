@@ -46,9 +46,15 @@ public class StalkerEntity extends InfectedEntity {
 		this.goalSelector.addGoal(3, new InfectedAttackGoal(this, 1.15, 16, 5));
 	}
 
+	/** Never stuck for long (Stalking.Unstick). */
+	private final com.deadlands.entity.ai.Stalking.Unstick unstick = new com.deadlands.entity.ai.Stalking.Unstick();
+
 	@Override
 	public void tick() {
 		super.tick();
+		if (level() instanceof net.minecraft.server.level.ServerLevel server && isAlive()) {
+			unstick.tick(this, server, getTarget() instanceof net.minecraft.world.entity.player.Player p ? p : null, getBbHeight());
+		}
 		if (!level().isClientSide()) {
 			setFlag(FLAG_CLIMBING, horizontalCollision);
 			if (horizontalCollision) {

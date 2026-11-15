@@ -68,6 +68,35 @@ public final class DeadlandsCommand {
 					ctx.getSource().sendFailure(Component.translatable("story.deadlands.cinematics.not_seen"));
 					return 0;
 				})))
+			.then(Commands.literal("character")
+				.executes(ctx -> {
+					var player = ctx.getSource().getPlayerOrException();
+					var mine = com.deadlands.player.SurvivorCharacter.of(player);
+					player.sendSystemMessage(mine == null ? Component.translatable("character.deadlands.none")
+						: Component.translatable("character.deadlands.you_are", mine.displayName()));
+					return 1;
+				})
+				.then(Commands.argument("who", StringArgumentType.word())
+					.suggests((ctx, builder) -> {
+						for (com.deadlands.npc.NpcCharacter character : com.deadlands.player.SurvivorCharacter.PLAYABLE) {
+							builder.suggest(character.id());
+						}
+						builder.suggest("none");
+						return builder.buildFuture();
+					})
+					.executes(ctx -> {
+						var player = ctx.getSource().getPlayerOrException();
+						String who = StringArgumentType.getString(ctx, "who");
+						if (who.equalsIgnoreCase("none")) {
+							return com.deadlands.player.SurvivorCharacter.choose(player, null) ? 1 : 0;
+						}
+						var character = com.deadlands.npc.NpcCharacter.byId(who);
+						if (character == null) {
+							ctx.getSource().sendFailure(Component.translatable("character.deadlands.unknown", who));
+							return 0;
+						}
+						return com.deadlands.player.SurvivorCharacter.choose(player, character) ? 1 : 0;
+					})))
 			.then(Commands.literal("choose").then(Commands.argument("option", StringArgumentType.word())
 				.executes(ctx -> choose(ctx.getSource(), StringArgumentType.getString(ctx, "option")))))
 			.then(Commands.literal("config")

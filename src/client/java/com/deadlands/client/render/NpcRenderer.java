@@ -92,6 +92,16 @@ public class NpcRenderer extends HumanoidMobRenderer<NpcEntity, NpcRenderer.Stat
 		return Deadlands.id("textures/entity/survivor/" + role.id() + "_" + look + ".png");
 	}
 
+	/** The character's skin texture (also used for a player who has chosen to be them, Phase 6). */
+	public static Identifier characterTexture(NpcCharacter character) {
+		return characterSkin(character).texture();
+	}
+
+	/** Whether the character's skin has slim arms. */
+	public static boolean characterSlim(NpcCharacter character) {
+		return characterSkin(character).slim();
+	}
+
 	/** The character's skin: a file the player provided, if there is one and it loads; otherwise the shipped one. */
 	private static CharacterSkin characterSkin(NpcCharacter character) {
 		return CHARACTER_SKINS.computeIfAbsent(character, c -> {

@@ -68,6 +68,14 @@ public final class HarleyQuest {
 	}
 
 	private static void harley(MinecraftServer server, ServerPlayer player) {
+		talkTo(server, player, "Harley");
+	}
+
+	/**
+	 * Talking to Harley: the NPC, or the survivor playing her ({@link HarleyRole}), whose name is {@code who}. Hand in what
+	 * she asked for, or get her next mission.
+	 */
+	public static void talkTo(MinecraftServer server, ServerPlayer player, String who) {
 		if (ImlilylolCampaign.talkedToHarley(server, player)) {
 			return; // Imlilylol's word, carried to her (Imlilylol's chapter one)
 		}
@@ -81,12 +89,12 @@ public final class HarleyQuest {
 			}
 			String key = "mission.deadlands." + id.getPath().replace('/', '.');
 			if (!carries(player.getInventory(), def)) {
-				say(player, "Harley", key + ".reminder");
+				say(player, who, key + ".reminder");
 				return;
 			}
 			MissionManager.complete(server, id); // rewards first: taking the items would undo "have the items"
 			take(player.getInventory(), def);
-			say(player, "Harley", key + ".thanks");
+			say(player, who, key + ".thanks");
 			if (id.equals(COLD_CHAIN)) {
 				StoryFlags.get(server).set(GAVE_CASE);
 				placeAdam(player);
@@ -96,7 +104,7 @@ public final class HarleyQuest {
 		}
 		MissionManager.offer(server, "harley", player).ifPresent(id -> {
 			if (MissionManager.start(server, id, player)) {
-				say(player, "Harley", "mission.deadlands." + id.getPath().replace('/', '.') + ".ask");
+				say(player, who, "mission.deadlands." + id.getPath().replace('/', '.') + ".ask");
 			}
 		});
 	}
@@ -219,6 +227,36 @@ public final class HarleyQuest {
 				return;
 			}
 		}
+	}
+
+	/**
+	 * The survivor playing Harley ({@link HarleyRole}): what she carries for her own active mission is used up and the
+	 * mission completes (her own words as a note to herself); with none active, her next one starts when it's due.
+	 */
+	public static void selfCheck(MinecraftServer server, ServerPlayer harley) {
+		for (Identifier id : List.of(STATIC, COLD_CHAIN)) {
+			if (!MissionManager.isActive(server, id)) {
+				continue;
+			}
+			MissionDef def = DLContent.MISSIONS.get(id).orElse(null);
+			if (def == null || !carries(harley.getInventory(), def)) {
+				return;
+			}
+			MissionManager.complete(server, id);
+			take(harley.getInventory(), def);
+			say(harley, "Harley", "mission.deadlands." + id.getPath().replace('/', '.') + ".thanks");
+			if (id.equals(COLD_CHAIN)) {
+				StoryFlags.get(server).set(GAVE_CASE);
+				placeAdam(harley);
+				MissionManager.start(server, THE_CASE, harley);
+			}
+			return;
+		}
+		MissionManager.offer(server, "harley", harley).ifPresent(id -> {
+			if (MissionManager.start(server, id, harley)) {
+				say(harley, "Harley", "mission.deadlands." + id.getPath().replace('/', '.') + ".ask");
+			}
+		});
 	}
 
 	static void say(ServerPlayer player, String who, String key) {

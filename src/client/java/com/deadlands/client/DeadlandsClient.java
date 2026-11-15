@@ -211,6 +211,7 @@ public final class DeadlandsClient implements ClientModInitializer {
 			com.deadlands.client.mission.ClientMissions.reset();
 			SurvivalHud.reset();
 			com.deadlands.client.hud.AwarenessHud.reset();
+			com.deadlands.client.ClientCharacters.reset();
 			LocalSurvival.reset();
 			VOICES.reset();
 		});

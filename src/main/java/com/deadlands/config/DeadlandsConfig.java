@@ -22,6 +22,7 @@ public final class DeadlandsConfig {
 	public Disasters disasters = new Disasters();
 	public Asesino asesino = new Asesino();
 	public Guest guest = new Guest();
+	public Killers killers = new Killers();
 	public Stealth stealth = new Stealth();
 	public Dot dot = new Dot();
 	public Mythos mythos = new Mythos();
@@ -213,6 +214,12 @@ public final class DeadlandsConfig {
 		@ConfigEntry(comment = "Safe respawn: when you come back after dying, hostile creatures and zombies near your respawn point vanish (no loot or experience).")
 		public boolean safeRespawn = true;
 
+		@ConfigEntry(comment = "Switch on the keepInventory game rule when the server starts: you respawn with everything you carried.")
+		public boolean keepInventory = true;
+
+		@ConfigEntry(comment = "Allow /back: one trip back to where you last died.")
+		public boolean backCommand = true;
+
 		@ConfigEntry(comment = "Safe respawn: how far around the respawn point, in blocks.", min = 8, max = 128)
 		public int safeRespawnRadius = 50;
 	}
@@ -309,12 +316,30 @@ public final class DeadlandsConfig {
 		public int attackRevealSeconds = 3;
 	}
 
+	/** Getting killers unstuck: all of them (the Aberrant, the Guest, D.O.T., the Stalker). */
+	public static final class Killers {
+		@ConfigEntry(comment = "A killer that has had no way to the survivor it is after for this long (seconds) appears right beside them.", min = 10, max = 600)
+		public int unreachableSeconds = 60;
+
+		@ConfigEntry(comment = "Let killers appear beside a survivor they can't reach.")
+		public boolean teleportWhenUnreachable = true;
+
+		@ConfigEntry(comment = "Let a killer stuck in one spot (trying to move but going nowhere) hop a few blocks away.")
+		public boolean hopWhenStuck = true;
+
+		@ConfigEntry(comment = "Shortest time stuck in one spot before it hops (seconds).", min = 3.0, max = 120.0)
+		public float stuckSecondsMin = 10.0F;
+
+		@ConfigEntry(comment = "Longest time stuck in one spot before it hops (seconds); each time picks between the two.", min = 3.0, max = 120.0)
+		public float stuckSecondsMax = 15.0F;
+	}
+
 	public static final class Guest {
 		@ConfigEntry(comment = "Climbing speed as a share of its walking speed.", min = 0.0, max = 1.0)
 		public double climbFactor = 0.3;
 
 		@ConfigEntry(comment = "Minutes after nightfall before the Guest can come (it never appears the moment night falls).", min = 0.0, max = 8.0)
-		public double nightDelayMinutes = 3.0;
+		public double nightDelayMinutes = 1.5;
 
 		@ConfigEntry(comment = "Let the Guest come.")
 		public boolean enabled = true;
@@ -323,13 +348,16 @@ public final class DeadlandsConfig {
 		public boolean nightOnly = true;
 
 		@ConfigEntry(comment = "Chance per survivor every 30 seconds at night that it comes for them.", min = 0.0, max = 1.0)
-		public double spawnChance = 0.12;
+		public double spawnChance = 0.25;
 
 		@ConfigEntry(comment = "Most Guests in the world at once.", min = 1, max = 10)
 		public int maxAlive = 2;
 
 		@ConfigEntry(comment = "Minutes sheltering in the same spot at night before it is certain to come.", min = 1.0, max = 60.0)
-		public double campMinutes = 5.0;
+		public double campMinutes = 3.0;
+
+		@ConfigEntry(comment = "When it can't reach the survivor it is after (shut in behind stone, up a tower, across water), it appears next to them in a puff of smoke.")
+		public boolean teleportWhenStuck = true;
 
 		@ConfigEntry(comment = "Let it tear through doors, glass and wooden walls (also needs the mobGriefing rule).")
 		public boolean breaksBlocks = true;

@@ -96,6 +96,8 @@ public class GuestEntity extends Monster {
 	private int chargeCooldown = 80;
 	private int stunned;
 	private int blockedTicks;
+	/** Ticks in a row without a way to the survivor it hunts; long enough and it appears beside them. */
+	private int unreachableTicks;
 	private @Nullable BlockPos knockAt;
 	private int knocks;
 	private int tearCooldown;
@@ -340,6 +342,9 @@ public class GuestEntity extends Monster {
 
 	// ======================================================================================== the mind
 
+	/** Never stuck for long (Stalking.Unstick). */
+	private final com.deadlands.entity.ai.Stalking.Unstick unstick = new com.deadlands.entity.ai.Stalking.Unstick();
+
 	@Override
 	protected void customServerAiStep(ServerLevel level) {
 		super.customServerAiStep(level);
@@ -365,6 +370,7 @@ public class GuestEntity extends Monster {
 			return;
 		}
 		Player target = preyPlayer(level);
+		unstick.tick(this, level, mode == Mode.HUNT || mode == Mode.KNOCK || mode == Mode.ENTER ? target : null, 3.3);
 		if (target == null) {
 			holdTicks = 0; // the survivor is gone (dead, left): nothing half-done carries over
 			windup = 0;
@@ -504,6 +510,13 @@ public class GuestEntity extends Monster {
 				knockedThisApproach = true;
 				return;
 			}
+		}
+		// No way to them at all (shut in behind stone, up a tower, across water): it comes out of the dark beside them.
+		Path route = getNavigation().getPath();
+		boolean noWay = distance > 3.0 && (route == null ? getNavigation().isDone() : !route.canReach());
+		unreachableTicks = noWay ? unreachableTicks + 1 : 0;
+		if (unreachableTicks > 100 && catchUpCooldown == 0 && besideThem(level, target)) {
+			return;
 		}
 		if (mode == Mode.HUNT && (unstuck.tick(this, target, 80) || distance > 40.0 && seen && catchUpCooldown == 0)) {
 			catchUpCooldown = 300;
@@ -652,12 +665,31 @@ public class GuestEntity extends Monster {
 		if (centre == null || !tear(level, centre)) {
 			if (++tearFailures > 6) {
 				tearFailures = 0;
-				setMode(Mode.HUNT); // stone: it cannot get in here; it circles, waiting
+				if (besideThem(level, target)) {
+					return; // stone: it cannot get in, so it is suddenly inside
+				}
+				setMode(Mode.HUNT); // no room even beside them: it circles, waiting
 				unseenTicks = 600;
 			}
 			return;
 		}
 		tearFailures = 0;
+	}
+
+	/** Appear right beside the survivor (guest.teleportWhenStuck), on their side of any wall. True if it did. */
+	private boolean besideThem(ServerLevel level, Player target) {
+		if (!ConfigManager.get().guest.teleportWhenStuck) {
+			return false;
+		}
+		catchUpCooldown = 300;
+		unreachableTicks = 0;
+		if (!com.deadlands.entity.ai.Stalking.teleportBeside(this, level, target, 2.5, 6.0, 3.3)) {
+			return false;
+		}
+		unstuck.reset();
+		setMode(Mode.HUNT);
+		voice(level, DLSounds.GUEST_SENSE.value(), 1.5F, 0.8F, 40);
+		return true;
 	}
 
 	/** Tear a 3x3 hole around {@code centre} (facing it) through what it can break. True if anything gave way. */

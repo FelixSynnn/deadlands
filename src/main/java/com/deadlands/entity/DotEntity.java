@@ -290,6 +290,9 @@ public class DotEntity extends Monster {
 		return distanceTo(player) <= range && hasLineOfSight(player);
 	}
 
+	/** Never stuck for long (Stalking.Unstick). */
+	private final Stalking.Unstick unstick = new Stalking.Unstick();
+
 	@Override
 	protected void customServerAiStep(ServerLevel level) {
 		super.customServerAiStep(level);
@@ -314,6 +317,7 @@ public class DotEntity extends Monster {
 		}
 		recordHistory(level);
 		Player target = preyPlayer(level);
+		unstick.tick(this, level, mode == Mode.PROVOKED ? target : null, 2.7);
 		if (mode == Mode.PROVOKED && target == null) {
 			calm();
 		}
