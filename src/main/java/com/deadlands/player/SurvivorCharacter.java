@@ -88,7 +88,7 @@ public final class SurvivorCharacter {
 	/** The character this survivor has chosen, or null. */
 	public static @Nullable NpcCharacter of(ServerPlayer player) {
 		NpcCharacter character = NpcCharacter.byId(player.getAttachedOrElse(CHOICE, ""));
-		return PLAYABLE.contains(character) ? character : null;
+		return character != null && PLAYABLE.contains(character) ? character : null; // List.of throws on contains(null)
 	}
 
 	/** Another survivor online playing {@code character}, or null. */
